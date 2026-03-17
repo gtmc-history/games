@@ -1,1 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>왕건의 외교전 — 918년 고려</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f0e2c0;
+  --paper2: #e6d4a8;
+  --paper3: #d9c48e;
+  --ink: #1c1008;
+  --ink2: #4a3820;
+  --gold: #c4903a;
+  --gold2: #e8b84b;
+  --crimson: #8b1c1c;
+  --jade: #3d7a5c;
+  --jade2: #5aad84;
+  --muted: #8a7458;
+  --danger: #c0392b;
+}
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Serif KR', serif;
+  background: #0e0704;
+  background-image: radial-gradient(ellipse at 30% 0%, #2a1206 0%, transparent 60%),
+                    radial-gradient(ellipse at 70% 100%, #1a0d04 0%, transparent 60%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 16px 12px 60px;
+}
+
+#app { width: 100%; max-width: 440px; }
+
+/* ─── FLASH OVERLAY ─── */
+#flash {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background: rgba(192,57,43,0.35);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+#flash.active { animation: flashAnim 0.5s ease; }
+@keyframes flashAnim {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1a0d04; color: var(--gold2);
+  border: 1px solid var(--gold); border-radius: 24px;
+  padding: 10px 22px; font-size: 13px;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9998; transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+/* ─── SHELL ─── */
+.shell {
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 15% 30%, rgba(240,220,160,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 70%, rgba(220,195,130,0.3) 0%, transparent 55%);
+  border-radius: 3px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gold), 0 0 0 4px #0e0704, 0 0 0 5px var(--gold),
+              0 16px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.25);
+  animation: shellIn 0.3s ease;
+}
+@keyframes shellIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.shell::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  z-index:0;
+}
+.shell > * { position: relative; z-index: 1; }
+.cr { position:absolute; width:22px; height:22px; border-color:var(--gold); border-style:solid; opacity:0.6; z-index:2; }
+.cr.tl { top:7px; left:7px; border-width:1.5px 0 0 1.5px; }
+.cr.tr { top:7px; right:7px; border-width:1.5px 1.5px 0 0; }
+.cr.bl { bottom:7px; left:7px; border-width:0 0 1.5px 1.5px; }
+.cr.br { bottom:7px; right:7px; border-width:0 1.5px 1.5px 0; }
+
+/* ─── PP BAR ─── */
+.pp-bar {
+  background:#1a0d04; border:1px solid var(--gold); border-radius:3px 3px 0 0;
+  padding:10px 16px; display:flex; align-items:center; gap:10px;
+  position:sticky; top:0; z-index:100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.pp-label { font-size:11px; color:var(--gold); letter-spacing:0.15em; font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+.pp-track { flex:1; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+.pp-fill { height:100%; border-radius:4px; transition:width 0.4s ease, background 0.4s ease; }
+.pp-num { font-size:14px; font-weight:700; color:var(--gold2); min-width:44px; text-align:right; font-family:'Noto Sans KR',sans-serif; }
+.pp-num.warn { color:#e74c3c; animation:ppWarn 0.6s ease infinite alternate; }
+@keyframes ppWarn { from{opacity:1;} to{opacity:0.4;} }
+
+/* ─── HEADER ─── */
+.hdr { padding:22px 20px 16px; text-align:center; border-bottom:1px solid var(--gold); }
+.hdr-badge {
+  width:58px; height:58px; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:28px; margin-bottom:12px; border:2px solid var(--gold);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+}
+.hdr-title { font-size:20px; font-weight:900; color:var(--crimson); }
+.hdr-sub { font-size:11px; color:var(--muted); letter-spacing:0.18em; margin-top:5px; font-family:'Noto Sans KR',sans-serif; }
+
+/* ─── STEPS ─── */
+.steps { display:flex; gap:6px; padding:12px 20px 0; }
+.step-dot { flex:1; height:3px; border-radius:2px; background:var(--paper3); transition:background 0.4s; }
+.step-dot.done { background:var(--gold); }
+.step-dot.active { background:var(--crimson); }
+
+/* ─── BODY ─── */
+.body { padding:18px 18px 28px; }
+
+/* ─── FACTION CARD ─── */
+.faction-card {
+  background:var(--paper2); border:1px solid var(--gold); border-radius:4px;
+  padding:14px; margin-bottom:16px; display:flex; gap:12px; align-items:flex-start;
+}
+.faction-icon { font-size:34px; line-height:1; flex-shrink:0; }
+.faction-name { font-size:17px; font-weight:700; color:var(--crimson); }
+.faction-desc { font-size:12px; color:var(--ink2); margin-top:4px; line-height:1.5; font-family:'Noto Sans KR',sans-serif; font-weight:300; }
+.faction-demand { font-size:12px; font-style:italic; color:var(--ink); margin-top:8px; padding:8px 10px; background:rgba(139,28,28,0.07); border-left:2px solid var(--crimson); line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+
+/* ─── CARDS ─── */
+.cards-label { font-size:12px; color:var(--muted); text-align:center; margin-bottom:10px; font-family:'Noto Sans KR',sans-serif; }
+.cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px; }
+.c-card {
+  background:#faf4e4; border:1.5px solid var(--paper3); border-radius:5px;
+  padding:11px 10px 10px; cursor:pointer; transition:all 0.18s; position:relative; overflow:hidden;
+}
+.c-card:hover:not(.disabled) { border-color:var(--gold); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.c-card.selected { border-color:var(--jade); background:rgba(61,122,92,0.1); box-shadow:0 0 0 2px var(--jade2); }
+.c-card.selected::after { content:'✓'; position:absolute; top:5px; right:7px; font-size:11px; color:var(--jade); font-weight:700; font-family:sans-serif; }
+.c-card.risky { border-color:#c09050; }
+.c-card.risky.selected { border-color:var(--danger); background:rgba(192,57,43,0.07); box-shadow:0 0 0 2px var(--danger); }
+.c-card.disabled { opacity:0.35; cursor:not-allowed; }
+.c-top { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.c-emoji { font-size:20px; }
+.c-name { font-size:12px; font-weight:700; color:var(--ink); flex:1; }
+.c-cost { font-size:11px; font-weight:700; background:var(--crimson); color:#fff; border-radius:20px; padding:1px 7px; font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+.c-desc { font-size:10px; color:var(--muted); line-height:1.4; font-family:'Noto Sans KR',sans-serif; font-weight:300; }
+.c-risk { font-size:10px; color:var(--danger); margin-top:4px; font-family:'Noto Sans KR',sans-serif; }
+.c-rate { font-size:10px; margin-top:5px; font-family:'Noto Sans KR',sans-serif; }
+
+/* ─── BUTTONS ─── */
+.btn { width:100%; padding:13px; border:none; border-radius:3px; font-family:'Noto Serif KR',serif; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.18s; letter-spacing:0.04em; }
+.btn + .btn { margin-top:8px; }
+.btn-red { background:var(--crimson); color:var(--paper); border:1.5px solid var(--gold); box-shadow:0 3px 10px rgba(139,28,28,0.3); }
+.btn-red:hover:not(:disabled) { background:#6d1515; transform:translateY(-1px); }
+.btn-red:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
+.btn-jade { background:var(--jade); color:#fff; border:1.5px solid var(--jade2); }
+.btn-jade:hover { background:var(--jade2); transform:translateY(-1px); }
+.btn-outline { background:transparent; color:var(--ink2); border:1.5px solid var(--paper3); }
+.btn-outline:hover { border-color:var(--gold); }
+.btn-gold { background:var(--gold); color:#1a0d04; border:1.5px solid var(--gold2); font-weight:900; }
+.btn-gold:hover { background:var(--gold2); transform:translateY(-1px); }
+
+/* ─── ROLLING ─── */
+.rolling-header { text-align:center; padding:10px 0 16px; font-size:13px; color:var(--muted); font-family:'Noto Sans KR',sans-serif; }
+.roll-list { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.roll-item {
+  background:var(--paper2); border:1px solid var(--paper3); border-radius:4px;
+  padding:12px 14px; display:flex; align-items:center; gap:12px; transition:border-color 0.3s;
+}
+.roll-item.pending { opacity:0.4; }
+.roll-item.rolling { border-color:var(--gold); opacity:1; }
+.roll-item.success { border-color:var(--jade); background:rgba(61,122,92,0.08); }
+.roll-item.fail    { border-color:var(--danger); background:rgba(192,57,43,0.07); }
+.roll-item.certain { border-color:#4a6080; }
+.roll-emoji { font-size:22px; flex-shrink:0; }
+.roll-name  { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.dice-box {
+  width:40px; height:40px; border-radius:6px; background:#1a0d04;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  font-size:18px; font-weight:900; color:var(--gold2);
+  font-family:'Noto Sans KR',sans-serif; border:1px solid var(--gold);
+}
+.dice-box.rolling-anim { animation:diceShake 0.12s ease infinite; }
+@keyframes diceShake { 0%{transform:rotate(-8deg) scale(1.05);} 50%{transform:rotate(8deg) scale(0.95);} 100%{transform:rotate(-4deg) scale(1.02);} }
+.roll-result { font-size:12px; font-weight:700; font-family:'Noto Sans KR',sans-serif; text-align:right; min-width:40px; }
+.roll-result.pos { color:var(--jade); }
+.roll-result.neg { color:var(--danger); }
+.roll-result.zero { color:var(--muted); }
+
+.trust-result {
+  background:var(--paper2); border:1px solid var(--paper3); border-radius:4px;
+  padding:12px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;
+}
+.trust-result-label { font-size:12px; color:var(--muted); font-family:'Noto Sans KR',sans-serif; }
+.trust-result-val { font-size:18px; font-weight:900; font-family:'Noto Sans KR',sans-serif; }
+.trust-result-val.ok   { color:var(--jade); }
+.trust-result-val.warn { color:var(--gold); }
+.trust-result-val.bad  { color:var(--danger); }
+
+/* ─── REACTION ─── */
+.reaction-portrait { text-align:center; padding:24px 0 16px; animation:fadeUp 0.4s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+.portrait-icon { font-size:60px; display:block; margin-bottom:12px; }
+.speech-bubble {
+  background:var(--paper2); border:1.5px solid var(--gold); border-radius:6px;
+  padding:14px 16px 14px 28px; margin:0 4px 16px;
+  font-size:14px; color:var(--ink); line-height:1.7; font-style:italic;
+  animation:bubbleIn 0.5s 0.15s both; position:relative;
+}
+.speech-bubble::before { content:'"'; font-size:36px; color:var(--gold); line-height:0; position:absolute; top:20px; left:10px; font-family:Georgia,serif; }
+@keyframes bubbleIn { from{opacity:0;transform:scale(0.92);} to{opacity:1;transform:scale(1);} }
+.speech-bubble.refuse { border-color:var(--danger); background:rgba(192,57,43,0.07); animation:shake 0.5s 0.15s both; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);} }
+
+/* ─── COUNTER ─── */
+.counter-box { background:rgba(184,40,40,0.08); border:1.5px solid var(--crimson); border-radius:4px; padding:14px 16px; margin-bottom:16px; animation:fadeUp 0.3s ease; }
+.counter-label { font-size:11px; color:var(--crimson); font-weight:700; letter-spacing:0.12em; margin-bottom:8px; font-family:'Noto Sans KR',sans-serif; }
+.counter-text { font-size:13px; color:var(--ink); line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.pill { display:inline-block; border-radius:20px; padding:2px 10px; font-size:12px; font-family:'Noto Sans KR',sans-serif; font-weight:700; margin-top:8px; }
+.pill-red  { background:var(--crimson); color:#fff; }
+.pill-jade { background:var(--jade); color:#fff; margin-left:4px; }
+.pp-warning { background:rgba(192,57,43,0.1); border:1px dashed var(--danger); border-radius:3px; padding:8px 12px; font-size:12px; color:var(--danger); font-family:'Noto Sans KR',sans-serif; margin-bottom:12px; text-align:center; }
+
+/* ─── BANKRUPT ─── */
+.bankrupt-box {
+  text-align:center; padding:30px 20px;
+  animation:fadeUp 0.4s ease;
+}
+.bankrupt-icon { font-size:56px; margin-bottom:16px; }
+.bankrupt-title { font-size:20px; font-weight:900; color:var(--danger); margin-bottom:8px; }
+.bankrupt-sub { font-size:13px; color:var(--ink2); line-height:1.7; font-family:'Noto Sans KR',sans-serif; margin-bottom:20px; }
+.bankrupt-note { background:rgba(192,57,43,0.08); border:1px dashed var(--danger); border-radius:4px; padding:12px 14px; font-size:12px; color:var(--ink); line-height:1.7; font-family:'Noto Sans KR',sans-serif; margin-bottom:20px; text-align:left; }
+.bankrupt-note::before { content:'📜 역사의 교훈'; display:block; font-size:10px; color:var(--danger); font-weight:700; letter-spacing:0.15em; margin-bottom:6px; }
+
+/* ─── SUMMARY / BETWEEN ─── */
+.summary-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:4px; margin-bottom:8px; border:1px solid transparent; }
+.summary-row.ok       { background:rgba(61,122,92,0.1); border-color:var(--jade2); }
+.summary-row.fail     { background:rgba(139,28,28,0.07); border-color:var(--crimson); }
+.summary-row.bankrupt { background:rgba(192,57,43,0.12); border-color:var(--danger); }
+.summary-row.upcoming { background:var(--paper2); border-color:var(--paper3); opacity:0.6; }
+.sr-icon { font-size:22px; }
+.sr-name { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.sr-badge { font-size:11px; padding:2px 8px; border-radius:20px; font-family:'Noto Sans KR',sans-serif; font-weight:700; }
+.sr-badge.ok       { background:var(--jade); color:#fff; }
+.sr-badge.fail     { background:var(--crimson); color:#fff; }
+.sr-badge.bankrupt { background:var(--danger); color:#fff; }
+.sr-badge.tbd      { background:var(--paper3); color:var(--muted); }
+
+/* ─── HISTORY / THINK ─── */
+.hist-note { border:1px dashed var(--gold); border-radius:4px; padding:12px 14px; margin:14px 0; font-size:12px; color:var(--ink2); line-height:1.75; font-family:'Noto Sans KR',sans-serif; font-weight:300; background:rgba(196,144,58,0.06); }
+.hist-note::before { content:'📜 실제 역사'; display:block; font-size:10px; color:var(--gold); font-weight:700; letter-spacing:0.15em; margin-bottom:6px; }
+.think { background:rgba(61,122,92,0.1); border:1px solid var(--jade2); border-radius:4px; padding:12px 14px; margin-bottom:16px; }
+.think-label { font-size:10px; color:var(--jade); font-weight:700; letter-spacing:0.15em; margin-bottom:5px; font-family:'Noto Sans KR',sans-serif; }
+.think p { font-size:12px; color:var(--ink); line-height:1.7; font-family:'Noto Sans KR',sans-serif; font-weight:300; }
+
+/* ─── FINAL ─── */
+.final-banner { text-align:center; padding:24px 0 18px; border-bottom:1px solid var(--gold); margin-bottom:20px; }
+.final-icon { font-size:56px; margin-bottom:12px; }
+.final-title { font-size:22px; font-weight:900; line-height:1.3; }
+.final-sub { font-size:13px; color:var(--muted); margin-top:8px; font-family:'Noto Sans KR',sans-serif; }
+.final-pp { font-size:12px; color:var(--muted); margin-top:8px; font-family:'Noto Sans KR',sans-serif; }
+
+/* ─── TITLE BADGE ─── */
+.title-badge {
+  background:linear-gradient(135deg, #1a0d04 0%, #2d1608 100%);
+  border:2px solid var(--gold); border-radius:8px;
+  padding:18px 16px; margin:16px 0; text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation:titleReveal 0.6s 0.2s both;
+}
+@keyframes titleReveal { from{opacity:0;transform:scale(0.8) rotate(-3deg);} to{opacity:1;transform:scale(1) rotate(0deg);} }
+.title-tag { font-size:10px; color:var(--gold); letter-spacing:0.2em; font-family:'Noto Sans KR',sans-serif; margin-bottom:8px; }
+.title-emoji { font-size:36px; margin-bottom:6px; }
+.title-name { font-size:20px; font-weight:900; color:var(--gold2); margin-bottom:6px; font-family:'Noto Serif KR',serif; }
+.title-desc { font-size:12px; color:rgba(240,220,160,0.7); font-family:'Noto Sans KR',sans-serif; line-height:1.5; }
+
+/* ─── DISCUSSION ─── */
+.discussion-box { background:rgba(139,28,28,0.06); border:1px dashed var(--crimson); border-radius:4px; padding:14px 16px; margin-bottom:16px; }
+.discussion-label { font-size:11px; color:var(--crimson); font-weight:700; letter-spacing:0.12em; margin-bottom:10px; font-family:'Noto Sans KR',sans-serif; }
+.d-q { font-size:12px; color:var(--ink); line-height:1.7; margin-bottom:8px; font-family:'Noto Sans KR',sans-serif; font-weight:300; }
+.d-q::before { content:'Q. '; font-weight:700; color:var(--crimson); }
+
+/* ─── INTRO ─── */
+.intro-body { padding:20px 20px 28px; }
+.intro-text { font-size:13px; color:var(--ink); line-height:1.9; font-family:'Noto Sans KR',sans-serif; font-weight:300; margin-bottom:20px; }
+.intro-text strong { font-weight:700; color:var(--crimson); font-family:'Noto Serif KR',serif; }
+.mission-box { background:var(--crimson); color:var(--paper); border-radius:4px; padding:16px; margin-bottom:16px; border:1.5px solid var(--gold); }
+.mission-tag { font-size:10px; letter-spacing:0.2em; opacity:0.7; margin-bottom:6px; font-family:'Noto Sans KR',sans-serif; }
+.mission-txt { font-size:14px; font-weight:700; line-height:1.5; }
+.rules-box { background:var(--paper2); border:1px solid var(--paper3); border-radius:4px; padding:14px 16px; margin-bottom:20px; }
+.rules-title { font-size:12px; color:var(--gold); font-weight:700; letter-spacing:0.1em; margin-bottom:10px; font-family:'Noto Sans KR',sans-serif; }
+.rule { display:flex; gap:8px; font-size:12px; color:var(--ink2); margin-bottom:6px; line-height:1.5; font-family:'Noto Sans KR',sans-serif; font-weight:300; }
+.rule-icon { flex-shrink:0; }
+
+hr.divider { border:none; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px 0; opacity:0.4; }
+</style>
+</head>
+<body>
+<div id="flash"></div>
+<div id="toast">📋 복사 완료!</div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const MAX_PP = 20;
+
+const FACTIONS = [
+  {
+    id:'hojok', name:'지방 호족', emoji:'⚔️',
+    desc:'각 지역을 실질적으로 지배하는 군벌. 왕건보다 강한 지역도 있다.',
+    demand:'"우리의 지역 지배권을 인정하시오. 그것 없이는 협력하기 어렵소."',
+    trustNeeded:6, maxSelect:3,
+    cards:[
+      {id:'sa',  emoji:'📜', name:'사심관 제도', cost:4, effect:4, rate:0.85, failEffect:1, desc:'호족을 연고지 사심관으로 임명. 지배권 공식 인정.', riskNote:null},
+      {id:'ho',  emoji:'💍', name:'정략결혼',   cost:3, effect:3, rate:0.90, failEffect:1, desc:'호족 가문과 혼인 동맹. 혈연으로 묶는다.',           riskNote:null},
+      {id:'gi',  emoji:'🏯', name:'기인 제도',  cost:2, effect:2, rate:0.60, failEffect:-2, desc:'호족 자제를 개경에 머물게 함. 견제 목적이 들키면 역효과.', riskNote:'실패 시 신뢰도 −2'},
+      {id:'ye',  emoji:'🌾', name:'역분전 지급', cost:6, effect:5, rate:1.00, failEffect:5, desc:'공로에 따른 토지 직접 지급. 확실하지만 매우 비쌈.',  riskNote:null},
+      {id:'ws',  emoji:'🔱', name:'왕씨 성 하사', cost:2, effect:2, rate:0.85, failEffect:0, desc:'주요 호족에게 왕씨 성을 하사해 왕족 예우.',           riskNote:null},
+    ],
+    reaction:{accept:'흡족하오. 고려 왕실을 섬기겠소!', counter:'부족하오. 한 가지 조건을 더 들어주시오.', refuse:'이건 모욕이오! 우리 호족을 하수인 취급하는 것이오?'},
+    counter:{demand:'내 아들에게 고위 관직을 보장해 달라.', cost:3, effect:3},
+    history:'왕건은 호족 딸들과 수차례 정략결혼을 맺었고, 사심관 제도로 지배권을 인정하면서도 기인 제도로 은밀히 견제했습니다. 포용과 통제의 양면 전략이 태조 통치의 핵심이었습니다.',
+    bankruptSpeech:'"빈손으로 협상에 나타나다니 무례하오! 우리를 그리 얕보는 것이오?" — 협상은 결렬되었습니다.',
+    bankruptHistory:'실제로 왕건은 호족들에게 막대한 물질적 보상 없이는 협력을 얻을 수 없었습니다. 정치력(자원)이 없으면 아무리 왕이라도 협상 테이블에 앉을 자격이 없었죠.',
+  },
+  {
+    id:'silla', name:'신라 진골 귀족', emoji:'🏛️',
+    desc:'수백 년 전통의 지배층. 자존심을 건드리지 않고 흡수해야 한다.',
+    demand:'"신라의 문화와 우리 가문의 명예가 고려에서도 이어지길 바라오."',
+    trustNeeded:6, maxSelect:3,
+    cards:[
+      {id:'gw',  emoji:'📋', name:'관직 부여',  cost:4, effect:4, rate:0.90, failEffect:2, desc:'고려 조정의 고위 관직 보장. 기득권 유지.',    riskNote:null},
+      {id:'ye2', emoji:'🌾', name:'역분전 지급', cost:5, effect:5, rate:1.00, failEffect:5, desc:'신라 공신들의 경제 기반을 토지로 보호. 확실.', riskNote:null},
+      {id:'bu',  emoji:'⛩️', name:'불교 장려',  cost:2, effect:3, rate:0.85, failEffect:1, desc:'신라의 불교 전통을 국가 종교로 계승.',          riskNote:null},
+      {id:'hu',  emoji:'📿', name:'훈요 10조',   cost:1, effect:2, rate:0.95, failEffect:1, desc:'불교·전통문화 존중을 담은 왕의 유훈 선포.',    riskNote:null},
+      {id:'gy',  emoji:'🤝', name:'경순왕 예우', cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 마지막 왕 우대. 귀족들의 체면을 살려준다.', riskNote:null},
+      {id:'ho2', emoji:'💍', name:'정략결혼',   cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 귀족 가문의 딸을 왕비로 맞이. (실제로 신성왕후와 혼인)', riskNote:null},
+    ],
+    reaction:{accept:'신라의 전통이 이어지니 고려를 섬기겠소.', counter:'그것만으로는 우리 가문의 명예를 지키기 어렵소.', refuse:'우리 신라의 자존심을 이런 식으로 짓밟으시오?'},
+    counter:{demand:'우리 가문 딸을 왕실 며느리로 맞아 달라.', cost:3, effect:3},
+    history:'신라 경순왕은 스스로 항복했습니다. 왕건은 신라 귀족들에게 관직과 토지를 보장하고 불교를 존중함으로써 갈등 없이 흡수했습니다.',
+    bankruptSpeech:'"아무런 보장도 없이 항복을 요구하는 것이오? 우리의 자존심을 짓밟는 처사요!" — 협상은 결렬되었습니다.',
+    bankruptHistory:'신라 귀족들은 항복 대가로 실질적인 보상을 기대했습니다. 왕건이 그들에게 아무것도 주지 않았다면, 역사는 달라졌을 것입니다.',
+  },
+  {
+    id:'balhae', name:'발해 유민', emoji:'🌊',
+    desc:'거란에 나라를 잃고 남하. 고구려 후예라는 자부심이 강하다.',
+    demand:'"우리는 고구려의 후손이오. 이방인 취급은 절대 받아들일 수 없소."',
+    trustNeeded:5, maxSelect:3,
+    cards:[
+      {id:'ws2', emoji:'🔱', name:'왕씨 성 하사',   cost:3, effect:4, rate:0.95, failEffect:2, desc:'왕자 대광현에게 왕씨 성. 왕족 예우.',          riskNote:null},
+      {id:'do',  emoji:'🤝', name:'동족 의식 선언', cost:2, effect:3, rate:0.85, failEffect:0, desc:'"우리는 모두 고구려의 후예다" 공식 선언.',     riskNote:null},
+      {id:'gw2', emoji:'📋', name:'관직 부여',       cost:4, effect:4, rate:0.90, failEffect:2, desc:'발해 귀족에게 고려 조정 관직 부여.',           riskNote:null},
+      {id:'yt',  emoji:'🗺️', name:'정착지 보장',    cost:3, effect:3, rate:0.65, failEffect:-1, desc:'유민 정착 토지 보장. 재원 부족 시 역효과.',   riskNote:'실패 시 신뢰도 −1'},
+      {id:'gg',  emoji:'🏰', name:'고구려 계승 선언', cost:1, effect:2, rate:0.80, failEffect:0, desc:'고려가 고구려를 잇는다고 공식 선언.',          riskNote:null},
+    ],
+    reaction:{accept:'고려가 우리의 새 조국이오. 충성을 맹세하겠소!', counter:'말뿐이 아니라 실질적 보장이 필요하오.', refuse:'우리를 그저 떠돌이 취급하는 것이오?'},
+    counter:{demand:'우리 유민 지도자를 지방관으로 임명해 달라.', cost:2, effect:3},
+    history:'왕건은 발해 왕자 대광현을 환대하며 왕씨 성을 하사했습니다. "고구려를 잇는 고려"라는 정체성은 발해 유민 포용의 핵심 논리였습니다.',
+    bankruptSpeech:'"우리에게 줄 것도 없으면서 어찌 우리를 부르시오? 고려는 믿을 수 없소!" — 협상은 결렬되었습니다.',
+    bankruptHistory:'왕건이 발해 유민을 포용할 수 있었던 건 실질적인 정착지와 지위를 보장했기 때문입니다. 빈 약속만으로는 유민들의 마음을 얻을 수 없었습니다.',
+  },
+];
+
+// ─── 칭호 시스템 ───
+const TITLES = [
+  {
+    id:'perfect', emoji:'👑', name:'태조의 재림',
+    desc:'3세력 모두 포섭하고 정치력 5점 이상을 남겼습니다. 완벽한 통치자.',
+    check:(s) => s.results.filter(r=>r.success).length === 3 && s.pp >= 5,
+    priority: 10,
+  },
+  {
+    id:'unifier', emoji:'🏰', name:'통합의 왕건',
+    desc:'3세력을 모두 포섭했습니다. 후삼국 통일의 완성자.',
+    check:(s) => s.results.filter(r=>r.success).length === 3,
+    priority: 9,
+  },
+  {
+    id:'romance', emoji:'💍', name:'혼인왕',
+    desc:'정략결혼 카드를 2번 이상 사용했습니다. 외교의 달인, 혹은 낭만주의자?',
+    check:(s) => s.usedCards.filter(id => id==='ho' || id==='ho2').length >= 2,
+    priority: 7,
+  },
+  {
+    id:'landlord', emoji:'🌾', name:'고려의 부동산 큰손',
+    desc:'역분전(토지 지급) 카드만 주로 사용했습니다. 돈으로 해결하는 실용주의자.',
+    check:(s) => s.usedCards.filter(id => id==='ye' || id==='ye2').length >= 2,
+    priority: 6,
+  },
+  {
+    id:'spy', emoji:'🕵️', name:'냉혹한 현실주의자',
+    desc:'기인 제도를 선택했습니다. 당근 뒤에 채찍을 숨긴 진짜 왕건의 전략.',
+    check:(s) => s.usedCards.includes('gi'),
+    priority: 6,
+  },
+  {
+    id:'miser', emoji:'🪙', name:'절제의 군주',
+    desc:'정치력 7점 이상을 남기고 통일에 성공했습니다. 최소 비용으로 최대 성과.',
+    check:(s) => s.results.filter(r=>r.success).length >= 2 && s.pp >= 7,
+    priority: 7,
+  },
+  {
+    id:'goguryeo', emoji:'🏰', name:'고구려의 후예',
+    desc:'발해 유민 포섭에 고구려 계승 선언을 사용했습니다. 역사 정체성을 꿰뚫어봤군요.',
+    check:(s) => s.usedCards.includes('gg'),
+    priority: 5,
+  },
+  {
+    id:'bankrupt', emoji:'💸', name:'빈손의 왕',
+    desc:'정치력을 소진해 협상을 포기한 세력이 있습니다. 자원 배분의 중요성을 배웠을 것.',
+    check:(s) => s.results.some(r=>r.bankrupt),
+    priority: 4,
+  },
+  {
+    id:'unlucky', emoji:'🎲', name:'운수 나쁜 날',
+    desc:'확률 카드에서 2번 이상 실패했습니다. 오늘은 하늘도 내 편이 아니었군요.',
+    check:(s) => s.failCount >= 2,
+    priority: 5,
+  },
+  {
+    id:'stubborn', emoji:'⚔️', name:'강경한 군주',
+    desc:'모든 역요구를 거절했습니다. 왕의 결정에 타협은 없다.',
+    check:(s) => s.results.length > 0 && s.results.filter(r=>r.counter==='counter').every(r=>r.counterChoice==='decline'),
+    priority: 5,
+  },
+  {
+    id:'yielder', emoji:'🏳️', name:'유화의 달인',
+    desc:'역요구를 2번 이상 수락했습니다. 적을 만족시키는 것도 능력입니다.',
+    check:(s) => s.results.filter(r=>r.counterChoice==='accept').length >= 2,
+    priority: 5,
+  },
+  {
+    id:'default', emoji:'📜', name:'고려의 협상가',
+    desc:'왕건의 어려운 길을 걸어봤습니다. 역사는 이런 선택들로 만들어집니다.',
+    check:() => true,
+    priority: 1,
+  },
+];
+
+function getTitle(s) {
+  return TITLES
+    .filter(t => t.check(s))
+    .sort((a,b) => b.priority - a.priority)[0];
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let S = {
+  phase:'intro',
+  pp: MAX_PP,
+  fi: 0,
+  sel: [],
+  rolls: [],
+  trust: 0,
+  reactionType: null,
+  results: [],
+  rollingStep: -1,
+  usedCards: [],   // 전체 플레이에서 사용한 카드 id
+  failCount: 0,    // 확률 실패 횟수
+};
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function flash() {
+  const el = document.getElementById('flash');
+  el.classList.remove('active');
+  void el.offsetWidth;
+  el.classList.add('active');
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function corners() { return '<div class="cr tl"></div><div class="cr tr"></div><div class="cr bl"></div><div class="cr br"></div>'; }
+
+function ppBar() {
+  const pct = (S.pp / MAX_PP) * 100;
+  const color = S.pp >= 10 ? '#c4903a' : S.pp >= 5 ? '#e07820' : '#c0392b';
+  const warn = S.pp <= 5 ? ' warn' : '';
+  return `
+  <div class="pp-bar">
+    <span class="pp-label">⚡ 정치력</span>
+    <div class="pp-track"><div class="pp-fill" style="width:${pct}%;background:${color}"></div></div>
+    <span class="pp-num${warn}">${S.pp} / ${MAX_PP}</span>
+  </div>`;
+}
+
+function stepDots(active) {
+  return `<div class="steps">${FACTIONS.map((_,i)=>{
+    let c='step-dot';
+    if(i<active) c+=' done'; else if(i===active) c+=' active';
+    return `<div class="${c}"></div>`;
+  }).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function R() {
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase==='intro'    ? renderIntro()    :
+    S.phase==='select'   ? renderSelect()   :
+    S.phase==='bankrupt' ? renderBankrupt() :
+    S.phase==='rolling'  ? renderRolling()  :
+    S.phase==='reaction' ? renderReaction() :
+    S.phase==='counter'  ? renderCounter()  :
+    S.phase==='between'  ? renderBetween()  :
+                           renderFinal();
+}
+
+// ─── INTRO ───
+function renderIntro() {
+  return `
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">🏰</div>
+      <div class="hdr-title">왕건의 외교전</div>
+      <div class="hdr-sub">918년 — 후삼국의 혼돈 속에서</div>
+    </div>
+    <div class="intro-body">
+      <div class="intro-text">
+        당신은 <strong>태조 왕건</strong>입니다.<br>
+        고려를 건국했지만 한반도는 아직 통일되지 않았습니다.<br><br>
+        <strong>지방 호족, 신라 진골 귀족, 발해 유민</strong>—<br>
+        이 세 세력을 협상으로 포섭해야 합니다.<br>
+        당신의 정치력은 <strong>⚡ 20점</strong>뿐입니다.
+      </div>
+      <div class="mission-box">
+        <div class="mission-tag">🎯 임무</div>
+        <div class="mission-txt">3개 세력을 모두 포섭해 후삼국 통일을 완성하라.</div>
+      </div>
+      <div class="rules-box">
+        <div class="rules-title">⚖️ 규칙</div>
+        <div class="rule"><span class="rule-icon">⚡</span><span>카드마다 <strong>정치력 비용</strong>이 있습니다. 20점을 세 세력에 나눠 써야 합니다.</span></div>
+        <div class="rule"><span class="rule-icon">🎲</span><span>일부 카드는 <strong>성공률</strong>이 있습니다. 실패하면 신뢰도가 오히려 떨어질 수 있습니다.</span></div>
+        <div class="rule"><span class="rule-icon">💬</span><span>세력은 <strong>수락, 역요구, 결렬</strong>로 반응합니다. 역요구 수락 시 추가 비용이 듭니다.</span></div>
+        <div class="rule"><span class="rule-icon">💸</span><span>정치력이 바닥나면 <strong>빈손 협상</strong>이 됩니다. 세력은 즉시 결렬할 것입니다.</span></div>
+      </div>
+      <button class="btn btn-red" onclick="goSelect()">협상을 시작하라 →</button>
+    </div>
+  </div>`;
+}
+
+// ─── SELECT ───
+function renderSelect() {
+  const f = FACTIONS[S.fi];
+  const totalCost = S.sel.reduce((s,id)=> s + f.cards.find(c=>c.id===id).cost, 0);
+  const minCost = Math.min(...f.cards.map(c=>c.cost));
+  const isBankruptState = S.pp < minCost;
+  const canSubmit = !isBankruptState && S.sel.length >= 1 && totalCost <= S.pp;
+
+  const cardsHtml = f.cards.map(card => {
+    const sel = S.sel.includes(card.id);
+    const wouldExceed = !sel && (totalCost + card.cost > S.pp);
+    const disabled = wouldExceed;
+    const risky = card.riskNote !== null;
+    const rateColor = card.rate >= 0.9 ? '#3d7a5c' : card.rate >= 0.75 ? '#c4903a' : '#c0392b';
+    const rateLabel = card.rate >= 1.0 ? '확실' : `성공률 ${Math.round(card.rate*100)}%`;
+    return `
+    <div class="c-card${sel?' selected':''}${disabled?' disabled':''}${risky?' risky':''}" onclick="toggleCard('${card.id}')">
+      <div class="c-top">
+        <span class="c-emoji">${card.emoji}</span>
+        <span class="c-name">${card.name}</span>
+        <span class="c-cost">⚡${card.cost}</span>
+      </div>
+      <div class="c-desc">${card.desc}</div>
+      ${risky ? `<div class="c-risk">⚠️ ${card.riskNote}</div>` : ''}
+      <div class="c-rate" style="color:${rateColor}">▣ ${rateLabel}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">${f.emoji}</div>
+      <div class="hdr-title">${f.name}과의 협상</div>
+      <div class="hdr-sub">세력 ${S.fi+1} / ${FACTIONS.length}</div>
+    </div>
+    ${stepDots(S.fi)}
+    <div class="body">
+      <div class="faction-card">
+        <div class="faction-icon">${f.emoji}</div>
+        <div>
+          <div class="faction-name">${f.name}</div>
+          <div class="faction-desc">${f.desc}</div>
+          <div class="faction-demand">${f.demand}</div>
+        </div>
+      </div>
+      <div class="cards-label">협상 카드 선택 (최대 ${f.maxSelect}장 · 잔여 ⚡${S.pp}) · 신뢰도 목표 ${f.trustNeeded}점 이상</div>
+      <div class="cards-grid">${cardsHtml}</div>
+      ${isBankruptState
+        ? `<button class="btn btn-outline" style="border-color:var(--danger);color:var(--danger);" onclick="goBankrupt()">💸 빈손으로 만나기 (정치력 부족)</button>`
+        : `<button class="btn btn-red" ${canSubmit?'':'disabled'} onclick="submitCards()">이 조건으로 협상하기 (⚡${totalCost} 소모)</button>`
+      }
+    </div>
+  </div>`;
+}
+
+// ─── BANKRUPT ───
+function renderBankrupt() {
+  const f = FACTIONS[S.fi];
+  const isLast = S.fi >= FACTIONS.length - 1;
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">💸</div>
+      <div class="hdr-title">정치력 고갈</div>
+      <div class="hdr-sub">${f.name} — 협상 불가</div>
+    </div>
+    <div class="body">
+      <div class="bankrupt-box">
+        <div class="bankrupt-icon">😶</div>
+        <div class="bankrupt-title">빈손으로 협상 테이블에 앉았습니다</div>
+        <div class="bankrupt-sub">정치력이 바닥났습니다.<br>${f.name}에게 제시할 카드가 없습니다.</div>
+      </div>
+      <div class="speech-bubble refuse" style="margin-bottom:16px">
+        ${f.bankruptSpeech}
+      </div>
+      <div class="bankrupt-note">${f.bankruptHistory}</div>
+      <button class="btn btn-outline" onclick="forceFail()">
+        ${isLast ? '결과 보기 →' : '다음 협상으로 →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+// ─── ROLLING ───
+function renderRolling() {
+  const f = FACTIONS[S.fi];
+  const allRevealed = S.rolls.every(r=>r.revealed);
+  const trustSoFar = S.rolls.filter(r=>r.revealed).reduce((s,r)=>s+r.effect, 0);
+
+  const rollsHtml = S.rolls.map((r,idx) => {
+    const card = f.cards.find(c=>c.id===r.cardId);
+    const isRolling = idx === S.rollingStep && !r.revealed;
+    let rowCls = 'roll-item pending';
+    let diceContent = '?'; let diceClass = 'dice-box'; let resultHtml = '';
+    if (r.revealed) {
+      const rowState = card.rate>=1.0 ? 'certain' : r.success ? 'success' : (r.effect<0?'fail':'certain');
+      rowCls = `roll-item ${rowState}`;
+      diceContent = r.success ? '✓' : (r.effect<0 ? '✗' : '△');
+      const s = r.effect>0?'+':''; const cls = r.effect>0?'pos':r.effect<0?'neg':'zero';
+      resultHtml = `<span class="roll-result ${cls}">${s}${r.effect}점</span>`;
+    } else if (isRolling) {
+      rowCls = 'roll-item rolling';
+      diceContent = '<span id="dice-num">?</span>';
+      diceClass = 'dice-box rolling-anim';
+    }
+    return `
+    <div class="${rowCls}" id="roll-${idx}">
+      <span class="roll-emoji">${card.emoji}</span>
+      <span class="roll-name">${card.name}</span>
+      <div class="${diceClass}">${diceContent}</div>
+      ${resultHtml}
+    </div>`;
+  }).join('');
+
+  const needed = f.trustNeeded;
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">🎲</div>
+      <div class="hdr-title">협상 카드 공개 중...</div>
+      <div class="hdr-sub">각 정책의 효과가 드러납니다</div>
+    </div>
+    <div class="body">
+      <div class="rolling-header">운명이 결정됩니다. 지켜보십시오.</div>
+      <div class="roll-list">${rollsHtml}</div>
+      ${allRevealed ? `
+        <div class="trust-result">
+          <span class="trust-result-label">협상 신뢰도 합계</span>
+          <span class="trust-result-val ${trustSoFar>=needed?'ok':trustSoFar>=needed*0.6?'warn':'bad'}">${trustSoFar} / ${needed}</span>
+        </div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ─── REACTION ───
+function renderReaction() {
+  const f = FACTIONS[S.fi];
+  const rt = S.reactionType;
+  const icons = {accept:'😊', counter:'🤔', refuse:'😡'};
+  const trustOk = S.trust >= f.trustNeeded;
+  const trustHalf = S.trust >= f.trustNeeded * 0.6;
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">${f.emoji}</div>
+      <div class="hdr-title">세력의 반응</div>
+      <div class="hdr-sub">${f.name} — 신뢰도 ${S.trust}점</div>
+    </div>
+    <div class="body">
+      <div class="reaction-portrait"><span class="portrait-icon">${icons[rt]}</span></div>
+      <div class="speech-bubble${rt==='refuse'?' refuse':''}">
+        <span>${f.reaction[rt]}</span>
+      </div>
+      <div class="trust-result">
+        <span class="trust-result-label">신뢰도 ${S.trust} / 목표 ${f.trustNeeded}</span>
+        <span class="trust-result-val ${trustOk?'ok':trustHalf?'warn':'bad'}">${trustOk?'✅ 포섭 가능':trustHalf?'⚖️ 조건부':'❌ 불가'}</span>
+      </div>
+      ${rt==='accept'  ? `<button class="btn btn-jade" onclick="goAfterReaction()">다음 →</button>` : ''}
+      ${rt==='counter' ? `<button class="btn btn-red"  onclick="goCounter()">역요구 내용 확인 →</button>` : ''}
+      ${rt==='refuse'  ? `<button class="btn btn-outline" onclick="goAfterReaction()">다음 협상으로</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// ─── COUNTER ───
+function renderCounter() {
+  const f = FACTIONS[S.fi];
+  const cd = f.counter;
+  const canAfford = S.pp >= cd.cost;
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">⚖️</div>
+      <div class="hdr-title">역요구</div>
+      <div class="hdr-sub">${f.name}의 추가 조건</div>
+    </div>
+    <div class="body">
+      <div class="counter-box">
+        <div class="counter-label">🔴 추가 요구 사항</div>
+        <div class="counter-text">"${cd.demand}"</div>
+        <span class="pill pill-red">⚡ ${cd.cost}점 추가 소모</span>
+        <span class="pill pill-jade">신뢰도 +${cd.effect}점</span>
+      </div>
+      ${!canAfford ? `<div class="pp-warning">⚡ 정치력 부족 — 수락 불가 (필요 ${cd.cost}점, 보유 ${S.pp}점)</div>` : ''}
+      <button class="btn btn-red" ${canAfford?'':'disabled'} onclick="acceptCounter()">
+        역요구 수락 (⚡${cd.cost} 추가 소모)
+      </button>
+      <button class="btn btn-outline" onclick="declineCounter()">
+        역요구 거절 (신뢰도 현상 유지)
+      </button>
+    </div>
+  </div>`;
+}
+
+// ─── BETWEEN ───
+function renderBetween() {
+  const f = FACTIONS[S.fi - 1];
+  const lastResult = S.results[S.results.length - 1];
+  const isLast = S.fi >= FACTIONS.length;
+  const isSuccess = lastResult && lastResult.success;
+  const isBankrupt = lastResult && lastResult.bankrupt;
+
+  const rowsHtml = FACTIONS.map((fac,i) => {
+    const r = S.results[i];
+    if (!r) return `<div class="summary-row upcoming"><span class="sr-icon">${fac.emoji}</span><span class="sr-name">${fac.name}</span><span class="sr-badge tbd">대기중</span></div>`;
+    if (r.bankrupt) return `<div class="summary-row bankrupt"><span class="sr-icon">${fac.emoji}</span><span class="sr-name">${fac.name}</span><span class="sr-badge bankrupt">빈손 결렬 💸</span></div>`;
+    return `<div class="summary-row ${r.success?'ok':'fail'}"><span class="sr-icon">${fac.emoji}</span><span class="sr-name">${fac.name}</span><span class="sr-badge ${r.success?'ok':'fail'}">${r.success?'포섭 ✓':'반발 ✗'}</span></div>`;
+  }).join('');
+
+  const headerIcon = isBankrupt ? '💸' : isSuccess ? '✅' : '❌';
+  const headerSub  = isBankrupt ? '빈손 결렬' : isSuccess ? '포섭 성공' : '포섭 실패';
+
+  return `
+  ${ppBar()}
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">${headerIcon}</div>
+      <div class="hdr-title">${f.name} 결과</div>
+      <div class="hdr-sub">${headerSub}</div>
+    </div>
+    <div class="body">
+      <div style="margin-bottom:14px">${rowsHtml}</div>
+      <div class="hist-note">${isBankrupt ? f.bankruptHistory : f.history}</div>
+      <hr class="divider">
+      ${isLast
+        ? `<button class="btn btn-red" onclick="goFinal()">최종 결과 확인 →</button>`
+        : `<button class="btn btn-red" onclick="goNextFaction()">다음 세력 협상 → (잔여 ⚡${S.pp})</button>`
+      }
+    </div>
+  </div>`;
+}
+
+// ─── FINAL ───
+function renderFinal() {
+  const wins = S.results.filter(r=>r.success).length;
+  let icon, titleText, titleColor, sub;
+  if (wins===3)      { icon='👑'; titleText='후삼국 통일 완성!'; titleColor='var(--jade)'; sub='왕건의 탁월한 통합 전략으로 고려가 하나가 되었습니다.'; }
+  else if (wins===2) { icon='⚖️'; titleText='불안한 통일...'; titleColor='var(--gold)'; sub='일부 세력이 반발 중입니다. 내홍이 계속될 것입니다.'; }
+  else               { icon='💀'; titleText='통일 실패'; titleColor='var(--crimson)'; sub='세력들의 반발로 고려가 분열 위기입니다.'; }
+
+  const rows = FACTIONS.map((f,i)=>{
+    const r = S.results[i];
+    if (!r) return '';
+    if (r.bankrupt) return `<div class="summary-row bankrupt"><span class="sr-icon">${f.emoji}</span><span class="sr-name">${f.name}</span><span class="sr-badge bankrupt">빈손 결렬</span></div>`;
+    return `<div class="summary-row ${r.success?'ok':'fail'}"><span class="sr-icon">${f.emoji}</span><span class="sr-name">${f.name}</span><span class="sr-badge ${r.success?'ok':'fail'}">${r.success?'포섭 ✓':'반발 ✗'}</span></div>`;
+  }).join('');
+
+  const title = getTitle(S);
+  const spent = MAX_PP - S.pp;
+
+  // 복사용 텍스트 생성
+  const copyText = buildCopyText(wins, title);
+
+  return `
+  <div class="shell">
+    ${corners()}
+    <div class="hdr">
+      <div class="hdr-badge" style="background:#1a0d04">🏰</div>
+      <div class="hdr-title">최종 결과</div>
+      <div class="hdr-sub">왕건의 통일 성적표</div>
+    </div>
+    <div class="body">
+      <div class="final-banner">
+        <div class="final-icon">${icon}</div>
+        <div class="final-title" style="color:${titleColor}">${titleText}</div>
+        <div class="final-sub">${sub}</div>
+        <div class="final-pp">사용 정치력 ${spent} / ${MAX_PP} · 잔여 ⚡${S.pp}</div>
+      </div>
+
+      <div style="margin-bottom:16px">${rows}</div>
+
+      <div class="title-badge">
+        <div class="title-tag">✨ 나의 칭호</div>
+        <div class="title-emoji">${title.emoji}</div>
+        <div class="title-name">${title.name}</div>
+        <div class="title-desc">${title.desc}</div>
+      </div>
+
+      <button class="btn btn-gold" onclick="copyResult()" style="margin-bottom:8px">
+        📋 내 결과 복사하기 (패들렛 공유용)
+      </button>
+      <button class="btn btn-outline" onclick="restart()">다시 해보기</button>
+      <div style="margin-top:20px; text-align:center; font-size:11px; color:rgba(255,255,255,0.2); font-family:sans-serif;">
+        © 찰리쌤 · <a href="https://hischarlie.tistory.com" target="_blank" style="color:rgba(255,255,255,0.2); text-decoration:none;">hischarlie.tistory.com</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── COPY TEXT ───
+function buildCopyText(wins, title) {
+  const lines = [
+    `${wins===3?'👑':wins===2?'⚖️':'💀'} ${wins===3?'후삼국 통일 완성!':wins===2?'불안한 통일':'통일 실패'} (잔여 ⚡${S.pp})`,
+    '',
+    ...FACTIONS.map((f,i)=>{
+      const r = S.results[i];
+      if (!r) return `${f.emoji} ${f.name}: -`;
+      if (r.bankrupt) return `${f.emoji} ${f.name}: 빈손 결렬 💸`;
+      return `${f.emoji} ${f.name}: ${r.success?'포섭 ✓':'반발 ✗'}`;
+    }),
+    '',
+    `✨ 칭호: ${title.emoji} ${title.name}`,
+    `— 왕건의 외교전 (고려 1단원)`,
+  ];
+  return lines.join('\n');
+}
+
+function copyResult() {
+  const wins = S.results.filter(r=>r.success).length;
+  const title = getTitle(S);
+  const text = buildCopyText(wins, title);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(()=> showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('📋 결과가 복사되었습니다!');
+  }
+}
+
+// ═══════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════
+function goBankrupt() {
+  S.phase = 'bankrupt'; R();
+}
+
+function goSelect() {
+  S.phase='select'; S.fi=0; S.sel=[]; S.results=[]; S.pp=MAX_PP; S.usedCards=[]; S.failCount=0;
+  R();
+}
+
+function toggleCard(id) {
+  const f = FACTIONS[S.fi];
+  const card = f.cards.find(c=>c.id===id);
+  if (S.sel.includes(id)) {
+    S.sel = S.sel.filter(x=>x!==id);
+  } else {
+    const cost = S.sel.reduce((s,sid)=>s+f.cards.find(c=>c.id===sid).cost, 0);
+    if (S.sel.length >= f.maxSelect || cost + card.cost > S.pp) return;
+    S.sel.push(id);
+  }
+  R();
+}
+
+function submitCards() {
+  const f = FACTIONS[S.fi];
+
+  // 파산 체크: 선택 가능한 카드가 없거나 정치력 0
+  if (S.pp === 0 || (S.sel.length === 0)) {
+    S.phase = 'bankrupt'; R(); return;
+  }
+
+  const cost = S.sel.reduce((s,id)=>s+f.cards.find(c=>c.id===id).cost, 0);
+  S.pp -= cost;
+  S.usedCards = [...S.usedCards, ...S.sel];
+  S.trust = 0;
+
+  S.rolls = S.sel.map(id => {
+    const card = f.cards.find(c=>c.id===id);
+    if (card.rate >= 1.0) return { cardId:id, revealed:true, success:true, effect:card.effect };
+    const success = Math.random() < card.rate;
+    if (!success) S.failCount++;
+    return { cardId:id, revealed:false, _success:success, _effect:success?card.effect:card.failEffect };
+  });
+  S.rolls.filter(r=>r.revealed).forEach(r=>{ S.trust += r.effect; });
+
+  S.phase='rolling'; S.rollingStep=-1; R();
+  startRolling();
+}
+
+function startRolling() {
+  const nextIdx = S.rolls.findIndex(r=>!r.revealed);
+  if (nextIdx === -1) {
+    S.reactionType = getReactionType();
+    setTimeout(()=>{ S.phase='reaction'; R(); }, 600);
+    return;
+  }
+  S.rollingStep = nextIdx; R();
+  const iv = setInterval(()=>{
+    const el = document.getElementById('dice-num');
+    if (el) el.textContent = ['1','2','3','4','5','6','⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*12)];
+  }, 110);
+  setTimeout(()=>{
+    clearInterval(iv);
+    const r = S.rolls[nextIdx];
+    S.rolls[nextIdx] = {...r, revealed:true, success:r._success, effect:r._effect};
+    S.trust += r._effect;
+    S.rollingStep = -1; R();
+    setTimeout(()=> startRolling(), 450);
+  }, 1300);
+}
+
+function getReactionType() {
+  const f = FACTIONS[S.fi];
+  if (S.trust >= f.trustNeeded) return 'accept';
+  if (S.trust >= f.trustNeeded * 0.6) return 'counter';
+  return 'refuse';
+}
+
+function goCounter() {
+  flash();
+  S.phase='counter'; R();
+}
+
+function acceptCounter() {
+  const cd = FACTIONS[S.fi].counter;
+  S.pp -= cd.cost; S.trust += cd.effect;
+  S.results.push({fi:S.fi, trust:S.trust, success:S.trust>=FACTIONS[S.fi].trustNeeded, counter:'counter', counterChoice:'accept'});
+  S.fi++; S.phase='between'; R();
+}
+
+function declineCounter() {
+  S.results.push({fi:S.fi, trust:S.trust, success:S.trust>=FACTIONS[S.fi].trustNeeded, counter:'counter', counterChoice:'decline'});
+  S.fi++; S.phase='between'; R();
+}
+
+function goAfterReaction() {
+  const rt = S.reactionType;
+  S.results.push({fi:S.fi, trust:S.trust, success:S.trust>=FACTIONS[S.fi].trustNeeded, counter:rt, counterChoice:null});
+  S.fi++; S.phase='between'; R();
+}
+
+function forceFail() {
+  // 파산으로 인한 자동 실패
+  S.results.push({fi:S.fi, trust:0, success:false, bankrupt:true, counter:null, counterChoice:null});
+  S.fi++;
+  if (S.fi >= FACTIONS.length) { S.phase='final'; }
+  else { S.phase='between'; }
+  R();
+}
+
+function goNextFaction() { S.sel=[]; S.phase='select'; R(); }
+function goFinal()        { S.phase='final'; R(); }
+
+function restart() {
+  S = { phase:'intro', pp:MAX_PP, fi:0, sel:[], rolls:[], trust:0, reactionType:null, results:[], rollingStep:-1, usedCards:[], failCount:0 };
+  R();
+}
+
+R();
+</script>
+</body>
+</html>
