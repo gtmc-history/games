@@ -337,16 +337,16 @@ const FACTIONS = [
     demand:'"신라의 문화와 우리 가문의 명예가 고려에서도 이어지길 바라오."',
     trustNeeded:6, maxSelect:3,
     cards:[
-      {id:'gw',  emoji:'📋', name:'관직 부여',  cost:4, effect:4, rate:0.90, failEffect:2, desc:'고려 조정의 고위 관직 보장. 기득권 유지.',    riskNote:null},
-      {id:'ye2', emoji:'🌾', name:'역분전 지급', cost:5, effect:5, rate:1.00, failEffect:5, desc:'신라 공신들의 경제 기반을 토지로 보호. 확실.', riskNote:null},
-      {id:'bu',  emoji:'⛩️', name:'불교 장려',  cost:2, effect:3, rate:0.85, failEffect:1, desc:'신라의 불교 전통을 국가 종교로 계승.',          riskNote:null},
-      {id:'hu',  emoji:'📿', name:'훈요 10조',   cost:1, effect:2, rate:0.95, failEffect:1, desc:'불교·전통문화 존중을 담은 왕의 유훈 선포.',    riskNote:null},
-      {id:'gy',  emoji:'🤝', name:'경순왕 예우', cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 마지막 왕 우대. 귀족들의 체면을 살려준다.', riskNote:null},
-      {id:'ho2', emoji:'💍', name:'정략결혼',   cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 귀족 가문의 딸을 왕비로 맞이. (실제로 신성왕후와 혼인)', riskNote:null},
+      {id:'gw',  emoji:'📋', name:'관직 부여',     cost:4, effect:4, rate:0.90, failEffect:2, desc:'고려 조정의 고위 관직 보장. 기득권 유지.',                          riskNote:null},
+      {id:'la',  emoji:'🏡', name:'토지·가옥 보장', cost:5, effect:5, rate:1.00, failEffect:5, desc:'신라 귀족 가문의 재산권을 고려에서도 공식 인정. 확실하지만 비쌈.', riskNote:null},
+      {id:'bu',  emoji:'⛩️', name:'불교 사찰 지원', cost:2, effect:3, rate:0.85, failEffect:1, desc:'고려의 불교 국가 정체성을 선언하고 사찰 건립을 지원.',               riskNote:null},
+      {id:'hu',  emoji:'📜', name:'시호·예우 선포',  cost:1, effect:2, rate:0.95, failEffect:1, desc:'신라 왕실과 귀족에게 공식 시호와 예우를 부여해 자존심을 세워준다.',  riskNote:null},
+      {id:'gy',  emoji:'🤝', name:'신라 왕족 관직 보장', cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 왕족을 고려 관료로 포용. 경주 지역 귀족 민심 안정.',      riskNote:null},
+      {id:'ho2', emoji:'💍', name:'정략결혼',        cost:3, effect:3, rate:0.90, failEffect:1, desc:'신라 귀족 가문의 딸을 왕비로 맞이. (실제로 신성왕후와 혼인)',       riskNote:null},
     ],
     reaction:{accept:'신라의 전통이 이어지니 고려를 섬기겠소.', counter:'그것만으로는 우리 가문의 명예를 지키기 어렵소.', refuse:'우리 신라의 자존심을 이런 식으로 짓밟으시오?'},
     counter:{demand:'우리 가문 딸을 왕실 며느리로 맞아 달라.', cost:3, effect:3},
-    history:'신라 경순왕은 스스로 항복했습니다. 왕건은 신라 귀족들에게 관직과 토지를 보장하고 불교를 존중함으로써 갈등 없이 흡수했습니다.',
+    history:'935년 신라 경순왕은 스스로 항복을 결정했습니다. 왕건은 신라 귀족들에게 관직과 재산권을 보장하고 불교 사찰을 지원함으로써 큰 갈등 없이 흡수할 수 있었습니다.',
     bankruptSpeech:'"아무런 보장도 없이 항복을 요구하는 것이오? 우리의 자존심을 짓밟는 처사요!" — 협상은 결렬되었습니다.',
     bankruptHistory:'신라 귀족들은 항복 대가로 실질적인 보상을 기대했습니다. 왕건이 그들에게 아무것도 주지 않았다면, 역사는 달라졌을 것입니다.',
   },
@@ -851,8 +851,8 @@ function renderFinal() {
         📋 내 결과 복사하기 (패들렛 공유용)
       </button>
       <button class="btn btn-outline" onclick="restart()">다시 해보기</button>
-      <div style="margin-top:20px; text-align:center; font-size:11px; color:rgba(255,255,255,0.2); font-family:sans-serif;">
-        © 찰리쌤 · <a href="https://hischarlie.tistory.com" target="_blank" style="color:rgba(255,255,255,0.2); text-decoration:none;">hischarlie.tistory.com</a>
+      <div style="margin-top:20px; text-align:center; font-size:11px; color:rgba(120,100,80,0.4); font-family:sans-serif;">
+        © 찰리쌤 · <a href="https://hischarlie.tistory.com" target="_blank" style="color:rgba(120,100,80,0.4); text-decoration:none;">hischarlie.tistory.com</a>
       </div>
     </div>
   </div>`;
