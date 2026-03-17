@@ -1,1 +1,1367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>고려에서 환생했다 — 문벌의 사다리</title>
+<style>
+:root {
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --font-sans: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  /* cosmic palette for gacha */
+  --cosmos:   #06080f;
+  --cosmos2:  #0d1120;
+  --star:     #e8dfc8;
+  --nebula:   #1a1040;
+  /* gold tier */
+  --gold-bg:  #2a1e04;
+  --gold:     #d4a84b;
+  --gold2:    #f0cc78;
+  --gold-pale:#fff8e6;
+  /* silver tier */
+  --silv-bg:  #141a26;
+  --silver:   #8aaac8;
+  --silver2:  #b8d0e8;
+  --silv-pale:#f0f4f8;
+  /* dirt tier */
+  --dirt-bg:  #100e08;
+  --dirt:     #8a7050;
+  --dirt2:    #b09070;
+  --dirt-pale:#f4efe6;
+  /* shared */
+  --jade:     #2e6e52;
+  --jade2:    #48a07a;
+  --crimson:  #8b2020;
+  --danger:   #b83030;
+  --muted:    #7a8898;
+  --ink:      #1a1610;
+}
 
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family: var(--font-serif);
+  background: var(--cosmos);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 16px 12px 60px;
+}
+
+#app { width:100%; max-width:440px; }
+
+/* ─── TOAST ─── */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:#1a1040; color:var(--gold2);
+  border:1px solid var(--gold); border-radius:24px;
+  padding:10px 22px; font-size:13px; font-family:var(--font-sans);
+  opacity:0; pointer-events:none; white-space:nowrap;
+  z-index:9999; transition:opacity 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#toast.show { opacity:1; }
+
+/* ─── STAR FIELD (intro only) ─── */
+.starfield {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  overflow:hidden;
+}
+.star-dot {
+  position:absolute; border-radius:50%;
+  background:#fff; animation: twinkle var(--dur) ease-in-out infinite alternate;
+}
+@keyframes twinkle { from{opacity:var(--min);} to{opacity:var(--max);} }
+
+/* ─── COSMOS SHELL (gacha screens) ─── */
+.cosmos-shell {
+  position:relative; z-index:1;
+  background: radial-gradient(ellipse at 50% 0%, #1a1040 0%, var(--cosmos2) 60%, var(--cosmos) 100%);
+  border-radius:4px;
+  border:1px solid rgba(200,168,75,0.4);
+  box-shadow: 0 0 40px rgba(100,60,200,0.15), 0 20px 60px rgba(0,0,0,0.8),
+              inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow:hidden;
+  animation: fadeUp 0.4s ease;
+}
+
+/* ─── PAPER SHELL (gameplay screens) ─── */
+.paper-shell {
+  position:relative; z-index:1;
+  border-radius:3px; overflow:hidden;
+  box-shadow: 0 0 0 1px var(--gold), 0 0 0 5px var(--cosmos),
+              0 0 0 6px rgba(200,168,75,0.3), 0 20px 60px rgba(0,0,0,0.7),
+              inset 0 1px 0 rgba(255,255,255,0.25);
+  animation: fadeUp 0.35s ease;
+}
+.paper-shell.gold-tier {
+  background: var(--gold-pale);
+  background-image: radial-gradient(ellipse at 15% 30%, rgba(240,210,140,0.5) 0%, transparent 55%);
+}
+.paper-shell.silver-tier {
+  background: var(--silv-pale);
+  background-image: radial-gradient(ellipse at 15% 30%, rgba(180,210,240,0.3) 0%, transparent 55%);
+}
+.paper-shell.dirt-tier {
+  background: var(--dirt-pale);
+  background-image: radial-gradient(ellipse at 15% 30%, rgba(200,180,150,0.4) 0%, transparent 55%);
+}
+
+/* horizontal rule texture */
+.paper-shell::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(160,140,100,0.05) 28px, rgba(160,140,100,0.05) 29px);
+}
+.paper-shell > * { position:relative; z-index:1; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+
+/* tier border colors */
+.paper-shell.gold-tier   { box-shadow: 0 0 0 1px var(--gold), 0 0 0 5px var(--cosmos), 0 0 0 6px rgba(212,168,75,0.5), 0 20px 60px rgba(0,0,0,0.7); }
+.paper-shell.silver-tier { box-shadow: 0 0 0 1px var(--silver), 0 0 0 5px var(--cosmos), 0 0 0 6px rgba(138,170,200,0.5), 0 20px 60px rgba(0,0,0,0.7); }
+.paper-shell.dirt-tier   { box-shadow: 0 0 0 1px var(--dirt), 0 0 0 5px var(--cosmos), 0 0 0 6px rgba(138,112,80,0.5), 0 20px 60px rgba(0,0,0,0.7); }
+
+/* corners */
+.cr { position:absolute; width:22px; height:22px; border-style:solid; opacity:0.5; z-index:2; }
+.cr.tl { top:7px; left:7px;   border-width:1.5px 0 0 1.5px; }
+.cr.tr { top:7px; right:7px;  border-width:1.5px 1.5px 0 0; }
+.cr.bl { bottom:7px; left:7px;  border-width:0 0 1.5px 1.5px; }
+.cr.br { bottom:7px; right:7px; border-width:0 1.5px 1.5px 0; }
+.gold-tier   .cr { border-color:var(--gold); }
+.silver-tier .cr { border-color:var(--silver); }
+.dirt-tier   .cr { border-color:var(--dirt); }
+
+/* ─── GEN BAR ─── */
+.gen-bar {
+  border-bottom: 1px solid;
+  padding: 10px 18px;
+  display:flex; align-items:center; gap:10px;
+  position:sticky; top:0; z-index:100;
+}
+.gold-tier   .gen-bar { background:rgba(42,30,4,0.95); border-color:var(--gold); }
+.silver-tier .gen-bar { background:rgba(20,26,38,0.95); border-color:var(--silver); }
+.dirt-tier   .gen-bar { background:rgba(16,14,8,0.95); border-color:var(--dirt); }
+.gen-label { font-size:11px; letter-spacing:0.15em; font-family:var(--font-sans); white-space:nowrap; }
+.gold-tier .gen-label { color:var(--gold); }
+.silver-tier .gen-label { color:var(--silver); }
+.dirt-tier .gen-label { color:var(--dirt); }
+.gen-track { flex:1; display:flex; gap:5px; }
+.gen-pip { flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.1); transition:background 0.4s; }
+.gold-tier .gen-pip.done { background:var(--gold); }
+.gold-tier .gen-pip.active { background:var(--crimson); }
+.silver-tier .gen-pip.done { background:var(--silver); }
+.silver-tier .gen-pip.active { background:var(--crimson); }
+.dirt-tier .gen-pip.done { background:var(--dirt); }
+.dirt-tier .gen-pip.active { background:var(--crimson); }
+.gen-score { font-size:13px; font-weight:700; font-family:var(--font-sans); min-width:52px; text-align:right; }
+.gold-tier .gen-score { color:var(--gold2); }
+.silver-tier .gen-score { color:var(--silver2); }
+.dirt-tier .gen-score { color:var(--dirt2); }
+.gen-score.close { color:#e07030; animation:ppWarn 0.7s ease infinite alternate; }
+@keyframes ppWarn { from{opacity:1;} to{opacity:0.4;} }
+
+/* ─── HEADER ─── */
+.hdr { padding:22px 20px 16px; text-align:center; border-bottom:1px solid; }
+.gold-tier   .hdr { border-color:var(--gold); }
+.silver-tier .hdr { border-color:var(--silver); }
+.dirt-tier   .hdr { border-color:var(--dirt); }
+.cosmos-shell .hdr { border-color:rgba(200,168,75,0.3); }
+.hdr-badge {
+  width:62px; height:62px; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:30px; margin-bottom:14px; border:2px solid;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.gold-tier   .hdr-badge { border-color:var(--gold); background:rgba(42,30,4,0.8); }
+.silver-tier .hdr-badge { border-color:var(--silver); background:rgba(20,26,38,0.8); }
+.dirt-tier   .hdr-badge { border-color:var(--dirt); background:rgba(16,14,8,0.8); }
+.cosmos-shell .hdr-badge { border-color:rgba(200,168,75,0.5); background:var(--nebula); }
+.hdr-title { font-size:20px; font-weight:800; color:var(--ink); }
+.cosmos-shell .hdr-title { color:var(--star); }
+.hdr-sub { font-size:11px; color:var(--muted); letter-spacing:0.18em; margin-top:6px; font-family:var(--font-sans); }
+.cosmos-shell .hdr-sub { color:rgba(220,210,190,0.5); }
+
+/* ─── BODY ─── */
+.body { padding:18px 18px 28px; }
+
+/* ─── COSMOS INTRO ─── */
+.cosmos-text {
+  font-size:14px; color:rgba(220,210,190,0.8); line-height:2;
+  font-family:var(--font-sans); font-weight:300;
+  text-align:center; padding:20px 20px 0;
+}
+.cosmos-text strong { color:var(--gold2); font-weight:700; }
+
+.fate-box {
+  margin:20px 20px 0;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,75,0.25);
+  border-radius:4px; padding:16px;
+}
+.fate-rows { display:flex; flex-direction:column; gap:8px; }
+.fate-row {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:4px;
+}
+.fate-row.gold-row   { background:rgba(212,168,75,0.12); border:1px solid rgba(212,168,75,0.3); }
+.fate-row.silver-row { background:rgba(138,170,200,0.10); border:1px solid rgba(138,170,200,0.25); }
+.fate-row.dirt-row   { background:rgba(138,112,80,0.10); border:1px solid rgba(138,112,80,0.25); }
+.fate-emoji { font-size:22px; }
+.fate-right { flex:1; }
+.fate-name  { font-size:13px; font-weight:700; }
+.gold-row .fate-name { color:var(--gold2); }
+.silver-row .fate-name { color:var(--silver2); }
+.dirt-row .fate-name { color:var(--dirt2); }
+.fate-desc { font-size:11px; color:rgba(200,190,170,0.7); font-family:var(--font-sans); margin-top:3px; }
+.fate-prob { font-size:11px; font-family:var(--font-sans); font-weight:700; }
+.gold-row .fate-prob { color:var(--gold); }
+.silver-row .fate-prob { color:var(--silver); }
+.dirt-row .fate-prob { color:var(--dirt2); }
+
+/* ─── GACHA SCREEN ─── */
+.gacha-arena {
+  display:flex; flex-direction:column; align-items:center;
+  padding:32px 20px 24px;
+}
+.gacha-title {
+  font-size:14px; color:rgba(220,210,190,0.6);
+  font-family:var(--font-sans); margin-bottom:28px; letter-spacing:0.1em;
+}
+.roulette-wheel {
+  width:180px; height:180px; border-radius:50%;
+  border:3px solid rgba(200,168,75,0.4);
+  position:relative; overflow:hidden;
+  box-shadow: 0 0 40px rgba(100,80,200,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+  margin-bottom:24px;
+}
+.roulette-inner {
+  width:100%; height:100%; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:48px;
+  transition: all 0.1s;
+}
+.roulette-inner.spinning { animation: rouletteSpin 0.15s ease infinite; }
+@keyframes rouletteSpin {
+  0%   { transform: rotate(-5deg) scale(0.95); }
+  50%  { transform: rotate(5deg) scale(1.05); }
+  100% { transform: rotate(-3deg) scale(0.97); }
+}
+.roulette-inner.reveal {
+  animation: rouletteReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes rouletteReveal {
+  0%   { transform: scale(0.3) rotate(-180deg); opacity:0; }
+  100% { transform: scale(1) rotate(0deg);      opacity:1; }
+}
+.roulette-label {
+  font-size:13px; color:rgba(220,210,190,0.5);
+  font-family:var(--font-sans); letter-spacing:0.15em;
+}
+
+/* ─── BIRTH REVEAL ─── */
+.birth-reveal {
+  text-align:center; padding:28px 20px 20px;
+  animation:fadeUp 0.4s ease;
+}
+.birth-icon { font-size:64px; margin-bottom:16px; display:block; }
+.birth-tier-label {
+  font-size:11px; letter-spacing:0.25em;
+  font-family:var(--font-sans); margin-bottom:8px;
+}
+.gold-tier   .birth-tier-label { color:var(--gold); }
+.silver-tier .birth-tier-label { color:var(--silver); }
+.dirt-tier   .birth-tier-label { color:var(--dirt); }
+.birth-name { font-size:24px; font-weight:800; margin-bottom:8px; }
+.gold-tier   .birth-name { color:var(--ink); }
+.silver-tier .birth-name { color:var(--ink); }
+.dirt-tier   .birth-name { color:var(--ink); }
+.birth-quote {
+  font-size:13px; font-style:italic; color:var(--muted);
+  line-height:1.7; margin-bottom:16px;
+  font-family:var(--font-sans);
+}
+
+.birth-stats {
+  display:flex; flex-direction:column; gap:6px;
+  margin:0 4px 20px;
+}
+.stat-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 12px; border-radius:4px;
+  font-size:12px; font-family:var(--font-sans);
+}
+.gold-tier   .stat-row { background:rgba(212,168,75,0.1); border:1px solid rgba(212,168,75,0.2); }
+.silver-tier .stat-row { background:rgba(138,170,200,0.1); border:1px solid rgba(138,170,200,0.2); }
+.dirt-tier   .stat-row { background:rgba(138,112,80,0.1); border:1px solid rgba(138,112,80,0.2); }
+.stat-key { color:var(--muted); }
+.stat-val { font-weight:700; }
+.stat-good { color:var(--jade2); }
+.stat-mid  { color:#c8a84b; }
+.stat-bad  { color:var(--danger); }
+
+/* ─── SCENARIO ─── */
+.scenario-box {
+  border-left:3px solid; border-radius:0 4px 4px 0;
+  padding:12px 14px; margin-bottom:16px;
+  background:rgba(0,0,0,0.04);
+}
+.gold-tier   .scenario-box { border-color:var(--gold); }
+.silver-tier .scenario-box { border-color:var(--silver); }
+.dirt-tier   .scenario-box { border-color:var(--dirt); }
+.scenario-title { font-size:13px; font-weight:700; margin-bottom:5px; }
+.gold-tier   .scenario-title { color:var(--gold); }
+.silver-tier .scenario-title { color:var(--silver); }
+.dirt-tier   .scenario-title { color:var(--dirt); }
+.scenario-text { font-size:12px; color:var(--ink); line-height:1.8; font-family:var(--font-sans); font-weight:300; }
+.scenario-text strong { font-weight:700; }
+
+/* ─── RANK ROW ─── */
+.rank-row { display:flex; gap:8px; margin-bottom:16px; }
+.rank-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  border-radius:20px; padding:4px 12px; font-size:11px;
+  font-family:var(--font-sans); border:1px solid;
+}
+.gold-tier   .rank-pill { background:rgba(42,30,4,0.6); border-color:var(--gold); color:var(--gold2); }
+.silver-tier .rank-pill { background:rgba(20,26,38,0.6); border-color:var(--silver); color:var(--silver2); }
+.dirt-tier   .rank-pill { background:rgba(16,14,8,0.6); border-color:var(--dirt); color:var(--dirt2); }
+
+/* ─── STRATEGY CARDS ─── */
+.strat-label { font-size:12px; color:var(--muted); text-align:center; margin-bottom:10px; font-family:var(--font-sans); }
+.strat-grid  { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+
+.s-card {
+  background:rgba(255,255,255,0.7);
+  border:1.5px solid rgba(180,160,120,0.3);
+  border-radius:4px; padding:13px 14px;
+  cursor:pointer; transition:all 0.18s;
+  position:relative; display:flex; align-items:flex-start; gap:12px;
+}
+.s-card:hover:not(.locked) { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,0.1); }
+.s-card.selected { box-shadow:0 0 0 2.5px var(--jade2); }
+.gold-tier   .s-card.selected { background:rgba(212,168,75,0.1); border-color:var(--gold); }
+.silver-tier .s-card.selected { background:rgba(138,170,200,0.12); border-color:var(--silver); }
+.dirt-tier   .s-card.selected { background:rgba(72,160,122,0.1); border-color:var(--jade2); }
+.s-card.selected::after { content:'✓'; position:absolute; top:8px; right:10px; font-size:12px; color:var(--jade); font-weight:700; font-family:sans-serif; }
+.s-card.locked { opacity:0.32; cursor:not-allowed; }
+.s-card.locked:hover { transform:none; box-shadow:none; }
+
+/* track left border */
+.s-card.exam-track     { border-left:3px solid #4a7ab8; }
+.s-card.eumseo-track   { border-left:3px solid var(--gold); }
+.s-card.marriage-track { border-left:3px solid #a05a8a; }
+
+/* eumseo special glow */
+.s-card.eumseo-track:not(.locked) {
+  border-left:3px solid var(--gold);
+}
+.gold-tier .s-card.eumseo-track:not(.locked) {
+  box-shadow: inset 0 0 12px rgba(212,168,75,0.08);
+}
+
+.s-icon  { font-size:26px; flex-shrink:0; line-height:1; }
+.s-right { flex:1; }
+.s-top   { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+.s-name  { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.s-type  { font-size:10px; padding:2px 7px; border-radius:20px; font-family:var(--font-sans); font-weight:700; }
+.type-exam     { background:#ddeeff; color:#2255aa; }
+.type-eumseo   { background:#fff3d0; color:#885500; }
+.type-marriage { background:#ffe0f0; color:#882266; }
+.s-desc  { font-size:11px; color:var(--muted); line-height:1.5; font-family:var(--font-sans); font-weight:300; }
+.s-effect{ display:flex; gap:5px; margin-top:7px; flex-wrap:wrap; }
+.s-pill  { font-size:10px; padding:2px 8px; border-radius:20px; font-family:var(--font-sans); font-weight:700; }
+.pill-score { background:var(--jade); color:#fff; }
+.pill-rate  { background:#333; color:#ccc; border:1px solid #555; }
+.pill-rank  { background:var(--gold); color:var(--ink); }
+.pill-risk  { background:var(--danger); color:#fff; }
+.pill-free  { background:var(--gold); color:var(--ink); animation:freePulse 1.2s ease infinite alternate; }
+@keyframes freePulse { from{box-shadow:0 0 0 rgba(212,168,75,0);} to{box-shadow:0 0 8px rgba(212,168,75,0.6);} }
+.s-lock-note { font-size:10px; color:var(--danger); margin-top:5px; font-family:var(--font-sans); }
+
+/* ─── BUTTONS ─── */
+.btn { width:100%; padding:13px; border:none; border-radius:3px; font-family:var(--font-serif); font-size:14px; font-weight:700; cursor:pointer; transition:all 0.18s; letter-spacing:0.04em; }
+.btn + .btn { margin-top:8px; }
+.btn-cosmos { background:linear-gradient(135deg, #1a1040, #0d1120); color:var(--gold2); border:1.5px solid rgba(200,168,75,0.5); box-shadow:0 3px 16px rgba(100,60,200,0.2); }
+.btn-cosmos:hover { background:linear-gradient(135deg, #241858, #111820); transform:translateY(-1px); }
+.btn-gold   { background:var(--gold); color:var(--ink); border:1.5px solid var(--gold2); }
+.btn-gold:hover:not(:disabled) { background:var(--gold2); transform:translateY(-1px); }
+.btn-gold:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
+.btn-silver { background:var(--silver); color:var(--ink); border:1.5px solid var(--silver2); }
+.btn-silver:hover:not(:disabled) { background:var(--silver2); transform:translateY(-1px); }
+.btn-silver:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-dirt   { background:var(--dirt); color:#fff; border:1.5px solid var(--dirt2); }
+.btn-dirt:hover:not(:disabled) { background:var(--dirt2); transform:translateY(-1px); }
+.btn-dirt:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-jade   { background:var(--jade); color:#fff; border:1.5px solid var(--jade2); }
+.btn-jade:hover { background:var(--jade2); transform:translateY(-1px); }
+.btn-outline { background:transparent; color:var(--muted); border:1.5px solid rgba(150,130,100,0.3); }
+.btn-outline:hover { border-color:var(--gold); color:var(--ink); }
+
+/* ─── ROLLING ─── */
+.roll-list { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.roll-item {
+  border-radius:4px; padding:12px 14px;
+  display:flex; align-items:center; gap:12px; transition:all 0.3s;
+  border:1px solid transparent;
+}
+.roll-item.pending  { background:rgba(255,255,255,0.4); opacity:0.4; }
+.roll-item.rolling  { background:rgba(255,255,255,0.6); border-color:var(--gold); opacity:1; }
+.roll-item.success  { background:rgba(46,110,82,0.1); border-color:var(--jade2); }
+.roll-item.fail     { background:rgba(184,48,48,0.08); border-color:var(--danger); }
+.roll-item.freepass { background:rgba(212,168,75,0.15); border-color:var(--gold); animation:freepassIn 0.5s ease; }
+@keyframes freepassIn { from{transform:scale(0.95);opacity:0;} to{transform:scale(1);opacity:1;} }
+.roll-emoji { font-size:22px; flex-shrink:0; }
+.roll-name  { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.dice-box {
+  width:40px; height:40px; border-radius:6px; background:var(--cosmos2);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  font-size:18px; font-weight:700; color:var(--gold2);
+  font-family:var(--font-sans); border:1px solid var(--gold);
+}
+.dice-box.rolling-anim { animation:diceShake 0.12s ease infinite; }
+@keyframes diceShake { 0%{transform:rotate(-8deg) scale(1.05);} 50%{transform:rotate(8deg) scale(0.95);} 100%{transform:rotate(-3deg) scale(1.02);} }
+.dice-box.freepass-stamp {
+  background:var(--gold); color:var(--ink); font-size:16px; font-weight:900;
+  animation:stampIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes stampIn { from{transform:scale(0) rotate(-20deg);} to{transform:scale(1) rotate(0);} }
+.roll-result { font-size:13px; font-weight:700; font-family:var(--font-sans); text-align:right; min-width:50px; }
+.roll-result.pos  { color:var(--jade); }
+.roll-result.neg  { color:var(--danger); }
+.roll-result.free { color:var(--gold); }
+
+.score-result {
+  border-radius:4px; padding:12px 16px; margin-bottom:16px;
+  display:flex; justify-content:space-between; align-items:center;
+  border:1px solid;
+}
+.gold-tier   .score-result { background:rgba(42,30,4,0.7); border-color:var(--gold); }
+.silver-tier .score-result { background:rgba(20,26,38,0.7); border-color:var(--silver); }
+.dirt-tier   .score-result { background:rgba(16,14,8,0.7); border-color:var(--dirt); }
+.score-label { font-size:12px; color:var(--muted); font-family:var(--font-sans); }
+.score-val   { font-size:20px; font-weight:700; font-family:var(--font-sans); }
+.score-val.ok   { color:var(--jade2); }
+.score-val.warn { color:var(--gold2); }
+.score-val.bad  { color:var(--danger); }
+
+/* ─── HISTORY NOTE ─── */
+.hist-note {
+  border:1px dashed; border-radius:3px; padding:12px 14px; margin:14px 0;
+  font-size:12px; color:var(--ink); line-height:1.8;
+  font-family:var(--font-sans); font-weight:300;
+}
+.gold-tier   .hist-note { border-color:var(--gold); background:rgba(212,168,75,0.06); }
+.silver-tier .hist-note { border-color:var(--silver); background:rgba(138,170,200,0.06); }
+.dirt-tier   .hist-note { border-color:var(--dirt); background:rgba(138,112,80,0.06); }
+.hist-note::before { content:'📜 실제 역사'; display:block; font-size:10px; font-weight:700; letter-spacing:0.15em; margin-bottom:6px; }
+.gold-tier   .hist-note::before { color:var(--gold); }
+.silver-tier .hist-note::before { color:var(--silver); }
+.dirt-tier   .hist-note::before { color:var(--dirt); }
+
+/* ─── FAMILY TREE ─── */
+.family-tree { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.gen-row {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:4px; border:1px solid transparent;
+}
+.gen-row.good { background:rgba(46,110,82,0.1); border-color:var(--jade2); }
+.gen-row.mid  { background:rgba(212,168,75,0.09); border-color:var(--gold); }
+.gen-row.bad  { background:rgba(184,48,48,0.07); border-color:var(--danger); }
+.gen-row.tbd  { background:rgba(255,255,255,0.2); border-color:rgba(150,130,100,0.2); opacity:0.5; }
+.gr-icon  { font-size:20px; }
+.gr-name  { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.gr-score { font-size:11px; font-family:var(--font-sans); color:var(--muted); }
+
+/* ─── TITLE BADGE ─── */
+.title-badge {
+  background:linear-gradient(135deg, var(--cosmos) 0%, var(--cosmos2) 100%);
+  border:2px solid var(--gold); border-radius:6px;
+  padding:20px 16px; margin:16px 0; text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  animation:titleReveal 0.6s 0.2s both;
+}
+@keyframes titleReveal { from{opacity:0;transform:scale(0.8) rotate(-2deg);} to{opacity:1;transform:scale(1) rotate(0);} }
+.title-tag   { font-size:10px; color:var(--gold); letter-spacing:0.2em; font-family:var(--font-sans); margin-bottom:8px; }
+.title-emoji { font-size:38px; margin-bottom:8px; }
+.title-name  { font-size:20px; font-weight:800; color:var(--gold2); margin-bottom:6px; }
+.title-desc  { font-size:12px; color:rgba(200,210,224,0.7); font-family:var(--font-sans); line-height:1.6; }
+
+/* ─── COMPARISON TABLE ─── */
+.compare-box {
+  border-radius:4px; overflow:hidden; margin-bottom:16px;
+  border:1px solid rgba(150,130,100,0.3);
+}
+.compare-title {
+  padding:10px 14px;
+  font-size:12px; font-weight:700; color:var(--star);
+  font-family:var(--font-sans); letter-spacing:0.1em;
+  background:var(--cosmos2);
+}
+.compare-row {
+  display:flex; align-items:center; gap:0; border-top:1px solid rgba(150,130,100,0.15);
+}
+.compare-row:first-of-type { border-top:none; }
+.compare-cell {
+  flex:1; padding:10px 10px; font-size:12px; text-align:center;
+  font-family:var(--font-sans);
+}
+.compare-cell.label { color:var(--muted); font-size:11px; flex:0.8; }
+.compare-cell.gold-cell   { background:rgba(212,168,75,0.1); color:var(--gold2); font-weight:700; }
+.compare-cell.silver-cell { background:rgba(138,170,200,0.08); color:var(--silver2); font-weight:700; }
+.compare-cell.dirt-cell   { background:rgba(138,112,80,0.08); color:var(--dirt2); font-weight:700; }
+.compare-cell.mine { border:1.5px solid var(--jade2); background:rgba(46,110,82,0.1); color:var(--jade2); font-weight:700; border-radius:3px; }
+
+/* ─── FINAL BANNER ─── */
+.final-banner {
+  text-align:center; padding:24px 0 18px;
+  border-bottom:1px solid rgba(150,130,100,0.3); margin-bottom:20px;
+}
+.final-icon  { font-size:58px; margin-bottom:12px; }
+.final-title { font-size:22px; font-weight:800; line-height:1.3; }
+.final-sub   { font-size:13px; color:var(--muted); margin-top:8px; font-family:var(--font-sans); }
+.final-score { font-size:12px; color:var(--muted); margin-top:6px; font-family:var(--font-sans); }
+
+hr.divider { border:none; height:1px; background:linear-gradient(90deg,transparent,rgba(180,150,100,0.4),transparent); margin:16px 0; }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════
+const TARGET = 20;
+
+const TIERS = {
+  gold: {
+    id:'gold', label:'금수저', emoji:'🥇', prob:0.10,
+    quote:'"태어날 때부터 하늘이 정해준 자리가 있소."',
+    startScore:4, startRank:3,
+    examBonus:0.10,   // 제술과 성공률 보너스
+    desc:'5품 이상 관리의 자제. 음서가 처음부터 열려 있고, 좋은 교육을 받아 과거 합격률도 높습니다.',
+    stats:[
+      {key:'음서', val:'즉시 가능', cls:'stat-good'},
+      {key:'시작 가문력', val:'+4점', cls:'stat-good'},
+      {key:'제술과 성공률', val:'45%', cls:'stat-mid'},
+      {key:'혼인 상대', val:'왕실 포함', cls:'stat-good'},
+    ],
+    color:'gold',
+  },
+  silver: {
+    id:'silver', label:'은수저', emoji:'🥈', prob:0.30,
+    quote:'"가문의 재력은 충분하니, 이제 개경으로 진출할 차례구려."',
+    startScore:1, startRank:2,
+    examBonus:0,
+    desc:'하급 관리나 상층 향리의 자제. 재력이 있어 교육과 혼인에 유리하지만, 음서는 선조가 5품 이상이어야 씁니다.',
+    stats:[
+      {key:'음서', val:'2대부터 가능(조건)', cls:'stat-mid'},
+      {key:'시작 가문력', val:'+1점', cls:'stat-mid'},
+      {key:'제술과 성공률', val:'35%', cls:'stat-mid'},
+      {key:'혼인 상대', val:'문벌 가문 가능', cls:'stat-mid'},
+    ],
+    color:'silver',
+  },
+  dirt: {
+    id:'dirt', label:'흙수저', emoji:'🌱', prob:0.60,
+    quote:'"농사짓는 틈틈이 글을 읽어 하늘을 뚫지 않으면, 이 신분에서 벗어날 길이 없소."',
+    startScore:0, startRank:0,
+    examBonus:-0.10,  // 제술과 성공률 페널티
+    desc:'일반 양인(백정) 출신. 법적으로 과거를 볼 수는 있지만 생업에 치여 공부할 여유가 없어 합격이 극히 어렵습니다.',
+    stats:[
+      {key:'음서', val:'불가', cls:'stat-bad'},
+      {key:'시작 가문력', val:'0점', cls:'stat-bad'},
+      {key:'제술과 성공률', val:'20%', cls:'stat-bad'}, // 25→20
+      {key:'혼인 상대', val:'같은 양인까지', cls:'stat-bad'},
+    ],
+    color:'dirt',
+  },
+};
+
+// ─── GENERATIONS DATA ───
+function getGens(tier) {
+  const examRate = { gold:0.45, silver:0.35, dirt:0.20 }[tier.id];
+  const canRoyal = tier.id !== 'dirt';
+  const canMunbeol = tier.id !== 'dirt';
+
+  return [
+    {
+      id:'gen1', label:'1대조', icon:'🌱', title:'가문의 첫 발걸음',
+      scenario: tier.id === 'gold'
+        ? '당신은 <strong>5품 관리의 자제</strong>입니다. 교육 환경이 좋아 과거 준비도 유리하고, 음서도 바로 쓸 수 있습니다. 하지만 안주하면 가문이 정체됩니다.'
+        : tier.id === 'silver'
+        ? '당신은 <strong>하급 관리(또는 상층 향리)의 자제</strong>입니다. 재력은 있지만 중앙 무대는 낯섭니다. 과거나 혼인으로 돌파구를 찾아야 합니다.'
+        : '당신은 <strong>일반 양인(백정)</strong>입니다. 법적으로 과거를 볼 수는 있지만, 생업에 치여 글공부할 여유가 없습니다. 이것이 고려 대다수 백성의 현실입니다.',
+      cards: [
+        {
+          id:'g1_eumseo', track:'eumseo', emoji:'🎖️', name:'음서 활용',
+          typeLabel:'음서', typeCls:'type-eumseo',
+          desc:'선조의 관직 덕에 시험 없이 관직 진출.',
+          baseRate:1.0, effect:4, failEffect:4, rankUp:2,
+          riskNote:null,
+          lockIf:(s)=> s.rank < 3,
+          lockNote:'선조 5품 이상 필요',
+          isFree:true,
+        },
+        {
+          id:'g1_exam', track:'exam', emoji:'📖', name:'제술과 응시',
+          typeLabel:'과거', typeCls:'type-exam',
+          desc:'문관 최고 시험. 합격하면 5품 이상으로 직결.',
+          baseRate: examRate, effect:7, failEffect:0, rankUp:3, failRankUp:0,
+          riskNote:'실패 시 얻는 것 없음',
+          lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g1_jap', track:'exam', emoji:'📐', name:'잡과 응시',
+          typeLabel:'과거', typeCls:'type-exam',
+          desc:'기술직 시험. 합격률 높지만 신분 상승에 한계.',
+          baseRate:0.75, effect:3, failEffect:0, rankUp:1, failRankUp:0,
+          riskNote:null,
+          lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g1_marry', track:'marriage', emoji:'💐', name:'혼인 동맹',
+          typeLabel:'혼인', typeCls:'type-marriage',
+          desc: tier.id === 'gold' ? '문벌 가문과 혼인. 권력망 확장.'
+              : tier.id === 'silver' ? '중견 가문과 혼인. 안정적 기반.'
+              : '지역 호족과 혼인. 제한적이지만 발판.',
+          baseRate:0.85, effect:2, failEffect:0, rankUp:0, failRankUp:0,
+          riskNote:null,
+          lockIf:null, lockNote:null, isFree:false,
+        },
+      ],
+      histNote:'고려 초기, 음서 덕에 관직을 얻은 고위 관리 자제와 오직 과거만으로 출발해야 했던 일반 양인의 차이는 출발선부터 달랐습니다.',
+    },
+    {
+      id:'gen2', label:'2대조', icon:'🌿', title:'발판을 넓혀라',
+      scenario: tier.id === 'gold'
+        ? '선대가 닦은 탄탄한 기반 위에서 2대가 시작합니다. 음서와 과거를 함께 쓸 수 있는 최적의 위치입니다.'
+        : tier.id === 'silver'
+        ? '선대의 성과에 따라 음서 활용 여부가 갈립니다. 이제 본격적으로 중앙 무대를 노려야 합니다.'
+        : '양인 출신 2대. 선대가 제술과에 합격했다면 비로소 관료의 길이 열립니다. 그렇지 않다면 여전히 좁은 선택지입니다.',
+      cards:[
+        {
+          id:'g2_eumseo', track:'eumseo', emoji:'🎖️', name:'음서 활용',
+          typeLabel:'음서', typeCls:'type-eumseo',
+          desc:'선조 덕에 시험 없이 관직 진출. 안정적.',
+          baseRate:1.0, effect:4, failEffect:4, rankUp:2,
+          riskNote:null, lockIf:(s)=>s.rank<3, lockNote:'선조 5품 이상 필요', isFree:true,
+        },
+        {
+          id:'g2_exam', track:'exam', emoji:'📖', name:'제술과 재도전',
+          typeLabel:'과거', typeCls:'type-exam',
+          desc:'음서가 있어도 제술과 합격이 진짜 명예.',
+          baseRate: examRate, effect:8, failEffect:0, rankUp:3, failRankUp:0,
+          riskNote:'실패 시 얻는 것 없음', lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g2_marry_up', track:'marriage', emoji:'💒', name:'상위 혼인 시도',
+          typeLabel:'혼인', typeCls:'type-marriage',
+          desc: canRoyal ? '왕실 또는 최고 문벌 가문과의 혼인을 노린다.' : '문벌 가문과의 혼인으로 신분 상승을 도모한다.',
+          baseRate: canRoyal ? 0.40 : 0.65, effect: canRoyal ? 7 : 4, failEffect:0,
+          rankUp:0, failRankUp:0,
+          riskNote:'실패 시 가문력 변화 없음', lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g2_marry_safe', track:'marriage', emoji:'🤝', name:'안정적 혼인',
+          typeLabel:'혼인', typeCls:'type-marriage',
+          desc:'중견 가문과 확실한 혼인 동맹.',
+          baseRate:0.88, effect:3, failEffect:1,
+          rankUp:0, failRankUp:0,
+          riskNote:null, lockIf:null, lockNote:null, isFree:false,
+        },
+      ],
+      histNote:'고려의 음서 제도는 5품 이상 관리의 자손에게 과거 없이 관직을 보장했습니다. 한 번 고위직에 오른 가문은 대를 이어 관직을 세습할 수 있었고, 이것이 문벌 형성의 핵심 기제였습니다.',
+    },
+    {
+      id:'gen3', label:'3대조', icon:'🌳', title:'문벌의 완성',
+      scenario:'3대에 이르렀습니다. 가문력 <strong>20점</strong>이 고려 최고 문벌의 기준입니다. 이 세대의 선택이 3대 역사의 결말을 씁니다.',
+      cards:[
+        {
+          id:'g3_eumseo', track:'eumseo', emoji:'🎖️', name:'음서 활용',
+          typeLabel:'음서', typeCls:'type-eumseo',
+          desc:'안정적 마무리. 3대까지 세습이 완성된다.',
+          baseRate:1.0, effect:4, failEffect:4, rankUp:2,
+          riskNote:null, lockIf:(s)=>s.rank<3, lockNote:'선조 5품 이상 필요', isFree:true,
+        },
+        {
+          id:'g3_exam', track:'exam', emoji:'📖', name:'제술과 최후의 도전',
+          typeLabel:'과거', typeCls:'type-exam',
+          desc:'3대 연속 제술과 배출이면 고려 최고의 명문.',
+          baseRate: examRate, effect:9, failEffect:0, rankUp:3, failRankUp:0,
+          riskNote:'실패 시 얻는 것 없음', lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g3_royal', track:'marriage', emoji:'👑', name:'왕실 혼인',
+          typeLabel:'혼인', typeCls:'type-marriage',
+          desc:'외척이 되면 권력의 정점. 이자겸의 길.',
+          baseRate: canRoyal ? 0.45 : 0.20, effect:7, failEffect:0,
+          rankUp:0, failRankUp:0,
+          riskNote:'실패 시 가문력 변화 없음', lockIf:null, lockNote:null, isFree:false,
+        },
+        {
+          id:'g3_network', track:'marriage', emoji:'🕸️', name:'문벌 연대망',
+          typeLabel:'혼인', typeCls:'type-marriage',
+          desc:'여러 가문과 중첩 혼인으로 권력망 완성.',
+          baseRate:0.85, effect:4, failEffect:1,
+          rankUp:0, failRankUp:0,
+          riskNote:null, lockIf:null, lockNote:null, isFree:false,
+        },
+      ],
+      histNote:'이자겸의 인주 이씨, 윤관의 파평 윤씨처럼 고려 문벌은 수대에 걸쳐 과거 합격자를 배출하고, 왕실·귀족과 혼인을 거듭하며 권력을 굳혔습니다.',
+    },
+  ];
+}
+
+// ─── TITLES ───
+const TITLES = [
+  { id:'perfect', emoji:'🏛️', name:'최고 명문가',
+    desc:'음서·혼인·과거를 모두 활용해 3대를 완벽히 쌓았습니다. 이자겸의 인주 이씨처럼, 특권이 특권을 낳는 고려 문벌 사회의 구조가 당신 가문에서 완성되었습니다.',
+    check:(s)=> s.tier==='gold' && s.score>=TARGET+3, priority:11 },
+  { id:'dirt_munbeol', emoji:'🔥', name:'양인의 기적',
+    desc:'일반 양인이 문벌에 도달했습니다. 고려 사회에서 이런 사례는 극히 드물었습니다. 신분 이동이 원칙적으로 열려 있었지만, 현실은 닫혀 있었다는 것 — 이것이 고려 신분제의 본질입니다.',
+    check:(s)=> s.tier==='dirt' && s.score>=TARGET, priority:10 },
+  { id:'munbeol', emoji:'👑', name:'문벌',
+    desc:'3대에 걸쳐 과거·혼인·음서를 통해 가문을 완성했습니다. 고려의 문벌은 하루아침에 만들어지지 않았습니다. 세대를 이어 쌓은 관직·혼인·경제력이 합쳐져야 비로소 가능한 일이었습니다.',
+    check:(s)=> s.score>=TARGET, priority:9 },
+  { id:'exam_king', emoji:'📖', name:'과거의 명문',
+    desc:'제술과 합격자를 2대 이상 배출했습니다. 고려의 과거제는 능력으로 신분을 바꿀 수 있는 통로였지만, 현실적으로는 교육 환경이 좋은 상층 가문에 훨씬 유리했습니다.',
+    check:(s)=> s.examCount>=2, priority:7 },
+  { id:'royal', emoji:'💍', name:'외척의 야망',
+    desc:'왕실과 혼인에 성공했습니다. 이자겸은 딸을 왕비로 들여 권력을 쥐었고, 결국 반란을 일으켰습니다. 혼인이 곧 정치였던 고려 문벌 사회의 단면입니다.',
+    check:(s)=> s.royalMarriage, priority:8 },
+  { id:'eumseo_life', emoji:'🎖️', name:'세습의 귀족',
+    desc:'음서를 2대 이상 활용했습니다. 음서는 5품 이상 관리의 자손에게 시험 없이 관직을 보장한 제도입니다. 한 번 고위직에 오른 가문이 대를 이어 권력을 유지할 수 있었던 결정적 이유입니다.',
+    check:(s)=> s.eumseoCount>=2, priority:6 },
+  { id:'unlucky', emoji:'🎲', name:'운이 없었던 가문',
+    desc:'제술과에서 거듭 고배를 마셨습니다. 고려의 제술과 경쟁률은 수십 대 일이었습니다. 실력만으로는 부족했고, 좋은 교육 환경과 인맥, 그리고 운까지 따라야 했습니다.',
+    check:(s)=> s.failCount>=2, priority:5 },
+  { id:'close', emoji:'😤', name:'아깝다!',
+    desc:'문벌의 문턱은 높았습니다. 수대에 걸쳐 쌓아야 할 것들을 3대 만에 이루려 했으니, 어쩌면 당연한 결과일지도 모릅니다.',
+    check:(s)=> s.score<TARGET && s.score>=TARGET-3, priority:4 },
+  { id:'default', emoji:'📜', name:'고려의 백성',
+    desc:'관직에 나아가지 못했지만, 이것이 고려 대다수 양인의 삶이었습니다. 문벌이 권력을 독점하는 사회에서, 일반 백성이 신분을 바꾸는 것은 거의 불가능에 가까웠습니다.',
+    check:()=>true, priority:1 },
+];
+function getTitle(s) {
+  return TITLES.filter(t=>t.check(s)).sort((a,b)=>b.priority-a.priority)[0];
+}
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let S = {
+  phase:'intro',      // intro|gacha|birth|select|rolling|between|final
+  tier: null,         // TIERS object
+  gens: null,         // generated gen data
+  gi: 0,
+  sel: [],
+  rolls: [],
+  score: 0,
+  rank: 0,
+  genResults: [],
+  examCount:0, eumseoCount:0, failCount:0, royalMarriage:false,
+  // for comparison
+  allTierResults: null,
+};
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.classList.remove('show'); toastTimer=null; }, 2400);
+}
+
+function tierCls() { return S.tier ? S.tier.id+'-tier' : ''; }
+
+function tierBtn() {
+  if (!S.tier) return 'btn-cosmos';
+  return {gold:'btn-gold', silver:'btn-silver', dirt:'btn-dirt'}[S.tier.id];
+}
+
+function genPips() {
+  return S.gens.map((_,i)=>{
+    let c='gen-pip'; if(i<S.gi) c+=' done'; else if(i===S.gi) c+=' active';
+    return `<div class="${c}"></div>`;
+  }).join('');
+}
+
+function crn() { return '<div class="cr tl"></div><div class="cr tr"></div><div class="cr bl"></div><div class="cr br"></div>'; }
+
+function genBar() {
+  const close = S.score >= TARGET-3 && S.score < TARGET;
+  return `
+  <div class="gen-bar">
+    <span class="gen-label">📊 가문력</span>
+    <div class="gen-track">${genPips()}</div>
+    <span class="gen-score${close?' close':''}">${S.score}/${TARGET}${S.score>=TARGET?' ✓':''}</span>
+  </div>`;
+}
+
+function getDynamicScenario() {
+  // 1대조는 이전 결과 없음
+  if (S.gi === 0) return '';
+
+  const prev1 = S.genResults[0]; // 1대 결과
+  const prev2 = S.genResults[1]; // 2대 결과 (3대 진입 시)
+
+  let msg = '';
+
+  if (S.gi === 1) {
+    // 2대 진입 — 1대 결과 반영
+    if (prev1.scoreGained >= 6) {
+      msg = '선대가 개경에 확고한 기반을 다졌습니다. 당신은 선조의 후광과 넉넉한 재력 위에서 2대를 시작합니다.';
+    } else if (prev1.scoreGained >= 3) {
+      msg = '선대는 작은 발판을 마련하는 데 그쳤습니다. 가문이 도약하려면 당신 세대의 치열한 노력이 필요합니다.';
+    } else {
+      msg = '선대의 거듭된 실패로 가세가 흔들립니다. 당신의 어깨에 가문의 명운이 달렸습니다.';
+    }
+  } else if (S.gi === 2) {
+    // 3대 진입 — 누적 점수 반영
+    if (S.score >= 10) {
+      msg = '당신은 이미 개경에서 내로라하는 명문의 후계자입니다. 화룡점정만 남았습니다.';
+    } else if (S.score >= 6) {
+      msg = '2대에 걸쳐 가문을 쌓아왔지만 아직 문벌과는 거리가 있습니다. 3대가 마지막 기회입니다.';
+    } else {
+      msg = '3대에 이르도록 가문이 뿌리를 내리지 못했습니다. 지금 포기하면 향리로 남습니다.';
+    }
+  }
+
+  return `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(150,130,100,0.3);font-size:12px;color:var(--muted);font-family:var(--font-sans);font-style:italic;line-height:1.7">💬 ${msg}</div>`;
+}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase==='intro'   ? renderIntro()   :
+    S.phase==='gacha'   ? renderGacha()   :
+    S.phase==='birth'   ? renderBirth()   :
+    S.phase==='select'  ? renderSelect()  :
+    S.phase==='rolling' ? renderRolling() :
+    S.phase==='between' ? renderBetween() :
+                          renderFinal();
+}
+
+// ─── INTRO ───
+function renderIntro() {
+  return `
+  <div class="cosmos-shell">
+    <div class="hdr">
+      <div class="hdr-badge">🌌</div>
+      <div class="hdr-title" style="color:var(--star)">고려에서 환생했다</div>
+      <div class="hdr-sub">문벌의 사다리 — 고려 전기</div>
+    </div>
+    <div class="cosmos-text">
+      당신은 지금 <strong>고려 시대로 환생</strong>합니다.<br>
+      어떤 신분으로 태어날지는 <strong>하늘이 정합니다.</strong><br><br>
+      금수저로 태어나면 음서가 기다리고,<br>
+      흙수저로 태어나면 오직 과거만이 살 길입니다.<br><br>
+      3대를 살아내어 <strong>가문력 20점</strong>을 달성하면<br>
+      고려 최고의 <strong>문벌</strong>이 됩니다.
+    </div>
+    <div class="fate-box">
+      <div class="fate-rows">
+        <div class="fate-row gold-row">
+          <span class="fate-emoji">🥇</span>
+          <div class="fate-right">
+            <div class="fate-name">금수저 — 5품 관리 자제</div>
+            <div class="fate-desc">음서 즉시 가능 · 시작 가문력 +3</div>
+          </div>
+          
+        </div>
+        <div class="fate-row silver-row">
+          <span class="fate-emoji">🥈</span>
+          <div class="fate-right">
+            <div class="fate-name">은수저 — 하급 관리·상층 향리 자제</div>
+            <div class="fate-desc">혼인 유리 · 시작 가문력 +1</div>
+          </div>
+          
+        </div>
+        <div class="fate-row dirt-row">
+          <span class="fate-emoji">🌱</span>
+          <div class="fate-right">
+            <div class="fate-name">흙수저 — 일반 양인(백정)</div>
+            <div class="fate-desc">음서 불가 · 낮은 과거 합격률</div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div style="padding:24px 20px 28px">
+      <button class="btn btn-cosmos" onclick="startGacha()">운명을 뽑아라 →</button>
+    </div>
+  </div>`;
+}
+
+// ─── GACHA ───
+let gachaInterval = null;
+let gachaCount = 0;
+const GACHA_EMOJIS = ['🥇','🥈','🌱','👑','📜','🎲','🏛️','💎','🎖️','📖'];
+
+function renderGacha() {
+  return `
+  <div class="cosmos-shell">
+    <div class="gacha-arena">
+      <div class="gacha-title">고려 시대 운명 판정 중...</div>
+      <div class="roulette-wheel">
+        <div class="roulette-inner spinning" id="roulette">🎲</div>
+      </div>
+      <div class="roulette-label" id="roulette-label">신분을 결정하는 중...</div>
+    </div>
+  </div>`;
+}
+
+function startGacha() {
+  S.phase = 'gacha'; R();
+  gachaCount = 0;
+
+  // Determine result upfront
+  const rand = Math.random();
+  const result = rand < 0.10 ? 'gold' : rand < 0.40 ? 'silver' : 'dirt';
+
+  const emojis = [...GACHA_EMOJIS];
+  gachaInterval = setInterval(() => {
+    const el = document.getElementById('roulette');
+    if (el) el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    gachaCount++;
+    if (gachaCount > 20) {
+      clearInterval(gachaInterval);
+      S.tier = TIERS[result];
+      S.gens = getGens(S.tier);
+      S.score = S.tier.startScore;
+      S.rank  = S.tier.startRank;
+      setTimeout(() => { S.phase='birth'; R(); }, 300);
+    }
+  }, 120);
+}
+
+// ─── BIRTH ───
+function renderBirth() {
+  const tier = S.tier;
+  const tc = tierCls();
+  const statsHtml = tier.stats.map(s =>
+    `<div class="stat-row"><span class="stat-key">${s.key}</span><span class="stat-val ${s.cls}">${s.val}</span></div>`
+  ).join('');
+
+  return `
+  <div class="paper-shell ${tc}">
+    ${crn()}
+    <div class="hdr">
+      <div class="hdr-badge">${tier.emoji}</div>
+      <div class="hdr-title">신분 판정 결과</div>
+      <div class="hdr-sub">당신의 고려 시대가 시작됩니다</div>
+    </div>
+    <div class="body">
+      <div class="birth-reveal">
+        <span class="birth-icon">${tier.emoji}</span>
+        <div class="birth-tier-label">당신은</div>
+        <div class="birth-name">${tier.label}로 태어났습니다</div>
+        <div class="birth-quote">${tier.quote}</div>
+      </div>
+      <div class="birth-stats">${statsHtml}</div>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;font-family:var(--font-sans);line-height:1.7">${tier.desc}</div>
+      <button class="btn ${tierBtn()}" onclick="goSelect()">이 신분으로 시작하기 →</button>
+      <button class="btn btn-outline" style="margin-top:8px" onclick="startGacha()">다시 뽑기 (연습용)</button>
+    </div>
+  </div>`;
+}
+
+// ─── SELECT ───
+function renderSelect() {
+  const gen = S.gens[S.gi];
+  const tc = tierCls();
+  const canSubmit = S.sel.length === 2;
+
+  const cardsHtml = gen.cards.map(card => {
+    const locked   = card.lockIf && card.lockIf(S);
+    const selected = S.sel.includes(card.id);
+    const rate     = Math.max(0, Math.min(1, card.baseRate));
+    const rateColor= rate>=0.8?'var(--jade)':rate>=0.5?'#c8a84b':'var(--danger)';
+    const rateLabel= rate>=1?'확실':`성공률 ${Math.round(rate*100)}%`;
+
+    return `
+    <div class="s-card ${card.track}-track${selected?' selected':''}${locked?' locked':''}"
+         onclick="${locked ? '' : 'toggleCard(\'' + card.id + '\')'}">
+      <div class="s-icon">${card.emoji}</div>
+      <div class="s-right">
+        <div class="s-top">
+          <span class="s-name">${card.name}</span>
+          <span class="s-type ${card.typeCls}">${card.typeLabel}</span>
+        </div>
+        <div class="s-desc">${card.desc}</div>
+        <div class="s-effect">
+          <span class="s-pill pill-score">+${card.effect}점</span>
+          ${card.isFree && !locked
+            ? '<span class="s-pill pill-free">⭐ 프리패스</span>'
+            : `<span class="s-pill pill-rate" style="color:${rateColor}">▣ ${rateLabel}</span>`}
+          ${card.rankUp>=3?'<span class="s-pill pill-rank">5품↑</span>':''}
+          ${card.riskNote?`<span class="s-pill pill-risk">⚠ ${card.riskNote}</span>`:''}
+        </div>
+        ${locked?`<div class="s-lock-note">🔒 ${card.lockNote}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  ${genBar()}
+  <div class="paper-shell ${tc}">
+    ${crn()}
+    <div class="hdr">
+      <div class="hdr-badge">${gen.icon}</div>
+      <div class="hdr-title">${gen.label} — ${gen.title}</div>
+      <div class="hdr-sub">${S.tier.label} · 세대 ${S.gi+1}/3</div>
+    </div>
+    <div class="body">
+      <div class="scenario-box">
+        <div class="scenario-title">📰 상황</div>
+        <div class="scenario-text">${gen.scenario}</div>
+        ${getDynamicScenario()}
+      </div>
+      <div class="rank-row">
+        <div class="rank-pill">🏅 ${S.rank===0?'관직 없음':S.rank===1?'하급직':S.rank===2?'중급직':'5품 이상'}</div>
+        <div class="rank-pill">📊 가문력 ${S.score}점</div>
+      </div>
+      <div class="strat-label">전략 2가지 선택 (${S.sel.length}/2)</div>
+      <div class="strat-grid">${cardsHtml}</div>
+      <button class="btn ${tierBtn()}" ${canSubmit?'':'disabled'} onclick="submitCards()">
+        이 전략으로 ${gen.label}을 살아내다 →
+      </button>
+    </div>
+  </div>`;
+}
+
+// ─── ROLLING ───
+function renderRolling() {
+  const gen = S.gens[S.gi];
+  const tc = tierCls();
+  const allDone = S.rolls.every(r=>r.revealed);
+  const gained  = S.rolls.filter(r=>r.revealed).reduce((s,r)=>s+r.effect,0);
+
+  const rollsHtml = S.rolls.map((r,idx) => {
+    const card = gen.cards.find(c=>c.id===r.cardId);
+    const isRolling = idx===S.rollingStep && !r.revealed;
+    let rowCls='roll-item pending', diceContent='?', diceClass='dice-box', resultHtml='';
+
+    if (r.freepass) {
+      rowCls='roll-item freepass';
+      diceClass='dice-box freepass-stamp';
+      diceContent='免';
+      resultHtml=`<span class="roll-result free">+${r.effect}점 프리패스</span>`;
+    } else if (r.revealed) {
+      rowCls=`roll-item ${r.success?'success':r.effect<0?'fail':'success'}`;
+      diceContent=r.success?'✓':'✗';
+      const s=r.effect>0?'+':''; const cls=r.effect>0?'pos':r.effect<0?'neg':'zero';
+      resultHtml=`<span class="roll-result ${cls}">${s}${r.effect}점${r.rankGained?' 🏅':''}</span>`;
+    } else if (isRolling) {
+      rowCls='roll-item rolling';
+      diceContent='<span id="dice-num">?</span>';
+      diceClass='dice-box rolling-anim';
+    }
+
+    return `
+    <div class="${rowCls}" id="roll-${idx}">
+      <span class="roll-emoji">${card.emoji}</span>
+      <span class="roll-name">${card.name}</span>
+      <div class="${diceClass}">${diceContent}</div>
+      ${resultHtml}
+    </div>`;
+  }).join('');
+
+  const newScore = S.score + (allDone ? gained : 0);
+
+  return `
+  ${genBar()}
+  <div class="paper-shell ${tc}">
+    ${crn()}
+    <div class="hdr">
+      <div class="hdr-badge">🎲</div>
+      <div class="hdr-title">${gen.label} — 결과 공개</div>
+      <div class="hdr-sub">선택의 결과가 드러납니다</div>
+    </div>
+    <div class="body">
+      <div style="text-align:center;padding:6px 0 14px;font-size:13px;color:var(--muted);font-family:var(--font-sans)">
+        ${gen.label}의 삶이 흘러갑니다...
+      </div>
+      <div class="roll-list">${rollsHtml}</div>
+      ${allDone?`
+        <div class="score-result">
+          <span class="score-label">${gen.label} 종료 · 누적 가문력</span>
+          <span class="score-val ${newScore>=TARGET?'ok':newScore>=TARGET*0.6?'warn':'bad'}">${newScore} / ${TARGET}</span>
+        </div>`:''}
+    </div>
+  </div>`;
+}
+
+// ─── BETWEEN ───
+function renderBetween() {
+  const gen = S.gens[S.gi-1];
+  const tc = tierCls();
+  const isLast = S.gi >= S.gens.length;
+
+  const treeHtml = S.gens.map((g,i) => {
+    const r = S.genResults[i];
+    if (!r) return `<div class="gen-row tbd"><span class="gr-icon">${g.icon}</span><span class="gr-name">${g.label}</span><span class="gr-score">대기중</span></div>`;
+    const cls = r.scoreGained>=6?'good':r.scoreGained>=3?'mid':'bad';
+    return `<div class="gen-row ${cls}"><span class="gr-icon">${g.icon}</span><span class="gr-name">${g.label}</span><span class="gr-score">+${r.scoreGained}점 → ${r.totalScore}</span></div>`;
+  }).join('');
+
+  return `
+  ${genBar()}
+  <div class="paper-shell ${tc}">
+    ${crn()}
+    <div class="hdr">
+      <div class="hdr-badge">${gen.icon}</div>
+      <div class="hdr-title">${gen.label} 종료</div>
+      <div class="hdr-sub">가문력 ${S.score} / ${TARGET}${S.score>=TARGET?' — 문벌 달성 가능!':''}</div>
+    </div>
+    <div class="body">
+      <div class="family-tree">${treeHtml}</div>
+      <div class="hist-note">${gen.histNote}</div>
+      <hr class="divider">
+      ${isLast
+        ? `<button class="btn ${tierBtn()}" onclick="goFinal()">최종 결과 확인 →</button>`
+        : `<button class="btn ${tierBtn()}" onclick="goNextGen()">
+            ${S.gens[S.gi].label}으로 이어간다 →
+            ${S.rank>=3?'<span style="font-size:11px;opacity:0.7"> (음서 가능!)</span>':''}
+           </button>`
+      }
+    </div>
+  </div>`;
+}
+
+// ─── FINAL ───
+function renderFinal() {
+  const achieved = S.score >= TARGET;
+  const title = getTitle(S);
+  let icon, titleText, titleColor, sub;
+  if (S.tier.id==='dirt'&&achieved)    { icon='🔥'; titleText='양인의 기적!'; titleColor='var(--jade)'; sub='일반 양인이 문벌에 도달했습니다. 법적으로 열린 길이 현실에서는 얼마나 좁았는지, 당신은 그 벽을 넘었습니다.'; }
+  else if (S.score>=TARGET+3)          { icon='🏛️'; titleText='최고 명문가!'; titleColor='var(--gold)'; sub='음서·혼인·과거를 모두 활용해 고려 최고의 문벌이 되었습니다. 특권이 특권을 낳는 구조의 완성입니다.'; }
+  else if (achieved)                   { icon='👑'; titleText='문벌 달성!'; titleColor='var(--jade)'; sub='3대에 걸친 노력으로 문벌이 되었습니다. 과거·혼인·음서 중 어떤 길이 결정적이었는지 돌아보세요.'; }
+  else if (S.score>=TARGET-3)          { icon='😤'; titleText='아깝다!'; titleColor='#c8a84b'; sub=`딱 ${TARGET-S.score}점이 부족했습니다. 문벌의 문턱은 높았고, 3대는 짧았습니다.`; }
+  else if (S.examCount >= 1)           { icon='📖'; titleText='중앙 관료의 길'; titleColor='#6a9abf'; sub='제술과 합격으로 신분의 벽을 넘었습니다. 문벌엔 이르지 못했지만, 고려 사회에서 드문 상승이었습니다.'; }
+  else if (S.tier.id==='dirt' && S.score < 5) { icon='🌾'; titleText='지역의 실력자'; titleColor='var(--dirt2)'; sub='중앙 진출은 못 했지만 지역에서 뿌리를 내렸습니다. 고려 향리층의 전형적인 삶입니다. 이들이 훗날 고려 말 새로운 세력의 토대가 됩니다.'; }
+  else                                 { icon='📜'; titleText='문벌의 꿈은 멀었다'; titleColor='var(--danger)'; sub='관직에 나아가지 못했습니다. 이것이 고려 대다수 양인의 현실이었습니다. 문벌이 권력을 독점한 사회의 민낯입니다.'; }
+
+  const treeHtml = S.gens.map((g,i) => {
+    const r=S.genResults[i]; if(!r) return '';
+    const cls=r.scoreGained>=6?'good':r.scoreGained>=3?'mid':'bad';
+    return `<div class="gen-row ${cls}"><span class="gr-icon">${g.icon}</span><span class="gr-name">${g.label}</span><span class="gr-score">+${r.scoreGained}점 → ${r.totalScore}</span></div>`;
+  }).join('');
+
+  // ── COMPARISON TABLE ──
+  const compareHtml = buildCompare();
+
+  return `
+  <div class="paper-shell ${tierCls()}">
+    ${crn()}
+    <div class="hdr">
+      <div class="hdr-badge">🏛️</div>
+      <div class="hdr-title">가문의 최종 성적표</div>
+      <div class="hdr-sub">${S.tier.label} · 3대 역사의 결산</div>
+    </div>
+    <div class="body">
+      <div class="final-banner">
+        <div class="final-icon">${icon}</div>
+        <div class="final-title" style="color:${titleColor}">${titleText}</div>
+        <div class="final-sub">${sub}</div>
+        <div class="final-score">최종 가문력 <strong>${S.score}점</strong> / 목표 ${TARGET}점 · ${S.tier.label}</div>
+      </div>
+
+      <div class="family-tree">${treeHtml}</div>
+
+      ${compareHtml}
+
+      <div class="title-badge">
+        <div class="title-tag">✨ 나의 칭호</div>
+        <div class="title-emoji">${title.emoji}</div>
+        <div class="title-name">${title.name}</div>
+        <div class="title-desc">${title.desc}</div>
+      </div>
+
+      <button class="btn btn-jade" onclick="copyResult()" style="margin-bottom:8px">
+        📋 내 결과 복사하기 (패들렛 공유용)
+      </button>
+      <button class="btn btn-outline" onclick="restart()">다시 환생하기</button>
+      <div style="margin-top:20px; text-align:center; font-size:11px; color:rgba(255,255,255,0.2); font-family:sans-serif;">
+        © 찰리쌤 · <a href="https://hischarlie.tistory.com" target="_blank" style="color:rgba(255,255,255,0.2); text-decoration:none;">hischarlie.tistory.com</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildCompare() {
+  // 티어별 3대 기대 가문력 (시작점 포함 평균값 — 실제 플레이와 무관한 고정값)
+  const EXPECTED = { gold: 24, silver: 18, dirt: 10 };
+  const mine = S.score;
+
+  const mineCell = (val) => `<div class="compare-cell mine">${val}</div>`;
+  const goldCell = (val) => `<div class="compare-cell gold-cell">${val}</div>`;
+  const silvCell = (val) => `<div class="compare-cell silver-cell">${val}</div>`;
+  const dirtCell = (val) => `<div class="compare-cell dirt-cell">${val}</div>`;
+
+  const makeRow = (label, gv, sv, dv) => `
+  <div class="compare-row">
+    <div class="compare-cell label">${label}</div>
+    ${S.tier.id==='gold' ? mineCell(gv) : goldCell(gv)}
+    ${S.tier.id==='silver' ? mineCell(sv) : silvCell(sv)}
+    ${S.tier.id==='dirt' ? mineCell(dv) : dirtCell(dv)}
+  </div>`;
+
+  // 내 실제 점수는 내 티어 칸에, 나머지는 기대값으로 표시
+  const goldDisp  = S.tier.id==='gold' ? `${mine}점 (실제)` : `~${EXPECTED.gold}점`;
+  const silvDisp  = S.tier.id==='silver' ? `${mine}점 (실제)` : `~${EXPECTED.silver}점`;
+  const dirtDisp  = S.tier.id==='dirt' ? `${mine}점 (실제)` : `~${EXPECTED.dirt}점`;
+  const targetMark = (score) => score >= TARGET ? ` ✓` : '';
+
+  return `
+  <div class="compare-box">
+    <div class="compare-title">🔍 만약 다른 신분이었다면?</div>
+    <div class="compare-row" style="border:none">
+      <div class="compare-cell label"></div>
+      <div class="compare-cell gold-cell">🥇 금수저</div>
+      <div class="compare-cell silver-cell">🥈 은수저</div>
+      <div class="compare-cell dirt-cell">🌱 흙수저</div>
+    </div>
+    ${makeRow('시작 가문력', '+3', '+1', '0')}
+    ${makeRow('음서', '즉시', '조건부', '불가')}
+    ${makeRow('과거 성공률', '45%', '35%', '25%')}
+    ${makeRow('3대 기대 가문력',
+      goldDisp + targetMark(S.tier.id==='gold'?mine:EXPECTED.gold),
+      silvDisp + targetMark(S.tier.id==='silver'?mine:EXPECTED.silver),
+      dirtDisp + targetMark(S.tier.id==='dirt'?mine:EXPECTED.dirt)
+    )}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════
+function goSelect() {
+  S.gi=0; S.sel=[]; S.genResults=[];
+  S.examCount=0; S.eumseoCount=0; S.failCount=0; S.royalMarriage=false;
+  S.phase='select'; R();
+}
+
+function toggleCard(id) {
+  const gen = S.gens[S.gi];
+  if (S.sel.includes(id)) { S.sel=S.sel.filter(x=>x!==id); }
+  else { if(S.sel.length>=2) return; S.sel.push(id); }
+  R();
+}
+
+function submitCards() {
+  const gen = S.gens[S.gi];
+
+  S.rolls = S.sel.map(id => {
+    const card = gen.cards.find(c=>c.id===id);
+    const rate = Math.max(0, Math.min(1, card.baseRate));
+
+    // eumseo는 선택 시점에 카운트 (항상 성공), exam은 성공 시점에 카운트
+    if (id.includes('eumseo')) S.eumseoCount++;
+    if (id.includes('royal') || id.includes('marry')) ; // handled below
+
+    // freepass (음서)
+    if (card.isFree && !(card.lockIf && card.lockIf(S))) {
+      const rankGained = card.rankUp > S.rank;
+      if (rankGained) S.rank = card.rankUp;
+      return { cardId:id, revealed:true, freepass:true, success:true, effect:card.effect, rankGained };
+    }
+
+    const success = Math.random() < rate;
+    if (!success && rate < 1) S.failCount++;
+    const effect = success ? card.effect : (card.failEffect || 0);
+    const rankGained = success && card.rankUp && card.rankUp > S.rank;
+    if (rankGained) S.rank = card.rankUp;
+    if (success && (id.includes('royal'))) S.royalMarriage = true;
+
+    return { cardId:id, revealed:false, freepass:false, _success:success, _effect:effect, _rankGained:rankGained };
+  });
+
+  S.phase='rolling'; S.rollingStep=-1; R();
+  // freepass ones are already revealed; start rolling for the rest
+  setTimeout(()=>startRolling(), 400);
+}
+
+function startRolling() {
+  const nextIdx = S.rolls.findIndex(r=>!r.revealed && !r.freepass);
+  if (nextIdx===-1) {
+    // all done
+    const gained = S.rolls.reduce((s,r)=>s+r.effect,0);
+    S.score += gained;
+    const cardNames = S.rolls.map(r => {
+      const gen = S.gens[S.gi];
+      const card = gen.cards.find(c=>c.id===r.cardId);
+      return card ? card.name : r.cardId;
+    });
+    S.genResults.push({gi:S.gi, scoreGained:gained, totalScore:S.score, cardNames});
+    S.gi++;
+    setTimeout(()=>{ S.phase='between'; R(); }, 700);
+    return;
+  }
+  S.rollingStep=nextIdx; R();
+  const iv=setInterval(()=>{
+    const el=document.getElementById('dice-num');
+    if(el) el.textContent=['1','2','3','4','5','6','⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*12)];
+  },110);
+  setTimeout(()=>{
+    clearInterval(iv);
+    const r=S.rolls[nextIdx];
+    const cardId = S.rolls[nextIdx].cardId;
+    S.rolls[nextIdx]={...r, revealed:true, success:r._success, effect:r._effect, rankGained:r._rankGained};
+    if (r._success && cardId && cardId.includes('exam')) S.examCount++;
+    S.rollingStep=-1; R();
+    setTimeout(()=>startRolling(), 500);
+  }, 1300);
+}
+
+function goNextGen() { S.sel=[]; S.phase='select'; R(); }
+function goFinal()   { S.phase='final'; R(); }
+
+function copyResult() {
+  const achieved = S.score>=TARGET;
+  const title = getTitle(S);
+  const lines=[
+    `${achieved?'👑':'📜'} ${S.tier.label}로 태어나 — ${achieved?'문벌 달성!':'문벌 미달'} (가문력 ${S.score}/${TARGET})`,
+    `출발: ${S.tier.id==='gold'?'5품 관리 자제 · 음서 즉시 가능':S.tier.id==='silver'?'하급 관리·상층 향리 자제 · 혼인 유리':'일반 양인(백정) · 음서 불가'}`,
+    '',
+    ...S.gens.map((g,i)=>{
+      const r=S.genResults[i];
+      if(!r) return '';
+      const cards = r.cardNames ? r.cardNames.join(' + ') : '';
+      return `${g.icon} ${g.label}: ${cards} → +${r.scoreGained}점 (누적 ${r.totalScore}점)`;
+    }).filter(Boolean),
+    '',
+    `✨ 칭호: ${title.emoji} ${title.name}`,
+    `— 고려에서 환생했다 (문벌의 사다리)`,
+  ];
+  const text=lines.join('\n');
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px'; ta.style.top='0';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0,99999);
+    try{ document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch(e){ showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S={ phase:'intro', tier:null, gens:null, gi:0, sel:[], rolls:[], score:0, rank:0,
+      genResults:[], examCount:0, eumseoCount:0, failCount:0, royalMarriage:false };
+  R();
+}
+
+R();
+</script>
+</body>
+</html>
