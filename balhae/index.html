@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>동북아 역사 수사대 | 발해에서 고구려의 DNA 찾기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d0e12; --surface:#161820; --card:#1e2028; --border:#2e3040;
+    --accent:#c8a94f; --text:#e8e4d9; --muted:#7a7d8e;
+    --green:#3a8a5a; --lit:#3b5bdb; --mat:#7c3aed;
+    --warn:#e07b3a; --gemini:#1a73e8;
+    --r1:#c8a94f; --r2:#e07b3a; --r3:#4a9eda; --r4:#9b59b6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.7;min-height:100vh;}
+  .screen{display:none;} .screen.active{display:block;}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px 80px;}
+
+  /* HEADER */
+  header{border-bottom:1px solid var(--border);padding:36px 0 24px;margin-bottom:28px;}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#000;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;padding:4px 10px;border-radius:2px;text-transform:uppercase;margin-bottom:14px;}
+  h1{font-family:'Noto Serif KR',serif;font-size:1.9rem;font-weight:700;line-height:1.3;margin-bottom:6px;}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:13px;font-family:'IBM Plex Mono',monospace;}
+
+  /* MISSION */
+  .mission{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:18px 22px;margin-bottom:32px;border-radius:0 4px 4px 0;}
+  .mission-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .mission p{font-size:14px;} .mission strong{color:var(--accent);}
+
+  /* ROLE CARDS */
+  .role-intro{font-family:'Noto Serif KR',serif;font-size:1.05rem;margin-bottom:20px;}
+  .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;}
+  @media(max-width:580px){.role-grid{grid-template-columns:1fr;}}
+  .role-card{background:var(--card);border:2px solid var(--border);border-radius:8px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+  .role-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .role-card.r1::before{background:var(--r1);} .role-card.r2::before{background:var(--r2);}
+  .role-card.r3::before{background:var(--r3);} .role-card.r4::before{background:var(--r4);}
+  .role-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+  .role-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 8px 24px rgba(200,169,79,.15);}
+  .role-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;}
+  .role-title{font-weight:700;font-size:15px;margin-bottom:4px;}
+  .role-type{font-size:11px;font-family:'IBM Plex Mono',monospace;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:10px;}
+  .type-lit{background:rgba(59,91,219,.2);color:#748ffc;} .type-mat{background:rgba(124,58,237,.2);color:#b197fc;}
+  .role-assigns{font-size:13px;color:var(--muted);} .role-assigns span{color:var(--text);font-weight:500;}
+  .start-btn{background:var(--accent);color:#000;border:none;padding:12px 32px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:opacity .2s;}
+  .start-btn:disabled{opacity:.3;cursor:default;} .start-btn:not(:disabled):hover{opacity:.85;}
+
+  /* TOP BAR */
+  .top-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 0 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;margin-bottom:4px;}
+  .role-pill{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:500;}
+  .role-dot{width:8px;height:8px;border-radius:50%;}
+  .timer-pill{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'IBM Plex Mono',monospace;}
+  .timer-val{font-size:16px;font-weight:600;color:var(--accent);}
+  .timer-label{font-size:11px;color:var(--muted);}
+
+  /* PHASE BAR */
+  .phase-bar{display:flex;gap:6px;margin:20px 0 28px;flex-wrap:wrap;}
+  .phase{flex:1;min-width:80px;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;transition:all .3s;}
+  .phase.active{border-color:var(--accent);color:var(--accent);background:rgba(200,169,79,.06);}
+  .phase.done{border-color:var(--green);color:var(--green);background:rgba(58,138,90,.06);}
+  .phase-time{font-size:10px;opacity:.7;margin-bottom:2px;} .phase-name{font-weight:600;}
+
+  /* SECTION TITLE */
+  .sec-title{display:flex;align-items:center;gap:10px;font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;margin:32px 0 14px;}
+  .sec-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .icon-lit{background:rgba(59,91,219,.2);} .icon-mat{background:rgba(124,58,237,.2);}
+  .icon-share{background:rgba(58,138,90,.2);} .icon-report{background:rgba(200,169,79,.2);}
+
+  /* EVIDENCE CARD */
+  .ev-card{background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:14px;overflow:hidden;transition:border-color .2s;}
+  .ev-card.done{border-color:var(--green);}
+  .ev-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;}
+  .ev-head:hover{background:rgba(255,255,255,.02);}
+  .ev-left{display:flex;align-items:center;gap:10px;}
+  .ev-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;border-radius:2px;}
+  .ev-name{font-weight:500;font-size:14px;}
+  .ev-badge{font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 8px;border-radius:10px;}
+  .ev-toggle{color:var(--muted);font-size:11px;transition:transform .2s;} .ev-toggle.open{transform:rotate(180deg);}
+  .ev-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border);}
+  .ev-body.open{display:block;}
+
+  /* SOURCE BOX */
+  .source-box{background:var(--surface);border-left:3px solid var(--lit);padding:13px 15px;margin:14px 0;border-radius:0 4px 4px 0;font-family:'Noto Serif KR',serif;font-size:13.5px;line-height:1.85;}
+  .source-box.mat{border-left-color:var(--mat);}
+  .src-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+
+  /* ── 읽기 자료 (접이식) ── */
+  .reading-toggle{display:flex;align-items:center;gap:7px;background:transparent;border:1px dashed var(--border);color:var(--muted);padding:7px 12px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-size:12px;cursor:pointer;margin-bottom:10px;transition:all .2s;width:100%;}
+  .reading-toggle:hover{border-color:var(--accent);color:var(--accent);}
+  .reading-toggle .rt-icon{font-size:14px;}
+  .reading-box{display:none;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:12px;font-size:13px;line-height:1.85;color:#ccc8be;}
+  .reading-box.open{display:block;}
+  .reading-box h4{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .reading-box p{margin-bottom:8px;}
+  .reading-box p:last-child{margin-bottom:0;}
+  .reading-box strong{color:var(--text);}
+
+  /* ── Gemini 프롬프트 ── */
+  .gemini-toggle{display:flex;align-items:center;gap:7px;background:transparent;border:1px solid rgba(26,115,232,.35);color:rgba(26,115,232,.8);padding:7px 12px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-size:12px;cursor:pointer;margin-bottom:12px;transition:all .2s;width:100%;}
+  .gemini-toggle:hover{border-color:var(--gemini);color:var(--gemini);}
+  .gemini-box{display:none;background:rgba(26,115,232,.05);border:1px solid rgba(26,115,232,.2);border-radius:4px;padding:14px 16px;margin-bottom:12px;}
+  .gemini-box.open{display:block;}
+  .gemini-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:rgba(26,115,232,.8);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .gemini-prompt{font-size:13px;line-height:1.8;color:#ccc8be;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:8px;white-space:pre-wrap;}
+  .copy-btn{display:flex;align-items:center;gap:5px;background:rgba(26,115,232,.15);border:1px solid rgba(26,115,232,.3);color:rgba(26,115,232,.9);padding:5px 12px;border-radius:4px;font-size:12px;cursor:pointer;transition:all .2s;}
+  .copy-btn:hover{background:rgba(26,115,232,.25);}
+  .copy-btn.copied{background:rgba(58,138,90,.15);border-color:var(--green);color:var(--green);}
+  .gemini-note{font-size:11px;color:var(--muted);margin-top:6px;}
+
+  /* Q BOX */
+  .q-box{background:rgba(200,169,79,.05);border:1px dashed rgba(200,169,79,.25);border-radius:4px;padding:11px 13px;margin-bottom:10px;font-size:13px;}
+  .q-label{font-size:10px;color:var(--accent);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;margin-bottom:3px;}
+
+  /* ANSWER */
+  textarea.ans{width:100%;min-height:80px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:13px;resize:vertical;transition:border-color .2s;}
+  textarea.ans:focus{outline:none;border-color:var(--accent);}
+  textarea.ans::placeholder{color:var(--muted);}
+
+  /* NUDGE */
+  .nudge-box{display:none;background:rgba(224,123,58,.12);border:1px solid rgba(224,123,58,.5);border-left:3px solid var(--warn);border-radius:0 4px 4px 0;padding:11px 14px;margin-top:8px;font-size:13px;color:#e8b07a;line-height:1.75;animation:nudgePop .3s ease;}
+  .nudge-box.show{display:block;}
+  .nudge-box .nk-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--warn);text-transform:uppercase;margin-bottom:5px;font-weight:600;}
+  @keyframes nudgePop{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
+
+  /* DONE BTN */
+  .done-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;margin-top:10px;transition:all .2s;}
+  .done-btn:hover{border-color:var(--green);color:#5cb880;}
+  .done-btn.checked{border-color:var(--green);color:var(--green);background:rgba(58,138,90,.08);}
+
+  /* PROG */
+  .prog-wrap{margin-bottom:6px;}
+  .prog-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:5px;}
+  .prog-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#e09f3e);border-radius:2px;transition:width .4s ease;width:0%;}
+
+  /* SHARE */
+  .share-box{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:22px;margin-bottom:14px;}
+  .share-prompt{font-family:'Noto Serif KR',serif;font-size:14px;line-height:1.8;margin-bottom:16px;}
+  .share-prompt em{color:var(--accent);font-style:normal;font-weight:600;}
+  .share-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  @media(max-width:560px){.share-steps{grid-template-columns:1fr 1fr;}}
+  .share-step{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;}
+  .step-order{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:3px;}
+  .step-name{font-size:12px;font-weight:500;} .step-time{font-size:11px;color:var(--muted);}
+  .share-done-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;margin-top:16px;transition:all .2s;}
+  .share-done-btn:hover{border-color:var(--green);color:#5cb880;}
+  .share-done-btn.active{background:var(--green);color:#fff;border-color:var(--green);}
+  .go-share-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:4px;font-size:13px;cursor:pointer;margin-top:24px;float:right;transition:all .2s;}
+  .go-share-btn.ready{border-color:var(--accent);color:var(--accent);}
+  .go-share-btn.ready:hover{background:rgba(200,169,79,.08);}
+
+  /* REPORT */
+  .report-box{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:22px;}
+  .report-prompt{font-family:'Noto Serif KR',serif;font-size:14px;line-height:1.85;margin-bottom:6px;}
+  .report-prompt em{color:var(--accent);font-style:normal;font-weight:600;}
+  .report-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
+  textarea.report-area{width:100%;min-height:130px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:12px 14px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;resize:vertical;line-height:1.8;transition:border-color .2s;}
+  textarea.report-area:focus{outline:none;border-color:var(--accent);}
+  textarea.report-area::placeholder{color:var(--muted);font-size:13px;}
+  .wc{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-align:right;margin-top:5px;}
+  .wc.ok{color:var(--green);}
+
+  /* SUBMIT */
+  .submit-row{display:flex;align-items:center;justify-content:space-between;margin-top:20px;flex-wrap:wrap;gap:12px;}
+  .submit-note{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+  .submit-note span{color:var(--accent);}
+  .submit-btn{background:var(--accent);color:#000;border:none;padding:11px 28px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s;}
+  .submit-btn:disabled{opacity:.3;cursor:default;} .submit-btn:not(:disabled):hover{opacity:.85;}
+
+  /* RESULT */
+  .result{display:none;margin-top:22px;background:rgba(58,138,90,.07);border:1px solid var(--green);border-radius:6px;padding:22px;animation:fadeUp .4s ease;}
+  .result.show{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+  .result-title{font-family:'Noto Serif KR',serif;font-size:1rem;color:#5cb880;font-weight:700;margin-bottom:10px;}
+  .result-body{font-size:13px;line-height:1.9;color:var(--text);}
+  .result-hint{margin-top:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--muted);line-height:1.8;}
+  .hint-label{font-size:10px;color:var(--accent);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;margin-bottom:4px;}
+
+  /* COMPARE GRID */
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:13px 0;}
+  @media(max-width:480px){.compare-grid{grid-template-columns:1fr;}}
+  .compare-item{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:11px;text-align:center;}
+  .compare-item.hl{border-color:var(--green);}
+  .ci-emoji{font-size:28px;margin-bottom:6px;}
+  .ci-name{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted);}
+  .ci-desc{font-size:10px;color:var(--muted);margin-top:3px;}
+
+  /* MEMO GRID */
+  .memo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+  @media(max-width:520px){.memo-grid{grid-template-columns:1fr;}}
+  .memo-item{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:12px;}
+  .memo-item.mine{border-color:var(--accent);background:rgba(200,169,79,.04);}
+  .memo-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  .memo-label .mine-tag{color:var(--accent);margin-left:4px;}
+  textarea.memo-area{width:100%;min-height:60px;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:8px 10px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:12px;resize:none;transition:border-color .2s;line-height:1.6;}
+  textarea.memo-area:focus{outline:none;border-color:var(--accent);}
+  textarea.memo-area::placeholder{color:var(--muted);font-size:11px;}
+  textarea.memo-area:disabled{opacity:.55;cursor:default;background:rgba(255,255,255,.02);}
+  .memo-note{font-size:11px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+
+  /* REPORT WITH MEMO SIDEBAR */
+  .report-layout{display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start;}
+  @media(max-width:640px){.report-layout{grid-template-columns:1fr;}}
+  .memo-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px;position:sticky;top:16px;}
+  .memo-sidebar-title{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .memo-ref-item{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .memo-ref-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .memo-ref-label{font-size:10px;color:var(--accent);font-family:'IBM Plex Mono',monospace;margin-bottom:3px;}
+  .memo-ref-text{font-size:12px;color:#ccc8be;line-height:1.6;white-space:pre-wrap;}
+
+  ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  .clearfix::after{content:'';display:block;clear:both;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SCREEN 1: ROLE SELECT ═══ -->
+<div class="screen active" id="screen-role">
+<div class="wrap">
+  <header>
+    <div class="badge">역사 수사대 · 역할 분담 모둠</div>
+    <h1>발해에서<br><span>고구려의 DNA</span>를 찾아라</h1>
+    <p class="subtitle">// 동북아 역사 수사대 — 증거 교차 분석 임무</p>
+  </header>
+  <div class="mission">
+    <div class="mission-label">▸ 임무 개요</div>
+    <p>중국의 <strong>동북공정(東北工程)</strong>은 발해를 중국 역사로 편입하려 합니다. 여러분은 수사대원으로서 <strong>문헌 증거</strong>와 <strong>물질 증거</strong>를 분석하여 발해가 고구려를 계승한 우리 민족의 국가임을 밝혀야 합니다. 모둠원이 역할을 나눠 담당 증거를 분석한 뒤, 함께 공유하고 최종 보고서를 작성합니다.</p>
+  </div>
+  <p class="role-intro">📌 모둠에서 자신의 역할을 선택하세요</p>
+  <div class="role-grid">
+    <div class="role-card r1" onclick="selectRole(1)" id="rc-1">
+      <div class="role-num">역할 1번</div>
+      <div class="role-title">문헌 수사관 A</div>
+      <div class="role-type type-lit">📄 문헌 증거</div>
+      <div class="role-assigns">담당: <span>E-01 속일본기 (758년)</span></div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">"고려의 옛 땅을 되찾고..." — 발해 국서 분석</div>
+    </div>
+    <div class="role-card r2" onclick="selectRole(2)" id="rc-2">
+      <div class="role-num">역할 2번</div>
+      <div class="role-title">문헌 수사관 B</div>
+      <div class="role-type type-lit">📄 문헌 증거</div>
+      <div class="role-assigns">담당: <span>E-02 외교문서 + E-03 구당서</span></div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">발해왕의 자칭 + 중국 측 기록 분석</div>
+    </div>
+    <div class="role-card r3" onclick="selectRole(3)" id="rc-3">
+      <div class="role-num">역할 3번</div>
+      <div class="role-title">유물 수사관 A</div>
+      <div class="role-type type-mat">🏺 유물 증거</div>
+      <div class="role-assigns">담당: <span>E-04 온돌 유적</span></div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">크라스키노 발굴 유적 — 생활 문화 계승 분석</div>
+    </div>
+    <div class="role-card r4" onclick="selectRole(4)" id="rc-4">
+      <div class="role-num">역할 4번</div>
+      <div class="role-title">유물 수사관 B</div>
+      <div class="role-type type-mat">🏺 유물 증거</div>
+      <div class="role-assigns">담당: <span>E-05 연꽃무늬 수막새</span></div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">고구려·발해·당 3각 비교 분석</div>
+    </div>
+  </div>
+  <button class="start-btn" id="start-btn" onclick="startActivity()" disabled>수사 시작하기 →</button>
+</div>
+</div>
+
+
+<!-- ═══ SCREEN 2: ACTIVITY ═══ -->
+<div class="screen" id="screen-activity">
+<div class="wrap">
+
+  <div class="top-bar">
+    <div class="role-pill"><div class="role-dot" id="role-dot"></div><span id="role-label">—</span></div>
+    <div class="timer-pill"><span class="timer-label">남은</span><span class="timer-val" id="timer">27:00</span></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-labels"><span>수사 진행</span><span id="prog-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+  </div>
+  <div class="phase-bar">
+    <div class="phase active" id="ph-1"><div class="phase-time">0–8분</div><div class="phase-name">개인 수사</div></div>
+    <div class="phase" id="ph-2"><div class="phase-time">8–15분</div><div class="phase-name">모둠 공유</div></div>
+    <div class="phase" id="ph-3"><div class="phase-time">15–22분</div><div class="phase-name">보고서</div></div>
+    <div class="phase" id="ph-4"><div class="phase-time">22–27분</div><div class="phase-name">발표·정리</div></div>
+  </div>
+
+  <!-- ── PHASE 1: ANALYSIS ── -->
+  <div id="phase-analysis">
+
+    <!-- ROLE 1 -->
+    <div class="role-section" id="rs-1" style="display:none">
+      <div class="sec-title"><div class="sec-icon icon-lit">📄</div>담당 증거 분석</div>
+      <div class="ev-card" id="ec-e1">
+        <div class="ev-head" onclick="toggleEv('e1')">
+          <div class="ev-left"><span class="ev-num">E-01</span><span class="ev-name">속일본기 (續日本紀) · 758년</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="ev-badge type-lit">문헌</span><span class="ev-toggle open" id="tg-e1">▼</span></div>
+        </div>
+        <div class="ev-body open" id="bd-e1">
+          <div class="source-box">
+            <div class="src-label">원문 사료</div>
+            발해 사신 양승경이 일본에 전한 국서에 이르기를,<br>
+            <strong>"고려(高麗)의 옛 땅을 되찾고, 부여(夫餘)의 유풍을 이어받았노라.<br>
+            (復高麗之舊居, 有夫餘之遺俗)"</strong>
+          </div>
+
+          <!-- 읽기 자료 -->
+          <button class="reading-toggle" onclick="toggleReading('r1')">
+            <span class="rt-icon">📖</span> 읽기 자료 — 속일본기란 무엇인가?
+            <span style="margin-left:auto;font-size:11px" id="rt-arrow-r1">▼</span>
+          </button>
+          <div class="reading-box" id="reading-r1">
+            <h4>📖 속일본기 (續日本紀)</h4>
+            <p><strong>속일본기</strong>는 일본의 공식 역사서로, 697년부터 791년까지의 역사를 기록한 책이에요. 발해가 일본에 외교 사절을 보낼 때 주고받은 국서(나라 사이의 공문서)가 그대로 실려 있어요.</p>
+            <p><strong>왜 중요한가?</strong> 발해가 외국에 보낸 공식 외교 문서에서 스스로를 어떻게 표현했는지를 보여줘요. 국서는 한 나라의 공식 입장을 담은 문서이므로, 발해의 자기 인식을 직접적으로 확인할 수 있는 1차 사료예요.</p>
+            <p><strong>핵심 포인트:</strong> '고려(高麗)'는 고구려(高句麗)의 줄임말이에요. 발해가 스스로 "고구려의 땅을 되찾았다"고 선언한 것은 단순한 수사가 아니라, <strong>고구려의 후계자임을 공식적으로 천명</strong>한 것입니다.</p>
+          </div>
+
+          <!-- Gemini 프롬프트 -->
+          <button class="gemini-toggle" onclick="toggleGemini('g1')">
+            <span>✦</span> Gemini에게 더 탐구하기 (선택)
+            <span style="margin-left:auto;font-size:11px" id="gt-arrow-g1">▼</span>
+          </button>
+          <div class="gemini-box" id="gemini-g1">
+            <div class="gemini-label">✦ Gemini 탐구 프롬프트</div>
+            <div class="gemini-prompt" id="gp-g1">발해가 758년 일본에 보낸 국서에 "고려의 옛 땅을 되찾고 부여의 유풍을 이어받았다"라고 적혀 있어. 고1 학생인 나에게 이 문장이 발해의 고구려 계승 의식을 보여주는 증거로 어떻게 해석될 수 있는지 설명해줘. 또 이 주장에 반론은 없는지도 알려줘.</div>
+            <button class="copy-btn" onclick="copyPrompt('gp-g1', this)">📋 프롬프트 복사</button>
+            <div class="gemini-note">💡 복사 후 Gemini(gemini.google.com)에 붙여넣기 하세요</div>
+          </div>
+
+          <div class="q-box"><div class="q-label">분석 질문</div>발해가 일본에 보낸 국서에서 '고려의 옛 땅'이라는 표현을 사용한 이유는 무엇일까요? 발해가 외교 문서를 통해 전달하려 했던 메시지를 서술해보세요.</div>
+          <textarea class="ans" id="ans-e1" placeholder="분석 내용을 작성하세요..." oninput="checkNudge('e1')"></textarea>
+          <div class="nudge-box" id="nudge-e1">
+            <div class="nk-label">💡 힌트</div>
+            핵심 키워드를 포함해보세요: <strong>고구려 계승</strong>, <strong>외교 문서(국서)</strong>, <strong>공식 선언</strong>의 의미를 중심으로 작성해보면 좋아요.
+          </div>
+          <button class="done-btn" id="db-e1" onclick="markDone('e1')"><span>○</span> 분석 완료</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLE 2 -->
+    <div class="role-section" id="rs-2" style="display:none">
+      <div class="sec-title"><div class="sec-icon icon-lit">📄</div>담당 증거 분석</div>
+
+      <div class="ev-card" id="ec-e2">
+        <div class="ev-head" onclick="toggleEv('e2')">
+          <div class="ev-left"><span class="ev-num">E-02</span><span class="ev-name">발해 외교 문서 — 발해왕의 자칭</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="ev-badge type-lit">문헌</span><span class="ev-toggle open" id="tg-e2">▼</span></div>
+        </div>
+        <div class="ev-body open" id="bd-e2">
+          <div class="source-box">
+            <div class="src-label">원문 사료 (일본 측 기록)</div>
+            발해 무왕이 일본에 보낸 외교 문서에서 자신을<br>
+            <strong>"고려국왕(高麗國王)"</strong>이라 칭하였다.<br>
+            <span style="font-size:12px;color:var(--muted)">※ 고려(高麗) = 고구려(高句麗)의 줄임말</span>
+          </div>
+
+          <button class="reading-toggle" onclick="toggleReading('r2')">
+            <span class="rt-icon">📖</span> 읽기 자료 — 발해 무왕은 누구인가?
+            <span style="margin-left:auto;font-size:11px" id="rt-arrow-r2">▼</span>
+          </button>
+          <div class="reading-box" id="reading-r2">
+            <h4>📖 발해 무왕 (재위 719~737년)</h4>
+            <p><strong>무왕(武王)</strong>은 발해의 2대 왕으로, 대조영의 아들이에요. 흑수 말갈을 제압하고 당나라 산둥반도를 직접 공격할 만큼 강경한 대외 정책을 폈어요.</p>
+            <p><strong>왜 스스로를 '고려국왕'이라 불렀나?</strong> 이것은 단순한 호칭이 아니에요. 당시 동아시아 외교에서 왕호는 국가의 정통성과 계보를 나타내는 중요한 표현이었어요. 발해 왕이 일본에 보낸 공식 문서에서 고구려의 왕을 자처했다는 것은, <strong>발해가 공식적으로 고구려의 후계 국가임을 주장</strong>한 것입니다.</p>
+            <p><strong>참고:</strong> 일본도 발해를 "고려(고구려)"라고 불렀고, 발해 사신을 고구려 사신으로 대우했어요.</p>
+          </div>
+
+          <button class="gemini-toggle" onclick="toggleGemini('g2')">
+            <span>✦</span> Gemini에게 더 탐구하기 (선택)
+            <span style="margin-left:auto;font-size:11px" id="gt-arrow-g2">▼</span>
+          </button>
+          <div class="gemini-box" id="gemini-g2">
+            <div class="gemini-label">✦ Gemini 탐구 프롬프트</div>
+            <div class="gemini-prompt" id="gp-g2">발해의 무왕이 일본에 보낸 외교 문서에서 스스로를 '고려국왕(高麗國王)'이라 칭했어. 고려가 고구려의 줄임말이라는 걸 고려할 때, 이것이 발해의 고구려 계승 의식을 보여주는 증거인지 고1 학생 수준으로 설명해줘. 단순한 외교적 수사와 실제 계승 의식의 차이도 알려줘.</div>
+            <button class="copy-btn" onclick="copyPrompt('gp-g2', this)">📋 프롬프트 복사</button>
+            <div class="gemini-note">💡 복사 후 Gemini(gemini.google.com)에 붙여넣기 하세요</div>
+          </div>
+
+          <div class="q-box"><div class="q-label">분석 질문</div>발해 왕이 스스로를 '고구려 왕'이라 칭한 것은 단순한 외교적 표현인가요, 아니면 의도적인 계승 선언인가요? 판단의 근거를 써보세요.</div>
+          <textarea class="ans" id="ans-e2" placeholder="분석 내용을 작성하세요..." oninput="checkNudge('e2')"></textarea>
+          <div class="nudge-box" id="nudge-e2">
+            <div class="nk-label">💡 힌트</div>
+            핵심 키워드를 포함해보세요: <strong>고려국왕</strong> 칭호의 의미, <strong>공식 입장</strong>과 <strong>외교적 표현</strong>의 차이를 구분해서 써보면 좋아요.
+          </div>
+          <button class="done-btn" id="db-e2" onclick="markDone('e2')"><span>○</span> 분석 완료</button>
+        </div>
+      </div>
+
+      <div class="ev-card" id="ec-e3">
+        <div class="ev-head" onclick="toggleEv('e3')">
+          <div class="ev-left"><span class="ev-num">E-03</span><span class="ev-name">구당서 (舊唐書) · 발해말갈전</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="ev-badge type-lit">문헌</span><span class="ev-toggle" id="tg-e3">▼</span></div>
+        </div>
+        <div class="ev-body" id="bd-e3">
+          <div class="source-box">
+            <div class="src-label">원문 사료 (중국 측 기록)</div>
+            "발해말갈의 대조영은 본래 <strong>고구려의 별종(別種)</strong>이다.<br>
+            고구려가 멸망하자 조영은 무리를 이끌고 동쪽으로 이동하여<br>
+            나라를 세우고 스스로를 진국왕(震國王)이라 하였다."
+          </div>
+
+          <button class="reading-toggle" onclick="toggleReading('r3')">
+            <span class="rt-icon">📖</span> 읽기 자료 — '별종'이란 무슨 뜻인가?
+            <span style="margin-left:auto;font-size:11px" id="rt-arrow-r3">▼</span>
+          </button>
+          <div class="reading-box" id="reading-r3">
+            <h4>📖 '별종(別種)'의 의미와 논쟁</h4>
+            <p><strong>구당서(舊唐書)</strong>는 당나라의 역사를 기록한 중국의 공식 역사서예요. '발해말갈전'은 발해와 말갈에 대한 기록이에요.</p>
+            <p><strong>'별종(別種)'의 두 가지 해석:</strong></p>
+            <p>① <strong>계승 주장 측:</strong> '별종'은 '같은 종족의 갈래'를 뜻해요. 즉 고구려인의 후손이라는 의미로, 중국 측 기록조차 대조영의 고구려 혈통을 인정한 셈이에요.</p>
+            <p>② <strong>반론 측(동북공정):</strong> '별종'은 '다른 종족'으로 해석할 수도 있고, '말갈'이 앞에 붙은 것처럼 발해를 말갈 계통으로 본 것이라고 주장해요.</p>
+            <p><strong>핵심:</strong> 같은 사료를 두 측이 다르게 해석한다는 점 자체가 역사 논쟁의 본질을 보여줘요.</p>
+          </div>
+
+          <button class="gemini-toggle" onclick="toggleGemini('g3')">
+            <span>✦</span> Gemini에게 더 탐구하기 (선택)
+            <span style="margin-left:auto;font-size:11px" id="gt-arrow-g3">▼</span>
+          </button>
+          <div class="gemini-box" id="gemini-g3">
+            <div class="gemini-label">✦ Gemini 탐구 프롬프트</div>
+            <div class="gemini-prompt" id="gp-g3">중국의 역사서 구당서에는 "대조영은 본래 고구려의 별종이다"라고 기록되어 있어. '별종(別種)'이라는 한자어가 발해의 고구려 계승을 지지하는 증거로도, 반론의 근거로도 사용된다고 해. 고1 학생에게 이 논쟁을 양쪽 입장에서 공정하게 설명해줘. 중국의 동북공정은 이 기록을 어떻게 활용하는지도 알려줘.</div>
+            <button class="copy-btn" onclick="copyPrompt('gp-g3', this)">📋 프롬프트 복사</button>
+            <div class="gemini-note">💡 복사 후 Gemini(gemini.google.com)에 붙여넣기 하세요</div>
+          </div>
+
+          <div class="q-box"><div class="q-label">분석 질문</div>중국 기록에서도 대조영을 '고구려의 별종'이라 했습니다. '별종'이라는 표현이 계승을 지지하는 쪽과 반론을 제기하는 쪽에서 각각 어떻게 해석될 수 있는지 양측 모두 생각해보세요.</div>
+          <textarea class="ans" id="ans-e3" placeholder="분석 내용을 작성하세요..." oninput="checkNudge('e3')"></textarea>
+          <div class="nudge-box" id="nudge-e3">
+            <div class="nk-label">💡 힌트</div>
+            핵심 키워드를 포함해보세요: <strong>별종의 두 가지 해석</strong>, <strong>중국 측 기록도 혈통 인정</strong>, <strong>동북공정의 반론</strong>을 모두 다뤄보세요.
+          </div>
+          <button class="done-btn" id="db-e3" onclick="markDone('e3')"><span>○</span> 분석 완료</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLE 3 -->
+    <div class="role-section" id="rs-3" style="display:none">
+      <div class="sec-title"><div class="sec-icon icon-mat">🏺</div>담당 증거 분석</div>
+      <div class="ev-card" id="ec-e4">
+        <div class="ev-head" onclick="toggleEv('e4')">
+          <div class="ev-left"><span class="ev-num">E-04</span><span class="ev-name">온돌 유적 — 러시아 크라스키노 발해 성터</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="ev-badge type-mat">유물</span><span class="ev-toggle open" id="tg-e4">▼</span></div>
+        </div>
+        <div class="ev-body open" id="bd-e4">
+          <div class="source-box mat">
+            <div class="src-label">발굴 보고</div>
+            러시아 연해주 크라스키노 지역 발해 유적지에서<br>
+            고구려 특유의 <strong>온돌(구들장) 구조</strong>가 대량으로 발굴되었다.<br>
+            온돌은 중국·말갈 문화에서는 발견되지 않는<br>
+            한반도 북방 고유의 난방 시스템이다.
+          </div>
+
+          <button class="reading-toggle" onclick="toggleReading('r4')">
+            <span class="rt-icon">📖</span> 읽기 자료 — 온돌이 왜 고구려 계승의 증거인가?
+            <span style="margin-left:auto;font-size:11px" id="rt-arrow-r4">▼</span>
+          </button>
+          <div class="reading-box" id="reading-r4">
+            <h4>📖 온돌(溫突)과 문화 계승</h4>
+            <p><strong>온돌(구들장)</strong>은 바닥 아래에 불기운을 통하게 하여 방을 데우는 난방 구조예요. 만들기 매우 복잡하고 기술이 필요해서, 이를 사용하는 집단은 이 기술을 전수받은 사람들이에요.</p>
+            <p><strong>왜 고구려 고유 문화인가?</strong> 온돌은 고구려 고분 벽화와 유적에서 광범위하게 확인돼요. 반면 당나라(한족)나 말갈족 거주지에서는 온돌이 발견되지 않아요. 의자 생활을 하는 중국과 달리, 온돌은 바닥에 앉는 좌식 문화와 연결돼 있어요.</p>
+            <p><strong>크라스키노의 의미:</strong> 러시아 연해주는 발해의 동쪽 영역이에요. 이 먼 곳에서도 고구려 방식의 온돌이 발견됐다는 것은, 발해 전역에서 고구려 생활 방식이 유지됐음을 보여줘요.</p>
+            <p><strong>생활 문화가 계승 증거가 되는 이유:</strong> 언어, 종교, 음식, 난방 방식 같은 일상 문화는 의식적으로 결정하기보다 <strong>자연스럽게 이어지는 것</strong>이에요. 온돌을 쓴다는 건 고구려 사람들이 그대로 발해에 살았다는 의미일 수 있어요.</p>
+          </div>
+
+          <button class="gemini-toggle" onclick="toggleGemini('g4')">
+            <span>✦</span> Gemini에게 더 탐구하기 (선택)
+            <span style="margin-left:auto;font-size:11px" id="gt-arrow-g4">▼</span>
+          </button>
+          <div class="gemini-box" id="gemini-g4">
+            <div class="gemini-label">✦ Gemini 탐구 프롬프트</div>
+            <div class="gemini-prompt" id="gp-g4">러시아 크라스키노의 발해 유적에서 고구려 특유의 온돌(구들장) 구조가 발굴됐어. 온돌은 중국이나 말갈 문화에서는 발견되지 않는 한반도 북방 고유 난방 시스템이래. 고1 학생인 나에게, 생활 문화(온돌)의 연속성이 민족 계승의 증거가 될 수 있는 이유를 설명해줘. 그리고 이런 고고학적 증거의 한계도 알려줘.</div>
+            <button class="copy-btn" onclick="copyPrompt('gp-g4', this)">📋 프롬프트 복사</button>
+            <div class="gemini-note">💡 복사 후 Gemini(gemini.google.com)에 붙여넣기 하세요</div>
+          </div>
+
+          <div class="q-box"><div class="q-label">분석 질문</div>온돌은 만들기 어려운 구조물입니다. 발해 지배층이 온돌을 사용했다는 것은 무엇을 의미할까요? 생활 문화의 연속성이 민족 계승의 증거가 될 수 있는지 판단하고 근거를 써보세요.</div>
+          <textarea class="ans" id="ans-e4" placeholder="분석 내용을 작성하세요..." oninput="checkNudge('e4')"></textarea>
+          <div class="nudge-box" id="nudge-e4">
+            <div class="nk-label">💡 힌트</div>
+            핵심 키워드를 포함해보세요: <strong>온돌</strong>이 <strong>고구려 고유</strong> 문화인 점, <strong>중국·말갈과의 차이</strong>, <strong>생활 문화 계승</strong>의 의미를 서술해보세요.
+          </div>
+          <button class="done-btn" id="db-e4" onclick="markDone('e4')"><span>○</span> 분석 완료</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLE 4 -->
+    <div class="role-section" id="rs-4" style="display:none">
+      <div class="sec-title"><div class="sec-icon icon-mat">🏺</div>담당 증거 분석</div>
+      <div class="ev-card" id="ec-e5">
+        <div class="ev-head" onclick="toggleEv('e5')">
+          <div class="ev-left"><span class="ev-num">E-05</span><span class="ev-name">연꽃무늬 수막새 — 고구려·발해·당 비교</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="ev-badge type-mat">유물</span><span class="ev-toggle open" id="tg-e5">▼</span></div>
+        </div>
+        <div class="ev-body open" id="bd-e5">
+          <div class="source-box mat">
+            <div class="src-label">유물 비교 분석</div>
+            고구려 기와(수막새)의 연꽃무늬 문양과<br>
+            발해 상경 용천부에서 출토된 수막새의 문양이<br>
+            <strong>꽃잎 수, 배열 방식, 조각 기법</strong>에서 거의 동일한 양식을 보인다.<br>
+            반면 당나라 기와와는 문양 구성이 뚜렷이 다르다.
+          </div>
+
+          <div class="compare-grid">
+            <div class="compare-item hl"><div class="ci-emoji">🌸</div><div class="ci-name" style="color:#748ffc">고구려 수막새</div><div class="ci-desc">8엽 연꽃, 선명한 테두리</div></div>
+            <div class="compare-item hl"><div class="ci-emoji">🌸</div><div class="ci-name" style="color:#b197fc">발해 수막새</div><div class="ci-desc">8엽 연꽃, 동일 양식</div></div>
+            <div class="compare-item"><div class="ci-emoji">🌼</div><div class="ci-name">당나라 수막새</div><div class="ci-desc">복잡한 다엽, 다른 구성</div></div>
+          </div>
+
+          <button class="reading-toggle" onclick="toggleReading('r5')">
+            <span class="rt-icon">📖</span> 읽기 자료 — 수막새가 왜 문화 계승의 증거인가?
+            <span style="margin-left:auto;font-size:11px" id="rt-arrow-r5">▼</span>
+          </button>
+          <div class="reading-box" id="reading-r5">
+            <h4>📖 수막새(기와)와 건축 문화 계승</h4>
+            <p><strong>수막새</strong>는 지붕 기와의 끝에 붙이는 둥근 장식 기와예요. 단순히 장식이 아니라, <strong>그 나라의 건축 양식과 미의식</strong>을 담고 있어요.</p>
+            <p><strong>왜 문양 비교가 중요한가?</strong> 기와 무늬는 단순히 예쁘게 만드는 것이 아니에요. 기와를 만드는 장인(기술자)이 특정 양식을 전수받아야 만들 수 있어요. 따라서 두 나라의 기와 양식이 동일하다는 것은, <strong>그 기술과 문화를 전수한 사람들이 이어졌다</strong>는 의미예요.</p>
+            <p><strong>고구려 vs 발해 수막새:</strong> 국립중앙박물관에서 소장 중인 두 수막새를 비교하면, 연꽃 꽃잎의 개수(8엽), 꽃잎 배열, 테두리 처리 방식이 거의 동일해요.</p>
+            <p><strong>당나라 기와와의 차이:</strong> 발해는 당나라 문물을 많이 받아들였어요. 그런데도 기와 양식은 당나라 것을 따르지 않고 고구려 것을 유지했다는 점이 핵심이에요. 이것은 의도적인 선택이었을 수 있어요.</p>
+          </div>
+
+          <button class="gemini-toggle" onclick="toggleGemini('g5')">
+            <span>✦</span> Gemini에게 더 탐구하기 (선택)
+            <span style="margin-left:auto;font-size:11px" id="gt-arrow-g5">▼</span>
+          </button>
+          <div class="gemini-box" id="gemini-g5">
+            <div class="gemini-label">✦ Gemini 탐구 프롬프트</div>
+            <div class="gemini-prompt" id="gp-g5">발해 수막새(지붕 기와)의 연꽃무늬 문양이 고구려 수막새와 꽃잎 수, 배열, 기법에서 거의 동일하고 당나라 것과는 뚜렷이 다르다고 해. 고1 학생인 나에게 기와 문양의 유사성이 문화 계승의 증거가 되는 이유를 설명해줘. 발해가 당나라 문물을 많이 받아들이면서도 기와 양식은 고구려 것을 유지한 이유도 추론해줘.</div>
+            <button class="copy-btn" onclick="copyPrompt('gp-g5', this)">📋 프롬프트 복사</button>
+            <div class="gemini-note">💡 복사 후 Gemini(gemini.google.com)에 붙여넣기 하세요</div>
+          </div>
+
+          <div class="q-box"><div class="q-label">분석 질문</div>문양의 유사성이 문화 계승의 증거가 될 수 있을까요? 고구려·발해·당나라 수막새를 비교하여 발해가 고구려 문화를 계승했다는 주장의 타당성을 평가해보세요.</div>
+          <textarea class="ans" id="ans-e5" placeholder="분석 내용을 작성하세요..." oninput="checkNudge('e5')"></textarea>
+          <div class="nudge-box" id="nudge-e5">
+            <div class="nk-label">💡 힌트</div>
+            핵심 키워드를 포함해보세요: <strong>수막새 문양</strong>의 동일성, <strong>당나라와의 차이</strong>, <strong>건축 기술 전수</strong>의 의미를 중심으로 써보세요.
+          </div>
+          <button class="done-btn" id="db-e5" onclick="markDone('e5')"><span>○</span> 분석 완료</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <button class="go-share-btn" id="go-share-btn" onclick="goToShare()">
+        분석 완료 → 모둠 공유 단계로
+      </button>
+    </div>
+  </div>
+
+  <!-- ── PHASE 2: SHARE ── -->
+  <div id="phase-share" style="display:none">
+    <div class="sec-title"><div class="sec-icon icon-share">🤝</div>모둠 공유 (5분)</div>
+    <div class="share-box">
+      <div class="share-prompt">각자 분석한 <em>담당 증거</em>를 모둠원에게 설명하고, 5개 증거 전체를 함께 파악하세요.<br><span style="font-size:13px;color:var(--muted)">발표 순서: ① 어떤 증거인지 ② 무엇을 알 수 있는지 ③ 왜 고구려 계승의 증거인지</span></div>
+      <div class="share-steps">
+        <div class="share-step"><div class="step-order">STEP 1</div><div class="step-name">역할 1번 발표</div><div class="step-time">E-01 속일본기</div></div>
+        <div class="share-step"><div class="step-order">STEP 2</div><div class="step-name">역할 2번 발표</div><div class="step-time">E-02·03 문헌</div></div>
+        <div class="share-step"><div class="step-order">STEP 3</div><div class="step-name">역할 3번 발표</div><div class="step-time">E-04 온돌</div></div>
+        <div class="share-step"><div class="step-order">STEP 4</div><div class="step-name">역할 4번 발표</div><div class="step-time">E-05 수막새</div></div>
+      </div>
+
+      <!-- 메모 그리드 -->
+      <div style="margin-top:18px;margin-bottom:4px;font-size:12px;color:var(--muted)">📝 다른 모둠원의 발표 내용을 키워드 위주로 메모하세요</div>
+      <div class="memo-grid" id="memo-grid">
+        <!-- JS로 채워짐 -->
+      </div>
+      <div class="memo-note">💡 메모는 보고서 작성 화면에서도 옆에 표시돼요. 키워드 위주로 짧게 적으면 충분해요.</div>
+
+      <button class="share-done-btn" onclick="goToReport()">✓ 공유 완료 → 보고서 작성하기</button>
+    </div>
+  </div>
+
+  <!-- ── PHASE 3: REPORT ── -->
+  <div id="phase-report" style="display:none">
+    <div class="sec-title"><div class="sec-icon icon-report">⚖️</div>최종 수사 보고서</div>
+    <div class="report-layout">
+      <div>
+        <div class="report-box">
+          <div class="report-prompt">모둠에서 공유한 <em>5가지 증거</em>를 종합하여 보고서를 작성하세요.</div>
+          <div class="report-sub">① 발해는 고구려를 계승한 국가인가?&nbsp;&nbsp;② 발해 역사는 우리 역사인가?&nbsp;&nbsp;③ 동북공정의 주장에 어떻게 반론할 수 있는가?</div>
+          <textarea class="report-area" id="report-text" placeholder="예시) 수집한 증거들을 종합하면, 발해는 고구려를 계승한 국가임을 알 수 있다. 첫째, E-01 속일본기에서..." oninput="updateWC()"></textarea>
+          <div class="wc" id="wc">0자 작성 중 (150자 이상 권장)</div>
+        </div>
+        <div class="submit-row">
+          <div class="submit-note">분석 완료: <span id="done-count">0</span>개 &nbsp;|&nbsp; <span id="char-ok" style="color:var(--muted)">미완성</span></div>
+          <button class="submit-btn" id="submit-btn" onclick="submitReport()" disabled>보고서 제출 →</button>
+        </div>
+        <div class="result" id="result-box">
+          <div class="result-title">✓ 수사 완료! 보고서가 제출되었습니다.</div>
+          <div class="result-body">📝 최종 보고서를 하이러닝 모둠 활동에 올려 공유하세요. 아래 핵심 포인트로 자신의 답변을 점검해보세요.</div>
+          <div class="result-hint">
+            <div class="hint-label">📌 내 역할의 핵심 포인트</div>
+            <div id="hint-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 메모 사이드바 -->
+      <div class="memo-sidebar" id="memo-sidebar">
+        <div class="memo-sidebar-title">📋 모둠 공유 메모</div>
+        <div id="memo-sidebar-content">
+          <div style="font-size:12px;color:var(--muted)">공유 단계에서 작성한 메모가 여기 표시돼요.</div>
+        </div>
+      </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+let selectedRole = 0;
+let doneCards = new Set();
+let totalSeconds = 27 * 60;
+
+const roleColors = {1:'#c8a94f',2:'#e07b3a',3:'#4a9eda',4:'#9b59b6'};
+const roleNames = {1:'문헌 수사관 A (E-01)',2:'문헌 수사관 B (E-02·03)',3:'유물 수사관 A (E-04)',4:'유물 수사관 B (E-05)'};
+const roleCards = {1:['e1'],2:['e2','e3'],3:['e4'],4:['e5']};
+
+// 카드별 핵심 키워드
+const keywords = {
+  e1: ['고구려','계승','외교','국서','고려','부여'],
+  e2: ['고려국왕','계승','공식','선언','외교','칭'],
+  e3: ['별종','계승','혈통','중국','고구려','해석'],
+  e4: ['온돌','고구려','계승','생활','말갈','문화'],
+  e5: ['수막새','문양','고구려','당','계승','양식','기와']
+};
+
+const hints = {
+  1:['• E-01: 발해가 스스로 "고구려의 후계자"라고 공식 외교 문서에 선언','• 국서는 국가의 공식 입장 → 가장 직접적인 계승 의식 증거'],
+  2:['• E-02: 고구려 줄임인 "고려" 왕호 사용 = 공식적·의도적 계승 천명','• E-03: 당나라 기록도 혈통 연결 인정, "별종" 해석이 논쟁의 핵심'],
+  3:['• E-04: 온돌은 한반도 북방 고유 → 중국·말갈과 구분되는 문화 표지','• 생활 문화의 계승 = 지배층이 고구려 사람들이었다는 증거'],
+  4:['• E-05: 꽃잎 수·배열·기법 동일 → 기술 전수, 단순 모방 아님','• 당나라 기와와 명확히 다름 → 당 아닌 고구려 문화권임을 입증']
+};
+
+// ── ROLE SELECT ──
+function selectRole(n) {
+  selectedRole = n;
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`rc-${n}`).classList.add('selected');
+  document.getElementById('start-btn').disabled = false;
+}
+
+// ── START ──
+function startActivity() {
+  document.getElementById('screen-role').classList.remove('active');
+  document.getElementById('screen-activity').classList.add('active');
+  document.getElementById('role-dot').style.background = roleColors[selectedRole];
+  document.getElementById('role-label').textContent = roleNames[selectedRole];
+  document.getElementById(`rs-${selectedRole}`).style.display = 'block';
+  startTimer();
+}
+
+// ── TIMER ──
+function startTimer() {
+  const el = document.getElementById('timer');
+  setInterval(() => {
+    if (totalSeconds <= 0) { el.textContent = '종료'; return; }
+    totalSeconds--;
+    const m = String(Math.floor(totalSeconds/60)).padStart(2,'0');
+    const s = String(totalSeconds%60).padStart(2,'0');
+    el.textContent = `${m}:${s}`;
+    if (totalSeconds < 300) el.style.color = '#e05c4b';
+  }, 1000);
+}
+
+// ── TOGGLE CARD ──
+function toggleEv(id) {
+  document.getElementById(`bd-${id}`).classList.toggle('open');
+  document.getElementById(`tg-${id}`).classList.toggle('open');
+}
+
+// ── READING TOGGLE ──
+function toggleReading(id) {
+  const box = document.getElementById(`reading-${id}`);
+  const arrow = document.getElementById(`rt-arrow-${id}`);
+  box.classList.toggle('open');
+  arrow.textContent = box.classList.contains('open') ? '▲' : '▼';
+}
+
+// ── GEMINI TOGGLE ──
+function toggleGemini(id) {
+  const box = document.getElementById(`gemini-${id}`);
+  const arrow = document.getElementById(`gt-arrow-${id}`);
+  box.classList.toggle('open');
+  arrow.textContent = box.classList.contains('open') ? '▲' : '▼';
+}
+
+// ── COPY PROMPT ──
+function copyPrompt(promptId, btn) {
+  const text = document.getElementById(promptId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓ 복사됨!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 프롬프트 복사'; }, 2000);
+  });
+}
+
+// ── NUDGE CHECK ──
+function checkNudge(cardId) {
+  const text = document.getElementById(`ans-${cardId}`).value;
+  const nudge = document.getElementById(`nudge-${cardId}`);
+  if (text.length < 5) { nudge.classList.remove('show'); return; }
+  const cleanText = text.replace(/\s+/g, ''); // Fix 2: 띄어쓰기 무시
+  const hasKeyword = keywords[cardId].some(k => cleanText.includes(k));
+  if (!hasKeyword) nudge.classList.add('show');
+  else nudge.classList.remove('show');
+}
+
+// ── MARK DONE ──
+function markDone(cardId) {
+  const text = document.getElementById(`ans-${cardId}`).value.trim();
+  const nudge = document.getElementById(`nudge-${cardId}`);
+
+  // Fix 1: 5자 미만이면 완료 차단
+  if (text.length < 5) {
+    nudge.classList.add('show');
+    nudge.innerHTML = '<div class="nk-label">💡 잠깐! 답변을 먼저 작성해보세요</div>아직 분석 내용이 없어요. 읽기 자료를 참고해서 5자 이상 작성해야 완료할 수 있어요.';
+    return;
+  }
+
+  // Fix 2: 띄어쓰기 무시하고 키워드 체크
+  const cleanText = text.replace(/\s+/g, '');
+  const hasKeyword = keywords[cardId].some(k => cleanText.includes(k));
+  if (!hasKeyword) nudge.classList.add('show');
+  else nudge.classList.remove('show');
+
+  doneCards.add(cardId);
+  const btn = document.getElementById(`db-${cardId}`);
+  btn.classList.add('checked');
+  btn.innerHTML = '<span>✓</span> 분석 완료';
+  document.getElementById(`ec-${cardId}`).classList.add('done');
+
+  const myCards = roleCards[selectedRole];
+  const done = myCards.filter(c => doneCards.has(c)).length;
+  const pct = Math.round((done/myCards.length)*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('done-count').textContent = doneCards.size;
+
+  const goBtn = document.getElementById('go-share-btn');
+  if (myCards.every(c => doneCards.has(c))) goBtn.classList.add('ready');
+}
+
+// ── GO TO SHARE ──
+function goToShare() {
+  if (!document.getElementById('go-share-btn').classList.contains('ready')) return;
+
+  // 메모 그리드 생성 (자기 역할 제외)
+  const memoData = [
+    { role: 1, label: '역할 1번 — E-01 속일본기', ev: 'E-01', placeholder: '고구려 옛 땅, 외교 문서, 계승 선언...' },
+    { role: 2, label: '역할 2번 — E-02·03 문헌', ev: 'E-02·03', placeholder: '고려국왕 자칭, 별종 해석...' },
+    { role: 3, label: '역할 3번 — E-04 온돌', ev: 'E-04', placeholder: '온돌, 고구려 생활 문화, 말갈과 차이...' },
+    { role: 4, label: '역할 4번 — E-05 수막새', ev: 'E-05', placeholder: '8엽 연꽃, 동일 양식, 당나라와 차이...' },
+  ];
+
+  const grid = document.getElementById('memo-grid');
+  grid.innerHTML = memoData.map(d => {
+    const isMine = d.role === selectedRole;
+    return `
+      <div class="memo-item ${isMine ? 'mine' : ''}">
+        <div class="memo-label">${d.label}${isMine ? '<span class="mine-tag">← 내 역할</span>' : ''}</div>
+        <textarea class="memo-area" id="memo-r${d.role}"
+          placeholder="${isMine ? '내 분석 내용은 위에서 작성했어요' : d.placeholder}"
+          ${isMine ? 'disabled' : ''}
+        ></textarea>
+      </div>`;
+  }).join('');
+
+  // 내 역할 메모칸엔 내 분석 답변 미리보기 채우기
+  const myCardId = roleCards[selectedRole][0];
+  const myAns = document.getElementById(`ans-${myCardId}`)?.value || '';
+  const myMemo = document.getElementById(`memo-r${selectedRole}`);
+  if (myMemo && myAns) myMemo.value = myAns.slice(0, 80) + (myAns.length > 80 ? '...' : '');
+
+  document.getElementById('phase-analysis').style.display = 'none';
+  document.getElementById('phase-share').style.display = 'block';
+  document.getElementById('ph-1').className = 'phase done';
+  document.getElementById('ph-2').className = 'phase active';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── GO TO REPORT ──
+function goToReport() {
+  // 메모 사이드바 채우기
+  const memoData = [
+    { role: 1, label: 'E-01 속일본기 (역할 1)', color: '#c8a94f' },
+    { role: 2, label: 'E-02·03 문헌 (역할 2)', color: '#e07b3a' },
+    { role: 3, label: 'E-04 온돌 (역할 3)', color: '#4a9eda' },
+    { role: 4, label: 'E-05 수막새 (역할 4)', color: '#9b59b6' },
+  ];
+
+  const sidebar = document.getElementById('memo-sidebar-content');
+  sidebar.innerHTML = memoData.map(d => {
+    const memoEl = document.getElementById(`memo-r${d.role}`);
+    const text = memoEl ? (memoEl.value.trim() || '(메모 없음)') : '(메모 없음)';
+    return `
+      <div class="memo-ref-item">
+        <div class="memo-ref-label" style="color:${d.color}">${d.label}</div>
+        <div class="memo-ref-text">${text}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('phase-share').style.display = 'none';
+  document.getElementById('phase-report').style.display = 'block';
+  document.getElementById('ph-2').className = 'phase done';
+  document.getElementById('ph-3').className = 'phase active';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── WORD COUNT ──
+function updateWC() {
+  const len = document.getElementById('report-text').value.length;
+  const el = document.getElementById('wc');
+  el.textContent = `${len}자 작성 중 (150자 이상 권장)`;
+  el.className = len >= 150 ? 'wc ok' : 'wc';
+  const ok = document.getElementById('char-ok');
+  ok.textContent = len >= 50 ? `${len}자` : '미완성';
+  ok.style.color = len >= 150 ? '#5cb880' : 'var(--muted)';
+  document.getElementById('submit-btn').disabled = len < 80; // Fix 4: 80자 이상부터 제출 가능
+}
+
+// Fix 3: 새로고침/뒤로가기 경고
+window.addEventListener('beforeunload', function(e) {
+  e.preventDefault();
+  e.returnValue = '';
+});
+
+// ── SUBMIT ──
+function submitReport() {
+  document.getElementById('hint-content').innerHTML = hints[selectedRole].map(h=>`<div style="margin-bottom:4px">${h}</div>`).join('');
+  document.getElementById('result-box').classList.add('show');
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('ph-3').className = 'phase done';
+  document.getElementById('ph-4').className = 'phase active';
+  document.getElementById('result-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
