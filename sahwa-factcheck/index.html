@@ -1,1 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>조보청 특별 조사관 — 사화의 진실</title>
+<style>
+:root {
+  --ink:#1a1208;--paper:#f5edd8;--paper2:#ede0c4;
+  --vermil:#b83030;--vermil2:#d94040;
+  --gold:#8a6a20;--gold2:#c49a30;
+  --jade:#2e5e44;--jade2:#3d7a5a;
+  --muted:#7a6850;
+  --font-b:'Georgia',serif;
+  --font-s:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:#2a1f10;
+  background-image:radial-gradient(ellipse at 30% 20%,#3a2a14 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,#1a1008 0%,transparent 60%);
+  min-height:100vh;display:flex;justify-content:center;
+  padding:20px 12px 60px;font-family:var(--font-s);
+}
+#app{width:100%;max-width:460px;}
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--paper);
+  border:1px solid var(--gold2);border-radius:2px;
+  padding:10px 22px;font-size:13px;
+  opacity:0;pointer-events:none;z-index:9999;transition:opacity 0.3s;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;
+}
+#toast.show{opacity:1;}
 
+/* ─── GLOSS TOOLTIP ─── */
+.term{
+  border-bottom:1.5px dotted var(--gold);cursor:pointer;
+  color:inherit;font-weight:inherit;
+  transition:background 0.15s;
+  border-radius:2px;padding:0 1px;
+}
+.term:hover,.term:active{background:rgba(139,106,32,0.12);}
+#gloss-popup{
+  position:fixed;z-index:9998;
+  background:var(--ink);color:var(--paper);
+  border:1px solid var(--gold2);border-radius:4px;
+  padding:10px 14px;font-size:12px;line-height:1.7;
+  font-family:var(--font-s);max-width:240px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.5);
+  display:none;
+  animation:glossIn 0.15s ease;
+}
+@keyframes glossIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+#gloss-popup .g-term{font-weight:700;color:var(--gold2);margin-bottom:4px;font-size:13px;}
+#gloss-popup .g-close{float:right;cursor:pointer;color:var(--muted);font-size:14px;margin-left:8px;}
+
+.doc-shell{
+  background:var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(139,106,32,0.06) 27px,rgba(139,106,32,0.06) 28px),
+    radial-gradient(ellipse at 50% 0%,rgba(240,220,170,0.6) 0%,transparent 60%);
+  border-radius:2px;
+  box-shadow:0 0 0 1px rgba(139,106,32,0.4),0 0 0 4px rgba(42,31,16,0.8),0 0 0 5px rgba(139,106,32,0.3),0 20px 60px rgba(0,0,0,0.7);
+  animation:unfurl 0.45s cubic-bezier(0.22,1,0.36,1);
+  position:relative;overflow:hidden;
+}
+@keyframes unfurl{from{opacity:0;transform:translateY(12px) scaleY(0.97);}to{opacity:1;transform:translateY(0) scaleY(1);}}
+.doc-shell>*{position:relative;z-index:1;}
+.cr{position:absolute;width:20px;height:20px;border-style:solid;border-color:var(--gold);opacity:0.35;z-index:2;}
+.cr.tl{top:8px;left:8px;border-width:1.5px 0 0 1.5px;}
+.cr.tr{top:8px;right:8px;border-width:1.5px 1.5px 0 0;}
+.cr.bl{bottom:8px;left:8px;border-width:0 0 1.5px 1.5px;}
+.cr.br{bottom:8px;right:8px;border-width:0 1.5px 1.5px 0;}
+
+.progress-row{display:flex;align-items:center;gap:8px;padding:10px 22px;border-bottom:1px solid rgba(139,106,32,0.2);background:rgba(139,106,32,0.04);}
+.prog-label{font-size:11px;color:var(--muted);white-space:nowrap;}
+.prog-track{flex:1;display:flex;gap:5px;}
+.prog-pip{flex:1;height:5px;border-radius:2px;background:rgba(139,106,32,0.15);transition:background 0.4s;}
+.prog-pip.done{background:var(--jade);}
+.prog-pip.active{background:var(--vermil);}
+.prog-score{font-size:12px;font-weight:700;color:var(--gold);min-width:36px;text-align:right;}
+
+.doc-header{border-bottom:2px solid var(--gold);padding:20px 22px 16px;text-align:center;}
+.office-badge{font-size:11px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px;font-weight:700;}
+.doc-title{font-family:var(--font-b);font-size:21px;font-weight:800;color:var(--ink);line-height:1.3;}
+.doc-sub{font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-top:6px;}
+.doc-body{padding:20px 22px 28px;}
+
+.intro-seal{width:76px;height:76px;border-radius:50%;background:#8b1a1a;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 18px;box-shadow:0 0 0 3px var(--paper),0 0 0 5px #c03030,0 6px 20px rgba(0,0,0,0.25);animation:sealDrop 0.5s 0.2s both cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes sealDrop{from{transform:scale(0) rotate(-20deg);opacity:0;}to{transform:scale(1) rotate(0);opacity:1;}}
+.intro-text{font-size:13px;color:var(--ink);line-height:2;text-align:center;margin-bottom:18px;}
+.intro-text strong{color:var(--vermil);font-weight:700;}
+.mission-box{background:rgba(139,106,32,0.07);border:1px solid rgba(139,106,32,0.3);border-left:3px solid var(--gold);border-radius:0 3px 3px 0;padding:13px 15px;margin-bottom:18px;}
+.mission-title{font-size:10px;color:var(--gold);letter-spacing:0.2em;font-weight:700;margin-bottom:7px;}
+.mission-text{font-size:12px;color:var(--ink);line-height:1.8;}
+.sahwa-list{display:flex;flex-direction:column;gap:5px;margin-bottom:20px;}
+.sahwa-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:2px;background:rgba(42,31,16,0.04);border:1px solid rgba(139,106,32,0.15);}
+.sahwa-year{font-size:11px;color:var(--gold);font-weight:700;min-width:36px;}
+.sahwa-name{font-size:13px;font-weight:700;color:var(--ink);flex:1;}
+.sahwa-tag{font-size:10px;color:var(--muted);}
+
+.official-stamp{display:inline-block;background:#8b1a1a;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:0.15em;border-radius:1px;margin-bottom:12px;box-shadow:1px 1px 0 rgba(0,0,0,0.3);}
+.official-doc{background:rgba(42,31,16,0.04);border:1px solid rgba(139,106,32,0.25);border-radius:2px;padding:15px;margin-bottom:18px;position:relative;}
+.official-doc::before{content:'公文';position:absolute;top:9px;right:11px;font-size:10px;color:rgba(139,106,32,0.35);font-weight:700;letter-spacing:0.1em;}
+.official-label{font-size:10px;color:var(--gold);letter-spacing:0.2em;font-weight:700;margin-bottom:8px;}
+.official-text{font-size:13px;color:var(--ink);line-height:1.9;font-family:var(--font-b);}
+.official-text em{color:var(--vermil);font-style:normal;font-weight:700;}
+
+.clues-label{font-size:10px;color:var(--muted);letter-spacing:0.2em;font-weight:700;margin-bottom:9px;}
+.clue-list{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.clue-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:2px;background:rgba(46,94,68,0.06);border:1px solid rgba(46,94,68,0.2);font-size:12px;color:var(--ink);line-height:1.7;}
+.clue-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+
+hr.div{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(139,106,32,0.35),transparent);margin:14px 0;}
+
+.choices-label{font-size:11px;color:var(--muted);text-align:center;margin-bottom:11px;letter-spacing:0.08em;}
+.choices{display:flex;flex-direction:column;gap:7px;margin-bottom:6px;}
+.choice-btn{width:100%;padding:12px 14px;background:rgba(255,255,255,0.5);border:1.5px solid rgba(139,106,32,0.3);border-radius:2px;cursor:pointer;font-size:13px;font-family:var(--font-s);color:var(--ink);text-align:left;transition:all 0.18s;display:flex;align-items:center;gap:10px;}
+.choice-btn:hover:not(:disabled){background:rgba(139,106,32,0.1);border-color:var(--gold);transform:translateX(2px);}
+.choice-btn:disabled{cursor:not-allowed;}
+.choice-btn.correct{background:rgba(46,94,68,0.15);border-color:var(--jade2);border-width:2px;}
+.choice-btn.wrong{background:rgba(184,48,48,0.1);border-color:var(--vermil);opacity:0.7;}
+.choice-btn.reveal-correct{background:rgba(46,94,68,0.1);border-color:var(--jade2);}
+.choice-letter{width:22px;height:22px;border-radius:50%;background:rgba(139,106,32,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0;}
+.correct .choice-letter,.reveal-correct .choice-letter{background:var(--jade2);color:#fff;}
+.wrong .choice-letter{background:var(--vermil);color:#fff;}
+
+.verdict-stamp{text-align:center;padding:8px 0 14px;}
+.stamp-circle{width:68px;height:68px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:30px;border:3px solid;animation:stampIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes stampIn{from{transform:scale(0) rotate(-15deg);opacity:0;}to{transform:scale(1) rotate(0);opacity:1;}}
+.correct-stamp{border-color:var(--jade);background:rgba(46,94,68,0.1);}
+.wrong-stamp{border-color:var(--vermil);background:rgba(184,48,48,0.07);}
+
+.feedback-box{border-radius:2px;padding:13px 15px;margin-top:12px;font-size:12px;line-height:1.8;animation:fadeIn 0.35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.correct-fb{background:rgba(46,94,68,0.09);border:1px solid var(--jade2);border-left:3px solid var(--jade);}
+.wrong-fb{background:rgba(184,48,48,0.07);border:1px solid var(--vermil);border-left:3px solid var(--vermil);}
+.fb-verdict{font-size:13px;font-weight:700;margin-bottom:7px;}
+.correct-fb .fb-verdict{color:var(--jade);}
+.wrong-fb .fb-verdict{color:var(--vermil);}
+.fb-text strong{color:var(--vermil);}
+
+/* 피해 대상 태그 */
+.victim-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:10px;padding:5px 10px;border-radius:2px;
+  font-size:11px;font-weight:700;font-family:var(--font-s);
+  background:rgba(139,106,32,0.08);border:1px solid rgba(139,106,32,0.3);
+  color:var(--gold);
+}
+
+.hist-note{border:1px dashed rgba(139,106,32,0.4);border-radius:2px;padding:12px 14px;margin-top:10px;font-size:12px;color:var(--ink);line-height:1.8;background:rgba(139,106,32,0.04);}
+.hist-note::before{content:'📜 실제 역사';display:block;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;margin-bottom:5px;}
+
+.btn{width:100%;padding:13px;border:none;border-radius:2px;font-family:var(--font-b);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.18s;letter-spacing:0.04em;}
+.btn+.btn{margin-top:8px;}
+.btn-ink{background:var(--ink);color:var(--paper);border:1.5px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+.btn-ink:hover{background:#2e2010;transform:translateY(-1px);}
+.btn-jade{background:var(--jade);color:#fff;border:1.5px solid var(--jade2);}
+.btn-jade:hover{background:var(--jade2);transform:translateY(-1px);}
+.btn-outline{background:transparent;color:var(--muted);border:1.5px solid rgba(139,106,32,0.3);}
+.btn-outline:hover{border-color:var(--gold);color:var(--ink);}
+
+.final-banner{text-align:center;padding:20px 0 16px;border-bottom:1px solid rgba(139,106,32,0.25);margin-bottom:16px;}
+.final-icon{font-size:54px;margin-bottom:11px;}
+.final-rank{font-size:11px;color:var(--gold);letter-spacing:0.2em;margin-bottom:5px;}
+.final-title{font-family:var(--font-b);font-size:21px;font-weight:800;color:var(--ink);margin-bottom:7px;}
+.final-desc{font-size:12px;color:var(--muted);line-height:1.7;}
+.final-score{font-size:12px;color:var(--gold);margin-top:7px;font-weight:700;}
+
+.compare-wrap{border:1px solid rgba(139,106,32,0.3);border-radius:2px;overflow:hidden;margin-bottom:16px;}
+.compare-header{background:var(--ink);color:var(--paper);padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:0.15em;}
+.compare-row{display:flex;border-top:1px solid rgba(139,106,32,0.12);}
+.compare-row:first-of-type{border-top:none;}
+.cmp-cell{padding:9px 8px;font-size:11px;}
+.cmp-cell.label{color:var(--muted);flex:0.8;border-right:1px solid rgba(139,106,32,0.12);}
+.cmp-cell.nominal{color:var(--vermil);font-weight:600;flex:1.2;border-right:1px solid rgba(139,106,32,0.12);}
+.cmp-cell.real{color:var(--jade);font-weight:600;flex:1.6;}
+/* 내 선택 표시 열 */
+.cmp-cell.mine-chosen{font-size:10px;color:var(--muted);flex:1.4;border-right:1px solid rgba(139,106,32,0.12);}
+.compare-row:nth-child(even){background:rgba(139,106,32,0.03);}
+
+.title-badge{background:var(--ink);border:1px solid var(--gold);border-radius:2px;padding:16px;margin:14px 0;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);animation:fadeIn 0.5s 0.2s both;}
+.t-tag{font-size:10px;color:var(--gold);letter-spacing:0.2em;margin-bottom:5px;}
+.t-icon{font-size:34px;margin-bottom:5px;}
+.t-name{font-size:17px;font-weight:800;color:var(--paper);margin-bottom:5px;}
+.t-desc{font-size:12px;color:rgba(240,220,170,0.65);line-height:1.6;}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="gloss-popup"><span class="g-close" onclick="closeGloss()">✕</span><div class="g-term" id="g-term"></div><div id="g-def"></div></div>
+<div id="app"></div>
+<script>
+// ═══ 용어 사전 ═══
+const GLOSSARY = {
+  사초:     {term:'사초(史草)', def:'사관(역사 기록 담당 관리)이 직접 보고 들은 것을 날마다 기록한 역사 초안. 왕도 볼 수 없었으며, 후대에 실록을 편찬할 때 사용했습니다.'},
+  사관:     {term:'사관(史官)', def:'역사를 기록하는 전담 관리. 왕의 모든 언행을 기록했으며, 왕도 이 기록을 볼 수 없었습니다.'},
+  훈구:     {term:'훈구(勳舊)', def:'세조가 왕위를 빼앗을 때 도운 공신과 그 후손 세력. 중앙 요직을 독점하고 대규모 토지를 가졌습니다.'},
+  사림:     {term:'사림(士林)', def:'성리학을 바탕으로 지방에서 성장한 선비 집단. 훈구의 비리를 비판하며 중앙 정치에 진출하려 했습니다.'},
+  언관:     {term:'언관(言官)', def:'왕과 고위 관리의 잘못을 비판·탄핵할 수 있는 관직. 사헌부와 사간원이 대표적입니다.'},
+  사헌부:   {term:'사헌부(司憲府)', def:'관리의 비리를 감찰하고 탄핵하는 기관. 오늘날의 감사원과 검찰에 해당합니다.'},
+  사간원:   {term:'사간원(司諫院)', def:'왕의 잘못을 간언(직언)하는 기관. 왕이라도 이들의 비판을 쉽게 무시할 수 없었습니다.'},
+  경연:     {term:'경연(經筵)', def:'왕이 신하들과 함께 유교 경전을 읽고 토론하는 자리. 신하들이 왕을 직접 교육하고 비판할 수 있는 통로였습니다.'},
+  위훈삭제: {term:'위훈 삭제(僞勳削除)', def:'거짓으로 공신이 된 사람들의 공신 칭호와 함께 주어진 토지·노비를 회수하는 것. 조광조가 훈구 76명을 대상으로 추진했습니다.'},
+  수렴청정: {term:'수렴청정(垂簾聽政)', def:'왕이 어릴 때 왕실 어른(주로 대비)이 발 뒤에서 정치를 대신 처리하는 제도. 문정왕후가 명종을 대신해 수렴청정했습니다.'},
+  외척:     {term:'외척(外戚)', def:'왕의 어머니나 왕비의 친정 집안. 왕과 혼인 관계를 이용해 권력을 잡는 경우가 많았습니다.'},
+  대윤:     {term:'대윤(大尹)', def:'인종의 외삼촌 윤임을 중심으로 한 세력. 인종이 왕위에 오르면서 권력을 잡았지만, 인종이 8개월 만에 죽으면서 몰락했습니다.'},
+  소윤:     {term:'소윤(小尹)', def:'명종의 외삼촌 윤원형을 중심으로 한 세력. 문정왕후의 수렴청정을 등에 업고 대윤을 제거했습니다.'},
+  붕당:     {term:'붕당(朋黨)', def:'같은 학문적 뿌리나 정치적 입장을 가진 신하들이 모인 집단. 조선 후기에는 붕당 간 경쟁이 정치의 중심이 됩니다.'},
+  조의제문: {term:'조의제문(弔義帝文)', def:'초나라 항우에게 억울하게 죽임당한 의제(義帝)를 추모하는 글. 단종을 의제에, 세조를 항우에 빗댄 것으로 해석되었습니다.'},
+  찬탈자:   {term:'찬탈자(簒奪者)', def:'정당한 방법이 아닌 무력이나 권모술수로 왕위를 빼앗은 사람. 세조가 조카 단종의 왕위를 빼앗은 것을 가리킵니다.'},
+  공신:     {term:'공신(功臣)', def:'나라에 큰 공을 세운 신하. 토지·노비·관직을 하사받으며 특권 계층을 형성했습니다.'},
+};
+
+function T(word, key){
+  return `<span class="term" onclick="showGloss(event,'${key}')">${word}</span>`;
+}
+
+function showGloss(e, key){
+  e.stopPropagation();
+  const g = GLOSSARY[key]; if(!g) return;
+  const popup = document.getElementById('gloss-popup');
+  document.getElementById('g-term').textContent = g.term;
+  document.getElementById('g-def').textContent = g.def;
+  popup.style.display = 'block';
+  // 위치: 클릭 위치 기준
+  const x = Math.min(e.clientX, window.innerWidth - 260);
+  const y = e.clientY + 16;
+  const maxY = window.innerHeight - 150;
+  popup.style.left = Math.max(8, x) + 'px';
+  popup.style.top = (y > maxY ? e.clientY - 130 : y) + 'px';
+}
+function closeGloss(){ document.getElementById('gloss-popup').style.display='none'; }
+document.addEventListener('click', closeGloss);
+
+// ═══ DATA ═══
+const CASES_RAW = [
+  {
+    id:'muo', year:'1498년 (연산군 4년)', name:'무오사화(戊午士禍)',
+    officialDoc:`${T('사관','사관')} 김일손이 스승 김종직의 글 ${T('〈조의제문〉','조의제문')}을 ${T('사초','사초')}에 기록하였으니, 이는 세조 대왕을 ${T('찬탈자','찬탈자')}로 비유한 대역부도한 행위이다. 이에 관련자를 엄히 처벌한다.`,
+    offKeyword:'〈조의제문〉 — 세조 비방 불경죄',
+    clues:[
+      {icon:'📊', text:`사화 직전, ${T('사림','사림')}이 ${T('사헌부','사헌부')}·${T('사간원','사간원')} 등 ${T('언관','언관')}직을 대거 차지하며 ${T('훈구','훈구')}의 비리를 탄핵하기 시작했습니다.`},
+      {icon:'📅', text:`${T('〈조의제문〉','조의제문')}이 쓰인 건 30년 전, 스승 김종직이 죽은 지도 6년이 지났습니다. 왜 하필 지금 문제 삼았을까요?`},
+      {icon:'🔍', text:`이극돈 등 ${T('훈구','훈구')} 측이 의도적으로 해당 ${T('사초','사초')}를 찾아내 연산군에게 고했습니다.`},
+    ],
+    choices:[
+      {id:'A', text:'세조를 비방한 불경스러운 글에 대한 정당한 처벌'},
+      {id:'B', text:'언관직을 장악한 사림을 몰아내려는 훈구의 권력 다툼'},
+      {id:'C', text:'연산군이 자신을 비판하는 세력을 개인적으로 제거한 것'},
+      {id:'D', text:'사림과 훈구의 학문적·사상적 노선 차이에서 비롯된 갈등'},
+    ],
+    correct:'B',
+    victim:'⚔️ 피해 대상: 사림 집중 피해',
+    feedback:`핵심은 30년 전 죽은 사람의 글을 왜 지금 꺼냈느냐입니다. 성종 대부터 ${T('사림','사림')}이 ${T('언관','언관')}직에 진출해 ${T('훈구','훈구')}의 비리를 탄핵하기 시작했고, 훈구는 이를 막으려 연산군을 이용했습니다. 연산군 입장에서도 자신을 비판하는 사림을 제거할 명분이 생겼으니 이해관계가 맞아떨어진 것입니다.`,
+    histNote:`사화 후 사림은 잠시 후퇴했지만, 지방 서원과 향약을 기반으로 세력을 유지했습니다. ${T('훈구','훈구')}의 일시적 승리처럼 보였지만, ${T('사림','사림')}의 뿌리는 훨씬 깊었습니다.`,
+  },
+  {
+    id:'gapja', year:'1504년 (연산군 10년)', name:'갑자사화(甲子士禍)',
+    officialDoc:`선왕(성종)의 후궁들이 폐비 윤씨를 모함하여 죽음에 이르게 하였으니 용서할 수 없다. 이를 간언하지 않고 방관한 조정 신하들도 공범이다. 가담자를 모두 엄벌에 처한다.`,
+    offKeyword:'어머니 폐비 윤씨에 대한 복수',
+    clues:[
+      {icon:'⚠️', text:`처벌 대상이 ${T('사림','사림')}만이 아니었습니다. 무오사화 때 사림을 공격했던 ${T('훈구','훈구')} 대신들도 이번엔 화를 피하지 못했습니다.`},
+      {icon:'📜', text:`연산군은 이 시기 ${T('경연','경연')}(왕의 공부 모임)을 폐지하고, 간언하는 신하는 누구든 처벌했습니다.`},
+      {icon:'📊', text:`사화 이후 ${T('사헌부','사헌부')}·${T('사간원','사간원')} 등 언론 기관이 사실상 무력화되었습니다.`},
+    ],
+    choices:[
+      {id:'A', text:'어머니 폐비 윤씨의 억울한 죽음에 대한 복수'},
+      {id:'B', text:'훈구가 사림을 완전히 제거하려 일으킨 2차 공세'},
+      {id:'C', text:'신하들의 간언을 차단하고 왕권을 극단화한 연산군의 폭정'},
+      {id:'D', text:'사림 내부 온건파와 급진파의 분열에서 비롯된 사건'},
+    ],
+    correct:'C',
+    victim:'⚔️ 피해 대상: 사림 + 훈구 모두 (연산군에게 간언한 모든 세력)',
+    feedback:`갑자사화는 다른 사화와 결이 다릅니다. ${T('사림','사림')}도 ${T('훈구','훈구')}도 가리지 않고 자신에게 간언하는 세력 전체를 제거한 것이 핵심입니다. 특정 세력의 이익이 아니라 연산군 개인의 폭정이 원인이었습니다.`,
+    histNote:`연산군은 성균관을 유흥장으로 쓰는 등 폭정을 이어가다 1506년 중종반정으로 폐위됩니다. 아이러니하게도, 반정을 이끈 건 ${T('훈구','훈구')} 세력이었습니다.`,
+  },
+  {
+    id:'gimo', year:'1519년 (중종 14년)', name:'기묘사화(己卯士禍)',
+    officialDoc:`조광조 일파가 ${T('붕당','붕당')}을 결성하고 조정을 어지럽히며, 나뭇잎에 "주초위왕(走肖爲王)"이라는 글씨가 새겨졌으니 이는 조씨가 왕이 된다는 역모의 징조이다. 즉각 처벌한다.`,
+    offKeyword:'"주초위왕(走肖爲王)" — 나뭇잎 역모 글씨',
+    clues:[
+      {icon:'🌿', text:`나뭇잎의 글씨는 ${T('훈구','훈구')} 세력이 꿀물로 글자를 써서 벌레가 갉아먹게 만든 조작으로 추정됩니다.`},
+      {icon:'📜', text:`조광조는 ${T('훈구','훈구')} 76명의 ${T('공신','공신')} 칭호와 토지를 빼앗자는 "${T('위훈삭제','위훈삭제')}"를 주장하며 훈구의 기득권을 정면으로 공격했습니다.`},
+      {icon:'😤', text:`급진적 개혁안을 쏟아내는 조광조를 처음엔 지지하던 중종도 점점 부담을 느끼기 시작했습니다.`},
+    ],
+    choices:[
+      {id:'A', text:'조광조의 실제 역모 혐의에 대한 처벌'},
+      {id:'B', text:'급진 개혁으로 기득권을 위협받은 훈구의 반격'},
+      {id:'C', text:'중종이 왕권 강화를 위해 사림을 견제한 것'},
+      {id:'D', text:'사림 내부 온건파와 급진파의 갈등'},
+    ],
+    correct:'B',
+    victim:'⚔️ 피해 대상: 사림 집중 피해 (조광조 일파)',
+    feedback:`"${T('위훈삭제','위훈삭제')}"가 결정적이었습니다. 76명의 ${T('훈구','훈구')} ${T('공신','공신')}이 칭호와 토지를 빼앗길 위기에 처하자 즉각 반격에 나섰습니다. 나뭇잎 글씨는 이 반격의 구실이었고, 중종도 너무 빠른 개혁 속도에 부담을 느껴 훈구 편을 들었습니다.`,
+    histNote:`조광조는 사약을 받았지만, 그의 이상은 이후 ${T('사림','사림')}의 정신적 원형이 됩니다. 기묘사화는 "사림이 얼마나 높은 곳을 바라봤는지"를 보여준 사건이기도 합니다.`,
+  },
+  {
+    id:'eulsa', year:'1545년 (명종 즉위년)', name:'을사사화(乙巳士禍)',
+    officialDoc:`${T('대윤','대윤')} 윤임 일파가 경원대군(명종)을 해치고 봉성군을 왕으로 추대하려는 역모를 꾸몄으니, 이를 고변한 ${T('공신','공신')}들에게 포상하고 윤임 일파를 처단한다.`,
+    offKeyword:'윤임 일파의 역모',
+    clues:[
+      {icon:'👑', text:`${T('대윤','대윤')}은 인종의 ${T('외척','외척')} 윤임, ${T('소윤','소윤')}은 명종의 ${T('외척','외척')} 윤원형. 인종이 재위 8개월 만에 죽고 어린 명종이 즉위하자 소윤이 대윤을 공격했습니다.`},
+      {icon:'💡', text:`윤원형은 명종의 어머니 문정왕후의 동생입니다. 문정왕후가 ${T('수렴청정','수렴청정')}을 하면서 ${T('소윤','소윤')}이 권력의 핵심에 섰습니다.`},
+      {icon:'📊', text:`사화의 피해자 중 ${T('사림','사림')}도 있었지만, 핵심 갈등 당사자는 ${T('훈구','훈구')} 내 두 ${T('외척','외척')} 세력이었습니다.`},
+    ],
+    choices:[
+      {id:'A', text:'윤임의 실제 역모에 대한 처벌'},
+      {id:'B', text:'사림이 성장하자 훈구가 일으킨 네 번째 사화'},
+      {id:'C', text:'두 외척 가문 대윤(윤임)과 소윤(윤원형)의 권력 다툼'},
+      {id:'D', text:'문정왕후가 사림을 탄압하기 위해 조작한 사건'},
+    ],
+    correct:'C',
+    victim:'⚔️ 피해 대상: 외척 간 싸움에 사림이 부수적으로 연루',
+    feedback:`을사사화는 ${T('훈구','훈구')} 대 ${T('사림','사림')}의 구도가 아닙니다. ${T('대윤','대윤')}(인종 외삼촌)과 ${T('소윤','소윤')}(명종 외삼촌)이라는 두 ${T('외척','외척')} 가문이 왕위 교체 시점에 정면으로 충돌한 것입니다. 사림은 이 싸움에서 부수적으로 피해를 입었을 뿐입니다.`,
+    histNote:`을사사화 이후 윤원형과 문정왕후가 20년간 권력을 잡습니다. 하지만 선조 즉위 이후 ${T('사림','사림')}이 마침내 중앙 정치를 장악하며, 4대에 걸친 사림의 긴 여정이 끝납니다.`,
+  },
+];
+
+const RANKS=[
+  {min:4,icon:'🏛️',rank:'수석 조사관',name:'진실의 탐구자',desc:'"공문서는 항상 진짜 이야기를 숨기고 있소." 4대 사화의 명분과 실제를 모두 꿰뚫었습니다.'},
+  {min:3,icon:'📜',rank:'선임 조사관',name:'날카로운 눈',desc:'대부분의 진실을 밝혀냈습니다. 역사의 표면 아래를 읽는 눈이 있습니다.'},
+  {min:2,icon:'🖊️',rank:'조사관 견습',name:'공문서의 그늘',desc:'절반은 꿰뚫었지만, 절반은 공식 명분에 속았습니다. 조선 조정의 문서는 그만큼 교묘했습니다.'},
+  {min:0,icon:'📋',rank:'조보 필사원',name:'공문을 그대로 믿었소',desc:'공식 발표를 그대로 믿었군요. 조선 조정이 바라던 반응이 바로 그것이었습니다.'},
+];
+
+// ═══ SHUFFLE ═══
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ═══ STATE ═══
+let S={phase:'intro',ci:0,answered:false,selectedId:null,score:0,results:[],shuffledChoices:[]};
+// CASES는 매 플레이마다 선택지 셔플 적용
+let CASES=[];
+function initCases(){
+  CASES=CASES_RAW.map(c=>({...c,choices:shuffle(c.choices)}));
+}
+
+// ═══ UTILS ═══
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2400);
+}
+function crn(){return '<div class="cr tl"></div><div class="cr tr"></div><div class="cr bl"></div><div class="cr br"></div>';}
+function progBar(){
+  const pips=CASES.map((_,i)=>{
+    let c='prog-pip';
+    if(i<S.ci)c+=' done';else if(i===S.ci)c+=' active';
+    return `<div class="${c}"></div>`;
+  }).join('');
+  return `<div class="progress-row"><span class="prog-label">📋 조사 진행</span><div class="prog-track">${pips}</div><span class="prog-score">${S.score}/${CASES.length}</span></div>`;
+}
+
+// ═══ RENDER ═══
+function R(){
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('app').innerHTML=
+    S.phase==='intro'?renderIntro():
+    S.phase==='case'?renderCase():renderFinal();
+}
+
+function renderIntro(){
+  const list=CASES_RAW.map(c=>`
+    <div class="sahwa-item">
+      <span class="sahwa-year">${c.year.slice(0,4)}</span>
+      <span class="sahwa-name">${c.name}</span>
+      <span class="sahwa-tag">조사 대기</span>
+    </div>`).join('');
+  return `
+  <div class="doc-shell">
+    ${crn()}
+    <div class="doc-header">
+      <div class="office-badge">📋 조선 조보청 특별 조사국</div>
+      <div class="doc-title">사화의 진실을 밝혀라</div>
+      <div class="doc-sub">4대 사화 진상 조사 — 명분 vs 실제</div>
+    </div>
+    <div class="doc-body">
+      <div class="intro-seal">⚖️</div>
+      <div class="intro-text">
+        조선 조정은 선비들을 숙청할 때마다<br>
+        <strong>그럴듯한 공식 명분</strong>을 내세웠습니다.<br><br>
+        당신은 조보청 특별 조사관입니다.<br>
+        공문서를 받고 단서를 검토해<br>
+        <strong>진짜 원인</strong>을 밝혀내야 합니다.
+      </div>
+      <div class="mission-box">
+        <div class="mission-title">📌 임무</div>
+        <div class="mission-text">공식 발표문과 단서 3개를 검토한 뒤, 사화의 진짜 원인을 선택하시오. 밑줄 친 용어를 탭하면 설명을 볼 수 있습니다.</div>
+      </div>
+      <div class="sahwa-list">${list}</div>
+      <button class="btn btn-ink" onclick="startCase()">조사를 시작한다 →</button>
+    </div>
+  </div>`;
+}
+
+function renderCase(){
+  const c=CASES[S.ci];
+  const cluesHtml=c.clues.map(cl=>`<div class="clue-item"><span class="clue-icon">${cl.icon}</span><span>${cl.text}</span></div>`).join('');
+  // 셔플된 선택지 사용
+  const choicesHtml=c.choices.map((ch,idx)=>{
+    const letter=String.fromCharCode(65+idx);
+    let cls='choice-btn';
+    if(S.answered){
+      if(ch.id===c.correct)cls+=' reveal-correct';
+      if(ch.id===S.selectedId&&ch.id!==c.correct)cls+=' wrong';
+      if(ch.id===S.selectedId&&ch.id===c.correct)cls='choice-btn correct';
+    }
+    return `<button class="${cls}" ${S.answered?'disabled':''} onclick="selectAnswer('${ch.id}')"><span class="choice-letter">${letter}</span><span>${ch.text}</span></button>`;
+  }).join('');
+
+  const isCorrect=S.answered&&S.selectedId===c.correct;
+  const verdictHtml=S.answered?`<div class="verdict-stamp"><div class="stamp-circle ${isCorrect?'correct-stamp':'wrong-stamp'}">${isCorrect?'✓':'✗'}</div></div>`:'';
+  const feedbackHtml=S.answered?renderFeedback(c):'';
+  const nextLabel=S.ci<CASES.length-1?'다음 사화 조사 →':'최종 보고서 확인 →';
+
+  return `
+  ${progBar()}
+  <div class="doc-shell">
+    ${crn()}
+    <div class="doc-header">
+      <div class="office-badge">🔍 ${S.ci+1}/${CASES.length}번째 사건</div>
+      <div class="doc-title">${c.name}</div>
+      <div class="doc-sub">${c.year}</div>
+    </div>
+    <div class="doc-body">
+      <div class="official-stamp">📮 공식 발표문</div>
+      <div class="official-doc">
+        <div class="official-label">조정 공문</div>
+        <div class="official-text">${c.officialDoc}</div>
+      </div>
+      <div class="clues-label">🔎 단서 검토</div>
+      <div class="clue-list">${cluesHtml}</div>
+      <hr class="div">
+      <div class="choices-label">이 사화의 진짜 원인은 무엇인가?</div>
+      <div class="choices">${choicesHtml}</div>
+      ${verdictHtml}
+      ${feedbackHtml}
+      ${S.answered?`<button class="btn btn-ink" style="margin-top:16px" onclick="nextCase()">${nextLabel}</button>`:''}
+    </div>
+  </div>`;
+}
+
+function renderFeedback(c){
+  const isCorrect=S.selectedId===c.correct;
+  const correctChoice=c.choices.find(ch=>ch.id===c.correct);
+  return `
+  <div class="feedback-box ${isCorrect?'correct-fb':'wrong-fb'}">
+    <div class="fb-verdict">${isCorrect?'✅ 정확한 판별!':'❌ 오판 — 실제는 "'+correctChoice.text+'"'}</div>
+    <div class="fb-text">${c.feedback}</div>
+    <div class="victim-tag">${c.victim}</div>
+  </div>
+  <div class="hist-note">${c.histNote}</div>`;
+}
+
+function renderFinal(){
+  const rank=RANKS.find(r=>S.score>=r.min);
+  // 비교표: 사화명 | 공식 명분 | 내 선택 | 실제 원인
+  const treeHtml=CASES_RAW.map((c,i)=>{
+    const r=S.results[i]; if(!r) return '';
+    const chosen=CASES[i].choices.find(ch=>ch.id===r.selectedId);
+    const realChoice=CASES_RAW[i].choices.find(ch=>ch.id===c.correct);
+    const chosenText=chosen?chosen.text:'';
+    const realText=realChoice?realChoice.text:'';
+    return `
+    <div class="compare-row">
+      <div class="cmp-cell label">${c.name.slice(0,5)}</div>
+      <div class="cmp-cell nominal">${c.offKeyword.length>13?c.offKeyword.slice(0,13)+'…':c.offKeyword}</div>
+      <div class="cmp-cell mine-chosen">${r.correct?'✅ ':'❌ '}${chosenText.length>13?chosenText.slice(0,13)+'…':chosenText}</div>
+      <div class="cmp-cell real">${realText.length>13?realText.slice(0,13)+'…':realText}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="doc-shell">
+    ${crn()}
+    <div class="doc-header">
+      <div class="office-badge">📋 조보청 최종 보고서</div>
+      <div class="doc-title">4대 사화 진상 조사 결과</div>
+      <div class="doc-sub">조사관의 판별 기록</div>
+    </div>
+    <div class="doc-body">
+      <div class="final-banner">
+        <div class="final-icon">${rank.icon}</div>
+        <div class="final-rank">${rank.rank}</div>
+        <div class="final-title">${rank.name}</div>
+        <div class="final-desc">${rank.desc}</div>
+        <div class="final-score">정확도 ${S.score} / ${CASES.length}</div>
+      </div>
+      <div class="compare-wrap">
+        <div class="compare-header">🔍 4대 사화 — 명분 vs 내 선택 vs 실제</div>
+        <div class="compare-row" style="background:rgba(42,31,16,0.07)">
+          <div class="cmp-cell label" style="font-weight:700;color:var(--ink)">사화</div>
+          <div class="cmp-cell nominal" style="font-weight:700;color:var(--ink)">공식 명분</div>
+          <div class="cmp-cell mine-chosen" style="font-weight:700;color:var(--ink)">내 선택</div>
+          <div class="cmp-cell real" style="font-weight:700;color:var(--ink)">실제 원인</div>
+        </div>
+        ${treeHtml}
+      </div>
+      <div class="title-badge">
+        <div class="t-tag">✨ 조사관 칭호</div>
+        <div class="t-icon">${rank.icon}</div>
+        <div class="t-name">${rank.rank} — ${rank.name}</div>
+        <div class="t-desc">4대 사화 모두 표면적 명분과 실제 원인이 달랐습니다. 역사의 공식 문서를 비판적으로 읽는 것 — 이것이 역사적 사고의 첫걸음입니다.</div>
+      </div>
+      <button class="btn btn-jade" onclick="copyResult()" style="margin-bottom:8px">📋 내 결과 복사하기 (패들렛 공유용)</button>
+      <button class="btn btn-outline" onclick="confirmRestart()">다시 조사하기</button>
+      <div style="text-align:center;padding:12px 0 0;font-size:10px;color:rgba(120,100,80,0.4);font-family:var(--font-s)">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>`;
+}
+
+// ═══ EVENTS ═══
+function startCase(){
+  initCases();
+  S={phase:'case',ci:0,answered:false,selectedId:null,score:0,results:[]};
+  R();
+}
+function selectAnswer(id){
+  if(S.answered)return;
+  S.selectedId=id;S.answered=true;
+  const c=CASES[S.ci];
+  if(id===c.correct)S.score++;
+  S.results.push({caseId:c.id,correct:id===c.correct,selectedId:id});
+  R();
+}
+function nextCase(){
+  S.ci++;
+  if(S.ci>=CASES.length){S.phase='final';R();}
+  else{S.answered=false;S.selectedId=null;R();}
+}
+function confirmRestart(){
+  if(confirm('처음부터 다시 조사하시겠습니까?')){
+    S={phase:'intro',ci:0,answered:false,selectedId:null,score:0,results:[]};
+    R();
+  }
+}
+function copyResult(){
+  const rank=RANKS.find(r=>S.score>=r.min);
+  const lines=[
+    '⚖️ 조보청 특별 조사관 — 사화의 진실','',
+    ...S.results.map((r,i)=>{
+      const c=CASES_RAW[i];
+      const chosen=CASES[i].choices.find(ch=>ch.id===r.selectedId);
+      return [
+        `[${c.name.slice(0,5)}]`,
+        `  공식 명분: ${c.offKeyword}`,
+        `  내 선택: ${chosen?chosen.text:''}  ${r.correct?'✅ 정확':'❌ 오판'}`,
+      ].join('\n');
+    }),
+    '',
+    `📋 정확도: ${S.score}/${CASES.length}`,
+    `✨ 등급: ${rank.rank} — ${rank.name}`,
+    '— 조보청 특별 조사관 (사림의 성장과 사화)',
+  ];
+  const text=lines.join('\n');
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.cssText='position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    try{document.execCommand('copy');showToast('📋 결과가 복사되었습니다!');}
+    catch(e){showToast('❌ 복사 실패');}
+    document.body.removeChild(ta);
+  }
+}
+
+initCases();
+R();
+</script>
+</body>
+</html>
