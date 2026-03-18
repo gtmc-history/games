@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>왕의 결재함 — 조선의 통치를 경험하다</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+:root {
+  --ink:        #1a1208;
+  --ink2:       #2e2210;
+  --parchment:  #f5edd8;
+  --parchment2: #ede2c4;
+  --parchment3: #e4d4a8;
+  --red:        #8b1a1a;
+  --red2:       #c0392b;
+  --gold:       #b8860b;
+  --gold2:      #d4a017;
+  --jade:       #1a5c3a;
+  --jade2:      #2e7d52;
+  --slate:      #2c3e50;
+  --slate2:     #34495e;
+  --muted:      #7a6a50;
+  --border:     rgba(139,100,60,0.3);
+  --shadow:     rgba(30,20,5,0.18);
+  --font-serif: 'Noto Serif KR', 'Georgia', serif;
+  --font-sans:  'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family: var(--font-serif);
+  background: #1a1208;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px 12px 60px;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(180,130,60,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(100,60,20,0.12) 0%, transparent 50%);
+}
+
+#app { width:100%; max-width:460px; }
+
+/* ── TOAST ── */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:var(--gold2);
+  border:1px solid var(--gold); border-radius:2px;
+  padding:10px 22px; font-size:13px; font-family:var(--font-sans);
+  opacity:0; pointer-events:none;
+  z-index:9999; transition:opacity 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#toast.show { opacity:1; }
+
+/* ── PAPER CARD ── */
+.card {
+  background: var(--parchment);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5edd8'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23e8d9b8' opacity='0.3'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--parchment) 0%, var(--parchment2) 100%);
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgba(139,100,60,0.4),
+    0 0 0 4px rgba(26,18,8,0.9),
+    0 0 0 5px rgba(139,100,60,0.2),
+    0 20px 60px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+  animation: cardIn 0.4s cubic-bezier(0.22,1,0.36,1);
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 32px,
+    rgba(160,130,80,0.06) 32px, rgba(160,130,80,0.06) 33px
+  );
+}
+.card > * { position:relative; z-index:1; }
+
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(16px) scale(0.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ── DARK CARD (intro, transition, reveal) ── */
+.card-dark {
+  background: linear-gradient(160deg, #221808 0%, #1a1208 60%, #110d04 100%);
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgba(184,134,11,0.35),
+    0 0 0 4px rgba(26,18,8,0.9),
+    0 0 0 5px rgba(184,134,11,0.15),
+    0 20px 60px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: cardIn 0.4s cubic-bezier(0.22,1,0.36,1);
+  position: relative;
+  overflow: hidden;
+}
+.card-dark::after {
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(184,134,11,0.08) 0%, transparent 60%);
+}
+.card-dark > * { position:relative; z-index:1; }
+
+/* ── HEADER ── */
+.hdr {
+  padding: 28px 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.card-dark .hdr { border-color: rgba(184,134,11,0.2); }
+
+.hdr-seal {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 30px; margin-bottom: 16px;
+  border: 2px solid;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.card .hdr-seal     { border-color: var(--gold); background: rgba(184,134,11,0.1); }
+.card-dark .hdr-seal { border-color: rgba(184,134,11,0.5); background: rgba(184,134,11,0.08); }
+
+.hdr-era {
+  font-size: 10px; letter-spacing: 0.3em;
+  font-family: var(--font-sans); font-weight: 500;
+  margin-bottom: 8px;
+}
+.card .hdr-era     { color: var(--red); }
+.card-dark .hdr-era { color: rgba(184,134,11,0.7); }
+
+.hdr-title {
+  font-size: 22px; font-weight: 900; line-height: 1.3;
+}
+.card .hdr-title     { color: var(--ink); }
+.card-dark .hdr-title { color: #f0e4c0; }
+
+.hdr-sub {
+  font-size: 12px; color: var(--muted);
+  font-family: var(--font-sans); margin-top: 6px; letter-spacing: 0.1em;
+}
+.card-dark .hdr-sub { color: rgba(240,228,192,0.45); }
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(26,18,8,0.92);
+  border-bottom: 1px solid rgba(184,134,11,0.2);
+  position: sticky; top: 0; z-index: 100;
+}
+.prog-label { font-size: 11px; color: rgba(184,134,11,0.7); font-family: var(--font-sans); letter-spacing: 0.15em; white-space: nowrap; }
+.prog-track { flex:1; display:flex; gap:4px; }
+.prog-pip {
+  flex:1; height:4px; border-radius:2px;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.4s;
+}
+.prog-pip.done   { background: var(--gold); }
+.prog-pip.done.red-era { background: var(--red2); }
+.prog-pip.active { background: rgba(184,134,11,0.5); animation: pipPulse 1s ease infinite alternate; }
+@keyframes pipPulse { from{opacity:0.5;} to{opacity:1;} }
+
+/* ── BODY ── */
+.body { padding: 20px 20px 28px; }
+
+/* ── INTRO TEXT ── */
+.intro-poem {
+  padding: 24px 20px 8px;
+  text-align: center;
+  font-size: 14px; color: rgba(240,228,192,0.8);
+  line-height: 2.2; font-weight: 300;
+  font-family: var(--font-sans);
+}
+.intro-poem strong { color: #f0e4c0; font-weight: 700; }
+.intro-poem em { color: rgba(184,134,11,0.9); font-style: normal; }
+
+.role-banner {
+  margin: 20px 20px 0;
+  background: rgba(184,134,11,0.06);
+  border: 1px solid rgba(184,134,11,0.25);
+  border-radius: 2px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.role-label { font-size: 10px; letter-spacing: 0.3em; color: rgba(184,134,11,0.6); font-family: var(--font-sans); margin-bottom: 10px; }
+.role-title { font-size: 28px; font-weight: 900; color: #f0e4c0; margin-bottom: 8px; }
+.role-desc  { font-size: 12px; color: rgba(240,228,192,0.6); font-family: var(--font-sans); line-height: 1.7; }
+
+/* ── DOCUMENT CARD ── */
+.doc-card {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.doc-header {
+  padding: 10px 14px;
+  background: rgba(26,18,8,0.06);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.doc-from {
+  font-size: 10px; letter-spacing: 0.15em;
+  font-family: var(--font-sans); font-weight: 700;
+}
+.taejong-era .doc-from { color: var(--red); }
+.sejong-era  .doc-from { color: var(--jade); }
+.doc-seal-small {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; border: 1px solid; flex-shrink: 0;
+}
+.taejong-era .doc-seal-small { border-color: var(--red); background: rgba(139,26,26,0.08); }
+.sejong-era  .doc-seal-small { border-color: var(--jade); background: rgba(26,92,58,0.08); }
+.doc-title-label {
+  font-size: 10px; font-family: var(--font-sans); color: var(--muted); margin-left: auto;
+}
+
+.doc-body { padding: 14px 16px; }
+.doc-title { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.doc-content {
+  font-size: 13px; color: var(--ink2); line-height: 2;
+  font-family: var(--font-sans); font-weight: 300;
+}
+.doc-content strong { font-weight: 700; color: var(--ink); }
+
+/* ── MINISTER OPINION ── */
+.minister-box {
+  margin: 0 16px 16px;
+  border: 1px dashed rgba(26,92,58,0.4);
+  border-radius: 2px;
+  background: rgba(26,92,58,0.04);
+  padding: 12px 14px;
+}
+.minister-label {
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--jade); font-family: var(--font-sans); font-weight: 700;
+  margin-bottom: 7px;
+}
+.minister-stance {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-family: var(--font-sans); font-weight: 700;
+  margin-bottom: 8px;
+}
+.stance-agree   { background: rgba(46,125,82,0.12); border: 1px solid var(--jade2); color: var(--jade); }
+.stance-oppose  { background: rgba(139,26,26,0.08); border: 1px solid var(--red); color: var(--red); }
+.minister-text {
+  font-size: 12px; color: var(--ink2); line-height: 1.8;
+  font-family: var(--font-sans); font-weight: 300; font-style: italic;
+}
+
+/* ── DECISION BUTTONS ── */
+.decision-area { padding: 4px 0 0; }
+.decision-label { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 12px; font-family: var(--font-sans); letter-spacing: 0.1em; }
+.decision-btns  { display: flex; gap: 10px; }
+
+.btn-approve {
+  flex: 1; padding: 14px 10px; border: none; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+  background: var(--red); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  box-shadow: 0 3px 12px rgba(139,26,26,0.3);
+  transition: all 0.18s;
+}
+.btn-approve:hover { background: var(--red2); transform: translateY(-1px); }
+
+.btn-reject {
+  flex: 1; padding: 14px 10px; border: none; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+  background: transparent; color: var(--ink); 
+  border: 1.5px solid rgba(139,100,60,0.4);
+  transition: all 0.18s;
+}
+.btn-reject:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+
+.btn-sejong-approve {
+  flex: 1; padding: 14px 10px; border: none; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+  background: var(--jade); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  box-shadow: 0 3px 12px rgba(26,92,58,0.3);
+  transition: all 0.18s;
+}
+.btn-sejong-approve:hover { background: var(--jade2); transform: translateY(-1px); }
+
+.btn-sejong-own {
+  flex: 1; padding: 14px 10px; border: none; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+  background: var(--red); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  box-shadow: 0 3px 12px rgba(139,26,26,0.2);
+  transition: all 0.18s;
+}
+.btn-sejong-own:hover { background: var(--red2); transform: translateY(-1px); }
+
+.btn-primary {
+  width: 100%; padding: 14px; border: none; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+  background: var(--gold); color: var(--ink);
+  border: 1.5px solid var(--gold2);
+  box-shadow: 0 3px 16px rgba(184,134,11,0.25);
+  transition: all 0.18s;
+}
+.btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+.btn-primary + .btn-primary { margin-top: 8px; }
+
+.btn-outline {
+  width: 100%; padding: 13px; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-serif); font-size: 14px;
+  background: transparent; color: var(--muted);
+  border: 1.5px solid rgba(139,100,60,0.25);
+  transition: all 0.18s; margin-top: 8px;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--ink); }
+
+/* ── FEEDBACK ── */
+.feedback-box {
+  border-radius: 2px; padding: 12px 14px; margin-bottom: 14px;
+  border: 1px solid; font-size: 12px; font-family: var(--font-sans);
+  line-height: 1.8; animation: cardIn 0.3s ease;
+}
+.feedback-approve { background: rgba(139,26,26,0.06); border-color: rgba(139,26,26,0.25); color: var(--red); }
+.feedback-reject  { background: rgba(139,100,60,0.06); border-color: rgba(139,100,60,0.25); color: var(--muted); }
+.feedback-label   { font-weight: 700; font-size: 11px; letter-spacing: 0.15em; margin-bottom: 5px; }
+
+/* ── TRANSITION SCENE ── */
+.transition-scene {
+  padding: 40px 24px 32px; text-align: center;
+}
+.trans-year {
+  font-size: 11px; letter-spacing: 0.4em; color: rgba(184,134,11,0.6);
+  font-family: var(--font-sans); margin-bottom: 20px;
+}
+.trans-poem {
+  font-size: 14px; color: rgba(240,228,192,0.75);
+  line-height: 2.4; font-weight: 300; font-family: var(--font-sans);
+  margin-bottom: 24px;
+}
+.trans-poem strong { color: #f0e4c0; font-weight: 700; }
+.trans-divider {
+  width: 80px; height: 1px; background: rgba(184,134,11,0.3);
+  margin: 0 auto 24px;
+}
+.trans-reveal {
+  font-size: 22px; font-weight: 900; color: #f0e4c0;
+  letter-spacing: 0.1em; margin-bottom: 8px;
+}
+.trans-reveal-sub { font-size: 12px; color: rgba(240,228,192,0.5); font-family: var(--font-sans); }
+
+/* ── REVEAL SCENE ── */
+.reveal-compare {
+  margin-bottom: 20px;
+}
+.reveal-col-title {
+  font-size: 11px; letter-spacing: 0.2em; font-family: var(--font-sans);
+  font-weight: 700; padding: 8px 12px;
+  border-radius: 2px 2px 0 0;
+}
+.col-title-red  { background: rgba(139,26,26,0.1); color: var(--red); border: 1px solid rgba(139,26,26,0.2); border-bottom: none; }
+.col-title-jade { background: rgba(26,92,58,0.1);  color: var(--jade); border: 1px solid rgba(26,92,58,0.2); border-bottom: none; }
+
+.record-row {
+  display: flex; align-items: center; gap: 0;
+  border: 1px solid var(--border); border-top: none;
+  overflow: hidden;
+}
+.record-row:last-child { border-radius: 0 0 2px 2px; }
+.record-cell {
+  flex: 1; padding: 9px 10px; font-size: 11px;
+  font-family: var(--font-sans); border-right: 1px solid var(--border);
+  background: rgba(255,255,255,0.5);
+}
+.record-cell:last-child { border-right: none; }
+.record-cell.label { flex: 0 0 90px; color: var(--muted); font-size: 10px; background: rgba(26,18,8,0.03); }
+.record-cell.approved { color: var(--red); font-weight: 700; }
+.record-cell.rejected { color: var(--muted); }
+.record-cell.history-match   { color: var(--jade); font-weight: 700; }
+.record-cell.history-nomatch { color: var(--gold); }
+
+.reveal-announce {
+  background: rgba(26,18,8,0.85);
+  border: 1px solid rgba(184,134,11,0.3);
+  border-radius: 2px;
+  padding: 20px; margin-bottom: 16px;
+  text-align: center; animation: cardIn 0.5s 0.1s both;
+}
+.reveal-announce-sub { font-size: 12px; color: rgba(240,228,192,0.5); font-family: var(--font-sans); margin-bottom: 12px; letter-spacing: 0.1em; }
+.reveal-announce-text { font-size: 14px; color: rgba(240,228,192,0.85); font-family: var(--font-sans); font-weight: 300; line-height: 2; }
+.reveal-announce-text strong { color: #f0e4c0; font-weight: 700; }
+
+/* ── CONCEPT CARDS ── */
+.concept-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.concept-card {
+  border-radius: 2px; padding: 14px 16px; border: 1px solid;
+  animation: cardIn 0.4s ease;
+}
+.concept-red  { background: rgba(139,26,26,0.06); border-color: rgba(139,26,26,0.25); }
+.concept-jade { background: rgba(26,92,58,0.06);  border-color: rgba(26,92,58,0.25); }
+.concept-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.concept-red  .concept-name { color: var(--red); }
+.concept-jade .concept-name { color: var(--jade); }
+.concept-who  { font-size: 11px; font-family: var(--font-sans); color: var(--muted); margin-bottom: 8px; }
+.concept-body { font-size: 12px; color: var(--ink2); font-family: var(--font-sans); line-height: 1.8; }
+.concept-body strong { font-weight: 700; color: var(--ink); }
+.concept-arrow {
+  display: flex; align-items: center; gap: 6px; margin-top: 10px;
+  font-size: 11px; font-family: var(--font-sans); color: var(--muted);
+  flex-wrap: wrap;
+}
+.concept-node {
+  padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 10px;
+}
+.node-king  { background: rgba(139,26,26,0.1); color: var(--red); border: 1px solid rgba(139,26,26,0.3); }
+.node-jo    { background: rgba(44,62,80,0.1); color: var(--slate); border: 1px solid rgba(44,62,80,0.3); }
+.node-uijeong { background: rgba(26,92,58,0.1); color: var(--jade); border: 1px solid rgba(26,92,58,0.3); }
+.arr { font-size: 13px; color: var(--muted); }
+
+/* ── FINAL ── */
+.final-banner {
+  text-align: center; padding: 28px 0 20px;
+  border-bottom: 1px solid var(--border); margin-bottom: 20px;
+}
+.final-icon  { font-size: 52px; margin-bottom: 12px; }
+.final-title { font-size: 21px; font-weight: 900; color: var(--ink); margin-bottom: 8px; }
+.final-sub   { font-size: 13px; color: var(--muted); font-family: var(--font-sans); line-height: 1.7; }
+
+.score-summary {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 16px;
+}
+.score-box {
+  border: 1px solid; border-radius: 2px; padding: 12px;
+  text-align: center;
+}
+.score-box.red-box  { border-color: rgba(139,26,26,0.25); background: rgba(139,26,26,0.04); }
+.score-box.jade-box { border-color: rgba(26,92,58,0.25);  background: rgba(26,92,58,0.04); }
+.score-box-era  { font-size: 10px; letter-spacing: 0.15em; font-family: var(--font-sans); margin-bottom: 6px; }
+.red-box  .score-box-era { color: var(--red); }
+.jade-box .score-box-era { color: var(--jade); }
+.score-box-num  { font-size: 24px; font-weight: 900; }
+.red-box  .score-box-num { color: var(--red); }
+.jade-box .score-box-num { color: var(--jade); }
+.score-box-label { font-size: 10px; color: var(--muted); font-family: var(--font-sans); margin-top: 4px; }
+
+.hist-match-label {
+  font-size: 11px; color: var(--muted); font-family: var(--font-sans);
+  letter-spacing: 0.1em; margin-bottom: 8px;
+}
+
+.match-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 2px; margin-bottom: 6px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.5);
+  font-size: 12px; font-family: var(--font-sans);
+}
+.match-icon { font-size: 16px; flex-shrink: 0; }
+.match-name { flex: 1; color: var(--ink2); }
+.match-mine  { font-size: 11px; font-weight: 700; }
+.mine-approve { color: var(--red); }
+.mine-reject  { color: var(--muted); }
+.match-check { font-size: 13px; }
+
+.hist-note-final {
+  border: 1px dashed rgba(139,100,60,0.3);
+  border-radius: 2px; padding: 14px 16px; margin: 16px 0;
+  font-size: 12px; color: var(--ink2); line-height: 1.9;
+  font-family: var(--font-sans); font-weight: 300;
+  background: rgba(184,134,11,0.03);
+}
+.hist-note-final::before {
+  content: '📜 역사적 맥락';
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.15em; color: var(--gold); margin-bottom: 8px;
+}
+
+hr.divider { border: none; height: 1px; background: linear-gradient(90deg,transparent,rgba(139,100,60,0.3),transparent); margin: 16px 0; }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+
+const TAEJONG_CASES = [
+  {
+    id: 'sbyuk',
+    emoji: '⚔️',
+    title: '사병 혁파',
+    from: '병조',
+    fromIcon: '⚔️',
+    content: '공신 및 왕자들이 보유한 <strong>사병(私兵)을 폐지</strong>하고 국가 군대로 편입할 것을 청합니다. 왕실의 군사력 독점을 위해 즉각 시행이 필요합니다.',
+    approve_feedback: '신속히 시행하셨습니다. 공신들의 반발이 있었으나 왕의 결단 하나로 처리됐습니다.',
+    reject_feedback: '반려하셨습니다. 공신들의 반발을 우려하셨군요. 사병은 그대로 남습니다.',
+    history: 'approve',
+    history_text: '태종은 즉위 직후 사병을 혁파하여 왕권을 강화했습니다.',
+  },
+  {
+    id: 'sinmungo',
+    emoji: '🥁',
+    title: '신문고 설치',
+    from: '형조',
+    fromIcon: '🥁',
+    content: '백성이 억울한 일을 당했을 때 <strong>궁 앞 북을 쳐서 임금에게 직접 호소</strong>할 수 있는 신문고를 설치할 것을 청합니다.',
+    approve_feedback: '윤허하셨습니다. 백성의 소리가 직접 왕에게 닿는 길이 열렸습니다.',
+    reject_feedback: '반려하셨습니다. 백성의 직소 통로가 만들어지지 않습니다.',
+    history: 'approve',
+    history_text: '태종은 신문고를 설치해 왕에 대한 직접 소통 경로를 만들었습니다.',
+  },
+  {
+    id: 'oechuk',
+    emoji: '🏠',
+    title: '외척 세력 제거',
+    from: '이조',
+    fromIcon: '🏠',
+    content: '왕비의 외가인 <strong>민씨 형제들이 권력을 남용</strong>하고 있습니다. 관직을 박탈하고 유배를 보낼 것을 청합니다.',
+    approve_feedback: '단행하셨습니다. 왕비의 형제라 해도 봐주지 않았습니다. 왕권이 흔들림 없이 작동했습니다.',
+    reject_feedback: '보류하셨습니다. 외척의 세력이 왕실 주변에 남아 있습니다.',
+    history: 'approve',
+    history_text: '태종은 처남 민무구·민무질 형제를 사사하여 외척 세력을 철저히 제거했습니다.',
+  },
+];
+
+const SEJONG_CASES = [
+  {
+    id: 'hunmin',
+    emoji: '📜',
+    title: '훈민정음 창제 및 반포',
+    from: '예조',
+    fromIcon: '📜',
+    minister_agree: false,
+    minister_name: '최만리 (집현전 부제학)',
+    minister_stance: '반대',
+    minister_text: '"우리나라는 대대로 중국의 문물을 따랐거늘, 새 문자를 만드는 것은 중국을 섬기는 예에 어긋납니다. 불필요한 일이옵니다."',
+    content: '백성이 한자를 몰라 문서와 법을 이해하지 못하고 있습니다. <strong>우리말을 적는 새 문자를 창제·반포</strong>할 것을 아뢰옵니다.',
+    approve_feedback: '재상의 반대를 물리치고 윤허하셨습니다. 훈민정음이 세상에 나왔습니다.',
+    reject_feedback: '재상의 의견을 따라 반려하셨습니다. 훈민정음 창제가 중단됩니다.',
+    history: 'approve',
+    history_text: '세종은 집현전의 반대를 무릅쓰고 1443년 훈민정음을 창제, 1446년 반포했습니다.',
+  },
+  {
+    id: 'cheugwu',
+    emoji: '🌧️',
+    title: '측우기 전국 배포',
+    from: '호조',
+    fromIcon: '🌧️',
+    minister_agree: true,
+    minister_name: '의정부 재상단',
+    minister_stance: '찬성',
+    minister_text: '"강수량을 측정해 각 도에 배포하면 농사의 풍흉을 예측할 수 있어 국가 조세 운영에 크게 이롭습니다. 속히 시행하길 청합니다."',
+    content: '<strong>빗물을 정확히 측정하는 기구(측우기)를 제작</strong>하여 전국 관청에 배포하고, 강수량을 보고하는 제도를 마련할 것을 아뢰옵니다.',
+    approve_feedback: '재상의 의견을 수용해 윤허하셨습니다. 측우기가 전국에 보급됩니다.',
+    reject_feedback: '반려하셨습니다. 측우기 제도가 도입되지 않습니다.',
+    history: 'approve',
+    history_text: '세종은 1441년 세계 최초의 우량계인 측우기를 발명해 전국에 배포했습니다.',
+  },
+  {
+    id: 'samsim',
+    emoji: '⚖️',
+    title: '사형수 삼복제(三覆制) 강화',
+    from: '형조',
+    fromIcon: '⚖️',
+    minister_agree: true,
+    minister_name: '의정부 재상단',
+    minister_stance: '찬성',
+    minister_text: '"사람의 목숨을 끊는 형벌은 한 번의 판단으로 결정해선 아니 됩니다. 세 번 재심리(三覆)를 거쳐 신중을 기하는 것이 인(仁)을 실천하는 길이옵니다."',
+    content: '억울한 죽음을 막기 위해 <strong>사형을 집행하기 전 세 차례 다시 심리하는 삼복(三覆) 제도</strong>를 강화할 것을 아뢰옵니다.<br><span style="font-size:11px;color:#7a6a50">※ 삼복(三覆): 覆는 \'뒤집어 다시 살핀다\'는 뜻. 판결을 세 번 재검토하는 제도로, 오늘날의 3심제(三審制)와는 다릅니다.</span>',
+    approve_feedback: '재상의 의견을 수용해 윤허하셨습니다. 사형수의 억울함을 세 번 재심리하는 삼복제가 강화됐습니다.',
+    reject_feedback: '반려하셨습니다. 삼복제가 강화되지 않아 사형 집행의 신중성이 떨어집니다.',
+    history: 'approve',
+    history_text: '세종은 사형 집행 전 삼복(三覆) 제도를 강화해 인명을 소중히 여기는 통치를 실천했습니다.',
+  },
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let S = {
+  phase: 'intro',   // intro | taejong | taejong_feedback | sejong | sejong_feedback | transition | reveal | final
+  ti: 0,            // taejong case index
+  si: 0,            // sejong case index
+  taejong_decisions: [],  // {id, decision}
+  sejong_decisions:  [],  // {id, decision, followedMinister}
+  last_decision: null,
+};
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML = render();
+}
+
+function render() {
+  switch(S.phase) {
+    case 'intro':              return renderIntro();
+    case 'taejong':            return renderTaejong();
+    case 'taejong_feedback':   return renderTaejongFeedback();
+    case 'transition':         return renderTransition();
+    case 'sejong':             return renderSejong();
+    case 'sejong_feedback':    return renderSejongFeedback();
+    case 'reveal':             return renderReveal();
+    case 'final':              return renderFinal();
+  }
+}
+
+function progressBar(current, era) {
+  // 6 total cases
+  const total = 6;
+  const pips = Array.from({length: total}, (_, i) => {
+    let cls = 'prog-pip';
+    if (i < current) cls += ' done' + (i < 3 ? ' red-era' : '');
+    else if (i === current) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  const eraLabel = era === 'taejong' ? '태종 시대' : '세종 시대';
+  return `<div class="progress-bar"><span class="prog-label">${eraLabel}</span><div class="prog-track">${pips}</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════
+
+function renderIntro() {
+  return `
+  <div class="card-dark">
+    <div class="hdr">
+      <div class="hdr-seal">🏛️</div>
+      <div class="hdr-era">조선 전기</div>
+      <div class="hdr-title">왕의 결재함</div>
+      <div class="hdr-sub">어떤 왕이 될 것인가</div>
+    </div>
+    <div class="intro-poem">
+      나라를 다스리는 방식에는<br>
+      정해진 답이 없습니다.<br><br>
+      <strong>6조</strong>가 왕에게 직접 올리는가,<br>
+      <strong>의정부 재상</strong>이 먼저 검토하는가.<br><br>
+      <em>지금부터 당신이 왕이 됩니다.</em>
+    </div>
+    <div class="role-banner">
+      <div class="role-label">오늘의 역할</div>
+      <div class="role-title">조선의 왕</div>
+      <div class="role-desc">결재함에 쌓인 안건을 처리해야 합니다.<br>윤허할지, 반려할지는 전하의 뜻에 달려 있습니다.</div>
+    </div>
+    <div style="padding:24px 20px 28px">
+      <button class="btn-primary" onclick="startGame()">결재를 시작하다 →</button>
+    </div>
+  </div>`;
+}
+
+function renderTaejong() {
+  const c = TAEJONG_CASES[S.ti];
+  return `
+  ${progressBar(S.ti, 'taejong')}
+  <div class="card taejong-era">
+    <div class="hdr">
+      <div class="hdr-seal" style="border-color:var(--red);background:rgba(139,26,26,0.08)">👑</div>
+      <div class="hdr-era" style="color:var(--red)">태종 ${S.ti + 1 + 3}년 — 안건 ${S.ti + 1}/3</div>
+      <div class="hdr-title">${c.title}</div>
+      <div class="hdr-sub">전하께 직접 아뢰옵니다</div>
+    </div>
+    <div class="body">
+      <div class="doc-card">
+        <div class="doc-header">
+          <div class="doc-seal-small">${c.fromIcon}</div>
+          <div class="doc-from">${c.from} → 전하께 직접 상소</div>
+          <div class="doc-title-label">결재 대기</div>
+        </div>
+        <div class="doc-body">
+          <div class="doc-title">${c.title}</div>
+          <div class="doc-content">${c.content}</div>
+        </div>
+      </div>
+      <div class="decision-area">
+        <div class="decision-label">— 전하의 결정을 내리소서 —</div>
+        <div class="decision-btns">
+          <button class="btn-approve" onclick="decideTaejong('approve')">✦ 윤허</button>
+          <button class="btn-reject"  onclick="decideTaejong('reject')">✕ 반려</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTaejongFeedback() {
+  const c = TAEJONG_CASES[S.ti - 1];
+  const d = S.last_decision;
+  const isApprove = d === 'approve';
+  const isLast = S.ti >= TAEJONG_CASES.length;
+
+  return `
+  ${progressBar(S.ti, 'taejong')}
+  <div class="card taejong-era">
+    <div class="hdr">
+      <div class="hdr-seal" style="border-color:var(--red);background:rgba(139,26,26,0.08)">
+        ${isApprove ? '✦' : '✕'}
+      </div>
+      <div class="hdr-era" style="color:var(--red)">${isApprove ? '윤허' : '반려'}</div>
+      <div class="hdr-title">${c.title}</div>
+      <div class="hdr-sub">결재가 처리되었습니다</div>
+    </div>
+    <div class="body">
+      <div class="feedback-box ${isApprove ? 'feedback-approve' : 'feedback-reject'}">
+        <div class="feedback-label">${isApprove ? '✦ 윤허 처리' : '✕ 반려 처리'}</div>
+        ${isApprove ? c.approve_feedback : c.reject_feedback}
+      </div>
+      <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);line-height:1.8;padding:10px 2px 16px">
+        📋 안건이 즉시 처리됐습니다. 재상의 검토 없이 결재가 완료되었습니다.
+      </div>
+      <button class="btn-primary" onclick="${isLast ? 'goTransition()' : 'nextTaejong()'}">
+        ${isLast ? '다음 시대로 →' : '다음 안건 →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderTransition() {
+  return `
+  <div class="card-dark" style="animation:cardIn 0.6s ease">
+    <div class="transition-scene">
+      <div class="trans-year">태종 18년 — 왕위 이양</div>
+      <div class="trans-poem">
+        전하께서는 왕자의 난을 딛고<br>
+        왕권을 굳히셨습니다.<br><br>
+        <strong>6조는 전하의 명에 따라 즉각 움직였고,</strong><br>
+        재상들은 감히 이견을 올리지 못했습니다.<br><br>
+        세종이 즉위하고 18년이 흘렀습니다.<br>
+        이제 전하께서 제도를 바꾸십니다.<br>
+        <strong>6조가 아니라 의정부를 통해 안건을 받겠노라.</strong>
+      </div>
+      <div class="trans-divider"></div>
+      <div class="trans-reveal">세종 18년 (1436)</div>
+      <div class="trans-reveal-sub" style="margin-bottom:28px">의정부 서사제 — 새로운 통치가 시작됩니다</div>
+      <button class="btn-primary" onclick="startSejong()">계속하다 →</button>
+    </div>
+  </div>`;
+}
+
+function renderSejong() {
+  const c = SEJONG_CASES[S.si];
+  const agreeLabel = c.minister_agree ? '찬성' : '반대';
+  const stanceCls  = c.minister_agree ? 'stance-agree' : 'stance-oppose';
+  const stanceIcon = c.minister_agree ? '✔' : '✘';
+
+  return `
+  ${progressBar(3 + S.si, 'sejong')}
+  <div class="card sejong-era">
+    <div class="hdr">
+      <div class="hdr-seal" style="border-color:var(--jade);background:rgba(26,92,58,0.08)">👑</div>
+      <div class="hdr-era" style="color:var(--jade)">세종 ${S.si + 20}년 — 안건 ${S.si + 1}/3</div>
+      <div class="hdr-title">${c.title}</div>
+      <div class="hdr-sub">의정부를 거쳐 아뢰옵니다</div>
+    </div>
+    <div class="body">
+      <div class="doc-card">
+        <div class="doc-header">
+          <div class="doc-seal-small">${c.fromIcon}</div>
+          <div class="doc-from">${c.from} → 의정부 → 전하께 상달</div>
+          <div class="doc-title-label">결재 대기</div>
+        </div>
+        <div class="doc-body">
+          <div class="doc-title">${c.title}</div>
+          <div class="doc-content">${c.content}</div>
+        </div>
+      </div>
+      <div class="minister-box">
+        <div class="minister-label">📋 의정부 재상 의견</div>
+        <div class="minister-stance ${stanceCls}">${stanceIcon} ${c.minister_name} — ${agreeLabel}</div>
+        <div class="minister-text">${c.minister_text}</div>
+      </div>
+      <div class="decision-area">
+        <div class="decision-label">— 전하의 결정을 내리소서 —</div>
+        <div class="decision-btns">
+          <button class="btn-sejong-approve" onclick="decideSejong('follow')">
+            재상 의견 수용<br><span style="font-size:10px;opacity:0.8">${c.minister_agree ? '(윤허)' : '(반려)'}</span>
+          </button>
+          <button class="btn-sejong-own" onclick="decideSejong('own')">
+            독자 판단<br><span style="font-size:10px;opacity:0.8">${c.minister_agree ? '(반려)' : '(윤허)'}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSejongFeedback() {
+  const c = SEJONG_CASES[S.si - 1];
+  const d = S.sejong_decisions[S.sejong_decisions.length - 1];
+  const isLast = S.si >= SEJONG_CASES.length;
+
+  const followed = d.followedMinister;
+  const approved = (c.minister_agree && followed) || (!c.minister_agree && !followed);
+
+  // Special note when king overrides minister
+  const overrideNote = !followed
+    ? `<div style="
+        margin-top:10px; padding:12px 14px; border-radius:2px;
+        background:rgba(184,134,11,0.08); border:1px solid rgba(184,134,11,0.3);
+        font-size:12px; color:var(--ink2); font-family:var(--font-sans); line-height:1.8;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.15em;color:var(--gold);display:block;margin-bottom:5px">💡 주목</span>
+        재상의 의견이 있었지만 전하께서 독자적으로 판단하셨습니다.
+        <strong>의정부 서사제 아래에서도 왕은 재상의 뜻을 거부할 수 있었습니다.</strong>
+        재상의 역할은 '결정'이 아니라 '심의와 건의'였기 때문입니다.
+      </div>`
+    : '';
+
+  return `
+  ${progressBar(3 + S.si, 'sejong')}
+  <div class="card sejong-era">
+    <div class="hdr">
+      <div class="hdr-seal" style="border-color:var(--jade);background:rgba(26,92,58,0.08)">
+        ${followed ? '📋' : '👑'}
+      </div>
+      <div class="hdr-era" style="color:var(--jade)">${followed ? '재상 의견 수용' : '독자 판단'}</div>
+      <div class="hdr-title">${c.title}</div>
+      <div class="hdr-sub">${approved ? '윤허' : '반려'} 처리되었습니다</div>
+    </div>
+    <div class="body">
+      <div class="feedback-box ${approved ? 'feedback-approve' : 'feedback-reject'}">
+        <div class="feedback-label">${followed ? '📋 재상 의견 수용' : '👑 왕의 독자 판단'} · ${approved ? '윤허' : '반려'}</div>
+        ${approved ? c.approve_feedback : c.reject_feedback}
+      </div>
+      ${overrideNote}
+      <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);line-height:1.8;padding:10px 2px 16px">
+        📋 ${followed ? '의정부의 심의 의견이 반영되어 처리됐습니다.' : '재상의 건의에도 불구하고 왕의 뜻대로 처리됐습니다.'}
+      </div>
+      <button class="btn-primary" onclick="${isLast ? 'goReveal()' : 'nextSejong()'}">
+        ${isLast ? '결과 확인 →' : '다음 안건 →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderReveal() {
+  // Build comparison table
+  const allCases = [...TAEJONG_CASES, ...SEJONG_CASES];
+  const allDecisions = [
+    ...S.taejong_decisions.map(d => ({ id: d.id, approved: d.decision === 'approve' })),
+    ...S.sejong_decisions.map(d => {
+      const c = SEJONG_CASES.find(x => x.id === d.id);
+      const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+      return { id: d.id, approved };
+    }),
+  ];
+
+  const rowsHtml = allCases.map((c, i) => {
+    const dec = allDecisions[i];
+    const era = i < 3 ? '태종' : '세종';
+    const eraColor = i < 3 ? 'var(--red)' : 'var(--jade)';
+    const myApproved = dec.approved;
+    const histMatch = (myApproved === (c.history === 'approve'));
+    return `
+    <div class="record-row">
+      <div class="record-cell label" style="border-right:1px solid var(--border)">
+        <span style="color:${eraColor};font-size:9px;display:block;margin-bottom:2px">${era}</span>
+        ${c.emoji} ${c.title}
+      </div>
+      <div class="record-cell ${myApproved ? 'approved' : 'rejected'}">${myApproved ? '✦ 윤허' : '✕ 반려'}</div>
+      <div class="record-cell ${histMatch ? 'history-match' : 'history-nomatch'}">${histMatch ? '✓ 일치' : '△ 다름'}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="card">
+    <div class="hdr">
+      <div class="hdr-seal">🔍</div>
+      <div class="hdr-era">지금까지의 결재를 돌아보며</div>
+      <div class="hdr-title">두 시대의 기록</div>
+      <div class="hdr-sub">전반부와 후반부 — 무엇이 달랐습니까?</div>
+    </div>
+    <div class="body">
+      <div class="reveal-compare">
+        <div class="record-row" style="border:1px solid var(--border);border-radius:2px 2px 0 0;background:rgba(26,18,8,0.04)">
+          <div class="record-cell label" style="font-size:10px;color:var(--muted);border-right:1px solid var(--border)">안건</div>
+          <div class="record-cell" style="font-size:10px;color:var(--muted)">내 결정</div>
+          <div class="record-cell" style="font-size:10px;color:var(--muted)">역사와 비교</div>
+        </div>
+        ${rowsHtml}
+      </div>
+
+      <div class="reveal-announce">
+        <div class="reveal-announce-sub">📖 지금 공개합니다</div>
+        <div class="reveal-announce-text">
+          <strong>전반부(태종 시대)</strong>에는 6조가 왕에게 <em style="color:#f0e4c0">직접</em> 안건을 올렸습니다.<br>
+          재상의 의견은 없었고, 결재는 즉각 처리됐습니다.<br><br>
+          <strong>후반부(세종 시대)</strong>에는 안건이 <em style="color:#f0e4c0">의정부를 거쳐</em> 올라왔습니다.<br>
+          재상의 의견이 함께 달렸고, 전하는 그것을 고려해 결정했습니다.
+        </div>
+      </div>
+      ${(() => {
+        const ownCount = S.sejong_decisions.filter(d => !d.followedMinister).length;
+        if (ownCount === 0) return `
+          <div style="padding:12px 14px;border-radius:2px;background:rgba(26,92,58,0.06);border:1px solid rgba(26,92,58,0.2);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
+            <span style="font-size:10px;font-weight:700;color:var(--jade);letter-spacing:0.15em;display:block;margin-bottom:5px">📋 전하의 통치 패턴</span>
+            세종 시대 3안건 모두 재상 의견을 따르셨습니다. 의정부 서사제의 취지대로 <strong>왕권과 신권이 균형</strong>을 이룬 통치였습니다.
+          </div>`;
+        if (ownCount === 3) return `
+          <div style="padding:12px 14px;border-radius:2px;background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.25);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
+            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">👑 전하의 통치 패턴</span>
+            세종 시대 3안건 모두 독자 판단하셨습니다. 의정부 서사제가 시행 중이었지만 <strong>왕의 의지가 강하게 관철</strong>됐습니다. 제도가 있어도 왕이 활용 방식을 결정한다는 점이 드러납니다.
+          </div>`;
+        return `
+          <div style="padding:12px 14px;border-radius:2px;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.2);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
+            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">👑 전하의 통치 패턴</span>
+            세종 시대 3안건 중 <strong>${ownCount}번</strong> 독자 판단하셨습니다. 의정부 서사제에서도 왕이 재상의 건의를 거부할 수 있었습니다. 이것이 이 제도의 핵심 — 재상은 <em>'결정자'</em>가 아니라 <em>'심의자'</em>였습니다.
+          </div>`;
+      })()}
+
+      <div class="concept-grid">
+        <div class="concept-card concept-red">
+          <div class="concept-name">6조 직계제</div>
+          <div class="concept-who">태종·세조 시행 — 왕권 강화</div>
+          <div class="concept-arrow">
+            <span class="concept-node node-jo">6조</span>
+            <span class="arr">→</span>
+            <span class="concept-node node-king">왕 직접 결재</span>
+          </div>
+          <div class="concept-body" style="margin-top:10px">
+            의정부 재상을 <strong>거치지 않고</strong> 6조가 왕에게 직접 보고합니다.
+            결재가 빠르고 왕의 의지가 즉시 반영되지만,
+            신하의 견제를 받지 않아 <strong>왕권이 강화</strong>됩니다.
+          </div>
+        </div>
+        <div class="concept-card concept-jade">
+          <div class="concept-name">의정부 서사제</div>
+          <div class="concept-who">세종 시행 — 왕권·신권 조화</div>
+          <div class="concept-arrow">
+            <span class="concept-node node-jo">6조</span>
+            <span class="arr">→</span>
+            <span class="concept-node node-uijeong">의정부 심의</span>
+            <span class="arr">→</span>
+            <span class="concept-node node-king">왕 결재</span>
+          </div>
+          <div class="concept-body" style="margin-top:10px">
+            안건이 <strong>의정부 재상의 심의를 거쳐</strong> 왕에게 올라옵니다.
+            처리가 느려지지만 재상의 검토로 오류를 막을 수 있고,
+            <strong>왕권과 신권이 균형</strong>을 이룹니다.
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="goFinal()">최종 결과 확인 →</button>
+    </div>
+  </div>`;
+}
+
+function renderFinal() {
+  const allCases = [...TAEJONG_CASES, ...SEJONG_CASES];
+
+  // Calculate scores
+  const taejongMatches = S.taejong_decisions.filter(d => {
+    const c = TAEJONG_CASES.find(x => x.id === d.id);
+    return (d.decision === 'approve') === (c.history === 'approve');
+  }).length;
+
+  const sejongDecisions = S.sejong_decisions.map(d => {
+    const c = SEJONG_CASES.find(x => x.id === d.id);
+    const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+    return { ...d, approved, match: approved === (c.history === 'approve') };
+  });
+  const sejongMatches = sejongDecisions.filter(d => d.match).length;
+  const total = taejongMatches + sejongMatches;
+  const ownJudgments = S.sejong_decisions.filter(d => !d.followedMinister).length;
+
+  // Pick result
+  let icon, title, sub;
+  if (total === 6)       { icon='🏛️'; title='완벽한 통치자'; sub='모든 안건에서 역사와 같은 판단을 내리셨습니다. 조선의 두 왕이 무엇을 고민했는지 꿰뚫어 보셨군요.'; }
+  else if (total >= 4)   { icon='📜'; title='현명한 판단'; sub='대부분의 안건을 역사와 같이 처리하셨습니다. 제도의 맥락을 잘 읽으셨습니다.'; }
+  else if (total >= 2)   { icon='⚖️'; title='나의 길을 가다'; sub='역사와 다른 판단도 있었습니다. 왕의 결정에 정답은 없습니다. 어떤 제도 아래에서 더 결정하기 쉬웠나요?'; }
+  else                   { icon='🎲'; title='다른 역사를 썼다'; sub='역사와 많이 달랐습니다. 당신의 조선은 어떻게 되었을까요?'; }
+
+  // Own-judgment commentary
+  let ownComment;
+  if (ownJudgments === 0) {
+    ownComment = `세종 시대 내내 재상 의견을 따르셨습니다. <strong>의정부 서사제의 이상을 충실히 구현</strong>한 통치였습니다.`;
+  } else if (ownJudgments === 3) {
+    ownComment = `세종 시대 3안건 모두 독자 판단하셨습니다. 의정부 서사제가 시행 중이었지만 <strong>실질적으로는 6조 직계제처럼 운영</strong>됐습니다. 제도보다 왕의 의지가 강했습니다.`;
+  } else {
+    ownComment = `세종 시대 중 <strong>${ownJudgments}번</strong> 재상 의견을 거부하고 독자 판단하셨습니다. <strong>의정부 서사제 아래서도 왕은 언제든 독단할 수 있었습니다.</strong> 재상은 결정자가 아니라 심의자였기 때문입니다.`;
+  }
+
+  const matchRowsHtml = allCases.map((c, i) => {
+    let myApproved;
+    if (i < 3) {
+      const d = S.taejong_decisions[i];
+      myApproved = d.decision === 'approve';
+    } else {
+      const d = sejongDecisions[i - 3];
+      myApproved = d.approved;
+    }
+    const histMatch = myApproved === (c.history === 'approve');
+    const era = i < 3 ? '태종' : '세종';
+    const eraColor = i < 3 ? 'var(--red)' : 'var(--jade)';
+    return `
+    <div class="match-row">
+      <span class="match-icon">${c.emoji}</span>
+      <span class="match-name">
+        <span style="font-size:10px;color:${eraColor}">${era}</span> ${c.title}
+      </span>
+      <span class="match-mine ${myApproved ? 'mine-approve' : 'mine-reject'}">${myApproved ? '윤허' : '반려'}</span>
+      <span class="match-check">${histMatch ? '✅' : '❌'}</span>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="card">
+    <div class="hdr">
+      <div class="hdr-seal">🏛️</div>
+      <div class="hdr-era">3대 통치 기록</div>
+      <div class="hdr-title">나의 결재 성적표</div>
+      <div class="hdr-sub">6조 직계제 · 의정부 서사제 체험 종료</div>
+    </div>
+    <div class="body">
+      <div class="final-banner">
+        <div class="final-icon">${icon}</div>
+        <div class="final-title">${title}</div>
+        <div class="final-sub">${sub}</div>
+      </div>
+
+      <div class="score-summary">
+        <div class="score-box red-box">
+          <div class="score-box-era">태종 시대</div>
+          <div class="score-box-num">${taejongMatches}/3</div>
+          <div class="score-box-label">역사와 일치</div>
+        </div>
+        <div class="score-box jade-box">
+          <div class="score-box-era">세종 시대</div>
+          <div class="score-box-num">${sejongMatches}/3</div>
+          <div class="score-box-label">역사와 일치</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 14px;border-radius:2px;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.2);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
+        <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">👑 세종 시대 나의 통치 스타일</span>
+        ${ownComment}
+      </div>
+
+      <div class="hist-match-label">안건별 비교</div>
+      ${matchRowsHtml}
+
+      <div class="hist-note-final">
+        태종의 <strong>6조 직계제</strong>는 왕이 모든 결재를 직접 처리해 신속하지만 독단의 위험이 있었습니다. 세종의 <strong>의정부 서사제</strong>는 재상의 심의를 거쳐 균형 잡힌 통치를 지향했습니다. 두 제도는 각각 왕권과 신권 중 어느 쪽을 중심에 놓느냐의 차이였으며, 조선 전기 내내 번갈아 시행되었습니다.
+      </div>
+
+      <hr class="divider">
+
+      <button class="btn-primary" onclick="copyResult()" style="margin-bottom:8px">
+        📋 내 결과 복사하기 (패들렛 공유용)
+      </button>
+      <button class="btn-outline" onclick="restart()">다시 체험하기</button>
+
+      <div style="margin-top:24px;text-align:center;font-size:11px;color:rgba(120,100,80,0.4);font-family:var(--font-sans)">
+        © 찰리쌤 · hischarlie.tistory.com
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════
+function startGame() {
+  S.phase = 'taejong'; S.ti = 0; R();
+}
+
+function decideTaejong(decision) {
+  const c = TAEJONG_CASES[S.ti];
+  S.taejong_decisions.push({ id: c.id, decision });
+  S.last_decision = decision;
+  S.ti++;
+  S.phase = 'taejong_feedback'; R();
+}
+
+function nextTaejong() {
+  S.phase = 'taejong'; R();
+}
+
+function goTransition() {
+  S.phase = 'transition'; R();
+}
+
+function startSejong() {
+  S.phase = 'sejong'; S.si = 0; R();
+}
+
+function decideSejong(choice) {
+  const c = SEJONG_CASES[S.si];
+  const followedMinister = choice === 'follow';
+  S.sejong_decisions.push({ id: c.id, followedMinister });
+  S.si++;
+  S.phase = 'sejong_feedback'; R();
+}
+
+function nextSejong() {
+  S.phase = 'sejong'; R();
+}
+
+function goReveal() {
+  S.phase = 'reveal'; R();
+}
+
+function goFinal() {
+  S.phase = 'final'; R();
+}
+
+function copyResult() {
+  const allCases = [...TAEJONG_CASES, ...SEJONG_CASES];
+
+  const taejongMatches = S.taejong_decisions.filter(d => {
+    const c = TAEJONG_CASES.find(x => x.id === d.id);
+    return (d.decision === 'approve') === (c.history === 'approve');
+  }).length;
+
+  const sejongResults = S.sejong_decisions.map(d => {
+    const c = SEJONG_CASES.find(x => x.id === d.id);
+    const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+    return { ...d, approved, match: approved === (c.history === 'approve') };
+  });
+  const sejongMatches = sejongResults.filter(d => d.match).length;
+
+  const ownJudgmentCount = S.sejong_decisions.filter(d => !d.followedMinister).length;
+
+  const lines = [
+    `👑 왕의 결재함 — 조선 전기 통치 체험`,
+    ``,
+    `[태종 시대 — 6조 직계제]`,
+    ...S.taejong_decisions.map((d, i) => {
+      const c = TAEJONG_CASES[i];
+      const match = (d.decision === 'approve') === (c.history === 'approve');
+      return `${c.emoji} ${c.title}: ${d.decision === 'approve' ? '윤허' : '반려'} ${match ? '✅' : '❌'}`;
+    }),
+    ``,
+    `[세종 시대 — 의정부 서사제]`,
+    ...sejongResults.map((d, i) => {
+      const c = SEJONG_CASES[i];
+      return `${c.emoji} ${c.title}: ${d.approved ? '윤허' : '반려'} (${d.followedMinister ? '재상 의견 수용' : '독자 판단'}) ${d.match ? '✅' : '❌'}`;
+    }),
+    ``,
+    `세종 시대 독자 판단: ${ownJudgmentCount}/3회`,
+    `역사 일치: 태종 ${taejongMatches}/3 · 세종 ${sejongMatches}/3 · 합계 ${taejongMatches + sejongMatches}/6`,
+    `— 왕의 결재함 (조선 전기 통치 체험)`,
+  ];
+
+  const text = lines.join('\n');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch(e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = { phase:'intro', ti:0, si:0, taejong_decisions:[], sejong_decisions:[], last_decision:null };
+  R();
+}
+
+R();
+</script>
+</body>
+</html>
