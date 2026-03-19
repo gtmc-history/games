@@ -491,6 +491,59 @@ body {
 }
 
 hr.divider { border: none; height: 1px; background: linear-gradient(90deg,transparent,rgba(139,100,60,0.3),transparent); margin: 16px 0; }
+
+/* ── TOOLTIP ── */
+.tt {
+  border-bottom: 1.5px dashed var(--gold);
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--red); }
+
+#tt-bubble {
+  position: fixed;
+  z-index: 9000;
+  max-width: 240px;
+  background: var(--ink);
+  border: 1px solid rgba(184,134,11,0.6);
+  border-radius: 4px;
+  padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#tt-bubble .tb-word {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold2);
+  font-family: var(--font-serif);
+  margin-bottom: 5px;
+}
+#tt-bubble .tb-desc {
+  font-size: 12px;
+  color: rgba(240,228,192,0.85);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.7;
+}
+#tt-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom: none;
+  border-top-color: rgba(184,134,11,0.6);
+}
 </style>
 </head>
 <body>
@@ -509,7 +562,7 @@ const TAEJONG_CASES = [
     title: '사병 혁파',
     from: '병조',
     fromIcon: '⚔️',
-    content: '공신 및 왕자들이 보유한 <strong>사병(私兵)을 폐지</strong>하고 국가 군대로 편입할 것을 청합니다. 왕실의 군사력 독점을 위해 즉각 시행이 필요합니다.',
+    content: '공신 및 왕자들이 보유한 <strong><span class="tt" data-tip="%EC%82%AC%EB%B3%91(%E7%A7%81%E5%85%B5)%20%E2%80%94%20%EA%B5%AD%EA%B0%80%20%EA%B5%B0%EB%8C%80%EA%B0%80%20%EC%95%84%EB%8B%8C%2C%20%EA%B0%9C%EC%9D%B8%EC%9D%B4%20%EC%82%AC%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EA%B1%B0%EB%8A%90%EB%A6%AC%EB%8A%94%20%EA%B5%B0%EB%8C%80.%20%EA%B3%A0%EB%A0%A4%20%EB%A7%90~%EC%A1%B0%EC%84%A0%20%EC%B4%88%20%EA%B3%B5%EC%8B%A0%C2%B7%EC%99%95%EC%9E%90%EB%93%A4%EC%9D%B4%20%EB%B3%B4%EC%9C%A0%ED%96%88%EB%8B%A4." data-word="사병(私兵)">사병(私兵)</span>을 폐지</strong>하고 국가 군대로 편입할 것을 청합니다. 왕실의 군사력 독점을 위해 즉각 시행이 필요합니다.',
     approve_feedback: '신속히 시행하셨습니다. 공신들의 반발이 있었으나 왕의 결단 하나로 처리됐습니다.',
     reject_feedback: '반려하셨습니다. 공신들의 반발을 우려하셨군요. 사병은 그대로 남습니다.',
     history: 'approve',
@@ -521,7 +574,7 @@ const TAEJONG_CASES = [
     title: '신문고 설치',
     from: '형조',
     fromIcon: '🥁',
-    content: '백성이 억울한 일을 당했을 때 <strong>궁 앞 북을 쳐서 임금에게 직접 호소</strong>할 수 있는 신문고를 설치할 것을 청합니다.',
+    content: '백성이 억울한 일을 당했을 때 <strong>궁 앞 북을 쳐서 임금에게 직접 호소</strong>할 수 있는 <span class="tt" data-tip="%EC%8B%A0%EB%AC%B8%EA%B3%A0(%E7%94%B3%E8%81%9E%E9%BC%93)%20%E2%80%94%20%EA%B6%81%20%EC%95%9E%EC%97%90%20%EC%84%A4%EC%B9%98%ED%95%9C%20%EB%B6%81.%20%EC%96%B5%EC%9A%B8%ED%95%9C%20%EC%9D%BC%EC%9D%84%20%EB%8B%B9%ED%95%9C%20%EB%B0%B1%EC%84%B1%EC%9D%B4%20%EC%A7%81%EC%A0%91%20%EB%B6%81%EC%9D%84%20%EC%B3%90%EC%84%9C%20%EC%99%95%EC%97%90%EA%B2%8C%20%ED%98%B8%EC%86%8C%ED%95%98%EB%8A%94%20%EC%A0%9C%EB%8F%84." data-word="신문고">신문고</span>를 설치할 것을 청합니다.',
     approve_feedback: '윤허하셨습니다. 백성의 소리가 직접 왕에게 닿는 길이 열렸습니다.',
     reject_feedback: '반려하셨습니다. 백성의 직소 통로가 만들어지지 않습니다.',
     history: 'approve',
@@ -533,7 +586,7 @@ const TAEJONG_CASES = [
     title: '외척 세력 제거',
     from: '이조',
     fromIcon: '🏠',
-    content: '왕비의 외가인 <strong>민씨 형제들이 권력을 남용</strong>하고 있습니다. 관직을 박탈하고 유배를 보낼 것을 청합니다.',
+    content: '<span class="tt" data-tip="%EC%99%B8%EC%B2%99(%E5%A4%96%E6%88%9A)%20%E2%80%94%20%EC%99%95%EC%9D%98%20%EC%96%B4%EB%A8%B8%EB%8B%88%EB%82%98%20%EC%99%95%EB%B9%84%20%EC%AA%BD%20%EC%B9%9C%EC%9D%B8%EC%B2%99.%20%EC%A7%80%EB%82%98%EC%B9%98%EB%A9%B4%20%EC%99%95%EA%B6%8C%EC%9D%84%20%EC%9C%84%ED%98%91%ED%96%88%EB%8B%A4." data-word="외척">왕비의 외가인</span> <strong>민씨 형제들이 권력을 남용</strong>하고 있습니다. 관직을 박탈하고 유배를 보낼 것을 청합니다.',
     approve_feedback: '단행하셨습니다. 왕비의 형제라 해도 봐주지 않았습니다. 왕권이 흔들림 없이 작동했습니다.',
     reject_feedback: '보류하셨습니다. 외척의 세력이 왕실 주변에 남아 있습니다.',
     history: 'approve',
@@ -543,20 +596,18 @@ const TAEJONG_CASES = [
 
 const SEJONG_CASES = [
   {
-    id: 'hunmin',
-    emoji: '📜',
-    title: '훈민정음 창제 및 반포',
-    from: '예조',
-    fromIcon: '📜',
-    minister_agree: false,
-    minister_name: '최만리 (집현전 부제학)',
-    minister_stance: '반대',
-    minister_text: '"우리나라는 대대로 중국의 문물을 따랐거늘, 새 문자를 만드는 것은 중국을 섬기는 예에 어긋납니다. 불필요한 일이옵니다."',
-    content: '백성이 한자를 몰라 문서와 법을 이해하지 못하고 있습니다. <strong>우리말을 적는 새 문자를 창제·반포</strong>할 것을 아뢰옵니다.',
-    approve_feedback: '재상의 반대를 물리치고 윤허하셨습니다. 훈민정음이 세상에 나왔습니다.',
-    reject_feedback: '재상의 의견을 따라 반려하셨습니다. 훈민정음 창제가 중단됩니다.',
-    history: 'approve',
-    history_text: '세종은 집현전의 반대를 무릅쓰고 1443년 훈민정음을 창제, 1446년 반포했습니다.',
+    id: 'gongbeop',
+    emoji: '🌾',
+    title: '공법(貢法) — 새 조세 기준 마련',
+    from: '호조',
+    fromIcon: '🌾',
+    uijeong_decision: false,   // 의정부: 보류 결정
+    uijeong_text: '"각 도의 토지 비옥도와 해마다 다른 기후를 하나의 기준으로 묶는 것은 이르옵니다. 지방 여론이 엇갈리고 있어, 지금 당장 시행하면 혼란이 클 것입니다. <strong>시행을 <span class="tt" data-tip="%EB%B3%B4%EB%A5%98%28%E4%BF%9D%E7%95%99%29%20%E2%80%94%20%EA%B2%B0%EC%A0%95%EC%9D%84%20%EB%AF%B8%EB%A3%A8%EA%B1%B0%EB%82%98%20%EC%9E%A0%EC%8B%9C%20%EC%A4%91%EB%8B%A8%ED%95%98%EB%8A%94%20%EA%B2%83." data-word="보류">보류</span>하기로 결정하였습니다.</strong>"',
+    content: '현행 <strong><span class="tt" data-tip="%EB%8B%B5%ED%97%98%EC%86%90%EC%8B%A4%EB%B2%95%28%E8%B8%8F%E9%A9%97%E6%90%8D%E5%A4%B1%E6%B3%95%29%20%E2%80%94%20%EA%B4%80%EB%A6%AC%EA%B0%80%20%EB%A7%A4%EB%85%84%20%EC%88%98%ED%99%95%EA%B8%B0%EC%97%90%20%EC%A7%81%EC%A0%91%20%ED%98%84%EC%9E%A5%EC%9D%84%20%EB%B0%A9%EB%AC%B8%ED%95%B4%20%EC%86%90%EC%8B%A4%EC%9D%84%20%EC%B8%A1%EC%A0%95%ED%95%98%EA%B3%A0%20%EC%84%B8%EA%B8%88%EC%9D%84%20%EA%B2%B0%EC%A0%95%ED%95%98%EB%8D%98%20%EB%B0%A9%EC%8B%9D.%20%EA%B4%80%EB%A6%AC%EC%9D%98%20%EB%B6%80%ED%8C%A8%EA%B0%80%20%EA%B7%B9%EC%8B%AC%ED%96%88%EB%8B%A4." data-word="답험손실법(踏驗損失法)">답험손실법(踏驗損失法)</span></strong>은 관리가 현장을 직접 답사해 수확량을 측정하는 방식으로, 관리의 부패와 백성 불만이 극심합니다. 토지 등급과 <span class="tt" data-tip="%ED%92%8D%ED%9D%89%28%E8%B1%90%E5%87%B6%29%20%E2%80%94%20%EA%B7%B8%20%ED%95%B4%20%EB%86%8D%EC%82%AC%EC%9D%98%20%EC%9E%98%EB%90%A8%28%E8%B1%90%E5%B9%B4%2C%20%ED%92%8D%EB%85%84%29%EA%B3%BC%20%EC%95%88%EB%90%A8%28%E5%87%B6%E5%B9%B4%2C%20%ED%9D%89%EB%85%84%29." data-word="풍흉">풍흉</span>에 따라 세금을 정하는 <strong>새 <span class="tt" data-tip="%EA%B3%B5%EB%B2%95%28%E8%B2%A2%E6%B3%95%29%20%E2%80%94%20%ED%86%A0%EC%A7%80%20%EB%93%B1%EA%B8%89%EA%B3%BC%20%ED%92%8D%ED%9D%89%EC%97%90%20%EB%94%B0%EB%9D%BC%20%EC%84%B8%EA%B8%88%EC%9D%84%20%EB%8B%AC%EB%A6%AC%20%EB%B6%80%EA%B3%BC%ED%95%98%EB%8A%94%20%EC%A1%B0%EC%84%B8%20%EC%A0%9C%EB%8F%84.%20%EC%84%B8%EC%A2%85%2026%EB%85%84%281444%29%20%EC%8B%9C%ED%96%89." data-word="공법(貢法)">공법(貢法)</span></strong>을 제정하여 시행할 것을 아뢰옵니다.',
+    gaja_feedback: '<p>의정부 결정대로 재가하셨습니다. 공법 시행이 보류됩니다. 기존 답험손실법이 유지되어 <strong>관리의 부패와 백성의 불만이 계속</strong>됩니다.</p>',
+    hwanbu_feedback: '<p><span class="tt" data-tip="%ED%99%98%EB%B6%80%28%E9%82%84%E4%BB%98%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%9D%98%EC%A0%95%EB%B6%80%EC%9D%98%20%EC%9D%98%EA%B2%B0%EC%9D%84%20%EB%8F%8C%EB%A0%A4%EB%B3%B4%EB%82%B4%20%EB%8B%A4%EC%8B%9C%20%EC%8B%AC%EC%9D%98%ED%95%98%EB%8F%84%EB%A1%9D%20%EB%AA%85%ED%95%98%EB%8A%94%20%EA%B2%83." data-word="환부">환부</span>하셨습니다. 왕의 강한 의지를 헤아린 의정부가 재심의 후 <strong>"전국 여론 조사를 거쳐 단계적으로 시행"</strong>하기로 결정을 바꿨습니다. <span class="tt" data-tip="%EA%B3%B5%EB%B2%95%28%E8%B2%A2%E6%B3%95%29%20%E2%80%94%20%ED%86%A0%EC%A7%80%20%EB%93%B1%EA%B8%89%EA%B3%BC%20%ED%92%8D%ED%9D%89%EC%97%90%20%EB%94%B0%EB%9D%BC%20%EC%84%B8%EA%B8%88%EC%9D%84%20%EB%8B%AC%EB%A6%AC%20%EB%B6%80%EA%B3%BC%ED%95%98%EB%8A%94%20%EC%A1%B0%EC%84%B8%20%EC%A0%9C%EB%8F%84.%20%EC%84%B8%EC%A2%85%2026%EB%85%84%281444%29%20%EC%8B%9C%ED%96%89." data-word="공법">공법</span>이 시행됩니다.</p>',
+    history: 'approve',  // 결국 시행됨 → 환부가 역사와 일치
+    history_text: '세종은 전국 17만여 명의 여론을 수렴한 뒤, 세종 26년(1444) 공법을 시행했습니다.',
   },
   {
     id: 'cheugwu',
@@ -564,15 +615,13 @@ const SEJONG_CASES = [
     title: '측우기 전국 배포',
     from: '호조',
     fromIcon: '🌧️',
-    minister_agree: true,
-    minister_name: '의정부 재상단',
-    minister_stance: '찬성',
-    minister_text: '"강수량을 측정해 각 도에 배포하면 농사의 풍흉을 예측할 수 있어 국가 조세 운영에 크게 이롭습니다. 속히 시행하길 청합니다."',
-    content: '<strong>빗물을 정확히 측정하는 기구(측우기)를 제작</strong>하여 전국 관청에 배포하고, 강수량을 보고하는 제도를 마련할 것을 아뢰옵니다.',
-    approve_feedback: '재상의 의견을 수용해 윤허하셨습니다. 측우기가 전국에 보급됩니다.',
-    reject_feedback: '반려하셨습니다. 측우기 제도가 도입되지 않습니다.',
-    history: 'approve',
-    history_text: '세종은 1441년 세계 최초의 우량계인 측우기를 발명해 전국에 배포했습니다.',
+    uijeong_decision: true,    // 의정부: 시행 결정
+    uijeong_text: '"강수량을 정확히 측정하면 각 도의 농사 풍흉을 예측하여 국가 조세 운영에 크게 이롭습니다. 전국 관청에 배포하고 강수량 보고 제도를 마련하기로 <strong>결정하였습니다.</strong>"',
+    content: '빗물의 양을 정확히 측정하는 기구 <strong><span class="tt" data-tip="%EC%B8%A1%EC%9A%B0%EA%B8%B0%28%E6%B8%AC%E9%9B%A8%E5%99%A8%29%20%E2%80%94%20%EB%B9%97%EB%AC%BC%EC%9D%98%20%EC%96%91%EC%9D%84%20%EC%B8%A1%EC%A0%95%ED%95%98%EB%8A%94%20%EA%B8%B0%EA%B5%AC.%20%EC%84%B8%EC%A2%85%2023%EB%85%84%281441%29%20%EC%84%B8%EA%B3%84%20%EC%B5%9C%EC%B4%88%EB%A1%9C%20%EB%B0%9C%EB%AA%85%C2%B7%EB%B0%B0%ED%8F%AC%EB%90%90%EB%8B%A4.%20%E6%B8%AC%3D%EC%9E%AC%EB%8B%A4%2C%20%E9%9B%A8%3D%EB%B9%84%2C%20%E5%99%A8%3D%EA%B8%B0%EA%B5%AC." data-word="측우기(測雨器)">측우기(測雨器)</span></strong>를 제작하여 전국 관청에 배포하고, 매번 비가 온 뒤 강수량을 측정·보고하는 제도를 마련할 것을 아뢰옵니다.',
+    gaja_feedback: '<p>재가하셨습니다. 의정부 결정대로 측우기가 전국에 보급됩니다. 강수량 자료가 쌓여 농업 정책에 활용될 것입니다.</p>',
+    hwanbu_feedback: '<p>환부하셨습니다. 의정부는 왕의 뜻을 "즉각 시행 불필요"로 받아들여 측우기 보급을 재검토합니다. 도입이 늦춰집니다.</p>',
+    history: 'approve',  // 시행됨 → 재가가 역사와 일치
+    history_text: '세종은 1441년(세종 23년) 세계 최초의 우량계인 측우기를 발명해 전국에 배포했습니다.',
   },
   {
     id: 'samsim',
@@ -580,15 +629,13 @@ const SEJONG_CASES = [
     title: '사형수 삼복제(三覆制) 강화',
     from: '형조',
     fromIcon: '⚖️',
-    minister_agree: true,
-    minister_name: '의정부 재상단',
-    minister_stance: '찬성',
-    minister_text: '"사람의 목숨을 끊는 형벌은 한 번의 판단으로 결정해선 아니 됩니다. 세 번 재심리(三覆)를 거쳐 신중을 기하는 것이 인(仁)을 실천하는 길이옵니다."',
-    content: '억울한 죽음을 막기 위해 <strong>사형을 집행하기 전 세 차례 다시 심리하는 삼복(三覆) 제도</strong>를 강화할 것을 아뢰옵니다.<br><span style="font-size:11px;color:#7a6a50">※ 삼복(三覆): 覆는 \'뒤집어 다시 살핀다\'는 뜻. 판결을 세 번 재검토하는 제도로, 오늘날의 3심제(三審制)와는 다릅니다.</span>',
-    approve_feedback: '재상의 의견을 수용해 윤허하셨습니다. 사형수의 억울함을 세 번 재심리하는 삼복제가 강화됐습니다.',
-    reject_feedback: '반려하셨습니다. 삼복제가 강화되지 않아 사형 집행의 신중성이 떨어집니다.',
-    history: 'approve',
-    history_text: '세종은 사형 집행 전 삼복(三覆) 제도를 강화해 인명을 소중히 여기는 통치를 실천했습니다.',
+    uijeong_decision: true,    // 의정부: 강화 결정
+    uijeong_text: '"사람의 목숨을 끊는 형벌은 단 한 번의 판단으로 결정해서는 아니 됩니다. 세 번 재심리하는 삼복(三覆) 제도를 강화하여 억울한 죽음을 막는 것이 仁을 실천하는 길이라 <strong>결정하였습니다.</strong>"',
+    content: '억울한 사형을 막기 위해 <strong>사형 집행 전 세 차례 다시 심리하는 <span class="tt" data-tip="%EC%82%BC%EB%B3%B5%28%E4%B8%89%E8%A6%86%29%20%E2%80%94%20%EC%82%AC%ED%98%95%20%ED%8C%90%EA%B2%B0%EC%9D%84%20%EC%A7%91%ED%96%89%ED%95%98%EA%B8%B0%20%EC%A0%84%20%EC%84%B8%20%EC%B0%A8%EB%A1%80%20%EB%8B%A4%EC%8B%9C%20%EC%8B%AC%EB%A6%AC%ED%95%98%EB%8A%94%20%EC%A0%9C%EB%8F%84.%20%E8%A6%86%EB%8A%94%20%EB%92%A4%EC%A7%91%EC%96%B4%20%EB%8B%A4%EC%8B%9C%20%EC%82%B4%ED%95%80%EB%8B%A4%EB%8A%94%20%EB%9C%BB.%20%EC%98%A4%EB%8A%98%EB%82%A0%203%EC%8B%AC%EC%A0%9C%28%E4%B8%89%E5%AF%A9%E5%88%B6%29%EC%99%80%EB%8A%94%20%EB%8B%A4%EB%A5%B4%EB%8B%A4." data-word="삼복(三覆) 제도">삼복(三覆) 제도</span></strong>를 강화할 것을 아뢰옵니다.',
+    gaja_feedback: '<p>재가하셨습니다. 의정부 결정대로 삼복제가 강화됩니다. 사형 집행 전 세 번 재심리하여 억울한 죽음을 줄이는 제도가 자리 잡습니다.</p>',
+    hwanbu_feedback: '<p>환부하셨습니다. 삼복제 강화가 보류됩니다. 사형 절차의 신중성이 떨어져 억울한 처형이 늘어날 수 있습니다.</p>',
+    history: 'approve',  // 시행됨 → 재가가 역사와 일치
+    history_text: '세종은 삼복(三覆) 제도를 강화해 사형 집행에 신중을 기하는 仁의 통치를 실천했습니다.',
   },
 ];
 
@@ -600,9 +647,43 @@ let S = {
   ti: 0,            // taejong case index
   si: 0,            // sejong case index
   taejong_decisions: [],  // {id, decision}
-  sejong_decisions:  [],  // {id, decision, followedMinister}
+  sejong_decisions:  [],  // {id, gaja: bool} — true=재가, false=환부
   last_decision: null,
 };
+
+
+// ═══════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════
+const TIPS = {
+  '재가':       '재가(裁可) — 왕이 의정부의 의결을 그대로 승인하여 시행을 허락하는 것.',
+  '환부':       '환부(還付) — 왕이 의정부의 의결을 돌려보내 다시 심의하도록 명하는 것. 왕이 거부권을 행사하는 방법.',
+  '의정부 서사제':'의정부 서사제(署事制) — 6조가 올린 안건을 의정부 3정승이 먼저 심의·의결한 뒤, 왕에게 올려 재가 또는 환부를 받는 제도. 세종 18년(1436) 시행.',
+  '6조 직계제': '6조 직계제(直啓制) — 이조·호조·예조·병조·형조·공조가 의정부를 거치지 않고 왕에게 직접 보고하는 제도. 태종·세조 시행.',
+  '서사제':     '서사제(署事制) → 의정부 서사제 참고.',
+  '직계제':     '직계제(直啓制) → 6조 직계제 참고.',
+  '의정부':     '의정부(議政府) — 조선의 최고 행정 합의 기관. 영의정·좌의정·우의정 3정승이 국정을 심의했다.',
+  '윤허':       '윤허(允許) — 왕이 신하의 청을 허락하는 것. "그리 하라"는 뜻.',
+  '반려':       '반려(返戾) — 왕이 신하의 청을 허락하지 않고 돌려보내는 것.',
+  '사병':       '사병(私兵) — 국가 군대가 아닌, 개인이 사적으로 거느리는 군대. 고려 말~조선 초 공신·왕자들이 보유했다.',
+  '혁파':       '혁파(革罷) — 기존 제도나 기관을 폐지하는 것.',
+  '신문고':     '신문고(申聞鼓) — 궁 앞에 설치한 북. 억울한 일을 당한 백성이 직접 북을 쳐서 왕에게 호소하는 제도.',
+  '외척':       '외척(外戚) — 왕의 어머니나 왕비 쪽 친인척. 왕실과 혼인으로 연결된 세력으로, 지나치면 왕권을 위협했다.',
+  '공법':       '공법(貢法) — 토지 등급과 풍흉(豐凶)에 따라 세금을 달리 부과하는 조세 제도. 세종 26년(1444) 시행.',
+  '답험손실법': '답험손실법(踏驗損失法) — 관리가 매년 수확기에 직접 현장을 방문해 손실을 측정한 뒤 세금을 결정하던 방식. 관리의 부패가 극심했다.',
+  '측우기':     '측우기(測雨器) — 빗물의 양을 측정하는 기구. 세종 23년(1441) 세계 최초로 발명·배포됐다.',
+  '삼복':       '삼복(三覆) — 사형 판결을 집행하기 전 세 차례 다시 심리하는 제도. 覆는 "뒤집어 다시 살핀다"는 뜻.',
+  '풍흉':       '풍흉(豐凶) — 그 해 농사의 잘됨(豐年)과 안됨(凶年).',
+  '삼복제':     '삼복제(三覆制) → 삼복 참고. 사형 집행 전 세 차례 재심리를 의무화한 제도.',
+  '서사':       '서사(署事) — 정무 서류에 서명하여 처리하는 것. 의정부 재상이 안건을 결재한다는 의미.',
+};
+
+function tt(word, tipKey) {
+  const key = tipKey || word;
+  const tip = TIPS[key] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
 
 // ═══════════════════════════════════════════════════
 // UTILS
@@ -614,6 +695,48 @@ function showToast(msg) {
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
 }
+
+
+// ── 툴팁 버블 이벤트 ──
+document.body.insertAdjacentHTML('beforeend', '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+
+const bubble = document.getElementById('tt-bubble');
+let bubbleTimer = null;
+
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    const word = el.dataset.word;
+    const tip  = decodeURIComponent(el.dataset.tip);
+    bubble.querySelector('.tb-word').textContent = word;
+    bubble.querySelector('.tb-desc').textContent = tip;
+    // position
+    const rect = el.getBoundingClientRect();
+    const bw = 240;
+    let left = rect.left + rect.width / 2 - bw / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - bw - 8));
+    let top = rect.top - 10;
+    bubble.style.width = bw + 'px';
+    bubble.style.left  = left + 'px';
+    bubble.style.top   = '';
+    bubble.style.bottom = '';
+    // 먼저 화면에 렌더링해야 offsetHeight가 정확히 나옴
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    // 위쪽에 공간이 있으면 위에, 없으면 아래에
+    if (rect.top - bubH - 14 < 8) {
+      bubble.style.top = (rect.bottom + 10) + 'px';
+    } else {
+      bubble.style.top = (rect.top - bubH - 14) + 'px';
+    }
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
 
 function R() {
   window.scrollTo(0, 0);
@@ -663,8 +786,8 @@ function renderIntro() {
     <div class="intro-poem">
       나라를 다스리는 방식에는<br>
       정해진 답이 없습니다.<br><br>
-      <strong>6조</strong>가 왕에게 직접 올리는가,<br>
-      <strong>의정부 재상</strong>이 먼저 검토하는가.<br><br>
+      <strong><span class="tt" data-tip="6%EC%A1%B0%28%E5%85%AD%E6%9B%B9%29%20%E2%80%94%20%EC%9D%B4%EC%A1%B0%C2%B7%ED%98%B8%EC%A1%B0%C2%B7%EC%98%88%EC%A1%B0%C2%B7%EB%B3%91%EC%A1%B0%C2%B7%ED%98%95%EC%A1%B0%C2%B7%EA%B3%B5%EC%A1%B0.%20%EC%A1%B0%EC%84%A0%EC%9D%98%20%ED%95%B5%EC%8B%AC%20%ED%96%89%EC%A0%95%20%EA%B8%B0%EA%B4%80%20%EC%97%AC%EC%84%AF%20%EA%B0%9C." data-word="6조">6조</span></strong>가 왕에게 직접 올리는가,<br>
+      <strong><span class="tt" data-tip="%EC%9D%98%EC%A0%95%EB%B6%80%28%E8%AD%B0%E6%94%BF%E5%BA%9C%29%20%E2%80%94%20%EC%A1%B0%EC%84%A0%EC%9D%98%20%EC%B5%9C%EA%B3%A0%20%ED%96%89%EC%A0%95%20%ED%95%A9%EC%9D%98%20%EA%B8%B0%EA%B4%80.%20%EC%98%81%EC%9D%98%EC%A0%95%C2%B7%EC%A2%8C%EC%9D%98%EC%A0%95%C2%B7%EC%9A%B0%EC%9D%98%EC%A0%95%203%EC%A0%95%EC%8A%B9%EC%9D%B4%20%EA%B5%AD%EC%A0%95%EC%9D%84%20%EC%8B%AC%EC%9D%98%ED%96%88%EB%8B%A4." data-word="의정부">의정부</span></strong>가 먼저 결론을 내리는가.<br><br>
       <em>지금부터 당신이 왕이 됩니다.</em>
     </div>
     <div class="role-banner">
@@ -693,7 +816,7 @@ function renderTaejong() {
       <div class="doc-card">
         <div class="doc-header">
           <div class="doc-seal-small">${c.fromIcon}</div>
-          <div class="doc-from">${c.from} → 전하께 직접 상소</div>
+          <div class="doc-from">${c.from} → <span class="tt" data-tip="%EC%A0%84%ED%95%98%28%E6%AE%BF%E4%B8%8B%29%20%E2%80%94%20%EC%99%95%EC%9D%84%20%EB%B6%80%EB%A5%B4%EB%8A%94%20%EC%A1%B4%EC%B9%AD." data-word="전하">전하</span>께 직접 상소</div>
           <div class="doc-title-label">결재 대기</div>
         </div>
         <div class="doc-body">
@@ -735,7 +858,7 @@ function renderTaejongFeedback() {
         ${isApprove ? c.approve_feedback : c.reject_feedback}
       </div>
       <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);line-height:1.8;padding:10px 2px 16px">
-        📋 안건이 즉시 처리됐습니다. 재상의 검토 없이 결재가 완료되었습니다.
+        📋 6조가 왕에게 직접 올린 안건이 즉각 처리됐습니다. <span class="tt" data-tip="%EC%9D%98%EC%A0%95%EB%B6%80%28%E8%AD%B0%E6%94%BF%E5%BA%9C%29%20%E2%80%94%20%EC%A1%B0%EC%84%A0%EC%9D%98%20%EC%B5%9C%EA%B3%A0%20%ED%96%89%EC%A0%95%20%ED%95%A9%EC%9D%98%20%EA%B8%B0%EA%B4%80.%20%EC%98%81%EC%9D%98%EC%A0%95%C2%B7%EC%A2%8C%EC%9D%98%EC%A0%95%C2%B7%EC%9A%B0%EC%9D%98%EC%A0%95%203%EC%A0%95%EC%8A%B9%EC%9D%B4%20%EA%B5%AD%EC%A0%95%EC%9D%84%20%EC%8B%AC%EC%9D%98%ED%96%88%EB%8B%A4." data-word="의정부">의정부</span> 재상의 심의 없이 <span class="tt" data-tip="%EC%9C%A4%ED%97%88%28%E5%85%81%E8%A8%B1%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%8B%A0%ED%95%98%EC%9D%98%20%EC%B2%AD%EC%9D%84%20%ED%97%88%EB%9D%BD%ED%95%98%EB%8A%94%20%EA%B2%83." data-word="윤허">윤허</span>·<span class="tt" data-tip="%EB%B0%98%EB%A0%A4%28%E8%BF%94%E6%88%BE%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%8B%A0%ED%95%98%EC%9D%98%20%EC%B2%AD%EC%9D%84%20%ED%97%88%EB%9D%BD%ED%95%98%EC%A7%80%20%EC%95%8A%EA%B3%A0%20%EB%8F%8C%EB%A0%A4%EB%B3%B4%EB%82%B4%EB%8A%94%20%EA%B2%83." data-word="반려">반려</span>가 완료됩니다.
       </div>
       <button class="btn-primary" onclick="${isLast ? 'goTransition()' : 'nextTaejong()'}">
         ${isLast ? '다음 시대로 →' : '다음 안건 →'}
@@ -756,7 +879,7 @@ function renderTransition() {
         재상들은 감히 이견을 올리지 못했습니다.<br><br>
         세종이 즉위하고 18년이 흘렀습니다.<br>
         이제 전하께서 제도를 바꾸십니다.<br>
-        <strong>6조가 아니라 의정부를 통해 안건을 받겠노라.</strong>
+        <strong>6조가 아니라 <span class="tt" data-tip="%EC%9D%98%EC%A0%95%EB%B6%80%28%E8%AD%B0%E6%94%BF%E5%BA%9C%29%20%E2%80%94%20%EC%A1%B0%EC%84%A0%EC%9D%98%20%EC%B5%9C%EA%B3%A0%20%ED%96%89%EC%A0%95%20%ED%95%A9%EC%9D%98%20%EA%B8%B0%EA%B4%80.%20%EC%98%81%EC%9D%98%EC%A0%95%C2%B7%EC%A2%8C%EC%9D%98%EC%A0%95%C2%B7%EC%9A%B0%EC%9D%98%EC%A0%95%203%EC%A0%95%EC%8A%B9%EC%9D%B4%20%EA%B5%AD%EC%A0%95%EC%9D%84%20%EC%8B%AC%EC%9D%98%ED%96%88%EB%8B%A4." data-word="의정부">의정부</span>를 통해 안건을 받겠노라.</strong>
       </div>
       <div class="trans-divider"></div>
       <div class="trans-reveal">세종 18년 (1436)</div>
@@ -768,9 +891,10 @@ function renderTransition() {
 
 function renderSejong() {
   const c = SEJONG_CASES[S.si];
-  const agreeLabel = c.minister_agree ? '찬성' : '반대';
-  const stanceCls  = c.minister_agree ? 'stance-agree' : 'stance-oppose';
-  const stanceIcon = c.minister_agree ? '✔' : '✘';
+  const uiDecided = c.uijeong_decision; // true = 시행 결정, false = 보류 결정
+  const stanceCls  = uiDecided ? 'stance-agree' : 'stance-oppose';
+  const stanceIcon = uiDecided ? '✔' : '✘';
+  const stanceLabel = uiDecided ? '시행하기로 결정' : '보류하기로 결정';
 
   return `
   ${progressBar(3 + S.si, 'sejong')}
@@ -779,14 +903,14 @@ function renderSejong() {
       <div class="hdr-seal" style="border-color:var(--jade);background:rgba(26,92,58,0.08)">👑</div>
       <div class="hdr-era" style="color:var(--jade)">세종 ${S.si + 20}년 — 안건 ${S.si + 1}/3</div>
       <div class="hdr-title">${c.title}</div>
-      <div class="hdr-sub">의정부를 거쳐 아뢰옵니다</div>
+      <div class="hdr-sub"><span class="tt" data-tip="%EC%9D%98%EC%A0%95%EB%B6%80%28%E8%AD%B0%E6%94%BF%E5%BA%9C%29%20%E2%80%94%20%EC%A1%B0%EC%84%A0%EC%9D%98%20%EC%B5%9C%EA%B3%A0%20%ED%96%89%EC%A0%95%20%ED%95%A9%EC%9D%98%20%EA%B8%B0%EA%B4%80.%20%EC%98%81%EC%9D%98%EC%A0%95%C2%B7%EC%A2%8C%EC%9D%98%EC%A0%95%C2%B7%EC%9A%B0%EC%9D%98%EC%A0%95%203%EC%A0%95%EC%8A%B9%EC%9D%B4%20%EA%B5%AD%EC%A0%95%EC%9D%84%20%EC%8B%AC%EC%9D%98%ED%96%88%EB%8B%A4." data-word="의정부">의정부</span>를 거쳐 아뢰옵니다</div>
     </div>
     <div class="body">
       <div class="doc-card">
         <div class="doc-header">
           <div class="doc-seal-small">${c.fromIcon}</div>
-          <div class="doc-from">${c.from} → 의정부 → 전하께 상달</div>
-          <div class="doc-title-label">결재 대기</div>
+          <div class="doc-from">${c.from} → 의정부 심의·의결 → 전하께 상달</div>
+          <div class="doc-title-label">재가 대기</div>
         </div>
         <div class="doc-body">
           <div class="doc-title">${c.title}</div>
@@ -794,18 +918,18 @@ function renderSejong() {
         </div>
       </div>
       <div class="minister-box">
-        <div class="minister-label">📋 의정부 재상 의견</div>
-        <div class="minister-stance ${stanceCls}">${stanceIcon} ${c.minister_name} — ${agreeLabel}</div>
-        <div class="minister-text">${c.minister_text}</div>
+        <div class="minister-label">🏛️ 의정부 의결 결과</div>
+        <div class="minister-stance ${stanceCls}">${stanceIcon} 의정부 — ${stanceLabel}</div>
+        <div class="minister-text">${c.uijeong_text}</div>
       </div>
       <div class="decision-area">
-        <div class="decision-label">— 전하의 결정을 내리소서 —</div>
+        <div class="decision-label">— 전하의 처분을 내리소서 —</div>
         <div class="decision-btns">
-          <button class="btn-sejong-approve" onclick="decideSejong('follow')">
-            재상 의견 수용<br><span style="font-size:10px;opacity:0.8">${c.minister_agree ? '(윤허)' : '(반려)'}</span>
+          <button class="btn-sejong-approve" onclick="decideSejong('gaja')">
+            <span class="tt" data-tip="%EC%9E%AC%EA%B0%80%28%E8%A3%81%E5%8F%AF%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%9D%98%EC%A0%95%EB%B6%80%EC%9D%98%20%EC%9D%98%EA%B2%B0%EC%9D%84%20%EA%B7%B8%EB%8C%80%EB%A1%9C%20%EC%8A%B9%EC%9D%B8%ED%95%98%EC%97%AC%20%EC%8B%9C%ED%96%89%EC%9D%84%20%ED%97%88%EB%9D%BD%ED%95%98%EB%8A%94%20%EA%B2%83." data-word="재가">재가</span><br><span style="font-size:10px;opacity:0.8">${uiDecided ? '(의정부 결정대로 시행)' : '(의정부 결정대로 보류)'}</span>
           </button>
-          <button class="btn-sejong-own" onclick="decideSejong('own')">
-            독자 판단<br><span style="font-size:10px;opacity:0.8">${c.minister_agree ? '(반려)' : '(윤허)'}</span>
+          <button class="btn-sejong-own" onclick="decideSejong('hwanbu')">
+            <span class="tt" data-tip="%ED%99%98%EB%B6%80%28%E9%82%84%E4%BB%98%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%9D%98%EC%A0%95%EB%B6%80%EC%9D%98%20%EC%9D%98%EA%B2%B0%EC%9D%84%20%EB%8F%8C%EB%A0%A4%EB%B3%B4%EB%82%B4%20%EB%8B%A4%EC%8B%9C%20%EC%8B%AC%EC%9D%98%ED%95%98%EB%8F%84%EB%A1%9D%20%EB%AA%85%ED%95%98%EB%8A%94%20%EA%B2%83.%20%EC%99%95%EC%9D%98%20%EA%B1%B0%EB%B6%80%EA%B6%8C." data-word="환부">환부</span><br><span style="font-size:10px;opacity:0.8">(의정부로 돌려보냄)</span>
           </button>
         </div>
       </div>
@@ -818,19 +942,19 @@ function renderSejongFeedback() {
   const d = S.sejong_decisions[S.sejong_decisions.length - 1];
   const isLast = S.si >= SEJONG_CASES.length;
 
-  const followed = d.followedMinister;
-  const approved = (c.minister_agree && followed) || (!c.minister_agree && !followed);
+  const gaja = d.gaja; // true = 재가, false = 환부
+  // 재가 → 의정부 결정 그대로 / 환부 → 반대 결과
+  const isApproved = gaja ? c.uijeong_decision : !c.uijeong_decision;
 
-  // Special note when king overrides minister
-  const overrideNote = !followed
+  const hwanbuNote = !gaja
     ? `<div style="
         margin-top:10px; padding:12px 14px; border-radius:2px;
         background:rgba(184,134,11,0.08); border:1px solid rgba(184,134,11,0.3);
         font-size:12px; color:var(--ink2); font-family:var(--font-sans); line-height:1.8;">
-        <span style="font-size:10px;font-weight:700;letter-spacing:0.15em;color:var(--gold);display:block;margin-bottom:5px">💡 주목</span>
-        재상의 의견이 있었지만 전하께서 독자적으로 판단하셨습니다.
-        <strong>의정부 서사제 아래에서도 왕은 재상의 뜻을 거부할 수 있었습니다.</strong>
-        재상의 역할은 '결정'이 아니라 '심의와 건의'였기 때문입니다.
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.15em;color:var(--gold);display:block;margin-bottom:5px">💡 주목 — 환부의 효과</span>
+        <span class="tt" data-tip="%EC%A0%84%ED%95%98%28%E6%AE%BF%E4%B8%8B%29%20%E2%80%94%20%EC%99%95%EC%9D%84%20%EB%B6%80%EB%A5%B4%EB%8A%94%20%EC%A1%B4%EC%B9%AD." data-word="전하">전하</span>께서 의정부의 의결을 돌려보내셨습니다.
+        <strong><span class="tt" data-tip="%ED%99%98%EB%B6%80%28%E9%82%84%E4%BB%98%29%20%E2%80%94%20%EC%99%95%EC%9D%B4%20%EC%9D%98%EC%A0%95%EB%B6%80%EC%9D%98%20%EC%9D%98%EA%B2%B0%EC%9D%84%20%EB%8F%8C%EB%A0%A4%EB%B3%B4%EB%82%B4%20%EB%8B%A4%EC%8B%9C%20%EC%8B%AC%EC%9D%98%ED%95%98%EB%8F%84%EB%A1%9D%20%EB%AA%85%ED%95%98%EB%8A%94%20%EA%B2%83.%20%EC%99%95%EC%9D%B4%20%EA%B1%B0%EB%B6%80%EA%B6%8C%EC%9D%84%20%ED%96%89%EC%82%AC%ED%95%98%EB%8A%94%20%EB%B0%A9%EB%B2%95." data-word="환부">환부</span>를 받은 의정부는 왕의 뜻을 헤아려 재심의 후 결정을 바꿨습니다.</strong>
+        의정부서사제에서도 왕은 환부로 언제든 의정부 결정을 뒤집을 수 있었습니다.
       </div>`
     : '';
 
@@ -839,20 +963,20 @@ function renderSejongFeedback() {
   <div class="card sejong-era">
     <div class="hdr">
       <div class="hdr-seal" style="border-color:var(--jade);background:rgba(26,92,58,0.08)">
-        ${followed ? '📋' : '👑'}
+        ${gaja ? '📋' : '↩'}
       </div>
-      <div class="hdr-era" style="color:var(--jade)">${followed ? '재상 의견 수용' : '독자 판단'}</div>
+      <div class="hdr-era" style="color:var(--jade)">${gaja ? '재가' : '환부'}</div>
       <div class="hdr-title">${c.title}</div>
-      <div class="hdr-sub">${approved ? '윤허' : '반려'} 처리되었습니다</div>
+      <div class="hdr-sub">${isApproved ? '시행' : '보류'} 처리되었습니다</div>
     </div>
     <div class="body">
-      <div class="feedback-box ${approved ? 'feedback-approve' : 'feedback-reject'}">
-        <div class="feedback-label">${followed ? '📋 재상 의견 수용' : '👑 왕의 독자 판단'} · ${approved ? '윤허' : '반려'}</div>
-        ${approved ? c.approve_feedback : c.reject_feedback}
+      <div class="feedback-box ${isApproved ? 'feedback-approve' : 'feedback-reject'}">
+        <div class="feedback-label">${gaja ? '📋 재가 — 의정부 결정 추인' : '↩ 환부 — 의정부로 돌려보냄'} · ${isApproved ? '시행' : '보류'}</div>
+        ${gaja ? c.gaja_feedback : c.hwanbu_feedback}
       </div>
-      ${overrideNote}
+      ${hwanbuNote}
       <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);line-height:1.8;padding:10px 2px 16px">
-        📋 ${followed ? '의정부의 심의 의견이 반영되어 처리됐습니다.' : '재상의 건의에도 불구하고 왕의 뜻대로 처리됐습니다.'}
+        📋 ${gaja ? '의정부의 의결이 그대로 재가되어 시행됩니다.' : '전하의 환부로 의정부가 재심의 후 결정을 바꿨습니다.'}
       </div>
       <button class="btn-primary" onclick="${isLast ? 'goReveal()' : 'nextSejong()'}">
         ${isLast ? '결과 확인 →' : '다음 안건 →'}
@@ -868,7 +992,7 @@ function renderReveal() {
     ...S.taejong_decisions.map(d => ({ id: d.id, approved: d.decision === 'approve' })),
     ...S.sejong_decisions.map(d => {
       const c = SEJONG_CASES.find(x => x.id === d.id);
-      const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+      const approved = (c.uijeong_decision && d.gaja) || (!c.uijeong_decision && !d.gaja);
       return { id: d.id, approved };
     }),
   ];
@@ -912,33 +1036,33 @@ function renderReveal() {
         <div class="reveal-announce-sub">📖 지금 공개합니다</div>
         <div class="reveal-announce-text">
           <strong>전반부(태종 시대)</strong>에는 6조가 왕에게 <em style="color:#f0e4c0">직접</em> 안건을 올렸습니다.<br>
-          재상의 의견은 없었고, 결재는 즉각 처리됐습니다.<br><br>
-          <strong>후반부(세종 시대)</strong>에는 안건이 <em style="color:#f0e4c0">의정부를 거쳐</em> 올라왔습니다.<br>
-          재상의 의견이 함께 달렸고, 전하는 그것을 고려해 결정했습니다.
+          전하는 <em style="color:#f0e4c0">윤허 또는 반려</em>로 즉각 결정하셨습니다.<br><br>
+          <strong>후반부(세종 시대)</strong>에는 <em style="color:#f0e4c0">의정부가 이미 결론을 내린 뒤</em> 올렸습니다.<br>
+          전하는 <em style="color:#f0e4c0">재가(추인)</em>하거나 <em style="color:#f0e4c0">환부(재심의 명령)</em>로 처분하셨습니다.
         </div>
       </div>
       ${(() => {
-        const ownCount = S.sejong_decisions.filter(d => !d.followedMinister).length;
-        if (ownCount === 0) return `
+        const hwanbuCount = S.sejong_decisions.filter(d => !d.gaja).length;
+        if (hwanbuCount === 0) return `
           <div style="padding:12px 14px;border-radius:2px;background:rgba(26,92,58,0.06);border:1px solid rgba(26,92,58,0.2);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
             <span style="font-size:10px;font-weight:700;color:var(--jade);letter-spacing:0.15em;display:block;margin-bottom:5px">📋 전하의 통치 패턴</span>
-            세종 시대 3안건 모두 재상 의견을 따르셨습니다. 의정부 서사제의 취지대로 <strong>왕권과 신권이 균형</strong>을 이룬 통치였습니다.
+            세종 시대 3안건 모두 재가하셨습니다. 의정부가 결정해 올린 것을 그대로 추인하는 <strong>왕권·신권 균형의 통치</strong>였습니다.
           </div>`;
-        if (ownCount === 3) return `
+        if (hwanbuCount === 3) return `
           <div style="padding:12px 14px;border-radius:2px;background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.25);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
-            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">👑 전하의 통치 패턴</span>
-            세종 시대 3안건 모두 독자 판단하셨습니다. 의정부 서사제가 시행 중이었지만 <strong>왕의 의지가 강하게 관철</strong>됐습니다. 제도가 있어도 왕이 활용 방식을 결정한다는 점이 드러납니다.
+            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">↩ 전하의 통치 패턴</span>
+            세종 시대 3안건 모두 환부하셨습니다. 의정부서사제가 시행 중이었지만 <strong>왕이 환부로 모든 결정을 뒤집었습니다.</strong> 제도보다 왕의 의지가 강하면 실질은 6조 직계제와 다르지 않았습니다.
           </div>`;
         return `
           <div style="padding:12px 14px;border-radius:2px;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.2);margin-bottom:16px;font-size:12px;color:var(--ink2);font-family:var(--font-sans);line-height:1.8">
-            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">👑 전하의 통치 패턴</span>
-            세종 시대 3안건 중 <strong>${ownCount}번</strong> 독자 판단하셨습니다. 의정부 서사제에서도 왕이 재상의 건의를 거부할 수 있었습니다. 이것이 이 제도의 핵심 — 재상은 <em>'결정자'</em>가 아니라 <em>'심의자'</em>였습니다.
+            <span style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;display:block;margin-bottom:5px">↩ 전하의 통치 패턴</span>
+            세종 시대 중 <strong>${hwanbuCount}번 환부</strong>하셨습니다. 의정부서사제에서도 왕은 환부로 결정을 뒤집을 수 있었습니다. 재가와 환부를 혼용한 통치 — 제도와 왕권이 균형을 이뤘습니다.
           </div>`;
-      })()}
+      })()}}
 
       <div class="concept-grid">
         <div class="concept-card concept-red">
-          <div class="concept-name">6조 직계제</div>
+          <div class="concept-name"><span class="tt" data-tip="6%EC%A1%B0%20%EC%A7%81%EA%B3%84%EC%A0%9C%28%E7%9B%B4%E5%95%93%E5%88%B6%29%20%E2%80%94%20%EC%9D%B4%EC%A1%B0%C2%B7%ED%98%B8%EC%A1%B0%C2%B7%EC%98%88%EC%A1%B0%C2%B7%EB%B3%91%EC%A1%B0%C2%B7%ED%98%95%EC%A1%B0%C2%B7%EA%B3%B5%EC%A1%B0%EA%B0%80%20%EC%9D%98%EC%A0%95%EB%B6%80%EB%A5%BC%20%EA%B1%B0%EC%B9%98%EC%A7%80%20%EC%95%8A%EA%B3%A0%20%EC%99%95%EC%97%90%EA%B2%8C%20%EC%A7%81%EC%A0%91%20%EB%B3%B4%EA%B3%A0%ED%95%98%EB%8A%94%20%EC%A0%9C%EB%8F%84.%20%ED%83%9C%EC%A2%85%C2%B7%EC%84%B8%EC%A1%B0%20%EC%8B%9C%ED%96%89." data-word="6조 직계제">6조 직계제</span></div>
           <div class="concept-who">태종·세조 시행 — 왕권 강화</div>
           <div class="concept-arrow">
             <span class="concept-node node-jo">6조</span>
@@ -952,19 +1076,20 @@ function renderReveal() {
           </div>
         </div>
         <div class="concept-card concept-jade">
-          <div class="concept-name">의정부 서사제</div>
+          <div class="concept-name"><span class="tt" data-tip="%EC%9D%98%EC%A0%95%EB%B6%80%20%EC%84%9C%EC%82%AC%EC%A0%9C%28%E7%BD%B2%E4%BA%8B%E5%88%B6%29%20%E2%80%94%206%EC%A1%B0%EA%B0%80%20%EC%98%AC%EB%A6%B0%20%EC%95%88%EA%B1%B4%EC%9D%84%20%EC%9D%98%EC%A0%95%EB%B6%80%203%EC%A0%95%EC%8A%B9%EC%9D%B4%20%EB%A8%BC%EC%A0%80%20%EC%8B%AC%EC%9D%98%C2%B7%EC%9D%98%EA%B2%B0%ED%95%9C%20%EB%92%A4%2C%20%EC%99%95%EC%97%90%EA%B2%8C%20%EC%98%AC%EB%A0%A4%20%EC%9E%AC%EA%B0%80%20%EB%98%90%EB%8A%94%20%ED%99%98%EB%B6%80%EB%A5%BC%20%EB%B0%9B%EB%8A%94%20%EC%A0%9C%EB%8F%84.%20%EC%84%B8%EC%A2%85%2018%EB%85%84%281436%29%20%EC%8B%9C%ED%96%89." data-word="의정부 서사제">의정부 서사제</span></div>
           <div class="concept-who">세종 시행 — 왕권·신권 조화</div>
           <div class="concept-arrow">
             <span class="concept-node node-jo">6조</span>
             <span class="arr">→</span>
-            <span class="concept-node node-uijeong">의정부 심의</span>
+            <span class="concept-node node-uijeong">의정부 심의·의결</span>
             <span class="arr">→</span>
-            <span class="concept-node node-king">왕 결재</span>
+            <span class="concept-node node-king">왕 재가 / 환부</span>
           </div>
           <div class="concept-body" style="margin-top:10px">
-            안건이 <strong>의정부 재상의 심의를 거쳐</strong> 왕에게 올라옵니다.
-            처리가 느려지지만 재상의 검토로 오류를 막을 수 있고,
-            <strong>왕권과 신권이 균형</strong>을 이룹니다.
+            6조가 안건을 올리면 <strong>의정부가 먼저 심의하여 결론을 내립니다.</strong>
+            왕은 의정부 의결을 <strong>재가(추인)</strong>하거나
+            <strong>환부(재심의 명령)</strong>할 수 있습니다.
+            재상은 '의견 제시자'가 아니라 <strong>'의결 기관'</strong>이었습니다.
           </div>
         </div>
       </div>
@@ -985,12 +1110,12 @@ function renderFinal() {
 
   const sejongDecisions = S.sejong_decisions.map(d => {
     const c = SEJONG_CASES.find(x => x.id === d.id);
-    const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+    const approved = (c.uijeong_decision && d.gaja) || (!c.uijeong_decision && !d.gaja);
     return { ...d, approved, match: approved === (c.history === 'approve') };
   });
   const sejongMatches = sejongDecisions.filter(d => d.match).length;
   const total = taejongMatches + sejongMatches;
-  const ownJudgments = S.sejong_decisions.filter(d => !d.followedMinister).length;
+  const hwanbuCount = S.sejong_decisions.filter(d => !d.gaja).length;
 
   // Pick result
   let icon, title, sub;
@@ -1001,12 +1126,12 @@ function renderFinal() {
 
   // Own-judgment commentary
   let ownComment;
-  if (ownJudgments === 0) {
-    ownComment = `세종 시대 내내 재상 의견을 따르셨습니다. <strong>의정부 서사제의 이상을 충실히 구현</strong>한 통치였습니다.`;
-  } else if (ownJudgments === 3) {
-    ownComment = `세종 시대 3안건 모두 독자 판단하셨습니다. 의정부 서사제가 시행 중이었지만 <strong>실질적으로는 6조 직계제처럼 운영</strong>됐습니다. 제도보다 왕의 의지가 강했습니다.`;
+  if (hwanbuCount === 0) {
+    ownComment = `세종 시대 내내 재가하셨습니다. 의정부가 결정해 올린 것을 그대로 추인하는 <strong>왕권·신권 균형의 통치</strong>를 실천하셨습니다.`;
+  } else if (hwanbuCount === 3) {
+    ownComment = `세종 시대 3안건 모두 환부하셨습니다. 의정부서사제가 시행 중이었지만 <strong>실질적으로는 왕의 의지가 모든 결정을 좌우</strong>했습니다. 제도보다 왕의 뜻이 강했습니다.`;
   } else {
-    ownComment = `세종 시대 중 <strong>${ownJudgments}번</strong> 재상 의견을 거부하고 독자 판단하셨습니다. <strong>의정부 서사제 아래서도 왕은 언제든 독단할 수 있었습니다.</strong> 재상은 결정자가 아니라 심의자였기 때문입니다.`;
+    ownComment = `세종 시대 중 <strong>${hwanbuCount}번 환부</strong>로 의정부 결정을 뒤집으셨습니다. <strong>의정부서사제에서도 왕은 환부로 언제든 결정을 번복할 수 있었습니다.</strong> 의정부는 결정자가 아니라 의결 기관이었고, 최종 권한은 왕에게 있었습니다.`;
   }
 
   const matchRowsHtml = allCases.map((c, i) => {
@@ -1069,7 +1194,7 @@ function renderFinal() {
       ${matchRowsHtml}
 
       <div class="hist-note-final">
-        태종의 <strong>6조 직계제</strong>는 왕이 모든 결재를 직접 처리해 신속하지만 독단의 위험이 있었습니다. 세종의 <strong>의정부 서사제</strong>는 재상의 심의를 거쳐 균형 잡힌 통치를 지향했습니다. 두 제도는 각각 왕권과 신권 중 어느 쪽을 중심에 놓느냐의 차이였으며, 조선 전기 내내 번갈아 시행되었습니다.
+        태종의 <strong>6조 직계제</strong>는 6조가 왕에게 직접 올리고 왕이 즉각 윤허·반려했습니다. 왕권이 강화되지만 독단의 위험이 있었습니다. 세종의 <strong>의정부 서사제</strong>는 의정부가 먼저 심의·의결한 뒤 왕에게 올리고, 왕은 재가하거나 환부했습니다. 두 제도는 '누가 먼저 결론을 내리는가'의 차이였으며, <span class="tt" data-tip="%EC%A1%B0%EC%84%A0%20%EC%A0%84%EA%B8%B0%20%E2%80%94%20%EA%B1%B4%EA%B5%AD%281392%29%EB%B6%80%ED%84%B0%20%EC%9E%84%EC%A7%84%EC%99%9C%EB%9E%80%281592%29%EA%B9%8C%EC%A7%80%20%EC%95%BD%20200%EB%85%84%EC%9D%84%20%EA%B0%80%EB%A6%AC%ED%82%A8%EB%8B%A4." data-word="조선 전기">조선 전기</span> 내내 번갈아 시행되었습니다.
       </div>
 
       <hr class="divider">
@@ -1115,8 +1240,8 @@ function startSejong() {
 
 function decideSejong(choice) {
   const c = SEJONG_CASES[S.si];
-  const followedMinister = choice === 'follow';
-  S.sejong_decisions.push({ id: c.id, followedMinister });
+  const gaja = choice === 'gaja'; // true = 재가, false = 환부
+  S.sejong_decisions.push({ id: c.id, gaja });
   S.si++;
   S.phase = 'sejong_feedback'; R();
 }
@@ -1143,12 +1268,12 @@ function copyResult() {
 
   const sejongResults = S.sejong_decisions.map(d => {
     const c = SEJONG_CASES.find(x => x.id === d.id);
-    const approved = (c.minister_agree && d.followedMinister) || (!c.minister_agree && !d.followedMinister);
+    const approved = (c.uijeong_decision && d.gaja) || (!c.uijeong_decision && !d.gaja);
     return { ...d, approved, match: approved === (c.history === 'approve') };
   });
   const sejongMatches = sejongResults.filter(d => d.match).length;
 
-  const ownJudgmentCount = S.sejong_decisions.filter(d => !d.followedMinister).length;
+  const hwanbuCount = S.sejong_decisions.filter(d => !d.gaja).length;
 
   const lines = [
     `👑 왕의 결재함 — 조선 전기 통치 체험`,
@@ -1163,10 +1288,10 @@ function copyResult() {
     `[세종 시대 — 의정부 서사제]`,
     ...sejongResults.map((d, i) => {
       const c = SEJONG_CASES[i];
-      return `${c.emoji} ${c.title}: ${d.approved ? '윤허' : '반려'} (${d.followedMinister ? '재상 의견 수용' : '독자 판단'}) ${d.match ? '✅' : '❌'}`;
+      return `${c.emoji} ${c.title}: ${d.approved ? '시행' : '보류'} (${d.gaja ? '재가' : '환부'}) ${d.match ? '✅' : '❌'}`;
     }),
     ``,
-    `세종 시대 독자 판단: ${ownJudgmentCount}/3회`,
+    `세종 시대 환부 횟수: ${hwanbuCount}/3회`,
     `역사 일치: 태종 ${taejongMatches}/3 · 세종 ${sejongMatches}/3 · 합계 ${taejongMatches + sejongMatches}/6`,
     `— 왕의 결재함 (조선 전기 통치 체험)`,
   ];
