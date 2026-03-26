@@ -186,35 +186,35 @@
     background: var(--hanji);
     border-bottom: 1px solid rgba(184,137,42,0.2);
   }
-  .round-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid var(--hanji-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: var(--ink-fade);
-    transition: all 0.4s ease;
-  }
-  .round-dot.active {
-    border-color: var(--red-seal);
-    background: var(--red-seal);
-    color: white;
-    transform: scale(1.1);
-  }
-  .round-dot.done {
-    border-color: var(--gold);
-    background: var(--gold);
-    color: white;
-  }
   .round-label {
     font-size: 11px;
     color: var(--ink-fade);
     font-family: 'Noto Sans KR', sans-serif;
     letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .turn-track {
+    flex: 1;
+    height: 6px;
+    background: var(--hanji-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 4px;
+  }
+  .turn-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, var(--gold), var(--red-seal));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .turn-count {
+    font-size: 11px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--ink-fade);
+    white-space: nowrap;
+    min-width: 36px;
+    text-align: right;
   }
 
   /* 채팅 영역 */
@@ -757,12 +757,13 @@
       </div>
     </div>
 
-    <!-- 라운드 표시 -->
+    <!-- 턴 진행 표시 -->
     <div class="round-indicator">
       <span class="round-label">논쟁</span>
-      <div class="round-dot active" id="dot1">一</div>
-      <div class="round-dot" id="dot2">二</div>
-      <div class="round-dot" id="dot3">三</div>
+      <div class="turn-track">
+        <div class="turn-fill" id="turnFill"></div>
+      </div>
+      <span class="turn-count" id="turnCount">0 / 5</span>
     </div>
 
     <!-- 채팅 영역 -->
@@ -787,7 +788,7 @@
         <span class="char-counter empty" id="charCounter">0 / 50자</span>
       </div>
       <div class="hint-box" id="hintBox">
-        <strong>💡 이번 주제:</strong> 고려 왕조를 유지하면서 개혁이 가능한가, 아니면 새 왕조를 세워야 하는가?
+        <strong>💡 논쟁 주제:</strong> 고려 왕조를 유지하며 개혁이 가능한가, 아니면 새 왕조를 세워야 하는가?
       </div>
       <button class="sacho-btn" onclick="openSacho()">📜 사료 보관함 — 논거가 막히면 열어보시오</button>
     </div>
@@ -819,12 +820,7 @@
 const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycbz9rS_C6MD1EqI6XEmHXb6mBL-PG4Csr5c6uzWom5jJJ6_yWeXoJKvCoRvwPM6GljW3/exec";
 // =====================================================
 
-const ROUNDS_MAX = 3;
-const ROUND_HINTS = [
-  "왕조 교체의 정당성 — 역성혁명이 성리학적으로 가능한가?",
-  "토지 개혁 방식 — 과전법으로 충분한가, 더 근본적 개혁이 필요한가?",
-  "불교와 성리학 — 고려의 불교 질서를 어떻게 청산할 것인가?"
-];
+const TURNS_MAX = 5;
 
 // 라운드별 사료 데이터
 const SACHO_DATA = [
@@ -886,25 +882,22 @@ const SACHO_DATA = [
 
 // 사료 보관함 열기/닫기
 function openSacho() {
-  const idx = Math.min(round - 1, SACHO_DATA.length - 1);
-  const data = SACHO_DATA[idx];
   const body = document.getElementById('sachoPanelBody');
-
-  let html = `<div style="font-size:12px;color:var(--ink-fade);font-family:'Noto Sans KR',sans-serif;margin-bottom:16px;letter-spacing:1px;">
-    현재 라운드: <strong style="color:var(--red-seal)">${data.roundTitle}</strong>
-  </div>`;
-
-  data.items.forEach((item, i) => {
-    if (i > 0) html += `<div class="sacho-divider"></div>`;
-    html += `
-      <div class="sacho-item">
-        <div class="sacho-source-label">【 ${item.label} 】</div>
-        <div class="sacho-source-title">${item.title}</div>
-        <div class="sacho-source-text">${item.text.replace(/\n/g, '<br>')}</div>
-        <div class="sacho-source-tip">${item.tip}</div>
-      </div>`;
+  let html = '';
+  SACHO_DATA.forEach((section, si) => {
+    if (si > 0) html += `<div class="sacho-divider"></div>`;
+    html += `<div style="font-size:11px;color:var(--red-seal);font-family:'Noto Sans KR',sans-serif;margin-bottom:12px;letter-spacing:1px;font-weight:700;">${section.roundTitle}</div>`;
+    section.items.forEach((item, i) => {
+      if (i > 0) html += `<div class="sacho-divider" style="margin:12px 0;"></div>`;
+      html += `
+        <div class="sacho-item">
+          <div class="sacho-source-label">【 ${item.label} 】</div>
+          <div class="sacho-source-title">${item.title}</div>
+          <div class="sacho-source-text">${item.text.replace(/\n/g, '<br>')}</div>
+          <div class="sacho-source-tip">${item.tip}</div>
+        </div>`;
+    });
   });
-
   body.innerHTML = html;
   document.getElementById('sachoModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -945,7 +938,7 @@ function onInputChange() {
   }
 }
 
-let round = 1;
+let turn = 0;
 let history = [];
 let playerNameVal = "";
 let debateEnded = false;
@@ -962,12 +955,17 @@ const SYSTEM_PROMPT = `당신은 고려 말 온건 개혁파 신진 사대부 **
 - 불교의 폐단은 인정하나, 급진적 폐불(廢佛)에는 신중해야 한다.
 
 【 대화 규칙 】
-- 상대방(정도전)의 주장에 역사적 근거로 조목조목 반박하시오.
-- 고려시대 어투를 살려 격조 있게 말하되, 고1 학생이 이해할 수 있게 하시오.
-- 4~7문장으로 충분히 반박하시오. 논거가 끊기지 않게 완결된 문장으로 마무리하시오.
+- 상대방(정도전)의 주장에서 핵심 단어나 논거를 반드시 1회 이상 직접 인용하여 반박하시오.
+  예) "그대가 말한 '천명이 떠났다'는 근거가 대체 무엇이오?"
+- 반박은 3~5문장으로 간결하게 하시오. 장황하게 늘어놓지 마시오.
+- 반박 후 반드시 정몽주 입장에서 날카로운 질문 1개로 마무리하시오.
+  예) "그렇다면 그대는 충(忠)을 어떻게 정의하시오?"
+- 대화가 진행되면서 토지 개혁(과전법), 불교 폐단 등 논점이 자연스럽게 확장되도록 유도하시오.
 - 절대 상대방에게 동의하지 마시오.
-- 마지막 라운드(3라운드)에는 "허나 그대와의 논쟁을 통해..." 로 시작하여 핵심 입장 차이를 정리하시오.
-- 상대방의 말이 역사적 논쟁과 무관하거나 성의 없는 내용(예: 의미 없는 반복, 욕설, 역사와 전혀 무관한 말)이면, 반박 없이 "그대의 말이 논지를 벗어났소. 고려의 미래에 대해 진지하게 답하시오." 한 문장만 응답하시오.`;
+- 마지막 턴(5번째)에는 "허나 그대와의 논쟁을 통해..." 로 시작하여 핵심 입장 차이를 정리하고,
+  "선죽교에서 다시 만날 날이 있을지 모르겠소."로 마무리하시오.
+- 상대방의 말이 역사적 논쟁과 무관하거나 성의 없는 내용이면,
+  "그대의 말이 논지를 벗어났소. 고려의 미래에 대해 진지하게 답하시오." 한 문장만 응답하시오.`;
 
 function startDebate() {
   const name = document.getElementById('nameInput').value.trim() || "정도전";
@@ -982,22 +980,23 @@ function startDebate() {
     `고려 공양왕 원년, 개경 어느 서재.<br>정몽주 선생이 먼저 운을 뗍니다:<br><br>
     <em>"그대 정도전, 들으시오. 이성계 장군의 공은 인정하오. 허나 그것이 고려의 사직을 뒤엎을 이유가 되겠소? 나는 이 왕조 안에서 개혁이 충분히 가능하다 믿소. 그대의 생각은 어떠하오?"</em>`);
 
-  updateHint();
+  updateTurnUI();
 }
 
-function updateHint() {
+function updateTurnUI() {
+  const fill = document.getElementById('turnFill');
+  const count = document.getElementById('turnCount');
+  const pct = Math.min((turn / TURNS_MAX) * 100, 100);
+  if (fill) fill.style.width = pct + '%';
+  if (count) count.textContent = turn + ' / ' + TURNS_MAX;
+  // 힌트박스: 5턴 고정 주제
   const hintBox = document.getElementById('hintBox');
-  if (round <= ROUNDS_MAX) {
-    hintBox.innerHTML = `<strong>💡 ${round}라운드 주제:</strong> ${ROUND_HINTS[round-1]}`;
-  }
-}
-
-function updateRoundDots() {
-  for (let i = 1; i <= ROUNDS_MAX; i++) {
-    const dot = document.getElementById('dot' + i);
-    if (i < round) { dot.className = 'round-dot done'; }
-    else if (i === round) { dot.className = 'round-dot active'; }
-    else { dot.className = 'round-dot'; }
+  if (hintBox) {
+    if (turn < TURNS_MAX) {
+      hintBox.innerHTML = '<strong>💡 논쟁 주제:</strong> 고려 왕조를 유지하며 개혁이 가능한가, 아니면 새 왕조를 세워야 하는가?';
+    } else {
+      hintBox.innerHTML = '<strong>💡 마지막 발언:</strong> 정몽주의 핵심 반론에 최후의 주장을 펼치시오.';
+    }
   }
 }
 
@@ -1017,50 +1016,41 @@ async function sendMessage() {
   input.disabled = true;
   sendBtn.disabled = true;
 
-  addMessage('user', `${playerNameVal} (나) — ${round}라운드`, text);
+  turn++;
+  const isLastTurn = turn === TURNS_MAX;
+
+  addMessage('user', `${playerNameVal} (나) — ${turn}번째 주장`, text);
   input.value = '';
 
-  history.push({ role: "user", content: `[${round}라운드] ${text}` });
+  history.push({ role: "user", content: `[${turn}번째 주장${isLastTurn ? ' - 마지막' : ''}] ${text}` });
 
-  // 로딩
   const loadingId = addLoading();
 
   try {
-    const isLastRound = round === ROUNDS_MAX;
-    const messages = [
-      ...history.slice(0, -1),
-      {
-        role: "user",
-        content: `[${round}라운드${isLastRound ? ' - 마지막 라운드' : ''}] ${text}`
-      }
-    ];
-
-    const reply = await callClaude(messages);
+    const reply = await callClaude(history);
     removeLoading(loadingId);
 
     history.push({ role: "assistant", content: reply });
-    addMessage('ai', `정몽주 — ${round}라운드 반박`, reply);
+    addMessage('ai', `정몽주 — ${turn}번째 반박`, reply);
 
-    round++;
+    updateTurnUI();
 
-    if (round > ROUNDS_MAX) {
+    if (isLastTurn) {
       debateEnded = true;
-      updateRoundDots();
       await showFinalFeedback();
     } else {
-      updateRoundDots();
-      updateHint();
       input.disabled = false;
       input.value = '';
-      onInputChange(); // 글자수 카운터 리셋
+      onInputChange();
       input.focus();
     }
 
   } catch (err) {
+    turn--; // 실패 시 턴 롤백
     removeLoading(loadingId);
     addError(err.message);
     input.disabled = false;
-    onInputChange(); // 글자수 다시 체크해서 버튼 상태 복구
+    onInputChange();
   }
 }
 
@@ -1073,7 +1063,7 @@ async function showFinalFeedback() {
       ...history,
       {
         role: "user",
-        content: `3라운드 논쟁이 끝났습니다. 이제 선생님의 시각으로 전환하여 다음을 한국어로 작성해주세요:
+        content: `5번의 논쟁이 끝났습니다. 이제 선생님의 시각으로 전환하여 다음을 한국어로 작성해주세요:
 1. 정도전(학생) 주장의 역사적 근거 평가 (잘한 점, 보완할 점)
 2. 실제 역사에서 두 인물의 운명 (간략히)
 3. 이 논쟁이 오늘날에 주는 시사점 1가지
@@ -1135,7 +1125,7 @@ async function callClaude(messages, isFeedback = false) {
       "과전법이 필요함은 나도 인정하오. 허나 그것이 고려를 무너뜨릴 이유가 되겠소? 토지 제도는 왕조 교체 없이도 개혁 가능하오. 지금 성급히 새 왕조를 세우면 또 다른 혼란만 부를 것이오. 백성들이 원하는 것은 안정이지, 또 다른 전란이 아니오.",
       "허나 그대와의 논쟁을 통해 한 가지는 분명해졌소. 우리 둘 다 백성을 위한다는 마음은 같다는 것이오. 다만 나는 충(忠)과 의(義)를 지키며 고려 안에서 그 길을 찾겠소. 그대가 새 왕조를 꿈꾼다면, 역사가 판단할 것이오."
     ];
-    return demos[Math.min(round - 1, 2)];
+    return demos[Math.min(turn - 1, 4)];
   }
 
   // GAS 프록시 경유 — Gemini API 키는 GAS 스크립트 안에 보관
@@ -1163,11 +1153,11 @@ function copyResult() {
   // history에서 학생 주장만 추출 (role === user)
   const userTurns = history.filter(m => m.role === 'user');
 
-  const roundLabels = ['1라운드', '2라운드', '3라운드'];
+  const roundLabels = ['1번째', '2번째', '3번째', '4번째', '5번째'];
   const roundLines = userTurns.map((m, i) => {
     // "[1라운드] " 접두사 제거 후 본문만
     const content = m.content.replace(/^\[\d라운드.*?\]\s*/, '').trim();
-    return `⚔ ${roundLabels[i] || (i+1)+'라운드'} 주장\n${truncate(content)}`;
+    return `⚔ ${roundLabels[i] || (i+1)+'번째'} 주장\n${truncate(content)}`;
   }).join('\n\n');
 
   // 피드백에서 HTML 태그 제거
