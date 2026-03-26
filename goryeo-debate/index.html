@@ -957,7 +957,7 @@ const SYSTEM_PROMPT = `당신은 고려 말 온건 개혁파 신진 사대부 **
 【 대화 규칙 】
 - 상대방(정도전)의 주장에서 핵심 단어나 논거를 반드시 1회 이상 직접 인용하여 반박하시오.
   예) "그대가 말한 '천명이 떠났다'는 근거가 대체 무엇이오?"
-- 반박은 3~5문장으로 간결하게 하시오. 장황하게 늘어놓지 마시오.
+- 반박은 반드시 3문장 이내로 완결하시오. 절대 4문장을 넘기지 마시오. 문장을 끊지 말고 완전한 문장으로 마무리하시오.
 - 반박 후 반드시 정몽주 입장에서 날카로운 질문 1개로 마무리하시오.
   예) "그렇다면 그대는 충(忠)을 어떻게 정의하시오?"
 - 대화가 진행되면서 토지 개혁(과전법), 불교 폐단 등 논점이 자연스럽게 확장되도록 유도하시오.
@@ -1135,7 +1135,7 @@ async function callClaude(messages, isFeedback = false) {
     body: JSON.stringify({
       system: SYSTEM_PROMPT,
       messages: messages,
-      max_tokens: isFeedback ? 2000 : 1200
+      max_tokens: isFeedback ? 2000 : 600
     })
   });
 
@@ -1156,7 +1156,7 @@ function copyResult() {
   const roundLabels = ['1번째', '2번째', '3번째', '4번째', '5번째'];
   const roundLines = userTurns.map((m, i) => {
     // "[1라운드] " 접두사 제거 후 본문만
-    const content = m.content.replace(/^\[\d라운드.*?\]\s*/, '').trim();
+    const content = m.content.replace(/^\[.*?\]\s*/, '').trim();
     return `⚔ ${roundLabels[i] || (i+1)+'번째'} 주장\n${truncate(content)}`;
   }).join('\n\n');
 
