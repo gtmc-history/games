@@ -1,1 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고려 말 대논쟁 — 정몽주 vs 정도전</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hanji: #f5eed8;
+    --hanji-dark: #e8dcc0;
+    --ink: #1a1208;
+    --ink-light: #3d2f1a;
+    --ink-fade: #6b5744;
+    --red-seal: #9b2335;
+    --red-seal-light: #c73652;
+    --gold: #b8892a;
+    --gold-light: #d4a845;
+    --jeongdo: #1e3a5f;   /* 정도전 - 청색 */
+    --jeongdo-light: #2d5a8e;
+    --jeonmong: #4a1942;  /* 정몽주 - 자주색 */
+    --jeonmong-light: #7a2d6e;
+  }
 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #2a1f0e;
+    background-image: 
+      radial-gradient(ellipse at 20% 50%, rgba(90,60,20,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(60,30,10,0.4) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+
+  /* 상단 타이틀 */
+  .title-block {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .title-era {
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+  }
+  .title-main {
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 900;
+    color: var(--hanji);
+    line-height: 1.3;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  }
+  .title-sub {
+    font-size: 13px;
+    color: var(--gold-light);
+    margin-top: 8px;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+  .divider-ornament {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin: 14px 0;
+  }
+  .divider-ornament span { color: var(--gold); font-size: 16px; }
+  .divider-ornament::before, .divider-ornament::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  /* 메인 컨테이너 */
+  .main-card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--hanji);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(184,137,42,0.3);
+    overflow: hidden;
+    animation: fadeUp 0.9s ease 0.2s both;
+  }
+
+  /* 인물 소개 헤더 */
+  .persona-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    background: var(--ink);
+    padding: 20px;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .persona {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .persona.you { align-items: flex-start; }
+  .persona.ai  { align-items: flex-end; }
+
+  .persona-badge {
+    font-size: 9px;
+    letter-spacing: 3px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .persona.you .persona-badge {
+    background: var(--jeongdo);
+    color: #aacbf0;
+  }
+  .persona.ai .persona-badge {
+    background: var(--jeonmong);
+    color: #e0b8dc;
+  }
+  .persona-name {
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 700;
+    color: var(--hanji);
+  }
+  .persona-role {
+    font-size: 11px;
+    color: var(--gold-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+  }
+  .vs-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  /* 상황 설명 */
+  .context-box {
+    padding: 18px 22px;
+    background: var(--hanji-dark);
+    border-bottom: 1px solid rgba(184,137,42,0.3);
+  }
+  .context-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--red-seal);
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 8px;
+  }
+  .context-text {
+    font-size: 13.5px;
+    line-height: 2;
+    color: var(--ink-light);
+  }
+  .context-text strong {
+    color: var(--red-seal);
+    font-weight: 700;
+  }
+
+  /* 라운드 표시 */
+  .round-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--hanji);
+    border-bottom: 1px solid rgba(184,137,42,0.2);
+  }
+  .round-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--hanji-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--ink-fade);
+    transition: all 0.4s ease;
+  }
+  .round-dot.active {
+    border-color: var(--red-seal);
+    background: var(--red-seal);
+    color: white;
+    transform: scale(1.1);
+  }
+  .round-dot.done {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: white;
+  }
+  .round-label {
+    font-size: 11px;
+    color: var(--ink-fade);
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 2px;
+  }
+
+  /* 채팅 영역 */
+  .chat-area {
+    padding: 20px;
+    min-height: 260px;
+    max-height: 600px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-track { background: var(--hanji-dark); }
+  .chat-area::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* 메시지 버블 */
+  .message {
+    max-width: 92%;
+    animation: fadeIn 0.4s ease;
+  }
+  .message.user { align-self: flex-start; }
+  .message.ai   { align-self: flex-end; }
+
+  .message-speaker {
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .message.user .message-speaker { color: var(--jeongdo-light); }
+  .message.ai   .message-speaker { color: var(--jeonmong-light); text-align: right; }
+
+  .message-bubble {
+    padding: 14px 18px;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--ink);
+    position: relative;
+  }
+  .message.user .message-bubble {
+    background: #ddeaf7;
+    border-left: 3px solid var(--jeongdo);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+  }
+  .message.ai .message-bubble {
+    background: #f0dff0;
+    border-right: 3px solid var(--jeonmong);
+    box-shadow: -2px 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* 시스템/피드백 메시지 */
+  .message.system {
+    align-self: center;
+    max-width: 100%;
+  }
+  .message.system .message-bubble {
+    background: #fffbf0;
+    border: 1px solid var(--gold);
+    border-top: 3px solid var(--gold);
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+  .message.system .message-speaker {
+    text-align: center;
+    color: var(--gold);
+  }
+  .feedback-section { margin-top: 8px; text-align: left; }
+  .feedback-section h4 {
+    color: var(--red-seal);
+    font-size: 13px;
+    margin: 12px 0 6px;
+    letter-spacing: 1px;
+  }
+  .feedback-section p {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--ink-light);
+    margin-bottom: 4px;
+  }
+
+  /* 입력 영역 */
+  .input-area {
+    padding: 16px 20px 20px;
+    background: var(--hanji-dark);
+    border-top: 1px solid rgba(184,137,42,0.3);
+  }
+  .input-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--jeongdo-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 8px;
+  }
+  .input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  textarea {
+    flex: 1;
+    background: var(--hanji);
+    border: 1px solid rgba(184,137,42,0.4);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: none;
+    min-height: 72px;
+    line-height: 1.7;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea:focus {
+    border-color: var(--jeongdo-light);
+    box-shadow: 0 0 0 2px rgba(30,58,95,0.1);
+  }
+  textarea::placeholder { color: var(--ink-fade); opacity: 0.6; }
+  textarea:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .send-btn {
+    background: var(--jeongdo);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 0 18px;
+    height: 72px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    transition: background 0.2s, transform 0.1s;
+    min-width: 64px;
+    line-height: 1.4;
+  }
+  .send-btn:hover:not(:disabled) { background: var(--jeongdo-light); }
+  .send-btn:active:not(:disabled) { transform: scale(0.97); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .send-btn .btn-icon { font-size: 18px; }
+
+  /* 힌트 */
+  .hint-box {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(184,137,42,0.08);
+    border-left: 2px solid var(--gold);
+    border-radius: 2px;
+    font-size: 12px;
+    color: var(--ink-fade);
+    line-height: 1.7;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .hint-box strong { color: var(--gold); }
+
+  /* 로딩 */
+  .loading-msg {
+    align-self: flex-end;
+    max-width: 60%;
+  }
+  .typing-dots {
+    display: flex;
+    gap: 5px;
+    padding: 14px 18px;
+    background: #f0dff0;
+    border-right: 3px solid var(--jeonmong);
+    border-radius: 3px;
+    align-items: center;
+  }
+  .typing-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--jeonmong-light);
+    border-radius: 50%;
+    animation: bounce 1.2s ease infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* 입력 이름 화면 */
+  .name-screen {
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .name-screen h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .name-screen p {
+    font-size: 13px;
+    color: var(--ink-fade);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .name-input {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 16px;
+    border: 1px solid rgba(184,137,42,0.5);
+    border-radius: 3px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--hanji);
+    text-align: center;
+    outline: none;
+    margin-bottom: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .name-input:focus { border-color: var(--jeongdo-light); }
+  .start-btn {
+    background: var(--red-seal);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 12px 36px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: background 0.2s;
+  }
+  .start-btn:hover { background: var(--red-seal-light); }
+
+  /* 완료 화면 */
+  .seal-stamp {
+    text-align: center;
+    margin: 10px 0;
+  }
+  .seal-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid var(--red-seal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--red-seal);
+    margin-bottom: 6px;
+    animation: rotateSeal 0.6s ease;
+  }
+  .restart-btn {
+    display: inline-block;
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 24px;
+    border-radius: 2px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .restart-btn:hover { background: var(--gold); color: white; }
+
+  /* 복사 버튼 */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--jeongdo);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 22px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background 0.2s, transform 0.1s;
+    margin-right: 10px;
+  }
+  .copy-btn:hover { background: var(--jeongdo-light); }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied {
+    background: #2e7d4f;
+    pointer-events: none;
+  }
+  .copy-toast {
+    display: inline-block;
+    font-size: 11px;
+    color: #2e7d4f;
+    font-family: 'Noto Sans KR', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    vertical-align: middle;
+  }
+  .copy-toast.show { opacity: 1; }
+
+  /* 사료 보관함 버튼 */
+  .sacho-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 5px 12px;
+    border-radius: 2px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+  .sacho-btn:hover { background: var(--gold); color: var(--ink); }
+
+  /* 사료 모달 오버레이 */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,2,0.75);
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 12px;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.hidden { display: none; }
+
+  /* 사료 패널 (하단 시트) */
+  .sacho-panel {
+    width: 100%;
+    max-width: 680px;
+    max-height: 75vh;
+    background: var(--hanji);
+    border-radius: 6px 6px 0 0;
+    overflow-y: auto;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s ease;
+  }
+  .sacho-panel::-webkit-scrollbar { width: 4px; }
+  .sacho-panel::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  .sacho-panel-header {
+    position: sticky;
+    top: 0;
+    background: var(--ink);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--gold);
+  }
+  .sacho-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--hanji);
+    letter-spacing: 2px;
+  }
+  .sacho-close-btn {
+    background: none;
+    border: none;
+    color: var(--gold-light);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .sacho-panel-body { padding: 20px; }
+
+  .sacho-item {
+    margin-bottom: 24px;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+  }
+  .sacho-item:last-child { margin-bottom: 0; }
+  .sacho-source-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red-seal);
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 6px;
+  }
+  .sacho-source-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .sacho-source-text {
+    font-size: 13px;
+    line-height: 2;
+    color: var(--ink-light);
+    background: var(--hanji-dark);
+    padding: 12px 14px;
+    border-radius: 2px;
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .sacho-source-tip {
+    font-size: 12px;
+    color: var(--jeongdo-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    line-height: 1.7;
+  }
+  .sacho-source-tip strong { color: var(--red-seal); }
+  .sacho-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 20px 0;
+  }
+
+  /* 글자수 카운터 */
+  .char-counter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .char-counter {
+    font-size: 11px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.2s;
+  }
+  .char-counter.ok    { color: #2e7d4f; }
+  .char-counter.warn  { color: var(--red-seal); }
+  .char-counter.empty { color: var(--ink-fade); }
+  .char-warning {
+    font-size: 11px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--red-seal);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .char-warning.visible { opacity: 1; }
+
+  /* 에러 */
+  .error-notice {
+    padding: 12px 16px;
+    background: #fff0f0;
+    border-left: 3px solid #c0392b;
+    border-radius: 2px;
+    font-size: 13px;
+    color: #c0392b;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  /* 하단 설정 안내 */
+  .setup-notice {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(184,137,42,0.12);
+    border: 1px dashed rgba(184,137,42,0.4);
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--gold-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    line-height: 1.8;
+    animation: fadeUp 0.9s ease 0.4s both;
+  }
+  .setup-notice code {
+    background: rgba(0,0,0,0.3);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 11px;
+    color: #f0d080;
+  }
+
+  /* 애니메이션 */
+  @keyframes fadeDown  { from { opacity:0; transform: translateY(-16px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes fadeUp    { from { opacity:0; transform: translateY(16px);  } to { opacity:1; transform: translateY(0); } }
+  @keyframes fadeIn    { from { opacity:0; transform: translateY(8px);   } to { opacity:1; transform: translateY(0); } }
+  @keyframes bounce    { 0%,80%,100% { transform:scale(0.6); opacity:0.5; } 40% { transform:scale(1); opacity:1; } }
+  @keyframes rotateSeal { from { transform: rotate(-30deg) scale(0.5); opacity:0; } to { transform: rotate(0) scale(1); opacity:1; } }
+  @keyframes slideUp   { from { transform: translateY(60px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+</style>
+</head>
+<body>
+
+<!-- 타이틀 -->
+<div class="title-block">
+  <div class="title-era">고려 말 · 신진 사대부의 대논쟁</div>
+  <div class="title-main">조선을 세울 것인가<br>고려를 지킬 것인가</div>
+  <div class="divider-ornament"><span>⊕</span></div>
+  <div class="title-sub">정도전(鄭道傳) vs 정몽주(鄭夢周) — 역사의 기로에 선 두 사대부</div>
+</div>
+
+<!-- 메인 카드 -->
+<div class="main-card" id="mainCard">
+
+  <!-- 이름 입력 화면 -->
+  <div class="name-screen" id="nameScreen">
+    <h2>그대의 이름을 고하시오</h2>
+    <p>
+      때는 1388년, 위화도 회군 직후.<br>
+      그대는 <strong style="color:var(--jeongdo)">급진파 정도전</strong>의 입장에서<br>
+      온건파 정몽주와 고려의 미래를 논할 것이오.
+    </p>
+    <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하시오" maxlength="10">
+    <button class="start-btn" onclick="startDebate()">논쟁을 시작하다 →</button>
+  </div>
+
+  <!-- 토론 화면 (초기 숨김) -->
+  <div id="debateScreen" style="display:none;">
+
+    <!-- 인물 헤더 -->
+    <div class="persona-header">
+      <div class="persona you">
+        <div class="persona-badge">급진 개혁파</div>
+        <div class="persona-name" id="playerName">정도전</div>
+        <div class="persona-role">새 왕조 건국 주장</div>
+      </div>
+      <div class="vs-circle">VS</div>
+      <div class="persona ai">
+        <div class="persona-badge">온건 개혁파</div>
+        <div class="persona-name">정몽주</div>
+        <div class="persona-role">고려 수호 주장</div>
+      </div>
+    </div>
+
+    <!-- 상황 설명 -->
+    <div class="context-box">
+      <div class="context-label">【 배경 상황 】</div>
+      <div class="context-text">
+        이성계의 위화도 회군(1388) 이후 권문세족은 몰락하고 신진 사대부가 실권을 장악했소.
+        <strong>토지 개혁(과전법)</strong>과 <strong>새 왕조 건국</strong>을 둘러싸고
+        신진 사대부는 둘로 나뉘었소. 3라운드의 논쟁으로 그대의 뜻을 밝히시오.
+      </div>
+    </div>
+
+    <!-- 라운드 표시 -->
+    <div class="round-indicator">
+      <span class="round-label">논쟁</span>
+      <div class="round-dot active" id="dot1">一</div>
+      <div class="round-dot" id="dot2">二</div>
+      <div class="round-dot" id="dot3">三</div>
+    </div>
+
+    <!-- 채팅 영역 -->
+    <div class="chat-area" id="chatArea"></div>
+
+    <!-- 입력 영역 -->
+    <div class="input-area" id="inputArea">
+      <div class="input-label">【 그대의 주장을 펼치시오 — 정도전 】</div>
+      <div class="input-wrapper">
+        <textarea id="userInput"
+          placeholder="예) 권문세족이 빼앗은 토지를 근본적으로 되돌리려면 고려의 틀로는 불가하오..."
+          rows="3"
+          oninput="onInputChange()"
+          onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+          <span class="btn-icon">⚔</span>
+          <span>주장</span>
+        </button>
+      </div>
+      <div class="char-counter-row">
+        <span class="char-warning" id="charWarning">⚠ 최소 50자 이상 입력하시오</span>
+        <span class="char-counter empty" id="charCounter">0 / 50자</span>
+      </div>
+      <div class="hint-box" id="hintBox">
+        <strong>💡 이번 주제:</strong> 고려 왕조를 유지하면서 개혁이 가능한가, 아니면 새 왕조를 세워야 하는가?
+      </div>
+      <button class="sacho-btn" onclick="openSacho()">📜 사료 보관함 — 논거가 막히면 열어보시오</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 설정 안내 (선생님용) -->
+<div class="setup-notice" id="setupNotice">
+  ⚙️ <strong>선생님 설정 안내</strong> — 파일 상단 <code>GAS_PROXY_URL</code> 변수에 Google Apps Script 배포 URL을 입력하세요.
+  GAS 코드는 함께 제공된 <code>gas_proxy_gemini.gs</code> 파일을 사용하세요.
+</div>
+
+<!-- 사료 보관함 모달 -->
+<div class="modal-overlay hidden" id="sachoModal" onclick="closeSachoOutside(event)">
+  <div class="sacho-panel" id="sachoPanel">
+    <div class="sacho-panel-header">
+      <div class="sacho-panel-title">📜 사료 보관함</div>
+      <button class="sacho-close-btn" onclick="closeSacho()">✕</button>
+    </div>
+    <div class="sacho-panel-body" id="sachoPanelBody"></div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// 🔧 설정: 선생님이 GAS 배포 URL로 교체하세요
+// =====================================================
+const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycbz9rS_C6MD1EqI6XEmHXb6mBL-PG4Csr5c6uzWom5jJJ6_yWeXoJKvCoRvwPM6GljW3/exec";
+// =====================================================
+
+const ROUNDS_MAX = 3;
+const ROUND_HINTS = [
+  "왕조 교체의 정당성 — 역성혁명이 성리학적으로 가능한가?",
+  "토지 개혁 방식 — 과전법으로 충분한가, 더 근본적 개혁이 필요한가?",
+  "불교와 성리학 — 고려의 불교 질서를 어떻게 청산할 것인가?"
+];
+
+// 라운드별 사료 데이터
+const SACHO_DATA = [
+  // 1라운드 — 역성혁명
+  {
+    roundTitle: "1라운드 사료 — 역성혁명의 정당성",
+    items: [
+      {
+        label: "출처 · 《맹자》 〈양혜왕 하〉",
+        title: "역성혁명론의 근거",
+        text: "齊宣王問曰 湯放桀 武王伐紂 有諸\n(제선왕이 물었다. 탕왕이 걸왕을 내쫓고 무왕이 주왕을 정벌한 것이 있었습니까?)\n孟子對曰 … 賊仁者謂之賊 賊義者謂之殘 殘賊之人 謂之一夫\n(맹자: 인을 해치는 자를 '적'이라 하고, 의를 해치는 자를 '잔'이라 하니, 잔적(殘賊)한 사람은 그냥 '일부(一夫·하나의 필부)'라 이를 뿐이오.)",
+        tip: "<strong>활용 팁:</strong> 맹자는 덕을 잃은 왕은 이미 왕이 아닌 한낱 일개인에 불과하므로 내칠 수 있다고 했어요. 정도전은 이 논리로 새 왕조 건국을 정당화했답니다."
+      },
+      {
+        label: "출처 · 정도전 《조선경국전》 서문",
+        title: "새 왕조의 정당성 주장",
+        text: "하늘이 백성을 낳고 왕을 세운 것은 백성을 위함이니, 백성을 위하여 왕 노릇을 잘하면 하늘의 명(命)이 돌아오고, 백성을 위하여 왕 노릇을 못하면 하늘의 명이 떠나간다.",
+        tip: "<strong>활용 팁:</strong> '천명(天命)'이 이미 고려를 떠났고 이성계에게 왔다는 논리로 연결해보세요."
+      }
+    ]
+  },
+  // 2라운드 — 토지 개혁
+  {
+    roundTitle: "2라운드 사료 — 토지 개혁과 과전법",
+    items: [
+      {
+        label: "출처 · 《고려사》 식화지",
+        title: "권문세족의 토지 겸병 실태",
+        text: "권세 있는 집안의 토지가 산과 내를 경계로 삼으니, 하나의 주(州)나 군(郡)에 걸쳐 있기도 하고, 주인이 몇 겹이나 되기도 한다. 농민들은 소작조차 거부당하여 유리걸식하니 백성의 고통이 극에 달하였다.",
+        tip: "<strong>활용 팁:</strong> 권문세족의 불법 토지 소유는 고려 체제 안에서는 귀족들의 강한 저항으로 해결이 불가능했다는 논리를 펼쳐보세요."
+      },
+      {
+        label: "출처 · 《고려사》 조준 상소문 (1388)",
+        title: "과전법 도입 주장",
+        text: "옛날에는 토지를 국가가 나누어 주었기에 백성이 굶주리지 않았으나, 지금은 토지가 대토지 소유자에게 집중되어 나라의 근본이 흔들립니다. 마땅히 사전(私田)을 혁파하고 과전(科田)을 설치하여 위로는 나라의 재정을 넉넉히 하고 아래로는 백성의 생활을 안정시켜야 합니다.",
+        tip: "<strong>활용 팁:</strong> 조준과 정도전은 '사전 혁파'가 고려 귀족들의 격렬한 반대로 고려 체제 안에서는 불가능하다고 보았어요."
+      }
+    ]
+  },
+  // 3라운드 — 불교 vs 성리학
+  {
+    roundTitle: "3라운드 사료 — 불교 질서의 청산",
+    items: [
+      {
+        label: "출처 · 정도전 《불씨잡변(佛氏雜辨)》",
+        title: "불교 비판의 논거",
+        text: "불씨(佛氏·부처)는 인륜을 버리고 출가하여 임금도 없고 어버이도 없다고 하니, 이는 금수(禽獸)와 다를 바 없다. 성리학의 오륜(五倫)이야말로 사람이 사람다운 근거이니, 불교는 나라와 가정을 무너뜨리는 해악이다.",
+        tip: "<strong>활용 팁:</strong> 정도전은 불교가 왕에 대한 충(忠), 부모에 대한 효(孝)를 부정한다고 비판했어요. 고려의 왕실·귀족 불교 후원 문화를 개혁해야 한다는 논거로 활용하세요."
+      },
+      {
+        label: "출처 · 《고려사》 불교 폐단 기록",
+        title: "고려 불교계의 현실",
+        text: "사찰이 토지와 노비를 무제한으로 소유하여 국가 재정을 잠식하고, 승려들이 재물을 탐하여 백성을 착취하니, 신돈이 전민변정도감을 설치하여 이를 바로잡으려 하였으나 권문세족과 불교 세력의 반발로 뜻을 이루지 못하였다.",
+        tip: "<strong>활용 팁:</strong> 신돈의 개혁 실패 사례를 들어, 고려의 틀 안에서는 불교 기득권을 해체할 수 없다는 주장을 강화해보세요."
+      }
+    ]
+  }
+];
+
+// 사료 보관함 열기/닫기
+function openSacho() {
+  const idx = Math.min(round - 1, SACHO_DATA.length - 1);
+  const data = SACHO_DATA[idx];
+  const body = document.getElementById('sachoPanelBody');
+
+  let html = `<div style="font-size:12px;color:var(--ink-fade);font-family:'Noto Sans KR',sans-serif;margin-bottom:16px;letter-spacing:1px;">
+    현재 라운드: <strong style="color:var(--red-seal)">${data.roundTitle}</strong>
+  </div>`;
+
+  data.items.forEach((item, i) => {
+    if (i > 0) html += `<div class="sacho-divider"></div>`;
+    html += `
+      <div class="sacho-item">
+        <div class="sacho-source-label">【 ${item.label} 】</div>
+        <div class="sacho-source-title">${item.title}</div>
+        <div class="sacho-source-text">${item.text.replace(/\n/g, '<br>')}</div>
+        <div class="sacho-source-tip">${item.tip}</div>
+      </div>`;
+  });
+
+  body.innerHTML = html;
+  document.getElementById('sachoModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSacho() {
+  document.getElementById('sachoModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function closeSachoOutside(e) {
+  if (e.target === document.getElementById('sachoModal')) closeSacho();
+}
+
+// 글자수 카운터
+const MIN_CHARS = 50;
+function onInputChange() {
+  const val = document.getElementById('userInput').value;
+  const len = val.trim().length;
+  const counter = document.getElementById('charCounter');
+  const warning = document.getElementById('charWarning');
+  const sendBtn = document.getElementById('sendBtn');
+
+  counter.textContent = `${len} / ${MIN_CHARS}자`;
+
+  if (len === 0) {
+    counter.className = 'char-counter empty';
+    warning.classList.remove('visible');
+    sendBtn.disabled = true;
+  } else if (len < MIN_CHARS) {
+    counter.className = 'char-counter warn';
+    warning.classList.add('visible');
+    sendBtn.disabled = true;
+  } else {
+    counter.className = 'char-counter ok';
+    warning.classList.remove('visible');
+    sendBtn.disabled = false;
+  }
+}
+
+let round = 1;
+let history = [];
+let playerNameVal = "";
+let debateEnded = false;
+let lastFeedbackText = "";
+
+const SYSTEM_PROMPT = `당신은 고려 말 온건 개혁파 신진 사대부 **정몽주**입니다.
+때는 1388년, 위화도 회군 직후입니다.
+
+【 당신의 입장 】
+- 고려 왕조의 정통성을 지켜야 한다. 역성혁명은 유교의 충(忠) 원리에 어긋난다.
+- 개혁은 고려의 틀 안에서 점진적으로 이루어져야 한다.
+- 이성계의 새 왕조 건국에 반대하며, 공양왕을 보필하겠다.
+- 토지 개혁은 필요하나, 왕조 교체 없이도 가능하다.
+- 불교의 폐단은 인정하나, 급진적 폐불(廢佛)에는 신중해야 한다.
+
+【 대화 규칙 】
+- 상대방(정도전)의 주장에 역사적 근거로 조목조목 반박하시오.
+- 고려시대 어투를 살려 격조 있게 말하되, 고1 학생이 이해할 수 있게 하시오.
+- 4~7문장으로 충분히 반박하시오. 논거가 끊기지 않게 완결된 문장으로 마무리하시오.
+- 절대 상대방에게 동의하지 마시오.
+- 마지막 라운드(3라운드)에는 "허나 그대와의 논쟁을 통해..." 로 시작하여 핵심 입장 차이를 정리하시오.
+- 상대방의 말이 역사적 논쟁과 무관하거나 성의 없는 내용(예: 의미 없는 반복, 욕설, 역사와 전혀 무관한 말)이면, 반박 없이 "그대의 말이 논지를 벗어났소. 고려의 미래에 대해 진지하게 답하시오." 한 문장만 응답하시오.`;
+
+function startDebate() {
+  const name = document.getElementById('nameInput').value.trim() || "정도전";
+  playerNameVal = name;
+  document.getElementById('playerName').textContent = name + " (나)";
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('debateScreen').style.display = 'block';
+  document.getElementById('setupNotice').style.display = 'none';
+
+  // 첫 메시지
+  addMessage('system', '【 논쟁 시작 】',
+    `고려 공양왕 원년, 개경 어느 서재.<br>정몽주 선생이 먼저 운을 뗍니다:<br><br>
+    <em>"그대 정도전, 들으시오. 이성계 장군의 공은 인정하오. 허나 그것이 고려의 사직을 뒤엎을 이유가 되겠소? 나는 이 왕조 안에서 개혁이 충분히 가능하다 믿소. 그대의 생각은 어떠하오?"</em>`);
+
+  updateHint();
+}
+
+function updateHint() {
+  const hintBox = document.getElementById('hintBox');
+  if (round <= ROUNDS_MAX) {
+    hintBox.innerHTML = `<strong>💡 ${round}라운드 주제:</strong> ${ROUND_HINTS[round-1]}`;
+  }
+}
+
+function updateRoundDots() {
+  for (let i = 1; i <= ROUNDS_MAX; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (i < round) { dot.className = 'round-dot done'; }
+    else if (i === round) { dot.className = 'round-dot active'; }
+    else { dot.className = 'round-dot'; }
+  }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || debateEnded || text.length < MIN_CHARS) return;
+
+  const sendBtn = document.getElementById('sendBtn');
+  input.disabled = true;
+  sendBtn.disabled = true;
+
+  addMessage('user', `${playerNameVal} (나) — ${round}라운드`, text);
+  input.value = '';
+
+  history.push({ role: "user", content: `[${round}라운드] ${text}` });
+
+  // 로딩
+  const loadingId = addLoading();
+
+  try {
+    const isLastRound = round === ROUNDS_MAX;
+    const messages = [
+      ...history.slice(0, -1),
+      {
+        role: "user",
+        content: `[${round}라운드${isLastRound ? ' - 마지막 라운드' : ''}] ${text}`
+      }
+    ];
+
+    const reply = await callClaude(messages);
+    removeLoading(loadingId);
+
+    history.push({ role: "assistant", content: reply });
+    addMessage('ai', `정몽주 — ${round}라운드 반박`, reply);
+
+    round++;
+
+    if (round > ROUNDS_MAX) {
+      debateEnded = true;
+      updateRoundDots();
+      await showFinalFeedback();
+    } else {
+      updateRoundDots();
+      updateHint();
+      input.disabled = false;
+      input.value = '';
+      onInputChange(); // 글자수 카운터 리셋
+      input.focus();
+    }
+
+  } catch (err) {
+    removeLoading(loadingId);
+    addError(err.message);
+    input.disabled = false;
+    onInputChange(); // 글자수 다시 체크해서 버튼 상태 복구
+  }
+}
+
+async function showFinalFeedback() {
+  const loadingId = addLoading();
+  document.getElementById('inputArea').style.display = 'none';
+
+  try {
+    const feedbackMessages = [
+      ...history,
+      {
+        role: "user",
+        content: `3라운드 논쟁이 끝났습니다. 이제 선생님의 시각으로 전환하여 다음을 한국어로 작성해주세요:
+1. 정도전(학생) 주장의 역사적 근거 평가 (잘한 점, 보완할 점)
+2. 실제 역사에서 두 인물의 운명 (간략히)
+3. 이 논쟁이 오늘날에 주는 시사점 1가지
+각 항목을 명확히 구분하여 작성하세요.`
+      }
+    ];
+
+    const feedback = await callClaude(feedbackMessages, true);
+    lastFeedbackText = feedback; // 복사용 저장
+    removeLoading(loadingId);
+
+    // 도장 + 피드백
+    const chatArea = document.getElementById('chatArea');
+    const el = document.createElement('div');
+    el.className = 'message system';
+    el.innerHTML = `
+      <div class="message-speaker">【 논쟁 종결 · 역사의 평가 】</div>
+      <div class="message-bubble">
+        <div class="seal-stamp">
+          <div class="seal-circle">結</div>
+        </div>
+        <div class="feedback-section">
+          ${formatFeedback(feedback)}
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <button class="copy-btn" id="copyBtn" onclick="copyResult()">📋 패들렛에 복사하기</button>
+          <button class="restart-btn" onclick="location.reload()">↩ 다시 논쟁하기</button>
+          <br><span class="copy-toast" id="copyToast">✅ 클립보드에 복사되었습니다! 패들렛에 붙여넣기 하세요.</span>
+        </div>
+      </div>`;
+    chatArea.appendChild(el);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+  } catch (err) {
+    removeLoading(loadingId);
+    addError(err.message);
+  }
+}
+
+function formatFeedback(text) {
+  // 번호 항목을 h4 태그로 변환
+  return text
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(1\.|2\.|3\.)/gm, '<h4>$1</h4>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^/, '<p>')
+    .replace(/$/, '</p>');
+}
+
+async function callClaude(messages, isFeedback = false) {
+  // GAS URL이 설정되지 않은 경우 데모 응답
+  if (GAS_PROXY_URL === "여기에_GAS_배포_URL_입력") {
+    await new Promise(r => setTimeout(r, 1200));
+    if (isFeedback) {
+      return `**1. 학생 주장 평가**\n\n역성혁명의 정당성과 토지 개혁의 필요성을 성리학적 근거로 연결한 점이 좋았습니다. 다만 구체적인 사료 근거를 더 활용하면 좋겠습니다.\n\n**2. 실제 역사 속 두 인물**\n\n정몽주는 1392년 선죽교에서 이방원에게 피살되었고, 정도전은 조선 건국의 설계자가 되어 《조선경국전》을 저술했으나 1398년 1차 왕자의 난에서 이방원에게 죽임을 당했습니다.\n\n**3. 오늘날의 시사점**\n\n개혁의 속도와 방법을 둘러싼 갈등은 오늘날에도 계속됩니다. 점진적 개혁과 근본적 변화 사이의 선택은 시대를 초월한 과제입니다.`;
+    }
+    const demos = [
+      "허허, 그대의 주장이 날카롭구려. 허나 역성혁명이란 것이 어디 쉬운 일이겠소? 맹자께서 폭군을 내칠 수 있다 하셨으나, 이성계 장군이 과연 그런 대의명분을 갖추었는지 묻고 싶소. 공민왕 이후 고려는 충분히 개혁할 여지가 있소. 왕조를 갈아엎는 것은 지나치게 급진적이오.",
+      "과전법이 필요함은 나도 인정하오. 허나 그것이 고려를 무너뜨릴 이유가 되겠소? 토지 제도는 왕조 교체 없이도 개혁 가능하오. 지금 성급히 새 왕조를 세우면 또 다른 혼란만 부를 것이오. 백성들이 원하는 것은 안정이지, 또 다른 전란이 아니오.",
+      "허나 그대와의 논쟁을 통해 한 가지는 분명해졌소. 우리 둘 다 백성을 위한다는 마음은 같다는 것이오. 다만 나는 충(忠)과 의(義)를 지키며 고려 안에서 그 길을 찾겠소. 그대가 새 왕조를 꿈꾼다면, 역사가 판단할 것이오."
+    ];
+    return demos[Math.min(round - 1, 2)];
+  }
+
+  // GAS 프록시 경유 — Gemini API 키는 GAS 스크립트 안에 보관
+  const res = await fetch(GAS_PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' }, // CORS preflight 방지
+    body: JSON.stringify({
+      system: SYSTEM_PROMPT,
+      messages: messages,
+      max_tokens: isFeedback ? 2000 : 1200
+    })
+  });
+
+  if (!res.ok) throw new Error(`서버 오류 (${res.status})`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.content;
+}
+
+// 복사 기능
+function copyResult() {
+  const PREVIEW_LEN = 70;
+  const truncate = (str) => str.length > PREVIEW_LEN ? str.slice(0, PREVIEW_LEN) + '...' : str;
+
+  // history에서 학생 주장만 추출 (role === user)
+  const userTurns = history.filter(m => m.role === 'user');
+
+  const roundLabels = ['1라운드', '2라운드', '3라운드'];
+  const roundLines = userTurns.map((m, i) => {
+    // "[1라운드] " 접두사 제거 후 본문만
+    const content = m.content.replace(/^\[\d라운드.*?\]\s*/, '').trim();
+    return `⚔ ${roundLabels[i] || (i+1)+'라운드'} 주장\n${truncate(content)}`;
+  }).join('\n\n');
+
+  // 피드백에서 HTML 태그 제거
+  const cleanFeedback = lastFeedbackText
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .trim()
+    .slice(0, 200) + (lastFeedbackText.length > 200 ? '...' : '');
+
+  const text =
+`📜 [${playerNameVal}]의 고려 말 대논쟁 결과
+${'─'.repeat(28)}
+
+${roundLines}
+
+${'─'.repeat(28)}
+📋 AI 평가 요약
+${cleanFeedback}
+
+${'─'.repeat(28)}
+✏️ 나의 소감 (아래 중 하나를 골라 작성하세요)
+
+💬 감정이입형
+정몽주를 설득하면서 가장 답답했던 점은?
+👉 
+
+💬 역사연결형
+말이 안 통하는 정몽주, 나라면 어떻게 했을까?
+(계속 설득한다 / 결국 선죽교로 사람을 보낸다)
+👉 
+
+💬 개념확인형
+AI 정몽주의 반박 중 가장 그럴듯했던 말은?
+👉 
+
+🕰 1388년 개경 · 고려 말 대논쟁 (정도전 vs 정몽주)`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const toast = document.getElementById('copyToast');
+    btn.textContent = '✅ 복사 완료!';
+    btn.classList.add('copied');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }).catch(() => {
+    // 클립보드 API 실패 시 fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const toast = document.getElementById('copyToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  });
+}
+
+// UI 헬퍼
+function addMessage(type, speaker, content) {
+  const chatArea = document.getElementById('chatArea');
+  const el = document.createElement('div');
+  el.className = `message ${type}`;
+  el.innerHTML = `
+    <div class="message-speaker">${speaker}</div>
+    <div class="message-bubble">${content}</div>`;
+  chatArea.appendChild(el);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+let loadingCounter = 0;
+function addLoading() {
+  const id = 'loading_' + (++loadingCounter);
+  const chatArea = document.getElementById('chatArea');
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'message loading-msg';
+  el.innerHTML = `
+    <div class="message-speaker" style="text-align:right; color:var(--jeonmong-light);">정몽주 — 생각 중...</div>
+    <div class="typing-dots"><span></span><span></span><span></span></div>`;
+  chatArea.appendChild(el);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  return id;
+}
+
+function removeLoading(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function addError(msg) {
+  const chatArea = document.getElementById('chatArea');
+  const el = document.createElement('div');
+  el.className = 'message system';
+  el.innerHTML = `<div class="message-bubble"><div class="error-notice">⚠️ 오류: ${msg}<br>API 키를 확인하거나 잠시 후 다시 시도하세요. 문제가 계속되면 페이지를 새로고침하세요.</div></div>`;
+  chatArea.appendChild(el);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+</script>
+</body>
+</html>
