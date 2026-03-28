@@ -1,1 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>1232 — 당신은 살아남을 수 있는가</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0b0804;
+  --bg2:     #130f08;
+  --bg3:     #1a1408;
+  --amber:   #c47c14;
+  --amber2:  #e09030;
+  --glow:    rgba(196,124,20,0.12);
+  --paper:   #f0e2c0;
+  --paper2:  #e2d0a0;
+  --ink:     #1a0e04;
+  --muted:   #8a7040;
+  --red:     #882018;
+  --red2:    #a83028;
+  --green:   #284830;
+  --green2:  #3a6840;
+  --line:    rgba(196,160,80,0.15);
+  --fs:      'Georgia', 'Batang', serif;
+  --fd:      'Black Han Sans', sans-serif;
+  --fk:      'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --fm:      'Courier New', monospace;
+}
 
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 50% 30%, rgba(40,28,8,0.9) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 80%, rgba(20,14,4,0.8) 0%, transparent 50%);
+  min-height:100vh;
+  display:flex; justify-content:center;
+  padding:16px 12px 64px;
+  font-family: var(--fs);
+}
+
+#app { width:100%; max-width:440px; }
+
+/* ── TOAST ── */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--green); color:#e8f0e4;
+  border-radius:20px; padding:10px 22px;
+  font-size:13px; font-family:var(--fk);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+  z-index:9999; white-space:nowrap;
+}
+#toast.show { opacity:1; }
+
+/* ── COPYRIGHT FOOTER ── */
+.game-footer-copy {
+  text-align:center; padding:14px 0 4px;
+  font-size:11px; font-family:var(--fk);
+  color:rgba(120,100,80,0.4);
+  letter-spacing:.05em;
+} (스킬 §1 전쟁 테마) ── */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9998;
+}
+
+/* ── FLAME GLOW (ambient) ── */
+.flame-bg {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(196,124,20,0.05) 0%, transparent 60%);
+  animation: flicker 3s ease-in-out infinite alternate;
+}
+@keyframes flicker {
+  0%   { opacity:.7; }
+  30%  { opacity:1; }
+  60%  { opacity:.8; }
+  100% { opacity:.6; }
+}
+
+/* ── MAIN CARD ── */
+.card {
+  position:relative; z-index:1;
+  background: var(--bg2);
+  border:1px solid rgba(196,160,80,0.2);
+  border-top:2px solid var(--amber);
+  box-shadow:
+    0 0 60px rgba(196,124,20,0.08),
+    0 24px 60px rgba(0,0,0,.75),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  animation: cardIn .4s ease;
+  overflow:hidden;
+}
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── YEAR STRIP ── */
+.year-strip {
+  background: linear-gradient(135deg, var(--amber) 0%, #8a5010 100%);
+  padding:6px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.year-num {
+  font-family:var(--fd); font-size:14px; font-weight:400;
+  color:#0b0804; letter-spacing:.12em;
+}
+.year-path {
+  font-size:10px; font-family:var(--fk); color:rgba(0,0,0,.5);
+  letter-spacing:.05em;
+}
+
+/* ── SCENE PANE ── */
+.scene-pane { padding:20px 18px 0; }
+
+.scene-title {
+  font-size:16px; font-weight:700; line-height:1.4;
+  color:#d4b880; margin-bottom:14px;
+}
+
+.scene-text {
+  font-size:13px; line-height:2.1;
+  color:#a09060; font-family:var(--fk); font-weight:300;
+}
+.scene-text strong { color:#c4a060; font-weight:700; }
+
+/* ── HIST BOX ── */
+.hist-box {
+  margin:16px 0 0;
+  background:rgba(196,160,80,0.04);
+  border:1px dashed rgba(196,160,80,0.2);
+  border-radius:2px; padding:12px 14px;
+}
+.hist-lbl {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fm);
+  color:var(--amber); margin-bottom:5px;
+}
+.hist-txt {
+  font-size:11px; color:#7a6838;
+  font-family:var(--fk); font-weight:300; line-height:1.8;
+}
+.hist-txt strong { color:#c4a060; font-weight:700; }
+
+/* ── CHOICE AREA ── */
+.choice-area {
+  padding:16px 18px 20px;
+}
+.choice-label {
+  font-size:10px; letter-spacing:.2em; font-family:var(--fm);
+  color:var(--muted); margin-bottom:10px;
+  text-align:center;
+}
+.choice-grid { display:flex; flex-direction:column; gap:8px; }
+
+.choice-btn {
+  background: rgba(255,255,255,0.04);
+  border:1.5px solid rgba(196,160,80,0.25);
+  border-left:3px solid transparent;
+  border-radius:2px; padding:13px 15px;
+  cursor:pointer; transition:all .18s;
+  text-align:left; width:100%;
+  display:flex; align-items:flex-start; gap:10px;
+  font-family:var(--fs);
+}
+.choice-btn:hover {
+  background:rgba(196,124,20,0.1);
+  border-left-color:var(--amber);
+  transform:translateX(4px);
+}
+.choice-btn:active {
+  transform:translateX(2px) scale(0.98);
+}
+.choice-icon {
+  font-size:20px; flex-shrink:0; margin-top:1px;
+  filter:grayscale(30%);
+}
+.choice-right { flex:1; }
+.choice-tag {
+  font-size:10px; font-family:var(--fm); letter-spacing:.1em;
+  color:var(--amber); margin-bottom:4px;
+}
+.choice-text {
+  font-size:15px; color:#c8b080;
+  font-family:var(--fk); line-height:1.6;
+}
+
+/* single continue btn */
+.continue-btn {
+  width:100%; padding:12px; border:none; border-radius:2px;
+  background:rgba(196,124,20,0.15);
+  border:1.5px solid rgba(196,160,80,0.3);
+  color:var(--amber2); font-family:var(--fs);
+  font-size:13px; font-weight:700; cursor:pointer;
+  transition:all .18s; letter-spacing:.04em;
+}
+.continue-btn:hover {
+  background:rgba(196,124,20,0.25);
+  border-color:var(--amber2);
+  transform:translateY(-1px);
+}
+.continue-btn:active { transform:translateY(0) scale(0.97); }
+
+/* ── OUTCOME BADGE ── */
+.outcome-badge {
+  margin:16px 18px 0;
+  border-radius:2px; padding:12px 14px;
+  display:flex; gap:10px; align-items:center;
+  border:1.5px solid;
+}
+.outcome-badge.good {
+  background:rgba(40,72,48,0.3); border-color:var(--green2);
+}
+.outcome-badge.bad {
+  background:rgba(136,32,24,0.2); border-color:var(--red);
+}
+.outcome-badge.neutral {
+  background:rgba(196,124,20,0.08); border-color:var(--amber);
+}
+.ob-icon { font-size:22px; flex-shrink:0; }
+.ob-text {
+  font-size:12px; line-height:1.7; font-family:var(--fk);
+}
+.good  .ob-text { color:#80b888; }
+.bad   .ob-text { color:#c07060; }
+.neutral .ob-text { color:#b09050; }
+
+/* ── DIVIDER ── */
+hr.div {
+  border:none; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(196,160,80,.2), transparent);
+  margin:0;
+}
+
+/* ── TRAIL (path tracker) ── */
+.trail {
+  padding:6px 18px;
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+}
+.trail-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--amber); opacity:.5;
+}
+.trail-dot.done { opacity:1; }
+.trail-arrow {
+  font-size:9px; color:var(--muted); opacity:.5;
+}
+.trail-label {
+  font-size:10px; font-family:var(--fm); color:var(--muted);
+  letter-spacing:.1em;
+}
+
+/* ── FINAL ── */
+.final-hdr {
+  padding:22px 18px 16px; text-align:center;
+  border-bottom:1px solid var(--line);
+  margin-bottom:18px;
+}
+.final-icon { font-size:52px; margin-bottom:12px; }
+.final-title { font-size:18px; font-weight:700; color:#d4b880; margin-bottom:6px; }
+.final-sub {
+  font-size:12px; color:var(--muted);
+  font-family:var(--fk); line-height:1.7;
+}
+
+.path-summary { margin-bottom:16px; }
+.ps-row {
+  display:flex; gap:10px; padding:9px 12px;
+  border-top:1px solid var(--line);
+}
+.ps-row:first-child { border-top:none; }
+.ps-icon { font-size:15px; flex-shrink:0; }
+.ps-text {
+  font-size:12px; color:#8a7040;
+  font-family:var(--fk); line-height:1.7;
+}
+.ps-text strong { color:#b09050; }
+
+.key-lessons {
+  background:rgba(196,160,80,0.04);
+  border:1px solid var(--line);
+  border-radius:2px; padding:14px;
+  margin-bottom:16px;
+}
+.kl-title {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fm);
+  color:var(--amber); margin-bottom:10px;
+}
+.kl-row {
+  display:flex; gap:8px; align-items:flex-start; padding:4px 0;
+  font-size:11px; color:#7a6838; font-family:var(--fk); line-height:1.7;
+}
+.kl-n {
+  font-family:var(--fm); color:var(--amber); flex-shrink:0;
+  font-weight:700; width:16px;
+}
+
+.btn-jade {
+  width:100%; padding:13px; border:none; border-radius:2px;
+  background:var(--green); color:#e8f0e4;
+  border:1.5px solid var(--green2);
+  font-family:var(--fs); font-size:14px; font-weight:700;
+  cursor:pointer; transition:all .18s; letter-spacing:.04em;
+  margin-bottom:8px;
+}
+.btn-jade:hover { background:var(--green2); transform:translateY(-1px); }
+.btn-outline {
+  width:100%; padding:12px; border:none; border-radius:2px;
+  background:transparent; color:var(--muted);
+  border:1.5px solid rgba(196,160,80,.18);
+  font-family:var(--fs); font-size:13px; cursor:pointer;
+  transition:all .18s;
+}
+.btn-outline:hover { border-color:var(--amber); color:#a08848; }
+
+/* ── TOOLTIP (프로젝트 지침 표준 패턴) ── */
+.tt {
+  border-bottom:1.5px dashed var(--amber);
+  cursor:pointer; position:relative;
+  white-space:nowrap; color:inherit;
+  transition:border-color .15s;
+}
+.tt:hover { border-bottom-color:var(--red2); }
+
+#tt-bubble {
+  position:fixed; z-index:9000;
+  max-width:240px;
+  background:var(--bg);
+  border:1px solid rgba(196,160,80,0.5);
+  border-radius:3px; padding:10px 13px;
+  box-shadow:0 6px 24px rgba(0,0,0,.7);
+  pointer-events:none; opacity:0;
+  transform:translateY(4px);
+  transition:opacity .18s, transform .18s;
+}
+#tt-bubble.show { opacity:1; transform:translateY(0); }
+#tt-bubble .tb-word {
+  font-size:12px; font-weight:700;
+  color:var(--amber2); margin-bottom:5px;
+  font-family:var(--fk);
+}
+#tt-bubble .tb-desc {
+  font-size:12px; color:rgba(240,220,180,0.85);
+  line-height:1.7; font-family:var(--fk); font-weight:300;
+}
+
+.intro-text {
+  font-size:13px; color:#906830;
+  font-family:var(--fk); font-weight:300;
+  line-height:2.1; text-align:center;
+  padding:20px 18px 0;
+}
+.intro-text strong { color:#c4a060; font-weight:700; }
+.intro-title-main {
+  font-family:var(--fd);
+  font-size:28px; color:#d4b880;
+  text-align:center; letter-spacing:.08em;
+  padding:20px 18px 0; line-height:1.3;
+}
+
+.intro-note {
+  margin:14px 18px 0;
+  background:rgba(196,160,80,0.04);
+  border:1px dashed rgba(196,160,80,.2);
+  border-radius:2px; padding:12px 14px;
+  font-size:11px; color:#7a6838;
+  font-family:var(--fk); line-height:1.8;
+}
+.intro-note strong { color:#c4a060; }
+</style>
+</head>
+<body>
+<div class="flame-bg"></div>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+// ═══ DATA ═══
+
+const NODES = {
+
+  // ── 인트로 ──
+  intro: {
+    type:'intro',
+  },
+
+  // ── 1232년, 강화 천도 소식 ──
+  start: {
+    year:'1232년 봄', path:'시작',
+    title:'몽골군이 또 쳐들어왔다',
+    scene:`당신은 경기도 근방의 <strong>평범한 <span class="tt" data-key="양인" data-word="양인">양인</span></strong>이다. 갑자기 급보가 날아들었다. 최씨 정권의 수장 <strong>최우</strong>가 수도를 강화도로 옮기기로 했다는 것이다.\n\n관리들이 짐을 싸고 있다. 가족이 불안한 눈으로 당신을 바라본다.`,
+    hist:`<strong>최씨 무신 정권</strong>은 1232년 강화도로 수도를 옮겼다. 몽골군이 수군(水軍)이 약해 강을 건너기 어렵다는 판단에서였다. 조정은 백성들에게 산성이나 섬으로 피란하라는 명령을 내렸다.`,
+    choices:[
+      { icon:'🚶', tag:'피란', text:'가족을 데리고 강화도 근처 섬으로 피란한다', next:'flee' },
+      { icon:'⚔️', tag:'항전', text:'고향을 떠날 수 없다. 남아서 싸우기로 한다', next:'fight' },
+    ],
+  },
+
+  // ── 피란 선택 ──
+  flee: {
+    year:'1232년 여름', path:'피란',
+    title:'강화도가 보이는 섬에서',
+    scene:`당신은 가족을 데리고 강화도가 보이는 작은 섬에 자리를 잡았다. 이것은 도망이 아니다 — 조정이 내린 방어 명령, <strong><span class="tt" data-key="입보" data-word="입보(入保)">입보(入保)</span></strong>다. 산성이나 섬으로 피해 몽골군이 물러날 때를 기다리는 것이 당시의 전략이었다.\n\n하지만 섬 생활은 혹독했다. 관리들이 군량을 징발해 갔고, 좁은 섬에 피란민이 몰리며 전염병이 돌았다. 그리고 소문이 들려왔다. <strong>최우가 강화도에서 그네뛰기 잔치를 벌였다</strong>는 것이다.`,
+    hist:`<strong>《고려사》</strong>에 따르면 최우는 강화도에서 그네뛰기 행사를 열고 잔치를 즐겼다고 기록되어 있다. 한편 같은 해, 경기도 <strong>처인성</strong>에서는 승려 김윤후가 이끄는 민병이 몽골 총사령관 <strong>살리타를 사살</strong>하는 일이 벌어졌다.`,
+    outcome:{ type:'neutral', icon:'🏝️', text:'섬에 숨어 전쟁의 소식을 듣는다. 피는 피지 않아도, 민중의 항전이 나라를 버티게 하고 있었다.' },
+    next:'daejang', nextLabel:'4년이 흘렀다, 1236년 →',
+  },
+
+  // ── 1236년, 팔만대장경 ──
+  daejang: {
+    year:'1236년', path:'팔만대장경',
+    title:'판을 새기는 사람들',
+    scene:`강화도 인근에서 조정이 대규모 작업을 시작했다는 소문이 들렸다. <strong>팔만대장경</strong> 조판이다. 부처의 힘으로 몽골을 물리치겠다는 것이었다.\n\n목수와 각수(刻手)를 모집한다는 공고가 붙었다. 당신에게도 선택지가 생겼다.`,
+    hist:`팔만대장경(1236~1251)은 약 16년에 걸쳐 제작된 8만여 장의 목판 대장경이다. 몽골 침입이 한창이던 시기, 부처의 가호로 외적을 물리치려는 염원을 담았다. 현재 합천 <strong>해인사</strong>에 보존되어 있으며, 유네스코 세계기록유산에 등재되어 있다.`,
+    choices:[
+      { icon:'🪵', tag:'참여', text:'조판 작업에 합류한다. 나라를 위해 할 수 있는 일을 찾겠다', next:'dae_part' },
+      { icon:'🏝️', tag:'대기', text:'섬에 남아 가족을 지키며 버틴다', next:'dae_wait' },
+    ],
+  },
+
+  // ── 팔만대장경 참여 ──
+  dae_part: {
+    year:'1236 — 1251년', path:'조판 참여',
+    title:'나무에 새긴 소망',
+    scene:`<span class="tt" data-key="각수" data-word="각수(刻手)">각수(刻手)</span>들과 함께 글자를 새겼다. 한 자 한 자가 적군을 물리치는 주문이기도 했다. 16년에 걸친 작업 끝에 8만여 장의 목판이 완성됐다.\n\n몽골이 물러가지는 않았다. 그러나 판은 남았다.`,
+    hist:`팔만대장경은 국난 극복의 염원을 담은 호국 불교의 산물이다. 동시에 이 방대한 작업을 완수한 장인들의 <strong>집단적 노력</strong>의 결과물이기도 하다. 몽골을 물리치는 데 직접적 효과가 있었는지와 무관하게, 고려 문화의 정수로 오늘까지 전한다.`,
+    outcome:{ type:'good', icon:'📿', text:'손에 남은 나무 먼지. 전쟁을 이기지는 못했지만, 이 판은 800년이 지나도 남아 있을 것이다.' },
+    next:'jungju', nextLabel:'17년이 흘렀다, 1253년 →',
+  },
+
+  // ── 팔만대장경 불참 ──
+  dae_wait: {
+    year:'1236 — 1251년', path:'섬에서 버팀',
+    title:'섬에서 버티는 시간',
+    scene:`조판 작업에는 참여하지 않았다. 섬에서 가족을 건사하며 버텼다. 몽골군은 물러갔다 다시 쳐들어오기를 반복했다.\n\n강화도에서 팔만대장경이 완성됐다는 소식이 들렸다. 16년이 걸렸다고 했다.`,
+    hist:`팔만대장경 조판 기간(1236~1251) 동안 몽골의 침입은 멈추지 않았다. 3~5차 침입이 이 시기에 겹친다. 섬과 산성에서 버티던 백성들에게 경판 완성 소식이 어떻게 들렸을지는 기록에 남아있지 않다.`,
+    outcome:{ type:'neutral', icon:'🏝️', text:'버티는 것도 하나의 삶이었다. 전쟁은 끝나지 않았고, 삶은 계속됐다.' },
+    next:'jungju', nextLabel:'17년이 흘렀다, 1253년 →',
+  },
+
+  // ── 항전 선택 ──
+  fight: {
+    year:'1232년 가을', path:'항전',
+    title:'처인성으로 가는 길',
+    scene:`고향에 남기로 했다. 가까운 곳에 <strong>처인성</strong>(지금의 경기도 용인)이라는 작은 토성이 있다. 승려 <strong>김윤후</strong>가 민병들을 모으고 있다는 소식이 들린다.\n\n몽골 총사령관 <strong>살리타</strong>가 이끄는 부대가 이쪽으로 온다고 한다.`,
+    hist:`처인성 전투(1232)는 정규군이 아닌 민병과 승려들이 치른 전투다. <strong>살리타</strong>는 몽골의 2차 침입을 이끈 총사령관이었다. 이 전투의 결과가 침입의 판도를 바꾸게 된다.`,
+    choices:[
+      { icon:'⚔️', tag:'항전', text:'처인성으로 가서 김윤후와 함께 싸운다', next:'cheoin' },
+      { icon:'🏃', tag:'도피', text:'너무 무섭다. 산속에 숨기로 한다', next:'hide' },
+    ],
+  },
+
+  // ── 처인성 항전 ──
+  cheoin: {
+    year:'1232년 가을, 처인성', path:'처인성',
+    title:'살리타가 쓰러지다',
+    scene:`전투가 시작됐다. 승려 <strong>김윤후</strong>가 쏜 화살이 몽골 총사령관 살리타를 꿰뚫었다. 총사령관을 잃은 몽골군은 혼비백산하여 물러났다.\n\n작은 흙성에서 벌어진 일이었다. 당신도 그 자리에 있었다.`,
+    hist:`처인성 전투는 2차 몽골 침입을 막아낸 결정적 전투다. <strong>정규군이 아닌 민중의 항전이 적장을 사살</strong>했다. 승려 김윤후는 이 공으로 이후 충주 방어에서도 활약하게 된다.`,
+    outcome:{ type:'good', icon:'🏹', text:'당신은 살리타가 쓰러지는 것을 목격했다. 민중이 나라를 지켰다.' },
+    next:'jungju', nextLabel:'20년이 흘렀다 →',
+  },
+
+  // ── 산속에 숨음 ──
+  hide: {
+    year:'1232년 겨울, 산속', path:'도피',
+    title:'산속에서 들려온 소식',
+    scene:`산속 깊이 숨어 겨울을 버텼다. 봄이 되어 소식이 들려왔다.\n\n처인성에서 승려 <strong>김윤후</strong>가 몽골 총사령관 살리타를 쏘아 죽였고, 몽골군이 물러났다는 것이다. 남아서 싸운 사람들이 해냈다.`,
+    hist:`처인성 전투(1232)는 정규군이 아닌 민병과 승려들이 이끈 항전이었다. <strong>살리타를 잃은 몽골군이 철수</strong>하면서 2차 침입이 마무리되었다. 그러나 전쟁은 끝나지 않았다.`,
+    outcome:{ type:'neutral', icon:'🌲', text:'산속에서 버티는 것도 살아남는 방법이었다. 그러나 나라를 지킨 것은 결국 남아서 싸운 민중이었다.' },
+    next:'jungju', nextLabel:'20년이 흘렀다 →',
+  },
+
+  // ── 1253년, 충주성 ──
+  jungju: {
+    year:'1253년 (4~5차 침입)', path:'충주성',
+    title:'20년이 지나도 전쟁은 끝나지 않았다',
+    scene:`그로부터 20년이 흘렀다. 당신은 늙었고, 이제 장성한 자식이 당신 곁에 있다. 몽골이 또다시 쳐들어왔다. 이번에는 <strong>충주성</strong>(지금의 충청북도 충주)이다.\n\n관군 지휘관은 이미 도망쳤다. 성안에는 <strong>노비와 <span class="tt" data-key="부곡민" data-word="부곡민">부곡민</span>들</strong>만 남아 있다. 그들이 말했다.\n\n<strong>"같이 싸웁시다."</strong>`,
+    hist:`4~5차 침입(1253~1254) 때 충주성에서 관리들이 떠난 후 <strong>노비와 부곡민들이 자발적으로 성을 지켰다</strong>. 전쟁의 고통이 민중에게 집중되었음을 보여주는 동시에, 신분을 초월한 자주적 항전의 증거이기도 하다.`,
+    choices:[
+      { icon:'🛡️', tag:'항전', text:'노비·부곡민들과 함께 충주성을 지킨다', next:'jungju_fight' },
+      { icon:'🏃', tag:'도피', text:'이제 더 못하겠다. 또 도망간다', next:'jungju_flee' },
+    ],
+  },
+
+  // ── 충주성 항전 ──
+  jungju_fight: {
+    year:'1253년, 충주성', path:'충주 항전',
+    title:'노비와 양인이 나란히 싸운 성',
+    scene:`관리도 없고 정규군도 없는 성에서, <strong>노비와 부곡민과 양인들이 함께</strong> 몽골군을 막아냈다. 신분을 가릴 틈이 없었다.\n\n이 전쟁에서 가장 열심히 싸운 것은, 가장 낮은 자리에 있던 사람들이었다.`,
+    hist:`충주성 전투에서 민중의 자발적 항전은 고려 대몽 항쟁의 핵심 장면 중 하나다. 지배층의 피란과 향락, 민중의 희생과 항전 — 이 <strong>극명한 대비</strong>가 이 시기 역사의 본질이다.`,
+    outcome:{ type:'good', icon:'🏰', text:'당신은 충주성을 지켰다. 이 전쟁의 진짜 주인공이 누구인지를 몸으로 알게 됐다.' },
+    next:'ending', nextLabel:'1259년, 마지막으로 →',
+  },
+
+  // ── 충주성 도피 ──
+  jungju_flee: {
+    year:'1253년', path:'도피',
+    title:'또 도망쳤지만…',
+    scene:`또 도망쳤다. 그러나 충주성 소식이 들렸다.\n\n관리들이 버리고 간 성을, <strong>노비와 부곡민들이 끝까지 지켜냈다</strong>는 것이다. 가장 낮은 자리에 있던 사람들이 이 나라를 지키고 있었다.`,
+    hist:`충주성에서의 민중 항전은 지배층의 부재 속에서도 백성이 스스로 국가를 지켰음을 보여준다. <strong>도망친 관리들</strong>과 <strong>싸운 민중</strong>의 대비는 이 시기 역사가 던지는 핵심 질문이다.`,
+    outcome:{ type:'neutral', icon:'🌾', text:'피란은 당시 많은 백성이 선택한 길이었다. 그러나 나라를 지킨 것은 또다시 민중이었다.' },
+    next:'ending', nextLabel:'1259년, 마지막으로 →',
+  },
+
+  // ── 1259년, 강화 체결 ──
+  ending: {
+    year:'1259년 → 1270년', path:'강화 체결',
+    title:'28년의 전쟁이 끝났다 — 그러나',
+    scene:`<strong>1259년</strong>, 고려 태자(훗날 원종)가 직접 몽골을 찾아가 항복하며 강화를 맺었다. 최씨 무신 정권은 이미 무너진 뒤였다.\n\n그리고 <strong>1270년</strong>, 원종이 개경으로 환도를 명했다. 그러자 <strong><span class="tt" data-key="삼별초" data-word="삼별초">삼별초</span></strong>가 반발하며 봉기했다. 배중손이 외쳤다.\n\n<strong>"몽골에 무릎 꿇는 조정을 따를 수 없다."</strong>\n\n장성한 당신의 자식이 묻는다. 삼별초에 합류할 것인가?`,
+    hist:`강화 체결(1259) 후 <strong>원 간섭기</strong>가 시작되며 충렬왕부터 충정왕까지 왕호에 '충(忠)'을 붙였다. 삼별초는 개경 환도에 반발해 <strong>강화도→진도(용장성)→제주도</strong>로 이동하며 1273년까지 항전했다. 이 항쟁은 자주 의식의 표현으로 평가받는다.`,
+    choices:[
+      { icon:'🏴', tag:'합류', text:'삼별초에 합류한다. 끝까지 싸우겠다', next:'sam_join' },
+      { icon:'🏡', tag:'귀향', text:'지쳤다. 고향으로 돌아가 평범하게 살겠다', next:'sam_stay' },
+    ],
+  },
+
+  // ── 삼별초 합류 ──
+  sam_join: {
+    year:'1270 — 1273년', path:'삼별초',
+    title:'강화도에서 진도로, 진도에서 제주도로',
+    scene:`삼별초는 강화도를 떠나 <strong><span class="tt" data-key="용장성" data-word="용장성">용장성</span></strong>을 쌓고 버텼다. 여몽 연합군이 쳐들어와 배중손이 전사했다. 살아남은 자들은 다시 <strong>제주도</strong>로 옮겨 끝까지 싸웠다.\n\n1273년, 제주도에서 항전은 끝났다. 당신의 자식은 그 마지막까지 자리를 지켰다.`,
+    hist:`삼별초의 항쟁은 <strong>여몽 연합군</strong>에 의해 1273년 진압됐다. 이들의 저항이 단순한 반란인지, 자주적 항전인지에 대한 역사적 해석은 지금도 엇갈린다. 분명한 것은 끝까지 싸운 마지막 세력이었다는 사실이다.`,
+    outcome:{ type:'good', icon:'🏴', text:'패했지만 끝까지 저항했다. 이 선택이 옳고 그름을 따지기 전에, 그 의지가 무엇을 말하는지 생각해보자.' },
+    next:'final', nextLabel:'나의 기록 확인하기 →',
+  },
+
+  // ── 삼별초 불합류 ──
+  sam_stay: {
+    year:'1270년 이후', path:'귀향',
+    title:'고향으로 돌아온 사람들',
+    scene:`고향으로 돌아왔다. 삼별초가 패했다는 소식이 들려왔다. 1273년, 제주도에서 항전이 끝났다.\n\n몽골 관리가 개경에 들어섰고, 고려 왕은 몽골 공주와 혼인했다. <strong><span class="tt" data-key="원 간섭기" data-word="원 간섭기">원 간섭기</span></strong>가 시작됐다. 이제 고려는 달라진 세상에서 살아가야 했다.`,
+    hist:`원 간섭기(1270~1356) 동안 고려 국왕은 원나라의 사위(부마)가 되었고, 왕호에 '충(忠)'을 붙였다. 이 시기 원의 세력을 등에 업고 성장한 세력이 <strong>권문세족</strong>이다. 새로운 지배층이 형성되는 고려 후기의 출발점이었다.`,
+    outcome:{ type:'neutral', icon:'🏡', text:'살아남아 새로운 시대를 맞이했다. 이것이 당시 대다수 백성이 맞이한 현실이었다.' },
+    next:'final', nextLabel:'나의 기록 확인하기 →',
+  },
+};
+
+// ═══ TOOLTIP ═══
+const TIPS = {
+  '양인':     '양인(良人) — 법적으로 자유로운 평민 신분. 과거 응시가 가능하나 실제로는 제한적이었다.',
+  '입보':     '입보(入保) — 적의 침입 시 산성이나 섬으로 피해 방어하는 고려의 공식 전략.',
+  '부곡민':   '부곡민(部曲民) — 특수 행정구역인 부곡에 사는 주민. 일반 양인보다 낮은 신분으로 더 무거운 부역을 졌다.',
+  '각수':     '각수(刻手) — 목판에 글자를 새기는 전문 장인.',
+  '삼별초':   '삼별초(三別抄) — 최씨 무신 정권의 사설 군대. 1270년 개경 환도에 반발해 끝까지 항전했다.',
+  '원 간섭기':'원 간섭기(元干涉期) — 고려가 원나라의 내정 간섭을 받던 시기(1270~1356). 왕호에 충(忠)을 붙였다.',
+  '용장성':   '용장성(龍藏城) — 삼별초가 진도에 세운 성. 배중손이 이곳에서 항전을 이어갔다.',
+  '팔만대장경':'팔만대장경(八萬大藏經) — 1236~1251년 제작된 8만여 장의 목판 대장경. 현재 합천 해인사 보존.',
+};
+
+function tt(word, tipKey) {
+  const tip = TIPS[tipKey || word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+// ═══ STATE ═══
+let S = {
+  phase: 'intro',
+  current: 'start',
+  history: [],   // ['start','flee','jungju','jungju_flee','ending']
+  choices: [],   // [{ node, choiceTag, choiceText }]
+};
+
+// ═══ UTILS ═══
+let _toast = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (_toast) clearTimeout(_toast);
+  _toast = setTimeout(()=>el.classList.remove('show'), 2400);
+}
+
+function R() {
+  window.scrollTo(0,0);
+  document.getElementById('app').innerHTML =
+    S.phase === 'intro' ? renderIntro() :
+    S.phase === 'node'  ? renderNode()  :
+                          renderFinal();
+}
+
+// ═══ RENDER ═══
+
+function renderIntro() {
+  return `
+  <div class="card">
+    <div class="year-strip">
+      <span class="year-num">1231 — 1273</span>
+      <span class="year-path">대몽 항쟁</span>
+    </div>
+    <div class="intro-title-main">당신은<br>살아남을 수 있는가</div>
+    <p class="intro-text">
+      당신은 <strong>고려의 평민</strong>입니다.<br>
+      몽골군이 쳐들어왔습니다.<br><br>
+      <strong>피란할 것인가, 싸울 것인가.</strong><br>
+      당신의 선택이 이 시대를 기억하는 방식을 바꿉니다.
+    </p>
+    <div class="intro-note">
+      이 게임에는 정답이 없습니다. 어떤 선택을 하든 당신 곁에서 역사가 흘러갑니다. 선택지 끝에 실제 역사 해설이 이어집니다.
+    </div>
+    <div class="choice-area">
+      <button class="continue-btn" onclick="startGame()">생존을 시작하다 →</button>
+    </div>
+  </div>`;
+}
+
+function renderNode() {
+  const node = NODES[S.current];
+  if (!node) return '';
+
+  // trail dots
+  const steps = ['start','flee|fight','daejang|cheoin|hide','dae_part|dae_wait|jungju','jungju_fight|jungju_flee|ending','sam_join|sam_stay','final'];
+  const progress = steps.findIndex(s => s.split('|').includes(S.current));
+  const trailHtml = steps.map((_,i) =>
+    `<div class="trail-dot${i<=progress?' done':''}"></div>${i<steps.length-1?'<span class="trail-arrow">›</span>':''}`
+  ).join('');
+
+  const outcomeHtml = node.outcome ? `
+    <div class="outcome-badge ${node.outcome.type}">
+      <span class="ob-icon">${node.outcome.icon}</span>
+      <span class="ob-text">${node.outcome.text}</span>
+    </div>` : '';
+
+  const sceneFormatted = node.scene.replace(/\n\n/g,'</p><p class="scene-text" style="margin-top:10px">').replace(/\n/g,'<br>');
+
+  const nextHtml = node.choices ? `
+    <div class="choice-area">
+      <div class="choice-label">[ 당신의 선택 ]</div>
+      <div class="choice-grid">
+        ${node.choices.map(c=>`
+          <button class="choice-btn" onclick="choose('${c.next}','${c.tag}','${c.text.replace(/'/g,"\\'")}')">
+            <span class="choice-icon">${c.icon}</span>
+            <div class="choice-right">
+              <div class="choice-tag">[ ${c.tag} ]</div>
+              <div class="choice-text">${c.text}</div>
+            </div>
+          </button>`).join('')}
+      </div>
+    </div>` : `
+    <div class="choice-area">
+      <button class="continue-btn" onclick="advance('${node.next}')">${node.nextLabel || '다음으로 →'}</button>
+    </div>`;
+
+  return `
+  <div class="trail" style="padding:8px 18px">${trailHtml}</div>
+  <div class="card">
+    <div class="year-strip">
+      <span class="year-num">${node.year}</span>
+      <span class="year-path">${node.path}</span>
+    </div>
+    <div class="scene-pane">
+      <div class="scene-title">${node.title}</div>
+      <p class="scene-text">${sceneFormatted}</p>
+      ${outcomeHtml}
+      <div class="hist-box">
+        <div class="hist-lbl">📜 역사 기록</div>
+        <div class="hist-txt">${node.hist}</div>
+      </div>
+    </div>
+    <hr class="div" style="margin:16px 18px 0">
+    ${nextHtml}
+  </div>`;
+}
+
+function renderFinal() {
+  // build path summary
+  const pathLabels = {
+    start: null,
+    flee:       { icon:'🚶', text:'<strong>피란 선택</strong> — 강화도 근처 섬으로 입보했다. 최우의 잔치 소문을 들었다.' },
+    daejang:    { icon:'📿', text:'<strong>1236년</strong> — 팔만대장경 조판 소식을 들었다.' },
+    dae_part:   { icon:'🪵', text:'<strong>조판 참여</strong> — 16년에 걸쳐 8만여 장의 목판 제작에 함께했다.' },
+    dae_wait:   { icon:'🏝️', text:'<strong>섬에서 대기</strong> — 가족을 지키며 팔만대장경 완성 소식을 들었다.' },
+    fight:      { icon:'⚔️', text:'<strong>항전 선택</strong> — 고향에 남아 처인성으로 향했다.' },
+    cheoin:     { icon:'🏹', text:'<strong>처인성 항전</strong> — 김윤후와 함께 싸워 살리타 사살을 목격했다.' },
+    hide:       { icon:'🌲', text:'<strong>산속 입보</strong> — 버티며 처인성 승전 소식을 들었다.' },
+    jungju:     { icon:'🏰', text:'<strong>충주성</strong> — 관리가 떠난 성에서 노비·부곡민이 싸우고 있었다.' },
+    jungju_fight:{ icon:'🛡️', text:'<strong>충주 항전</strong> — 민중과 함께 충주성을 지켰다.' },
+    jungju_flee: { icon:'🏃', text:'<strong>충주 도피</strong> — 피했지만, 민중이 성을 지켰다.' },
+    ending:     { icon:'📜', text:'<strong>1259년 강화</strong> — 28년 항쟁이 끝나고, 삼별초가 봉기했다.' },
+    sam_join:   { icon:'🏴', text:'<strong>삼별초 합류</strong> — 강화→진도→제주도. 1273년 끝까지 싸웠다.' },
+    sam_stay:   { icon:'🏡', text:'<strong>귀향</strong> — 고향으로 돌아와 원 간섭기를 맞이했다.' },
+  };
+
+  const pathHtml = S.history
+    .map(id => pathLabels[id])
+    .filter(Boolean)
+    .map(p=>`<div class="ps-row"><span class="ps-icon">${p.icon}</span><span class="ps-text">${p.text}</span></div>`)
+    .join('');
+
+  // determine result tone
+  const foughtCheoin = S.history.includes('cheoin');
+  const foughtJungju = S.history.includes('jungju_fight');
+  const joinedSam    = S.history.includes('sam_join');
+  let finalIcon, finalTitle, finalSub;
+
+  if (foughtCheoin && foughtJungju && joinedSam) {
+    finalIcon='🔥'; finalTitle='끝까지 싸운 사람';
+    finalSub='세 차례 모두 싸우는 쪽을 선택했습니다. 처인성, 충주성, 삼별초까지. 이 시대를 지탱한 것은 지배층이 아니었고, 당신은 그 한가운데 있었습니다.';
+  } else if (foughtCheoin && foughtJungju) {
+    finalIcon='⚔️'; finalTitle='민중 항전의 증인';
+    finalSub='두 차례 싸웠지만 삼별초에는 합류하지 않았습니다. 처인성과 충주성에서 민중이 나라를 지켰음을 몸으로 알았습니다.';
+  } else if (joinedSam) {
+    finalIcon='🏴'; finalTitle='마지막 저항';
+    finalSub='앞서는 피하거나 도망쳤지만, 삼별초에 합류해 끝까지 싸웠습니다. 원 간섭을 거부한 마지막 항전에 함께했습니다.';
+  } else if (foughtJungju) {
+    finalIcon='🛡️'; finalTitle='충주성의 기억';
+    finalSub='처음엔 피했지만, 충주성에서 민중과 함께 싸웠습니다. 신분을 가릴 틈 없이 나란히 선 그 경험이 이 시대의 본질입니다.';
+  } else if (foughtCheoin) {
+    finalIcon='🏹'; finalTitle='처인성의 증인';
+    finalSub='처인성에서 살리타 사살을 목격했습니다. 민중 항전의 한 장면을 직접 경험했지만, 이후의 전쟁은 먼발치에서 바라봤습니다.';
+  } else {
+    finalIcon='📜'; finalTitle='피란민의 기록';
+    finalSub='세 차례 모두 싸움을 피했습니다. 이것이 당시 많은 백성의 실제 선택이었습니다. 나라를 지킨 것은 그 속에서도 끝까지 남아 싸운 사람들이었습니다.';
+  }
+
+  return `
+  <div class="card">
+    <div class="year-strip">
+      <span class="year-num">생존 기록 완료</span>
+    </div>
+    <div class="final-hdr">
+      <div class="final-icon">${finalIcon}</div>
+      <div class="final-title">${finalTitle}</div>
+      <div class="final-sub">${finalSub}</div>
+    </div>
+    <div style="padding:0 18px 16px">
+      <div style="font-size:9px;letter-spacing:.2em;font-family:var(--fm);color:var(--muted);margin-bottom:8px">나의 선택 경로</div>
+      <div class="path-summary">${pathHtml}</div>
+      <hr class="div" style="margin:4px 0 16px">
+      <div class="key-lessons">
+        <div class="kl-title">핵심 정리 — 고려 대몽 항쟁</div>
+        <div class="kl-row"><span class="kl-n">①</span>최씨 무신 정권은 1232년 강화도로 천도했다. 《고려사》는 최우가 강화도에서 잔치를 열었다고 기록한다.</div>
+        <div class="kl-row"><span class="kl-n">②</span>처인성(1232)에서 승려 김윤후가 살리타를 사살했고, 충주성(1253)에서 노비·부곡민이 성을 지켰다. 민중이 항전의 주체였다.</div>
+        <div class="kl-row"><span class="kl-n">③</span>1259년 강화 체결 후 삼별초(1270~1273)가 개경 환도를 거부하고 끝까지 저항했다. 강화→진도→제주도로 이어진 마지막 항전이었다.</div>
+      </div>
+      <button class="btn-jade" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
+      <button class="btn-outline" onclick="restart()">다시 생존하기</button>
+      <div class="game-footer-copy">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>`;
+}
+
+// ═══ ACTIONS ═══
+function startGame() {
+  S = { phase:'node', current:'start', history:[], choices:[] };
+  R();
+}
+
+function choose(next, tag, text) {
+  S.choices.push({ node:S.current, tag, text });
+  S.history.push(S.current);
+  S.current = next;
+  R();
+}
+
+function advance(next) {
+  S.history.push(S.current);
+  S.current = next;
+  if (next === 'final') { S.phase = 'final'; }
+  R();
+}
+
+function restart() {
+  if (!confirm('기록이 사라집니다. 다시 시작할까요?')) return;
+  S = { phase:'intro', current:'start', history:[], choices:[] };
+  R();
+}
+
+function copyResult() {
+  const pathLabels = {
+    flee:'피란(입보) 선택', fight:'항전 선택',
+    daejang:'1236년 팔만대장경', dae_part:'조판 참여', dae_wait:'섬에서 대기',
+    cheoin:'처인성 항전', hide:'산속 입보',
+    jungju:'충주성 도달', jungju_fight:'충주 항전', jungju_flee:'충주 도피',
+    ending:'1259년 강화 체결', sam_join:'삼별초 합류', sam_stay:'귀향',
+  };
+  const pathStr = S.history
+    .filter(id=>pathLabels[id])
+    .map((id,i)=>`  ${i+1}. ${pathLabels[id]}`)
+    .join('\n');
+
+  const foughtCheoin = S.history.includes('cheoin');
+  const foughtJungju = S.history.includes('jungju_fight');
+  const joinedSam    = S.history.includes('sam_join');
+  const title =
+    foughtCheoin&&foughtJungju&&joinedSam ? '끝까지 싸운 사람' :
+    foughtCheoin&&foughtJungju ? '민중 항전의 증인' :
+    joinedSam ? '마지막 저항' :
+    foughtJungju ? '충주성의 기억' :
+    foughtCheoin ? '처인성의 증인' : '피란민의 기록';
+
+  const text = [
+    `⚔️ 1232 — 당신은 살아남을 수 있는가`,
+    `결과: ${title}`,
+    ``,
+    `나의 선택 경로:`,
+    pathStr,
+    ``,
+    `핵심 정리:`,
+    `① 최씨 정권 강화 천도(1232) — 《고려사》에 최우의 잔치 기록`,
+    `② 처인성(1232) 김윤후 살리타 사살 / 충주성(1253) 노비·부곡민 항전`,
+    `③ 삼별초 항쟁(1270~1273) — 강화→진도→제주 끝까지 저항`,
+    ``,
+    `— 고려 대몽 항쟁 생존 선택 게임`,
+  ].join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(()=>toast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.style.cssText='position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); toast('📋 결과가 복사되었습니다!'); }
+    catch(e){ toast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+// ── 툴팁 버블 ──
+document.body.insertAdjacentHTML('beforeend',
+  '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+const bubble = document.getElementById('tt-bubble');
+let bubbleTimer = null;
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    const key = el.dataset.key || el.dataset.word;
+    const tip = TIPS[key] || '';
+    if (!tip) return;
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = tip;
+    const bw = 240;
+    const rect = el.getBoundingClientRect();
+    let left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left  = left + 'px';
+    bubble.style.top   = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bubH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bubH - 14) + 'px';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(()=>bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+R();
+</script>
+</body>
+</html>
