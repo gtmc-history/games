@@ -1,124 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-G350VXSFGE');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>3사 청문회 — 이 임명을 막아라</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* ── 조선시대 팔레트 (gtmc-history-design SKILL 기준) ── */
-  --bg:         #f5f0e8;   /* 백자 유백색 */
-  --surface:    #ede5d8;   /* 한지 표면 */
-  --surface2:   #e4d9c8;   /* 한지 표면 (깊은) */
-  --primary:    #1a3a5c;   /* 관복 감색 */
-  --accent:     #8b1a1a;   /* 어보 붉은 인주 */
-  --text:       #1c1410;   /* 먹 검정 */
-  --text-mid:   #3a2e24;
-  --muted:      #7a6e60;
-  --border:     #c4b49a;   /* 황토 테두리 */
-  --border-soft: rgba(139,115,85,0.25);
-  --gold:       #b8860b;   /* 어금 */
-  --gold2:      #d4a030;
-  /* 역할별 컬러 — 조선 팔레트와 조화롭게 채도 낮춤 */
-  --heon:     #8b2020;   /* 사헌부 — 인주 붉 */
-  --gan:      #1a3a5c;   /* 사간원 — 관복 감색 */
-  --hong:     #1e5c3a;   /* 홍문관 — 숲 녹 */
-  --jang:     #6b4f00;   /* 이조전랑 — 황갈 */
-  --heon-bg:  rgba(139,32,32,0.08);
-  --gan-bg:   rgba(26,58,92,0.08);
-  --hong-bg:  rgba(30,92,58,0.08);
-  --jang-bg:  rgba(107,79,0,0.08);
-  --heon-light: #c0392b;
-  --gan-light:  #2471a3;
-  --hong-light: #1e8449;
-  --jang-light: #9a7010;
-  --font-serif:    'Noto Serif KR', serif;
-  --font-sans:     'Noto Sans KR', sans-serif;
-  --font-document: 'Gowun Batang', serif;
+  --font-serif: 'Noto Serif KR', serif;
+  --font-sans:  'Noto Sans KR', sans-serif;
+  --ink:        #07090c;
+  --ink2:       #0d1018;
+  --ink3:       #141820;
+  --gold:       #c9a052;
+  --gold2:      #e8c97a;
+  --gold-dim:   rgba(201,160,82,0.15);
+  --border:     rgba(201,160,82,0.2);
+  --text:       #e8dcc8;
+  --muted:      #7a8090;
+  /* 역할별 컬러 */
+  --heon:   #c0392b;   /* 사헌부 — 붉은 기강 */
+  --gan:    #2471a3;   /* 사간원 — 파란 논박 */
+  --hong:   #1e8449;   /* 홍문관 — 녹색 학문 */
+  --jang:   #7d6608;   /* 이조전랑 — 황갈 실리 */
+  --heon-bg:  rgba(192,57,43,0.12);
+  --gan-bg:   rgba(36,113,163,0.12);
+  --hong-bg:  rgba(30,132,73,0.12);
+  --jang-bg:  rgba(125,102,8,0.12);
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
+  background: var(--ink);
   color: var(--text);
-  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 16px 12px 60px;
 }
 
-/* ── 한지 배경 패턴 ── */
+/* ── 배경 패턴 ── */
 body::before {
   content: '';
   position: fixed; inset: 0;
   background-image:
-    radial-gradient(ellipse 80% 40% at 50% -5%, rgba(184,134,11,0.06) 0%, transparent 60%),
-    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238b7355' fill-opacity='0.04'%3E%3Cpath d='M20 20h-2v2h2v-2zm0-10h-2v2h2v-2zm10 10h-2v2h2v-2zm-20 0H8v2h2v-2z'/%3E%3C/g%3E%3C/svg%3E");
+    radial-gradient(ellipse 80% 40% at 50% -5%, rgba(201,160,82,0.07) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a052' fill-opacity='0.025'%3E%3Cpath d='M20 20h-2v2h2v-2zm0-10h-2v2h2v-2zm10 10h-2v2h2v-2zm-20 0H8v2h2v-2z'/%3E%3C/g%3E%3C/svg%3E");
   pointer-events: none; z-index: 0;
 }
 
-#app {
-  width: 100%;
-  max-width: 900px;
-  position: relative; z-index: 1;
-}
+#app { width: 100%; max-width: 460px; position: relative; z-index: 1; }
 
 /* ── TOAST ── */
 #toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: var(--primary); color: #f0e8d0;
+  background: var(--ink3); color: var(--gold2);
   border: 1px solid var(--gold); border-radius: 24px;
   padding: 10px 22px; font-size: 13px;
   opacity: 0; pointer-events: none; white-space: nowrap;
   z-index: 9999; transition: opacity 0.3s;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 #toast.show { opacity: 1; }
 
 /* ── 공통 카드 ── */
 .card {
-  background: var(--surface);
+  background: var(--ink2);
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
   animation: fadeUp 0.4s ease both;
-  box-shadow: 0 2px 16px rgba(139,115,85,0.15), 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 0 0 1px rgba(201,160,82,0.08), 0 20px 60px rgba(0,0,0,0.6);
 }
 .card::before {
-  content: ''; display: block; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), var(--accent), var(--gold), transparent);
+  content: ''; display: block; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
-
-/* ── 안건6 클라이맥스 카드 ── */
-.card.climax {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(139,26,26,0.15), 0 4px 24px rgba(139,26,26,0.12), 0 2px 8px rgba(0,0,0,0.1);
-}
-.card.climax::before {
-  height: 4px;
-  background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
-  animation: climaxBorder 2s ease infinite alternate;
-}
-@keyframes climaxBorder {
-  from { opacity: 0.8; }
-  to   { opacity: 1; }
-}
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -126,134 +87,93 @@ body::before {
 
 /* ── 헤더 ── */
 .hdr {
-  padding: 22px 24px 16px; text-align: center;
-  border-bottom: 1px solid var(--border-soft);
-  background: var(--surface2);
+  padding: 22px 20px 16px; text-align: center;
+  border-bottom: 1px solid var(--border);
 }
 .hdr-badge {
   width: 60px; height: 60px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 28px; margin-bottom: 12px;
   border: 2px solid var(--gold);
-  background: rgba(184,134,11,0.08);
-  box-shadow: 0 2px 10px rgba(139,115,85,0.2);
+  background: rgba(201,160,82,0.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 .hdr-title {
   font-family: var(--font-serif);
-  font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 5px;
+  font-size: 19px; font-weight: 700; color: #f0e8d4; margin-bottom: 5px;
 }
 .hdr-sub { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; }
 
-/* 클라이맥스 헤더 */
-.climax .hdr { background: rgba(139,26,26,0.05); }
-.climax .hdr-title { color: var(--accent); }
-.climax-badge {
-  display: inline-block;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
-  padding: 3px 10px; border-radius: 2px;
-  background: var(--accent); color: #fff;
-  margin-bottom: 8px;
-  animation: climaxPulse 1.2s ease infinite alternate;
-}
-@keyframes climaxPulse {
-  from { opacity: 0.85; box-shadow: 0 0 0 0 rgba(139,26,26,0); }
-  to   { opacity: 1;    box-shadow: 0 0 8px 2px rgba(139,26,26,0.25); }
-}
-
 /* ── BODY ── */
-.body { padding: 20px 24px 28px; }
+.body { padding: 18px 18px 24px; }
 
 /* ── 버튼 ── */
 .btn {
   width: 100%; padding: 13px; border: none; border-radius: 3px;
   font-family: var(--font-serif); font-size: 14px; font-weight: 700;
-  cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
-  letter-spacing: 0.04em;
+  cursor: pointer; transition: all 0.18s; letter-spacing: 0.04em;
 }
 .btn + .btn { margin-top: 8px; }
-.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-.btn:active:not(:disabled) { transform: translateY(0) scale(0.97); }
-
-.btn-primary { background: var(--primary); color: #f0e8d0; border: 1.5px solid #254d78; }
-.btn-primary:hover:not(:disabled) { background: #254d78; }
-.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-
-.btn-outline {
-  background: transparent; color: var(--muted);
-  border: 1.5px solid var(--border);
-}
-.btn-outline:hover { border-color: var(--primary); color: var(--text); }
-
-.btn-danger {
-  background: rgba(139,26,26,0.08); color: var(--accent);
-  border: 1.5px solid rgba(139,26,26,0.3);
-}
-.btn-danger:hover { background: rgba(139,26,26,0.15); }
-
-/* ── 도장 애니메이션 (조선시대 전용) ── */
-@keyframes stamp-in {
-  0%   { transform: scale(2.2) rotate(-8deg); opacity: 0; }
-  60%  { transform: scale(0.92) rotate(2deg); opacity: 1; }
-  80%  { transform: scale(1.04) rotate(-1deg); opacity: 1; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-.stamp-anim { animation: stamp-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.btn-gold { background: var(--gold); color: var(--ink); border: 1.5px solid var(--gold2); }
+.btn-gold:hover:not(:disabled) { background: var(--gold2); transform: translateY(-1px); }
+.btn-gold:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-outline { background: transparent; color: var(--muted); border: 1.5px solid rgba(150,130,100,0.3); }
+.btn-outline:hover { border-color: var(--gold); color: var(--text); }
+.btn-danger { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1.5px solid rgba(192,57,43,0.4); }
+.btn-danger:hover { background: rgba(192,57,43,0.35); transform: translateY(-1px); }
 
 /* ── 역할 카드 ── */
 .role-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-
-@media (min-width: 600px) {
-  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-}
-
 .role-card {
-  border-radius: 3px; padding: 14px 16px;
+  border-radius: 4px; padding: 14px 16px;
   cursor: pointer; transition: all 0.18s;
-  border: 1.5px solid var(--border-soft);
+  border: 1.5px solid transparent;
   display: flex; align-items: center; gap: 14px;
   position: relative; overflow: hidden;
-  background: rgba(255,255,255,0.5);
 }
 .role-card::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 4px;
+  width: 3px;
 }
+.role-card.heon { background: var(--heon-bg); }
 .role-card.heon::before { background: var(--heon); }
+.role-card.heon:hover, .role-card.heon.selected { border-color: var(--heon); box-shadow: 0 0 0 1px var(--heon); }
+.role-card.gan  { background: var(--gan-bg); }
 .role-card.gan::before  { background: var(--gan); }
+.role-card.gan:hover,  .role-card.gan.selected  { border-color: var(--gan);  box-shadow: 0 0 0 1px var(--gan); }
+.role-card.hong { background: var(--hong-bg); }
 .role-card.hong::before { background: var(--hong); }
+.role-card.hong:hover, .role-card.hong.selected { border-color: var(--hong); box-shadow: 0 0 0 1px var(--hong); }
+.role-card.jang { background: var(--jang-bg); }
 .role-card.jang::before { background: var(--jang); }
-
-.role-card.heon:hover, .role-card.heon.selected { background: var(--heon-bg); border-color: var(--heon); }
-.role-card.gan:hover,  .role-card.gan.selected  { background: var(--gan-bg);  border-color: var(--gan); }
-.role-card.hong:hover, .role-card.hong.selected { background: var(--hong-bg); border-color: var(--hong); }
-.role-card.jang:hover, .role-card.jang.selected { background: var(--jang-bg); border-color: var(--jang); }
-
+.role-card.jang:hover, .role-card.jang.selected { border-color: var(--jang); box-shadow: 0 0 0 1px var(--jang); }
 .role-card.selected::after {
   content: '✓'; position: absolute; top: 10px; right: 12px;
-  font-size: 13px; font-weight: 700; color: var(--gold);
+  font-size: 13px; font-weight: 700; color: var(--gold2);
 }
 .role-icon { font-size: 28px; flex-shrink: 0; }
 .role-info { flex: 1; }
-.role-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-.role-card.heon .role-name { color: var(--heon); }
-.role-card.gan  .role-name { color: var(--gan); }
-.role-card.hong .role-name { color: var(--hong); }
-.role-card.jang .role-name { color: var(--jang); }
+.role-name { font-size: 14px; font-weight: 700; color: #f0e8d4; margin-bottom: 3px; }
+.role-heon .role-name { color: #e87060; }
+.role-gan  .role-name { color: #60a8e8; }
+.role-hong .role-name { color: #60c880; }
+.role-jang .role-name { color: #d4a830; }
 .role-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
 .role-power {
   font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
   padding: 2px 8px; border-radius: 20px; margin-top: 5px; display: inline-block;
 }
-.role-card.heon .role-power { background: var(--heon-bg); color: var(--heon); border: 1px solid rgba(139,32,32,0.2); }
-.role-card.gan  .role-power { background: var(--gan-bg);  color: var(--gan);  border: 1px solid rgba(26,58,92,0.2); }
-.role-card.hong .role-power { background: var(--hong-bg); color: var(--hong); border: 1px solid rgba(30,92,58,0.2); }
-.role-card.jang .role-power { background: var(--jang-bg); color: var(--jang); border: 1px solid rgba(107,79,0,0.2); }
+.heon .role-power { background: rgba(192,57,43,0.2); color: #e87060; }
+.gan  .role-power { background: rgba(36,113,163,0.2); color: #60a8e8; }
+.hong .role-power { background: rgba(30,132,73,0.2);  color: #60c880; }
+.jang .role-power { background: rgba(125,102,8,0.2);  color: #d4a830; }
 
 /* ── 안건 카드 ── */
 .agenda-box {
-  border: 1px solid var(--border-soft); border-radius: 3px;
+  border: 1px solid var(--border); border-radius: 4px;
   padding: 16px; margin-bottom: 16px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.02);
+  position: relative;
 }
 .agenda-num {
   font-size: 10px; letter-spacing: 0.2em; color: var(--gold);
@@ -261,35 +181,33 @@ body::before {
 }
 .agenda-title {
   font-family: var(--font-serif); font-size: 16px; font-weight: 700;
-  color: var(--primary); line-height: 1.5; margin-bottom: 10px;
+  color: #f0e8d4; line-height: 1.5; margin-bottom: 10px;
 }
-.climax .agenda-title { color: var(--accent); }
 .agenda-detail {
-  font-family: var(--font-document);
-  font-size: 13px; color: var(--text-mid); line-height: 1.9;
-  border-top: 1px solid var(--border-soft); padding-top: 10px;
+  font-size: 12px; color: var(--muted); line-height: 1.8;
+  border-top: 1px solid var(--border); padding-top: 10px;
 }
-.agenda-detail strong { color: var(--text); font-weight: 700; }
+.agenda-detail strong { color: var(--text); }
 
 /* ── 역할별 논거 ── */
 .argument-box {
-  border-radius: 3px; padding: 14px 16px; margin-bottom: 16px;
-  border-left: 4px solid;
+  border-radius: 4px; padding: 14px 16px; margin-bottom: 16px;
+  border-left: 3px solid;
 }
 .argument-box.heon { background: var(--heon-bg); border-color: var(--heon); }
 .argument-box.gan  { background: var(--gan-bg);  border-color: var(--gan); }
 .argument-box.hong { background: var(--hong-bg); border-color: var(--hong); }
 .argument-box.jang { background: var(--jang-bg); border-color: var(--jang); }
-
-.argument-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 8px; }
-.argument-box.heon .argument-label { color: var(--heon); }
+.argument-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.heon .argument-label, .argument-box.heon .argument-label { color: var(--heon); }
 .argument-box.gan  .argument-label { color: var(--gan); }
 .argument-box.hong .argument-label { color: var(--hong); }
 .argument-box.jang .argument-label { color: var(--jang); }
-
-.argument-text { font-size: 13px; color: var(--text); line-height: 1.9; font-family: var(--font-document); }
-.argument-text strong { color: var(--primary); font-weight: 700; }
-.climax .argument-text strong { color: var(--accent); }
+.argument-text { font-size: 13px; color: var(--text); line-height: 1.8; }
+.argument-text strong { color: var(--gold2); }
 
 /* ── 선택 버튼 그룹 ── */
 .decision-label {
@@ -297,127 +215,95 @@ body::before {
   margin-bottom: 10px; letter-spacing: 0.1em;
 }
 .decision-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-
-@media (min-width: 600px) {
-  .decision-grid { flex-direction: row; gap: 10px; }
-  .dec-btn { flex: 1; }
-}
-
 .dec-btn {
-  padding: 13px 14px; border-radius: 3px;
-  border: 1.5px solid var(--border-soft);
-  cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s, background 0.15s;
-  text-align: left; display: flex; align-items: center; gap: 12px;
-  font-family: var(--font-sans); background: rgba(255,255,255,0.6);
+  padding: 13px 16px; border-radius: 3px; border: 1.5px solid transparent;
+  cursor: pointer; transition: all 0.18s; text-align: left;
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-sans); background: rgba(255,255,255,0.03);
 }
-.dec-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.dec-btn:active { transform: scale(0.97); }
-.dec-btn.selected { box-shadow: 0 0 0 2px var(--gold); }
-
-.dec-btn.pass  { border-color: rgba(30,92,58,0.3); }
-.dec-btn.pass:hover    { background: rgba(30,92,58,0.08); border-color: var(--hong); }
-.dec-btn.pass.selected { background: rgba(30,92,58,0.1); border-color: var(--hong); }
-
-.dec-btn.argue { border-color: rgba(26,58,92,0.3); }
-.dec-btn.argue:hover   { background: rgba(26,58,92,0.08); border-color: var(--gan); }
-.dec-btn.argue.selected { background: rgba(26,58,92,0.1); border-color: var(--gan); }
-
-.dec-btn.block { border-color: rgba(139,26,26,0.3); }
-.dec-btn.block:hover   { background: rgba(139,26,26,0.08); border-color: var(--heon); }
-.dec-btn.block.selected { background: rgba(139,26,26,0.1); border-color: var(--heon); }
-
+.dec-btn:hover { transform: translateY(-1px); }
+.dec-btn.selected { box-shadow: 0 0 0 2px var(--gold2); }
+.dec-btn.pass    { border-color: rgba(46,204,113,0.3); }
+.dec-btn.pass:hover    { background: rgba(46,204,113,0.1); border-color: rgba(46,204,113,0.6); }
+.dec-btn.pass.selected { background: rgba(46,204,113,0.12); border-color: #2ecc71; }
+.dec-btn.argue   { border-color: rgba(52,152,219,0.3); }
+.dec-btn.argue:hover   { background: rgba(52,152,219,0.1); border-color: rgba(52,152,219,0.6); }
+.dec-btn.argue.selected { background: rgba(52,152,219,0.12); border-color: #3498db; }
+.dec-btn.block   { border-color: rgba(231,76,60,0.3); }
+.dec-btn.block:hover   { background: rgba(231,76,60,0.1); border-color: rgba(231,76,60,0.6); }
+.dec-btn.block.selected { background: rgba(231,76,60,0.12); border-color: #e74c3c; }
 .dec-icon { font-size: 22px; flex-shrink: 0; }
 .dec-right { flex: 1; }
 .dec-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-.dec-btn.pass  .dec-name { color: var(--hong); }
-.dec-btn.argue .dec-name { color: var(--gan); }
-.dec-btn.block .dec-name { color: var(--heon); }
+.pass  .dec-name { color: #2ecc71; }
+.argue .dec-name { color: #3498db; }
+.block .dec-name { color: #e74c3c; }
 .dec-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-/* ── 라운드 진행 바 ── */
-.round-bar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-bottom: 1px solid var(--border-soft);
-  background: var(--surface2);
-  position: sticky; top: 0; z-index: 100;
-  border-bottom: 1px solid var(--border);
+/* ── 타이머 ── */
+.timer-wrap {
+  text-align: center; margin-bottom: 16px;
+  padding: 14px; border-radius: 4px;
+  background: rgba(201,160,82,0.06); border: 1px solid var(--border);
 }
-.round-label { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; font-weight: 700; }
-.round-pips  { flex: 1; display: flex; gap: 4px; }
-.round-pip {
-  flex: 1; height: 5px; border-radius: 2px;
-  background: rgba(139,115,85,0.15); transition: background 0.4s;
+.timer-label { font-size: 10px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 6px; }
+.timer-num {
+  font-family: var(--font-serif); font-size: 36px; font-weight: 700;
+  color: var(--gold2); line-height: 1;
 }
-.round-pip.done   { background: var(--gold); }
-.round-pip.active { background: var(--accent); }
-.round-pip.climax-pip { background: var(--border-soft); }
-.round-pip.climax-pip.active {
-  background: var(--accent);
-  animation: climaxPip 0.8s ease infinite alternate;
-}
-@keyframes climaxPip {
-  from { box-shadow: 0 0 0 0 rgba(139,26,26,0); }
-  to   { box-shadow: 0 0 6px 2px rgba(139,26,26,0.4); }
-}
-.round-score { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; }
-.round-score.urgent { color: var(--accent); animation: warnPulse 0.6s ease infinite alternate; }
-@keyframes warnPulse { from { opacity: 1; } to { opacity: 0.4; } }
+.timer-num.urgent { color: #e74c3c; animation: timerPulse 0.5s ease infinite alternate; }
+@keyframes timerPulse { from { opacity: 1; } to { opacity: 0.4; } }
+.timer-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-/* ── 수치 게이지 ── */
-.gauge-wrap { margin-bottom: 16px; }
-.gauge-row { margin-bottom: 10px; }
-.gauge-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
-.gauge-name { color: var(--muted); }
-.gauge-val  { font-weight: 700; color: var(--text); }
-.gauge-bar { height: 8px; border-radius: 4px; background: rgba(139,115,85,0.15); overflow: hidden; }
-.gauge-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-.gauge-trust  .gauge-fill { background: linear-gradient(90deg, var(--heon), #c0392b); }
-.gauge-gonron .gauge-fill { background: linear-gradient(90deg, var(--hong), #27ae60); }
-.gauge-change { font-size: 11px; font-weight: 700; margin-top: 3px; text-align: right; }
-.gauge-change.pos { color: var(--hong); }
-.gauge-change.neg { color: var(--heon); }
+/* ── 결과 화면 ── */
+.result-choice {
+  text-align: center; padding: 14px; border-radius: 4px;
+  margin-bottom: 16px; border: 1px solid;
+}
+.result-choice.pass  { background: rgba(46,204,113,0.1);  border-color: #2ecc71; }
+.result-choice.argue { background: rgba(52,152,219,0.1);  border-color: #3498db; }
+.result-choice.block { background: rgba(231,76,60,0.1);   border-color: #e74c3c; }
+.result-choice-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.result-choice-name  { font-size: 16px; font-weight: 700; }
+.pass  .result-choice-name { color: #2ecc71; }
+.argue .result-choice-name { color: #3498db; }
+.block .result-choice-name { color: #e74c3c; }
 
-/* ── 결과 — 도장 스탬프 ── */
-.result-stamp-wrap { text-align: center; margin-bottom: 18px; }
-.result-stamp {
-  display: inline-block;
-  padding: 10px 24px; border-radius: 3px;
-  border: 3px solid; font-family: var(--font-serif);
-  font-size: 20px; font-weight: 700;
-  letter-spacing: 0.15em;
-  position: relative;
-}
-.result-stamp.pass  {
-  border-color: var(--hong); color: var(--hong);
-  background: rgba(30,92,58,0.06);
-  transform: rotate(-2deg);
-}
-.result-stamp.argue {
-  border-color: var(--gan); color: var(--gan);
-  background: rgba(26,58,92,0.06);
-  transform: rotate(1.5deg);
-}
-.result-stamp.block {
-  border-color: var(--heon); color: var(--heon);
-  background: rgba(139,26,26,0.06);
-  transform: rotate(-1deg);
-}
-.result-stamp-label { font-size: 10px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.1em; }
-
-/* ── 역사 노트 ── */
 .history-box {
   border: 1px dashed var(--border); border-radius: 3px;
-  padding: 14px 16px; margin-bottom: 14px;
-  font-family: var(--font-document);
-  font-size: 13px; line-height: 1.9; color: var(--text-mid);
-  background: rgba(255,255,255,0.4);
+  padding: 12px 14px; margin-bottom: 14px;
+  font-size: 12px; line-height: 1.8; color: var(--text);
 }
 .history-box::before {
   content: '📜 실제 역사'; display: block;
   font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
   color: var(--gold); margin-bottom: 6px;
-  font-family: var(--font-sans);
 }
+
+/* ── 수치 바 ── */
+.gauge-wrap { margin-bottom: 16px; }
+.gauge-row { margin-bottom: 10px; }
+.gauge-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; margin-bottom: 5px;
+}
+.gauge-name { color: var(--muted); }
+.gauge-val  { font-weight: 700; color: var(--gold2); }
+.gauge-bar {
+  height: 7px; border-radius: 4px;
+  background: rgba(255,255,255,0.07); overflow: hidden;
+}
+.gauge-fill {
+  height: 100%; border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gauge-trust .gauge-fill { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.gauge-gonron .gauge-fill { background: linear-gradient(90deg, #1e8449, #2ecc71); }
+.gauge-change {
+  font-size: 11px; font-weight: 700; margin-top: 3px; text-align: right;
+}
+.gauge-change.pos { color: #2ecc71; }
+.gauge-change.neg { color: #e74c3c; }
 
 /* ── 역할별 반응 ── */
 .reactions { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
@@ -425,106 +311,83 @@ body::before {
   padding: 10px 12px; border-radius: 3px;
   display: flex; align-items: flex-start; gap: 10px;
   font-size: 12px; line-height: 1.6;
-  border-left: 3px solid;
-  background: rgba(255,255,255,0.4);
+  border-left: 2px solid;
 }
-.reaction-item.heon { border-color: var(--heon); }
-.reaction-item.gan  { border-color: var(--gan); }
-.reaction-item.hong { border-color: var(--hong); }
-.reaction-item.jang { border-color: var(--jang); }
+.reaction-item.heon { background: var(--heon-bg); border-color: var(--heon); color: #e87060; }
+.reaction-item.gan  { background: var(--gan-bg);  border-color: var(--gan);  color: #60a8e8; }
+.reaction-item.hong { background: var(--hong-bg); border-color: var(--hong); color: #60c880; }
+.reaction-item.jang { background: var(--jang-bg); border-color: var(--jang); color: #d4a830; }
 .reaction-role { font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-.reaction-item.heon .reaction-role { color: var(--heon); }
-.reaction-item.gan  .reaction-role { color: var(--gan); }
-.reaction-item.hong .reaction-role { color: var(--hong); }
-.reaction-item.jang .reaction-role { color: var(--jang); }
-.reaction-text { color: var(--text-mid); }
+.reaction-text { color: var(--text); }
 
-/* ── 역할 배지 ── */
+/* ── 라운드 진행 바 ── */
+.round-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100;
+}
+.round-label { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; }
+.round-pips  { flex: 1; display: flex; gap: 4px; }
+.round-pip {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: rgba(255,255,255,0.07); transition: background 0.4s;
+}
+.round-pip.done   { background: var(--gold); }
+.round-pip.active { background: #e74c3c; }
+.round-score { font-size: 12px; font-weight: 700; color: var(--gold2); white-space: nowrap; }
+
+/* ── 최종 결과 ── */
+.final-banner { text-align: center; padding: 24px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+.final-icon  { font-size: 56px; margin-bottom: 12px; }
+.final-title { font-family: var(--font-serif); font-size: 22px; font-weight: 800; line-height: 1.3; }
+.final-sub   { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+.final-score { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+.summary-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+.summary-table th {
+  padding: 8px 10px; text-align: left; color: var(--gold);
+  font-size: 10px; letter-spacing: 0.1em; font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.summary-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text); }
+.summary-table td.pass  { color: #2ecc71; font-weight: 700; }
+.summary-table td.argue { color: #3498db; font-weight: 700; }
+.summary-table td.block { color: #e74c3c; font-weight: 700; }
+
 .role-badge {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: 20px; font-size: 12px;
   font-weight: 700; margin-bottom: 14px; border: 1px solid;
-  background: rgba(255,255,255,0.5);
 }
-.role-badge.heon { border-color: var(--heon); color: var(--heon); }
-.role-badge.gan  { border-color: var(--gan);  color: var(--gan); }
-.role-badge.hong { border-color: var(--hong); color: var(--hong); }
-.role-badge.jang { border-color: var(--jang); color: var(--jang); }
+.role-badge.heon { background: var(--heon-bg); border-color: var(--heon); color: #e87060; }
+.role-badge.gan  { background: var(--gan-bg);  border-color: var(--gan);  color: #60a8e8; }
+.role-badge.hong { background: var(--hong-bg); border-color: var(--hong); color: #60c880; }
+.role-badge.jang { background: var(--jang-bg); border-color: var(--jang); color: #d4a830; }
 
-/* ── 요약 테이블 ── */
-.summary-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
-.summary-table th {
-  padding: 8px 10px; text-align: left;
-  font-size: 10px; letter-spacing: 0.1em; font-weight: 700;
-  border-bottom: 1px solid var(--border);
-  color: var(--gold); background: var(--surface2);
-}
-.summary-table td {
-  padding: 8px 10px; border-bottom: 1px solid rgba(139,115,85,0.1);
-  color: var(--text-mid);
-}
-.summary-table td.pass  { color: var(--hong); font-weight: 700; }
-.summary-table td.argue { color: var(--gan);  font-weight: 700; }
-.summary-table td.block { color: var(--heon); font-weight: 700; }
+hr.div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
 
-/* ── 최종 배너 ── */
-.final-banner {
-  text-align: center; padding: 24px 0 18px;
-  border-bottom: 1px solid var(--border-soft); margin-bottom: 18px;
-}
-.final-icon  { font-size: 56px; margin-bottom: 12px; }
-.final-title { font-family: var(--font-serif); font-size: 22px; font-weight: 800; line-height: 1.3; }
-.final-sub   { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.8; font-family: var(--font-document); }
-.final-score { font-size: 12px; color: var(--muted); margin-top: 8px; }
-
-hr.div { border: none; border-top: 1px solid var(--border-soft); margin: 14px 0; }
-
-/* ── 정보 박스 ── */
-.info-box {
-  background: rgba(184,134,11,0.06); border: 1px solid rgba(184,134,11,0.2);
-  border-radius: 3px; padding: 14px 16px;
-}
-.info-box-label {
-  font-size: 10px; letter-spacing: 0.2em; color: var(--gold);
-  margin-bottom: 10px; font-weight: 700;
-}
-
-/* ── 툴팁 ── */
+/* 툴팁 */
 .tt {
   border-bottom: 1.5px dashed var(--gold);
   cursor: pointer; white-space: nowrap; color: inherit;
   transition: border-color 0.15s;
 }
-.tt:hover { border-bottom-color: var(--accent); }
+.tt:hover { border-bottom-color: #e74c3c; }
 #tt-bubble {
   position: fixed; z-index: 9000; max-width: 240px;
-  background: var(--primary); border: 1px solid rgba(184,134,11,0.5);
-  border-radius: 3px; padding: 10px 13px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  background: var(--ink); border: 1px solid rgba(184,134,11,0.6);
+  border-radius: 4px; padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
   pointer-events: none; opacity: 0; transform: translateY(4px);
   transition: opacity 0.18s, transform 0.18s;
 }
 #tt-bubble.show { opacity: 1; transform: translateY(0); }
-#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--gold2); margin-bottom: 5px; }
-#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,232,200,0.9); line-height: 1.7; }
-
-/* ── 태블릿 2단 레이아웃 (게임 화면) ── */
-@media (min-width: 700px) {
-  .game-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    align-items: start;
-  }
-  .game-layout .agenda-box { margin-bottom: 0; }
-  .game-layout .argument-box { margin-bottom: 0; }
-  .game-right { display: flex; flex-direction: column; gap: 12px; }
-}
+#tt-bubble .tb-word { font-size:12px; font-weight:700; color:var(--gold2); margin-bottom:5px; }
+#tt-bubble .tb-desc { font-size:12px; color:rgba(240,228,192,0.85); line-height:1.7; }
 
 @media (max-width: 480px) {
   .hdr-title { font-size: 17px; }
   .agenda-title { font-size: 15px; }
-  .body { padding: 16px 16px 24px; }
 }
 </style>
 </head>
@@ -562,26 +425,9 @@ const TIPS = {
 };
 
 function tt(word, key) {
-  const tip = TIPS[key || word] || '';
+  const tip = TIPS[key||word] || '';
   if (!tip) return word;
   return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
-}
-
-// 한국어 조사 헬퍼 — 마지막 글자 받침 여부로 자동 선택
-function josa(word, type) {
-  const code = word[word.length - 1].charCodeAt(0);
-  const isHangul = code >= 0xAC00 && code <= 0xD7A3;
-  const batchim  = isHangul ? (code - 0xAC00) % 28 : -1;
-  const hasB     = batchim > 0;
-  const isRieul  = batchim === 8; // ㄹ 받침
-  switch (type) {
-    case '으로/로': return word + (hasB && !isRieul ? '으로' : '로');
-    case '은/는':   return word + (hasB ? '은' : '는');
-    case '이/가':   return word + (hasB ? '이' : '가');
-    case '을/를':   return word + (hasB ? '을' : '를');
-    case '와/과':   return word + (hasB ? '과' : '와');
-    default: return word;
-  }
 }
 
 document.body.insertAdjacentHTML('beforeend',
@@ -596,15 +442,13 @@ document.addEventListener('click', e => {
     bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
     const rect = el.getBoundingClientRect();
     const bw = 240;
-    const left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+    const left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
     bubble.style.width = bw + 'px';
     bubble.style.left  = left + 'px';
     bubble.style.top   = '-9999px';
     bubble.classList.add('show');
     const bh = bubble.offsetHeight;
-    bubble.style.top = (rect.top - bh - 14 < 8)
-      ? (rect.bottom + 10) + 'px'
-      : (rect.top - bh - 14) + 'px';
+    bubble.style.top = (rect.top - bh - 14 < 8) ? (rect.bottom + 10) + 'px' : (rect.top - bh - 14) + 'px';
     if (bbTimer) clearTimeout(bbTimer);
     bbTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
   } else {
@@ -648,7 +492,7 @@ const ROLES = [
 
 const AGENDAS = [
   {
-    id: 1, isClimax: false,
+    id: 1,
     title: '왕이 공신의 자제를 사헌부 요직에 임명하려 한다',
     detail: `전하께서 개국 공신 이씨의 아들을 <strong>사헌부 <span class="tt" data-tip="${encodeURIComponent(TIPS['지평'])}" data-word="지평">지평</span></strong>에 임명하는 <span class="tt" data-tip="${encodeURIComponent(TIPS['교지'])}" data-word="교지">교지</span>를 내리셨습니다. 이씨 자제는 과거 급제 이력이 없으며, 나이도 젊어 관료 경험이 부족합니다.`,
     arguments: {
@@ -669,7 +513,7 @@ const AGENDAS = [
     },
   },
   {
-    id: 2, isClimax: false,
+    id: 2,
     title: '왕이 3개월째 경연을 거부하고 있다',
     detail: `전하께서 <strong>경연</strong> 참석을 석 달째 미루고 계십니다. "<span class="tt" data-tip="${encodeURIComponent(TIPS['국사'])}" data-word="국사">국사</span>가 바빠 시간이 없다"는 이유이나, 최측근 내관들과 연회를 즐긴다는 소문이 돌고 있습니다.`,
     arguments: {
@@ -690,7 +534,7 @@ const AGENDAS = [
     },
   },
   {
-    id: 3, isClimax: false,
+    id: 3,
     title: '훈구 대신이 사림 출신 관리를 모함하여 탄핵을 요청했다',
     detail: `<strong>훈구</strong> 계열의 <span class="tt" data-tip="${encodeURIComponent(TIPS['영의정'])}" data-word="영의정">영의정</span>이 사림 출신 <strong>이조정랑</strong>(이조의 실무 관리)을 "<span class="tt" data-tip="${encodeURIComponent(TIPS['붕당'])}" data-word="붕당">붕당</span>을 만들어 왕을 농락했다"는 죄목으로 탄핵해 달라는 상소를 올렸습니다. 증거는 불분명합니다.`,
     arguments: {
@@ -711,7 +555,7 @@ const AGENDAS = [
     },
   },
   {
-    id: 4, isClimax: false,
+    id: 4,
     title: '왕이 훈구와 사림의 타협안을 요청하며 언관의 활동 자제를 명했다',
     detail: `전하께서 "훈구와 사림의 싸움이 국정을 해친다"며 <strong>언관의 간쟁 횟수를 한 달에 3회로 제한</strong>하는 <span class="tt" data-tip="${encodeURIComponent(TIPS['교지'])}" data-word="교지">교지</span>를 내리셨습니다. 양측이 타협하면 이 제한을 풀겠다고 하십니다.`,
     arguments: {
@@ -732,7 +576,7 @@ const AGENDAS = [
     },
   },
   {
-    id: 5, isClimax: false,
+    id: 5,
     title: '왕이 사림 출신 관리들을 한꺼번에 지방으로 내보내려 한다',
     detail: `전하께서 "지방 행정이 부실하다"는 명목으로 <strong>사림 출신 언관 7명을 한꺼번에 지방 <span class="tt" data-tip="${encodeURIComponent(TIPS['수령'])}" data-word="수령">수령</span>으로 발령</strong>내는 <span class="tt" data-tip="${encodeURIComponent(TIPS['교지'])}" data-word="교지">교지</span>를 내리셨습니다. 실질적으로 중앙에서 사림을 몰아내는 조치입니다.`,
     arguments: {
@@ -753,7 +597,7 @@ const AGENDAS = [
     },
   },
   {
-    id: 6, isClimax: true,   // ← 클라이맥스 안건
+    id: 6,
     title: '왕이 이번 일을 빌미로 언론 삼사 축소를 논의하겠다고 선언했다',
     detail: '앞선 갈등들을 빌미로 전하께서 "언관들이 국정을 방해한다"며 <strong>삼사 기능 축소를 조정 회의에 올리겠다</strong>고 선언하셨습니다. 이번이 마지막 기회일 수 있습니다.',
     arguments: {
@@ -779,13 +623,16 @@ const AGENDAS = [
 // 상태
 // ══════════════════════════════════════
 let S = {
-  phase: 'intro',
-  role: null,
-  agendaIdx: 0,
-  decision: null,
-  trust: 60,
-  gonron: 60,
-  history: [],
+  phase: 'intro',    // intro | role | game | result | between | final
+  role: null,        // 선택한 역할 객체
+  agendaIdx: 0,      // 현재 안건 인덱스 (0~5)
+  decision: null,    // 현재 선택 (pass/argue/block)
+  trust: 60,         // 왕 신뢰도 (0~100)
+  gonron: 60,        // 공론 지지도 (0~100)
+  history: [],       // [{agendaId, decision, trustChange, gonronChange}]
+  timerVal: 120,
+  timerRunning: false,
+  timerHandle: null,
 };
 
 // ══════════════════════════════════════
@@ -800,8 +647,9 @@ function showToast(msg) {
 }
 
 function R() {
-  window.scrollTo(0, 0);
-  document.getElementById('app').innerHTML =
+  window.scrollTo(0,0);
+  const app = document.getElementById('app');
+  app.innerHTML =
     S.phase === 'intro'       ? renderIntro()       :
     S.phase === 'role'        ? renderRole()        :
     S.phase === 'roleconfirm' ? renderRoleConfirm() :
@@ -814,27 +662,27 @@ function R() {
 function decisionLabel(d, agendaIdx) {
   if (d === 'pass')  return '통과';
   if (d === 'argue') return '간쟁';
+  // block: 인사 안건(0,2,4)은 서경 거부, 나머지는 연명 상소
   const idx = agendaIdx !== undefined ? agendaIdx : S.agendaIdx - 1;
   return [0, 2, 4].includes(idx) ? '서경 거부' : '연명 상소';
 }
 
-function roundBar(isClimax = false) {
-  const pips = AGENDAS.map((a, i) => {
+function roundBar() {
+  const pips = AGENDAS.map((_,i) => {
     let c = 'round-pip';
-    if (a.isClimax) c += ' climax-pip';
     if (i < S.agendaIdx) c += ' done';
     else if (i === S.agendaIdx) c += ' active';
     return `<div class="${c}"></div>`;
   }).join('');
-  const lowTrust  = S.trust < 30;
-  const lowGonron = S.gonron < 30;
+  const lowTrust   = S.trust < 30;
+  const lowGonron  = S.gonron < 30;
   const warn = lowTrust || lowGonron;
   return `
   <div class="round-bar">
     <span class="round-label">📋 안건</span>
     <div class="round-pips">${pips}</div>
-    <span class="round-score${warn ? ' urgent' : ''}">
-      ${lowTrust ? '⚠' : '👑'}${S.trust} / ${lowGonron ? '⚠' : '🌿'}${S.gonron}
+    <span class="round-score${warn?' urgent':''}">
+      ${lowTrust?'⚠':'👑'}${S.trust} / ${lowGonron?'⚠':'🌿'}${S.gonron}
     </span>
   </div>`;
 }
@@ -851,35 +699,35 @@ function renderIntro() {
       <div class="hdr-sub">이 임명을 막아라 — 조선 전기</div>
     </div>
     <div class="body">
-      <div style="font-family:var(--font-document);font-size:14px;color:var(--text-mid);line-height:2.1;margin-bottom:20px;text-align:center">
+      <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:18px;text-align:center">
         왕도 마음대로 못 하고,<br>
         신하도 무조건 막을 수 없다.<br><br>
-        <strong style="color:var(--primary)">언론 삼사</strong>의 신하가 되어<br>
+        <strong style="color:var(--text)">언론 삼사</strong>의 신하가 되어<br>
         왕권과 공론 사이에서 균형을 지켜라.
       </div>
-      <div class="info-box" style="margin-bottom:18px">
-        <div class="info-box-label">📖 게임 방법</div>
-        <div style="font-size:12px;color:var(--text-mid);line-height:2.1">
-          ① 모둠원이 <strong>각자 기기로 같은 링크</strong>에 접속합니다<br>
-          ② 모둠에서 <strong>서로 다른 역할</strong>을 나눠서 선택합니다<br>
-          ③ 안건마다 <strong>내 역할의 논거</strong>를 확인하고 모둠 토론합니다<br>
-          ④ 합의 후 <strong>대표 1명이 결정을 입력</strong> → 나머지도 같은 결정 선택<br>
+      <div style="background:rgba(201,160,82,0.06);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:18px">
+        <div style="font-size:10px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px;font-weight:700">📖 게임 방법</div>
+        <div style="font-size:12px;color:var(--muted);line-height:2">
+          ① 모둠원이 <strong style="color:var(--text)">각자 기기로 같은 링크</strong>에 접속합니다<br>
+          ② 모둠에서 <strong style="color:var(--text)">서로 다른 역할</strong>을 나눠서 선택합니다<br>
+          ③ 안건마다 <strong style="color:var(--text)">내 역할의 논거</strong>를 확인하고 모둠 토론합니다<br>
+          ④ 합의 후 <strong style="color:var(--gold)">대표 1명이 결정을 입력</strong> → 나머지도 같은 결정 선택<br>
           ⑤ 6개 안건 완료 후 최종 결과를 확인하고 패들렛에 공유합니다
         </div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:20px">
-        <div style="flex:1;background:var(--heon-bg);border:1px solid rgba(139,32,32,0.2);border-radius:3px;padding:12px;text-align:center">
-          <div style="font-size:22px;margin-bottom:4px">👑</div>
-          <div style="font-size:11px;color:var(--heon);font-weight:700">왕 신뢰도</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5">너무 떨어지면<br>왕이 역공을 준비합니다</div>
+      <div style="display:flex;gap:8px;margin-bottom:18px">
+        <div style="flex:1;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2);border-radius:3px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">👑</div>
+          <div style="font-size:11px;color:#e87060;font-weight:700">왕 신뢰도</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">너무 떨어지면<br>왕이 역공을 준비합니다</div>
         </div>
-        <div style="flex:1;background:var(--hong-bg);border:1px solid rgba(30,92,58,0.2);border-radius:3px;padding:12px;text-align:center">
-          <div style="font-size:22px;margin-bottom:4px">🌿</div>
-          <div style="font-size:11px;color:var(--hong);font-weight:700">공론 지지도</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5">너무 떨어지면<br>언관이 무력화됩니다</div>
+        <div style="flex:1;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:3px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">🌿</div>
+          <div style="font-size:11px;color:#60c880;font-weight:700">공론 지지도</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">너무 떨어지면<br>언관이 무력화됩니다</div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="goRole()">역할 선택하기 →</button>
+      <button class="btn btn-gold" onclick="goRole()">역할 선택하기 →</button>
     </div>
   </div>`;
 }
@@ -893,7 +741,7 @@ function renderRole() {
          onclick="selectRole('${r.id}')">
       <div class="role-icon">${r.icon}</div>
       <div class="role-info">
-        <div class="role-name">${r.name}</div>
+        <div class="role-name" style="color:${r.cls==='heon'?'#e87060':r.cls==='gan'?'#60a8e8':r.cls==='hong'?'#60c880':'#d4a830'}">${r.name}</div>
         <div class="role-desc">${r.desc}</div>
         <div class="role-power">${r.power}</div>
       </div>
@@ -907,105 +755,46 @@ function renderRole() {
       <div class="hdr-sub">모둠에서 각자 다른 역할을 선택하세요</div>
     </div>
     <div class="body">
-      <div class="info-box" style="margin-bottom:16px">
-        <div class="info-box-label">📌 역할 배분 방법</div>
-        <div style="font-size:12px;color:var(--text-mid);line-height:2">
+      <div style="background:rgba(201,160,82,0.07);border:1px solid rgba(201,160,82,0.3);border-radius:4px;padding:13px 15px;margin-bottom:16px">
+        <div style="font-size:10px;letter-spacing:0.2em;color:var(--gold);font-weight:700;margin-bottom:8px">📌 역할 배분 방법</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
           모둠원이 <strong>서로 다른 역할</strong>을 하나씩 나눠서 선택하세요.<br>
           같은 역할을 고르면 논거가 같아서 토론이 안 됩니다!
         </div>
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(184,134,11,0.2);display:flex;gap:10px;flex-wrap:wrap">
-          <span style="font-size:11px;color:var(--heon)">⚖️ 1번 → 사헌부</span>
-          <span style="font-size:11px;color:var(--gan)">📢 2번 → 사간원</span>
-          <span style="font-size:11px;color:var(--hong)">📚 3번 → 홍문관</span>
-          <span style="font-size:11px;color:var(--jang)">🗝️ 4번 → 이조전랑</span>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,160,82,0.2);display:flex;gap:8px;flex-wrap:wrap">
+          <div style="font-size:11px;color:#e87060">⚖️ 1번 → 사헌부</div>
+          <div style="font-size:11px;color:#60a8e8">📢 2번 → 사간원</div>
+          <div style="font-size:11px;color:#60c880">📚 3번 → 홍문관</div>
+          <div style="font-size:11px;color:#d4a830">🗝️ 4번 → 이조전랑</div>
         </div>
-        <div style="margin-top:8px;font-size:11px;color:var(--muted)">3인 모둠이라면 이조전랑을 제외하고 진행하세요</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--muted)">
+          3인 모둠이라면 이조전랑을 제외하고 진행하세요
+        </div>
       </div>
       <div class="role-grid">${cardsHtml}</div>
-      <button class="btn btn-primary" ${S.role ? '' : 'disabled'} onclick="startGame()">
-        ${S.role ? `${S.role.icon} ${josa(S.role.name, '으로/로')} 시작하기 →` : '역할을 선택해주세요'}
+      <button class="btn btn-gold" ${S.role ? '' : 'disabled'} onclick="startGame()">
+        ${S.role ? `${S.role.icon} ${S.role.name}으로 시작하기 →` : '역할을 선택해주세요'}
       </button>
     </div>
   </div>`;
 }
 
 // ══════════════════════════════════════
-// 역할 확인
-// ══════════════════════════════════════
-function renderRoleConfirm() {
-  const r = S.role;
-  const colorMap = { heon: 'var(--heon)', gan: 'var(--gan)', hong: 'var(--hong)', jang: 'var(--jang)' };
-  const color = colorMap[r.cls];
-  const tipRows = {
-    heon: [
-      { label: '주요 권한', val: '관리 비리 감찰 · 탄핵 요청 · 서경 심사' },
-      { label: '서경 거부', val: '사간원과 함께 부당한 임명을 막는 최강 수단' },
-      { label: '성향', val: '원칙·보수적 — 전례와 법도를 근거로 판단' },
-    ],
-    gan: [
-      { label: '주요 권한', val: '왕에게 직접 간쟁 · 왕명 논박 · 서경 심사' },
-      { label: '간쟁', val: '왕의 잘못된 명령에 직언으로 맞서는 것' },
-      { label: '성향', val: '논쟁적·직설적 — 왕에게도 물러서지 않는다' },
-    ],
-    hong: [
-      { label: '주요 권한', val: '경연 주관 · 학문 자문 · 정책 비판' },
-      { label: '경연', val: '왕과 신하가 함께 유교 경전·정사를 논하는 자리' },
-      { label: '성향', val: '이론·명분 중시 — 성리학적 근거로 설득' },
-    ],
-    jang: [
-      { label: '주요 권한', val: '이조 낭관직 후임 추천 · 3사 언관 인사 영향력' },
-      { label: '핵심 전략', val: '계파 이해관계를 계산해 실리를 취하는 것' },
-      { label: '성향', val: '실리·전략적 — 힘의 균형을 계산한다' },
-    ],
-  };
-  const rows = tipRows[r.cls].map(row => `
-    <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-soft)">
-      <span style="font-size:11px;color:var(--muted);min-width:70px;flex-shrink:0">${row.label}</span>
-      <span style="font-size:12px;color:var(--text-mid);line-height:1.6">${row.val}</span>
-    </div>`).join('');
-
-  return `
-  <div class="card">
-    <div class="hdr" style="border-left:4px solid ${color}">
-      <div class="hdr-badge" style="border-color:${color}">${r.icon}</div>
-      <div class="hdr-title" style="color:${color}">${r.name}</div>
-      <div class="hdr-sub">내 역할을 확인하세요</div>
-    </div>
-    <div class="body">
-      <div style="background:rgba(255,255,255,0.5);border:1px solid var(--border-soft);border-left:4px solid ${color};border-radius:0 3px 3px 0;padding:14px 16px;margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:${color};margin-bottom:4px">${r.title}</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.8">${r.desc}</div>
-      </div>
-      <div style="margin-bottom:18px">${rows}</div>
-      <div class="info-box" style="margin-bottom:18px">
-        <div style="font-size:12px;color:var(--text-mid);line-height:1.9">
-          💡 <strong>게임 핵심:</strong> 안건마다 내 역할의 관점이 다르게 나옵니다.<br>
-          모둠원과 서로 논거를 공유하고, <strong style="color:var(--gold)">대표 1명이 결정을 입력</strong>하면<br>
-          나머지 모둠원도 <strong style="color:var(--gold)">같은 결정을 각자 화면에서</strong> 선택하세요.
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="confirmRole()">${r.icon} ${josa(r.name, '으로/로')} 게임 시작 →</button>
-      <button class="btn btn-outline" style="margin-top:8px" onclick="goRole()">← 역할 다시 선택</button>
-    </div>
-  </div>`;
-}
-
-// ══════════════════════════════════════
-// 게임 화면
+// 게임 (안건 + 논거 + 선택)
 // ══════════════════════════════════════
 function renderGame() {
   const agenda = AGENDAS[S.agendaIdx];
   const arg = agenda.arguments[S.role.id];
-  const isPersonnel = [0, 2, 4].includes(S.agendaIdx);
-  const isClimax = agenda.isClimax;
 
-  const blockOption = isPersonnel
-    ? { id: 'block', icon: '🚫', name: '서경 거부', desc: `${tt('서경')} 거부로 임명을 막습니다. 공론↑, 왕 신뢰도 크게↓` }
-    : { id: 'block', icon: '📜', name: '연명 상소', desc: `${tt('연명 상소')}로 왕에게 집단 이의를 제기합니다. 공론↑, 왕 신뢰도↓` };
+  // 안건 1·3·5는 인사 안건 → 서경 거부 / 안건 2·4·6은 왕 행동 안건 → 연명 상소
+  const isPersonnelAgenda = [0, 2, 4].includes(S.agendaIdx);
+  const blockOption = isPersonnelAgenda
+    ? { id:'block', icon:'🚫', name:'서경 거부', desc:`${tt('서경')} 거부로 임명을 막습니다. 공론↑, 왕 신뢰도 크게↓` }
+    : { id:'block', icon:'📜', name:'연명 상소', desc:`${tt('연명 상소')}로 왕에게 집단 이의를 제기합니다. 공론↑, 왕 신뢰도↓` };
 
   const decButtons = [
-    { id: 'pass',  icon: '✅', name: '통과',  desc: `왕의 결정을 그대로 수용합니다. 왕 신뢰도↑, 공론↓` },
-    { id: 'argue', icon: '📢', name: '간쟁',  desc: `${tt('간쟁')}을 올려 왕의 결정에 이의를 제기합니다. 균형을 유지하는 선택.` },
+    { id:'pass',  icon:'✅', name:'통과',  desc:`왕의 결정을 그대로 수용합니다. 왕 신뢰도↑, 공론↓` },
+    { id:'argue', icon:'📢', name:'간쟁',  desc:`${tt('간쟁')}을 올려 왕의 결정에 이의를 제기합니다. 균형을 유지하는 선택.` },
     blockOption,
   ].map(d => `
     <div class="dec-btn ${d.id}${S.decision === d.id ? ' selected' : ''}"
@@ -1017,53 +806,40 @@ function renderGame() {
       </div>
     </div>`).join('');
 
-  const climaxWarning = isClimax ? `
-    <div style="background:rgba(139,26,26,0.07);border:1px solid rgba(139,26,26,0.25);border-radius:3px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--accent);font-family:var(--font-document);line-height:1.9;text-align:center">
-      ⚠️ <strong>최후의 안건입니다.</strong> 앞선 5개 안건의 결과가 이 순간으로 이어졌습니다.<br>
-      언론 삼사의 운명을 결정하는 마지막 선택을 하십시오.
-    </div>` : '';
-
-  // 태블릿에서 2단 레이아웃
   return `
-  ${roundBar(isClimax)}
-  <div class="card${isClimax ? ' climax' : ''}">
+  ${roundBar()}
+  <div class="card">
     <div class="hdr">
-      ${isClimax ? '<div class="climax-badge">⚠ 최후의 안건</div>' : ''}
       <div class="hdr-badge">${S.role.icon}</div>
       <div class="hdr-title">${S.role.title}</div>
       <div class="hdr-sub">안건 ${S.agendaIdx + 1} / ${AGENDAS.length}</div>
     </div>
     <div class="body">
-      ${climaxWarning}
-      <div class="game-layout">
-        <div class="game-left">
-          <div class="agenda-box">
-            <div class="agenda-num">📋 안건 ${S.agendaIdx + 1}</div>
-            <div class="agenda-title">${agenda.title}</div>
-            <div class="agenda-detail">${agenda.detail}</div>
-          </div>
-          <div class="argument-box ${S.role.cls}">
-            <div class="argument-label">⚡ ${S.role.name}의 관점</div>
-            <div class="argument-text">${arg}</div>
-          </div>
-        </div>
-        <div class="game-right">
-          <div style="background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.2);border-radius:3px;padding:10px 14px;font-size:12px;color:var(--text-mid);line-height:1.9">
-            💬 <strong>모둠 토론 시간</strong> — 각자 화면의 논거를 서로 공유하고 합의하세요.<br>
-            <span style="color:var(--gold)">📌 합의가 되면:</span>
-            <strong>대표 1명이 먼저 결정을 입력</strong> →
-            나머지 모둠원도 <strong>같은 결정을 각자 화면에서</strong> 선택하세요.
-          </div>
-          <div>
-            <div class="decision-label">결정을 선택하세요</div>
-            <div class="decision-grid">${decButtons}</div>
-          </div>
-          <button class="btn btn-primary${isClimax ? '' : ''}" ${S.decision ? '' : 'disabled'}
-                  onclick="submitDecision()">
-            ${isClimax ? '⚖️ 최후의 결정 확정 →' : '결정 확정 →'}
-          </button>
-        </div>
+      <div class="agenda-box">
+        <div class="agenda-num">📋 안건 ${S.agendaIdx + 1}</div>
+        <div class="agenda-title">${agenda.title}</div>
+        <div class="agenda-detail">${agenda.detail}</div>
       </div>
+
+      <div class="argument-box ${S.role.cls}">
+        <div class="argument-label">⚡ ${S.role.name}의 관점</div>
+        <div class="argument-text">${arg}</div>
+      </div>
+
+      <div style="background:rgba(201,160,82,0.06);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.9">
+        💬 <strong style="color:var(--text)">모둠 토론 시간</strong> — 각자 화면의 논거를 서로 공유하고 합의하세요.<br>
+        <span style="color:var(--gold)">📌 합의가 되면:</span>
+        <strong style="color:var(--text)">대표 1명이 먼저 결정을 입력</strong> →
+        나머지 모둠원도 <strong style="color:var(--text)">같은 결정을 각자 화면에서 선택</strong>하세요.
+      </div>
+
+      <div class="decision-label">결정을 선택하세요</div>
+      <div class="decision-grid">${decButtons}</div>
+
+      <button class="btn btn-gold" ${S.decision ? '' : 'disabled'}
+              onclick="submitDecision()">
+        결정 확정 →
+      </button>
     </div>
   </div>`;
 }
@@ -1072,20 +848,18 @@ function renderGame() {
 // 결과 화면
 // ══════════════════════════════════════
 function renderResult() {
-  const agenda    = AGENDAS[S.agendaIdx];
-  const dec       = S.decision;
-  const res       = agenda.results[dec];
+  const agenda   = AGENDAS[S.agendaIdx];
+  const dec      = S.decision;
+  const res      = agenda.results[dec];
   const reactions = agenda.reactions[dec];
 
   const newTrust  = Math.max(0, Math.min(100, S.trust  + res.trust));
   const newGonron = Math.max(0, Math.min(100, S.gonron + res.gonron));
 
-  const trustChange  = res.trust  >= 0 ? `+${res.trust}`  : `${res.trust}`;
-  const gonronChange = res.gonron >= 0 ? `+${res.gonron}` : `${res.gonron}`;
-
+  // 내 역할 반응 먼저, 나머지는 접기
   const myReaction = `
-    <div class="reaction-item ${S.role.cls}" style="border-width:3px">
-      <span class="reaction-role">${S.role.icon} ${S.role.name} <span style="font-size:10px;opacity:0.6">(나)</span></span>
+    <div class="reaction-item ${S.role.cls}" style="border-width:2px;margin-bottom:4px">
+      <span class="reaction-role">${S.role.icon} ${S.role.name} <span style="font-size:10px;opacity:0.7">(나)</span></span>
       <span class="reaction-text">${reactions[S.role.id]}</span>
     </div>`;
 
@@ -1095,18 +869,30 @@ function renderResult() {
       <span class="reaction-text">${reactions[r.id]}</span>
     </div>`).join('');
 
+  const reactHtml = `
+    ${myReaction}
+    <details style="margin-top:4px">
+      <summary style="font-size:11px;color:var(--muted);cursor:pointer;padding:6px 4px;list-style:none;display:flex;align-items:center;gap:6px">
+        <span style="color:var(--gold)">▸</span> 다른 역할의 반응 보기
+      </summary>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:6px">${otherReactions}</div>
+    </details>`;
+
+  const trustChange  = res.trust  >= 0 ? `+${res.trust}` : `${res.trust}`;
+  const gonronChange = res.gonron >= 0 ? `+${res.gonron}` : `${res.gonron}`;
+
   return `
-  ${roundBar(agenda.isClimax)}
-  <div class="card${agenda.isClimax ? ' climax' : ''}">
+  ${roundBar()}
+  <div class="card">
     <div class="hdr">
       <div class="hdr-badge">📊</div>
       <div class="hdr-title">안건 ${S.agendaIdx + 1} 결과</div>
       <div class="hdr-sub">${agenda.title}</div>
     </div>
     <div class="body">
-      <div class="result-stamp-wrap">
-        <div class="result-stamp-label">모둠의 선택</div>
-        <div class="result-stamp ${dec} stamp-anim">${decisionLabel(dec, S.agendaIdx)}</div>
+      <div class="result-choice ${dec}">
+        <div class="result-choice-label">모둠의 선택</div>
+        <div class="result-choice-name">${decisionLabel(dec, S.agendaIdx)}</div>
       </div>
 
       <div class="gauge-wrap">
@@ -1131,17 +917,9 @@ function renderResult() {
       <div class="history-box">${res.history}</div>
 
       <div style="font-size:11px;color:var(--gold);letter-spacing:0.1em;margin-bottom:8px;font-weight:700">💬 역할별 반응</div>
-      <div class="reactions">
-        ${myReaction}
-        <details style="margin-top:4px">
-          <summary style="font-size:11px;color:var(--muted);cursor:pointer;padding:6px 4px;list-style:none;display:flex;align-items:center;gap:6px">
-            <span style="color:var(--gold)">▸</span> 다른 역할의 반응 보기
-          </summary>
-          <div style="margin-top:6px;display:flex;flex-direction:column;gap:6px">${otherReactions}</div>
-        </details>
-      </div>
+      <div class="reactions">${reactHtml}</div>
 
-      <button class="btn btn-primary" onclick="nextAgenda()">
+      <button class="btn btn-gold" onclick="nextAgenda()">
         ${S.agendaIdx + 1 < AGENDAS.length ? '다음 안건으로 →' : '최종 결과 확인 →'}
       </button>
     </div>
@@ -1149,38 +927,30 @@ function renderResult() {
 }
 
 // ══════════════════════════════════════
-// 중간 결산
+// 비트윈 (라운드 사이 요약 — 3안건 후)
 // ══════════════════════════════════════
 function renderBetween() {
-  const warnTrust  = S.trust < 30;
-  const warnGonron = S.gonron < 30;
+  const warningTrust  = S.trust < 30;
+  const warningGonron = S.gonron < 30;
 
-  const histHtml = S.history.map((h, i) => {
+  const histHtml = S.history.map((h,i) => {
     const ag = AGENDAS[h.agendaId];
-    const tch = h.trustChange  >= 0 ? `+${h.trustChange}`  : `${h.trustChange}`;
+    const tch = h.trustChange >= 0 ? `+${h.trustChange}` : `${h.trustChange}`;
     const gch = h.gonronChange >= 0 ? `+${h.gonronChange}` : `${h.gonronChange}`;
     return `<tr>
-      <td>${i + 1}. ${ag.title.substring(0, 18)}…</td>
+      <td>${i+1}. ${ag.title.substring(0,18)}…</td>
       <td class="${h.decision}">${decisionLabel(h.decision, h.agendaId)}</td>
-      <td style="color:${h.trustChange  >= 0 ? 'var(--hong)' : 'var(--heon)'}">${tch}</td>
-      <td style="color:${h.gonronChange >= 0 ? 'var(--hong)' : 'var(--heon)'}">${gch}</td>
+      <td style="color:${h.trustChange>=0?'#2ecc71':'#e74c3c'}">${tch}</td>
+      <td style="color:${h.gonronChange>=0?'#2ecc71':'#e74c3c'}">${gch}</td>
     </tr>`;
   }).join('');
-
-  const diagText = (() => {
-    const t = S.trust, g = S.gonron;
-    if (t >= 50 && g >= 50) return `<span style="color:var(--hong)">균형이 잘 유지되고 있습니다. 후반에도 같은 방향으로 가되, 너무 한쪽으로 치우치지 않도록 주의하세요.</span>`;
-    if (t >= 50 && g < 50)  return `<span style="color:var(--heon)">공론이 너무 낮습니다. 후반엔 간쟁이나 연명 상소로 공론을 회복해야 합니다.</span>`;
-    if (t < 50  && g >= 50) return `<span style="color:var(--gan)">왕 신뢰도가 낮습니다. 후반 안건 중 한두 개는 통과를 선택해 왕의 분노를 누그러뜨릴 필요가 있습니다.</span>`;
-    return `<span style="color:var(--heon)">왕 신뢰도와 공론 모두 위험합니다. 후반에는 안건을 신중하게 골라 균형을 회복하는 것이 최선입니다.</span>`;
-  })();
 
   return `
   <div class="card">
     <div class="hdr">
       <div class="hdr-badge">📋</div>
       <div class="hdr-title">전반 3안건 결산</div>
-      <div class="hdr-sub">후반 3안건이 남았습니다 — 안건 6이 마지막입니다</div>
+      <div class="hdr-sub">후반 3안건이 남았습니다</div>
     </div>
     <div class="body">
       <table class="summary-table">
@@ -1191,25 +961,31 @@ function renderBetween() {
         <div class="gauge-row gauge-trust">
           <div class="gauge-label">
             <span class="gauge-name">👑 왕 신뢰도</span>
-            <span class="gauge-val">${S.trust}${warnTrust ? ' ⚠' : ''}</span>
+            <span class="gauge-val ${warningTrust ? 'urgent' : ''}">${S.trust}${warningTrust ? ' ⚠' : ''}</span>
           </div>
           <div class="gauge-bar"><div class="gauge-fill" style="width:${S.trust}%"></div></div>
         </div>
         <div class="gauge-row gauge-gonron">
           <div class="gauge-label">
             <span class="gauge-name">🌿 공론 지지도</span>
-            <span class="gauge-val">${S.gonron}${warnGonron ? ' ⚠' : ''}</span>
+            <span class="gauge-val ${warningGonron ? 'urgent' : ''}">${S.gonron}${warningGonron ? ' ⚠' : ''}</span>
           </div>
           <div class="gauge-bar"><div class="gauge-fill" style="width:${S.gonron}%"></div></div>
         </div>
       </div>
-      ${warnTrust ? `<div style="font-size:12px;color:var(--heon);text-align:center;margin-bottom:10px;padding:8px;background:var(--heon-bg);border-radius:3px;">⚠ 왕 신뢰도가 위험합니다. 후반 안건에서 왕의 역공이 거세질 수 있습니다.</div>` : ''}
-      ${warnGonron ? `<div style="font-size:12px;color:var(--heon);text-align:center;margin-bottom:10px;padding:8px;background:var(--heon-bg);border-radius:3px;">⚠ 공론 지지도가 낮습니다. 언관의 목소리가 힘을 잃고 있습니다.</div>` : ''}
-      <div class="info-box" style="margin-bottom:16px">
-        <div class="info-box-label">🧭 현재 상태 진단</div>
-        <div style="font-size:12px;line-height:1.9">${diagText}</div>
+      ${warningTrust ? '<div style="font-size:12px;color:#e74c3c;text-align:center;margin-bottom:10px;padding:8px;background:rgba(231,76,60,0.1);border-radius:3px;">⚠ 왕 신뢰도가 위험합니다. 후반 안건에서 왕의 역공이 거세질 수 있습니다.</div>' : ''}
+      ${warningGonron ? '<div style="font-size:12px;color:#e74c3c;text-align:center;margin-bottom:10px;padding:8px;background:rgba(231,76,60,0.1);border-radius:3px;">⚠ 공론 지지도가 낮습니다. 언관의 목소리가 힘을 잃고 있습니다.</div>' : ''}
+      <div style="background:rgba(201,160,82,0.06);border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:16px;font-size:12px;line-height:1.9">
+        <div style="font-size:10px;letter-spacing:0.15em;color:var(--gold);font-weight:700;margin-bottom:8px">🧭 현재 상태 진단</div>
+        ${(() => {
+          const t = S.trust, g = S.gonron;
+          if (t >= 50 && g >= 50) return '<span style="color:#60c880">균형이 잘 유지되고 있습니다. 후반에도 같은 방향으로 가되, 너무 한쪽으로 치우치지 않도록 주의하세요.</span>';
+          if (t >= 50 && g < 50)  return '<span style="color:#e87060">공론이 너무 낮습니다. 후반엔 간쟁이나 연명 상소로 공론을 회복해야 균형을 찾을 수 있습니다.</span>';
+          if (t < 50  && g >= 50) return '<span style="color:#60a8e8">왕 신뢰도가 낮습니다. 후반 안건 중 한두 개는 통과를 선택해 왕의 분노를 누그러뜨릴 필요가 있습니다.</span>';
+          return '<span style="color:#e74c3c">왕 신뢰도와 공론 모두 위험합니다. 후반에는 안건을 신중하게 골라 균형을 회복하는 것이 최선입니다.</span>';
+        })()}
       </div>
-      <button class="btn btn-primary" onclick="continueToBetween()">후반 안건 시작 →</button>
+      <button class="btn btn-gold" onclick="continueToBetween()">후반 안건 시작 →</button>
     </div>
   </div>`;
 }
@@ -1219,37 +995,39 @@ function renderBetween() {
 // ══════════════════════════════════════
 function renderFinal() {
   const t = S.trust, g = S.gonron;
-  let icon, title, color, sub, historyCue;
+  let icon, title, color, sub;
 
   if (t >= 50 && g >= 50) {
-    icon = '⚖️'; title = '완벽한 균형'; color = 'var(--gold)';
-    sub = '왕권과 공론 사이에서 균형을 지켰습니다. 언론 삼사가 제 기능을 했을 때 조선의 정치가 이런 모습이었습니다. 중종 초반 조광조 시대가 지향했던 이상에 가장 가깝습니다.';
-    historyCue = '중종 초반(1515~1519) 조광조가 이상적 균형을 추구했으나 4년 만에 기묘사화로 무너졌습니다. 균형이 얼마나 유지하기 어려운지 보여주는 사례입니다.';
+    icon='⚖️'; title='완벽한 균형'; color='var(--gold2)';
+    sub='왕권과 공론 사이에서 균형을 지켰습니다. 언론 삼사가 제 기능을 했을 때 조선의 정치가 이런 모습이었습니다. 중종 초반 조광조 시대가 지향했던 이상에 가장 가깝습니다.';
+    historyCue='📜 실제 역사 — 중종 초반(1515~1519) 조광조가 이상적 균형을 추구했으나 4년 만에 기묘사화로 무너졌습니다. 균형이 얼마나 유지하기 어려운지 보여주는 사례입니다.';
   } else if (t >= 50 && g < 50) {
-    icon = '👑'; title = '왕의 도구가 되다'; color = 'var(--heon)';
-    sub = '공론이 무너지고 왕의 뜻만 남았습니다. 언관이 왕의 도구로 전락한 상태입니다. 삼사가 존재해도 제 기능을 못 하는 연산군 말기의 모습과 닮았습니다.';
-    historyCue = '연산군(재위 1494~1506)은 언관들이 굴복하자 삼사를 사실상 무력화했습니다. 제 기능을 못하는 삼사는 있으나 마나였습니다.';
+    icon='👑'; title='왕의 도구가 되다'; color='#e87060';
+    sub='공론이 무너지고 왕의 뜻만 남았습니다. 언관이 왕의 도구로 전락한 상태입니다. 삼사가 존재해도 제 기능을 못 하는 연산군 말기의 모습과 닮았습니다.';
+    historyCue='📜 실제 역사 — 연산군(재위 1494~1506)은 언관들이 굴복하자 삼사를 사실상 무력화했습니다. 제 기능을 못하는 삼사는 있으나 마나였습니다.';
   } else if (t < 50 && g >= 50) {
-    icon = '🌿'; title = '공론의 수호자'; color = 'var(--hong)';
-    sub = '왕의 신뢰를 잃었지만 공론을 지켰습니다. 조광조가 걸었던 길입니다. 공론이 강할수록 왕권의 역공도 거세졌습니다. 험하지만 역사는 이들을 기억합니다.';
-    historyCue = '기묘사화(1519) 직전 조광조 세력의 선택과 가장 닮았습니다. 공론을 지키려 했지만 훈구의 역공으로 조광조는 사사되었습니다.';
+    icon='🌿'; title='공론의 수호자'; color='#60c880';
+    sub='왕의 신뢰를 잃었지만 공론을 지켰습니다. 조광조가 걸었던 길입니다. 공론이 강할수록 왕권의 역공도 거세졌습니다. 험하지만 역사는 이들을 기억합니다.';
+    historyCue='📜 실제 역사 — 기묘사화(1519) 직전 조광조 세력의 선택과 가장 닮았습니다. 공론을 지키려 했지만 훈구의 역공으로 조광조는 사사되었습니다.';
   } else {
-    icon = '💥'; title = '모든 것을 잃다'; color = 'var(--accent)';
-    sub = '왕의 신뢰도 잃고 공론도 사라졌습니다. 언관이 방향을 잃으면 왕권도 신권도 모두 무너집니다. 훈구와 왕 모두에게 외면받은 최악의 상황입니다.';
-    historyCue = '무오사화(1498) 이후 언관들이 방향을 잃고 왕권과 훈구 사이에서 갈팡질팡했을 때 조선 정치가 가장 혼란스러웠습니다.';
+    icon='💥'; title='모든 것을 잃다'; color='#e74c3c';
+    sub='왕의 신뢰도 잃고 공론도 사라졌습니다. 언관이 방향을 잃으면 왕권도 신권도 모두 무너집니다. 훈구와 왕 모두에게 외면받은 최악의 상황입니다.';
+    historyCue='📜 실제 역사 — 무오사화(1498) 이후 언관들이 방향을 잃고 왕권과 훈구 사이에서 갈팡질팡했을 때 조선 정치가 가장 혼란스러웠습니다.';
   }
 
-  const histHtml = S.history.map((h, i) => {
+  const histHtml = S.history.map((h,i) => {
     const ag = AGENDAS[h.agendaId];
-    const tch = h.trustChange  >= 0 ? `+${h.trustChange}`  : `${h.trustChange}`;
+    const tch = h.trustChange >= 0 ? `+${h.trustChange}` : `${h.trustChange}`;
     const gch = h.gonronChange >= 0 ? `+${h.gonronChange}` : `${h.gonronChange}`;
     return `<tr>
-      <td>${i + 1}. ${ag.title.substring(0, 16)}…</td>
+      <td>${i+1}. ${ag.title.substring(0,16)}…</td>
       <td class="${h.decision}">${decisionLabel(h.decision, h.agendaId)}</td>
-      <td style="color:${h.trustChange  >= 0 ? 'var(--hong)' : 'var(--heon)'}">${tch}</td>
-      <td style="color:${h.gonronChange >= 0 ? 'var(--hong)' : 'var(--heon)'}">${gch}</td>
+      <td style="color:${h.trustChange>=0?'#2ecc71':'#e74c3c'}">${tch}</td>
+      <td style="color:${h.gonronChange>=0?'#2ecc71':'#e74c3c'}">${gch}</td>
     </tr>`;
   }).join('');
+
+  const roleCls = S.role?.cls || 'heon';
 
   return `
   <div class="card">
@@ -1265,8 +1043,10 @@ function renderFinal() {
         <div class="final-sub">${sub}</div>
         <div class="final-score">👑 왕 신뢰도 ${t} · 🌿 공론 지지도 ${g}</div>
       </div>
-      <div class="history-box" style="margin-bottom:16px">${historyCue}</div>
-      <div class="role-badge ${S.role?.cls || 'heon'}">${S.role.icon} ${josa(S.role.title, '으로/로')} 플레이</div>
+      <div style="background:rgba(201,160,82,0.07);border:1px dashed rgba(201,160,82,0.35);border-radius:4px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--text);line-height:1.8">
+        ${historyCue}
+      </div>
+      <div class="role-badge ${roleCls}">${S.role.icon} ${S.role.title}로 플레이</div>
       <table class="summary-table">
         <thead><tr><th>안건</th><th>선택</th><th>👑</th><th>🌿</th></tr></thead>
         <tbody>${histHtml}</tbody>
@@ -1281,9 +1061,11 @@ function renderFinal() {
           <div class="gauge-bar"><div class="gauge-fill" style="width:${g}%"></div></div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="copyResult()" style="margin-bottom:8px">📋 결과 복사하기 (패들렛 공유용)</button>
+      <button class="btn btn-gold" onclick="copyResult()" style="margin-bottom:8px">
+        📋 결과 복사하기 (패들렛 공유용)
+      </button>
       <button class="btn btn-outline" onclick="restart()">다시 플레이하기</button>
-      <div style="text-align:center;margin-top:24px;font-size:11px;color:rgba(139,115,85,0.4);letter-spacing:0.05em">
+      <div style="text-align:center;margin-top:20px;font-size:11px;color:rgba(201,160,82,0.35);letter-spacing:0.05em">
         © 찰리쌤 · hischarlie.tistory.com
       </div>
     </div>
@@ -1293,15 +1075,93 @@ function renderFinal() {
 // ══════════════════════════════════════
 // 이벤트
 // ══════════════════════════════════════
-function goRole()      { S.phase = 'role'; R(); }
-function selectRole(id) { S.role = ROLES.find(r => r.id === id); R(); }
-function startGame()   { if (!S.role) return; S.phase = 'roleconfirm'; R(); }
+function goRole()  { S.phase = 'role'; R(); }
+
+function selectRole(id) {
+  S.role = ROLES.find(r => r.id === id);
+  R();
+}
+
+function startGame() {
+  if (!S.role) return;
+  S.phase = 'roleconfirm';
+  R();
+}
+
 function confirmRole() {
   S.agendaIdx = 0; S.decision = null;
   S.trust = 60; S.gonron = 60; S.history = [];
-  S.phase = 'game'; R();
+  S.phase = 'game';
+  R();
 }
-function selectDecision(d) { S.decision = d; R(); }
+
+// ══════════════════════════════════════
+// 역할 확인 (중간 단계)
+// ══════════════════════════════════════
+function renderRoleConfirm() {
+  const r = S.role;
+  const colorMap = { heon:'#e87060', gan:'#60a8e8', hong:'#60c880', jang:'#d4a830' };
+  const color = colorMap[r.cls];
+
+  const tipRows = {
+    heon: [
+      { label:'주요 권한', val:'관리 비리 감찰 · 탄핵 요청 · 서경 심사' },
+      { label:'서경 거부', val:'사간원과 함께 부당한 임명을 막는 최강 수단' },
+      { label:'성향', val:'원칙·보수적 — 전례와 법도를 근거로 판단' },
+    ],
+    gan: [
+      { label:'주요 권한', val:'왕에게 직접 간쟁 · 왕명 논박 · 서경 심사' },
+      { label:'간쟁', val:'왕의 잘못된 명령에 직언으로 맞서는 것' },
+      { label:'성향', val:'논쟁적·직설적 — 왕에게도 물러서지 않는다' },
+    ],
+    hong: [
+      { label:'주요 권한', val:'경연 주관 · 학문 자문 · 정책 비판' },
+      { label:'경연', val:'왕과 신하가 함께 유교 경전·정사를 논하는 자리' },
+      { label:'성향', val:'이론·명분 중시 — 성리학적 근거로 설득' },
+    ],
+    jang: [
+      { label:'주요 권한', val:'이조 낭관직 후임 추천 · 3사 언관 인사 영향력' },
+      { label:'핵심 전략', val:'계파 이해관계를 계산해 실리를 취하는 것' },
+      { label:'성향', val:'실리·전략적 — 힘의 균형을 계산한다' },
+    ],
+  };
+
+  const rows = tipRows[r.cls].map(row => `
+    <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+      <span style="font-size:11px;color:var(--muted);min-width:70px;flex-shrink:0">${row.label}</span>
+      <span style="font-size:12px;color:var(--text);line-height:1.6">${row.val}</span>
+    </div>`).join('');
+
+  return `
+  <div class="card">
+    <div class="hdr">
+      <div class="hdr-badge" style="border-color:${color}">${r.icon}</div>
+      <div class="hdr-title" style="color:${color}">${r.name}</div>
+      <div class="hdr-sub">내 역할을 확인하세요</div>
+    </div>
+    <div class="body">
+      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-left:3px solid ${color};border-radius:0 4px 4px 0;padding:14px 16px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:${color};margin-bottom:4px">${r.title}</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8">${r.desc}</div>
+      </div>
+      <div style="margin-bottom:18px">${rows}</div>
+      <div style="background:rgba(201,160,82,0.06);border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.8">
+        💡 <strong style="color:var(--text)">게임 핵심:</strong>
+        안건마다 내 역할의 관점이 다르게 나옵니다.<br>
+        모둠원과 서로 논거를 공유하고, <strong style="color:var(--gold)">대표 1명이 결정을 입력</strong>하면<br>
+        나머지 모둠원도 <strong style="color:var(--gold)">같은 결정을 각자 화면에서</strong> 선택하세요.
+      </div>
+      <button class="btn btn-gold" onclick="confirmRole()">
+        ${r.icon} ${r.name}으로 게임 시작 →
+      </button>
+      <button class="btn btn-outline" style="margin-top:8px" onclick="goRole()">← 역할 다시 선택</button>
+    </div>
+  </div>`;
+}
+
+function selectDecision(d) {
+  S.decision = d; R();
+}
 
 function submitDecision() {
   if (!S.decision) return;
@@ -1310,18 +1170,22 @@ function submitDecision() {
   S.trust  = Math.max(0, Math.min(100, S.trust  + res.trust));
   S.gonron = Math.max(0, Math.min(100, S.gonron + res.gonron));
   S.history.push({
-    agendaId:     S.agendaIdx,
-    decision:     S.decision,
-    trustChange:  res.trust,
+    agendaId:    S.agendaIdx,
+    decision:    S.decision,
+    trustChange: res.trust,
     gonronChange: res.gonron,
   });
-  S.phase = 'result'; R();
+  S.phase = 'result';
+  R();
 }
 
 function nextAgenda() {
+  // 3안건 후 중간 결산
   if (S.agendaIdx === 2) {
     S.agendaIdx++;
-    S.phase = 'between'; R(); return;
+    S.phase = 'between';
+    R();
+    return;
   }
   S.agendaIdx++;
   if (S.agendaIdx >= AGENDAS.length) {
@@ -1333,19 +1197,21 @@ function nextAgenda() {
   R();
 }
 
-function continueToBetween() { S.decision = null; S.phase = 'game'; R(); }
+function continueToBetween() {
+  S.decision = null;
+  S.phase = 'game';
+  R();
+}
 
 function copyResult() {
   const lines = [
-    `⚖️ 3사 청문회 — ${josa(S.role.title, '으로/로')} 플레이`,
+    `⚖️ 3사 청문회 — ${S.role.title}로 플레이`,
     `👑 왕 신뢰도: ${S.trust} / 🌿 공론 지지도: ${S.gonron}`,
     '',
-    ...S.history.map((h, i) => {
+    ...S.history.map((h,i) => {
       const ag = AGENDAS[h.agendaId];
-      return `${i + 1}. ${ag.title} → ${decisionLabel(h.decision, h.agendaId)} (👑${h.trustChange >= 0 ? '+' : ''}${h.trustChange} / 🌿${h.gonronChange >= 0 ? '+' : ''}${h.gonronChange})`;
+      return `${i+1}. ${ag.title} → ${decisionLabel(h.decision, h.agendaId)} (👑${h.trustChange>=0?'+':''}${h.trustChange} / 🌿${h.gonronChange>=0?'+':''}${h.gonronChange})`;
     }),
-    '',
-    `— 찰리쌤의 한국사 게임실 · hischarlie.tistory.com`,
   ];
   const text = lines.join('\n');
   if (navigator.clipboard && window.isSecureContext) {
@@ -1361,7 +1227,7 @@ function copyResult() {
 }
 
 function restart() {
-  S = { phase: 'intro', role: null, agendaIdx: 0, decision: null, trust: 60, gonron: 60, history: [] };
+  S = { phase:'intro', role:null, agendaIdx:0, decision:null, trust:60, gonron:60, history:[], timerVal:120, timerRunning:false, timerHandle:null };
   R();
 }
 
