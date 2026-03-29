@@ -1,1 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이조 전랑 자리를 차지하라 — 붕당의 탄생 1575</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── 조선시대 디자인 토큰 (스킬 §1) ── */
+:root {
+  --bg:        #f5f0e8;
+  --surface:   #ede5d8;
+  --surface2:  #e4dac8;
+  --surface3:  #ddd0b8;
+  --primary:   #1a3a5c;
+  --primary2:  #24507a;
+  --accent:    #8b1a1a;
+  --accent2:   #a83028;
+  --text:      #1c1410;
+  --text-mid:  #4a3c2c;
+  --muted:     #8a7a68;
+  --border:    #8b7355;
+  --border2:   rgba(139,115,85,0.3);
+  --gold:      #b8860b;
+  --gold2:     #d4a820;
+  --line:      rgba(139,115,85,0.2);
+  --green:     #2a6040;
+  --green-bg:  #e8f0e4;
 
+  --fs: 'Noto Serif KR', serif;
+  --fb: 'Noto Sans KR', sans-serif;
+  --fd: 'Gowun Batang', serif;
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  background: var(--bg);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  color: var(--text);
+  font-family: var(--fb);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 16px 12px 60px;
+}
+
+#app { width:100%; max-width:580px; }
+
+/* ── TOAST ── */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--primary); color:#e8dcc8;
+  border-radius:2px; padding:10px 22px;
+  font-size:13px; font-family:var(--fb);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+  z-index:9999; white-space:nowrap;
+}
+#toast.show { opacity:1; }
+
+/* ── PROGRESS STEPS ── */
+.steps {
+  display:flex; margin-bottom:14px; gap:0;
+  background:var(--surface); border:1px solid var(--border2);
+}
+.step {
+  flex:1; padding:8px 4px; text-align:center;
+  font-size:10px; font-family:var(--fb); color:var(--muted);
+  letter-spacing:.04em; border-right:1px solid var(--border2);
+  transition:all .3s;
+}
+.step:last-child { border-right:none; }
+.step.done { background:var(--surface2); color:var(--text-mid); }
+.step.active { background:var(--primary); color:#e8dcc8; font-weight:700; }
+
+/* ── CARD SHELL ── */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:3px solid var(--primary);
+  animation: fadeUp .35s ease;
+  overflow:hidden;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── CARD HEADER ── */
+.card-hdr {
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--line);
+}
+.card-era {
+  font-size:10px; letter-spacing:.22em;
+  color:var(--accent); font-family:var(--fb); margin-bottom:6px;
+}
+.card-title {
+  font-family:var(--fs); font-size:20px; font-weight:700;
+  color:var(--primary); line-height:1.35;
+}
+.card-sub {
+  font-size:12px; color:var(--muted);
+  font-family:var(--fb); margin-top:5px; letter-spacing:.04em;
+}
+
+/* ── BODY ── */
+.card-body { padding:20px 22px 26px; }
+
+/* ── SITUATION BOX ── */
+.sit-box {
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--accent);
+  padding:14px 16px; margin-bottom:18px;
+}
+.sit-label {
+  font-size:9px; letter-spacing:.22em; font-family:var(--fb);
+  color:var(--accent); margin-bottom:8px;
+}
+.sit-text {
+  font-family:var(--fd); font-size:14px;
+  color:var(--text); line-height:2.1;
+}
+.sit-text strong { color:var(--primary); font-weight:700; }
+
+/* ── CHARACTER CARDS ── */
+.char-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+.sel-counter {
+  font-size:12px; font-family:var(--fb);
+  color:var(--muted); margin-bottom:10px;
+}
+.sel-counter strong { color:var(--accent); font-size:15px; font-family:var(--fs); }
+
+.char-card {
+  background:var(--bg);
+  border:1.5px solid var(--border2);
+  border-left:4px solid transparent;
+  padding:13px 15px;
+  cursor:pointer;
+  display:flex; align-items:flex-start; gap:14px;
+  transition:all .18s; position:relative;
+}
+.char-card:hover:not(.disabled) {
+  border-left-color:var(--primary);
+  background:var(--surface2);
+  transform:translateX(3px);
+}
+.char-card:active:not(.disabled) { transform:translateX(2px) scale(0.99); }
+.char-card.selected {
+  border-left-color:var(--accent);
+  background:#f0e8dc;
+  box-shadow:0 0 0 1px var(--accent);
+}
+.char-card.selected::after {
+  content:'✓'; position:absolute; top:10px; right:12px;
+  font-size:14px; color:var(--accent); font-weight:700;
+  font-family:var(--fs);
+}
+.char-card.disabled { opacity:.38; cursor:not-allowed; }
+
+.char-badge {
+  width:38px; height:38px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px;
+  background:var(--surface2); border:2px solid var(--border2);
+}
+
+.char-info { flex:1; }
+.char-name {
+  font-family:var(--fs); font-size:16px; font-weight:700;
+  color:var(--text); margin-bottom:2px;
+}
+.char-hanja { font-size:12px; color:var(--muted); font-weight:400; }
+.char-desc {
+  font-size:12px; color:var(--text-mid);
+  font-family:var(--fb); font-weight:300; line-height:1.65;
+}
+
+/* ── SAMSA RESULT ── */
+.samsa-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.samsa-row {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 14px; background:var(--bg);
+  border:1px solid var(--border2);
+}
+.samsa-pos {
+  font-size:11px; font-family:var(--fb); color:var(--muted);
+  letter-spacing:.06em; flex-shrink:0; width:96px;
+}
+.samsa-name {
+  font-family:var(--fs); font-size:14px; font-weight:600;
+  color:var(--text); flex:1;
+}
+.samsa-type {
+  font-size:10px; padding:2px 8px; border-radius:10px;
+  font-family:var(--fb); font-weight:700; flex-shrink:0;
+}
+
+/* ── REACTION BOX ── */
+.reaction {
+  background:var(--surface2);
+  border:1px dashed var(--border);
+  border-left:3px solid var(--gold);
+  padding:12px 14px; margin-bottom:14px;
+  animation: slideDown .3s ease;
+}
+@keyframes slideDown {
+  from { opacity:0; transform:translateY(-5px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.react-label {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fb);
+  color:var(--gold); margin-bottom:5px;
+}
+.react-text {
+  font-size:13px; color:var(--text-mid);
+  font-family:var(--fd); line-height:1.9;
+}
+
+/* ── CHOICE BUTTONS (안건) ── */
+.choice-stack { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+
+.choice-btn {
+  background:var(--bg);
+  border:1.5px solid var(--border2);
+  border-left:3px solid transparent;
+  padding:15px 16px;
+  cursor:pointer; text-align:left; width:100%;
+  transition:all .18s; font-family:var(--fb);
+}
+.choice-btn:hover:not(.answered) {
+  border-left-color:var(--primary);
+  background:var(--surface2);
+  transform:translateX(4px);
+}
+.choice-btn:active:not(.answered) { transform:translateX(2px) scale(0.99); }
+.choice-btn.picked {
+  border-left-color:var(--accent);
+  background:#f0e8dc; pointer-events:none;
+}
+.choice-btn.faded { opacity:.3; pointer-events:none; }
+.choice-main {
+  font-size:15px; color:var(--text); line-height:1.5; margin-bottom:4px;
+}
+.choice-quote {
+  font-size:12px; color:var(--muted); font-style:italic;
+  font-family:var(--fd); line-height:1.7;
+}
+
+/* ── FEEDBACK ── */
+.feedback {
+  background:var(--surface2);
+  border:1px dashed var(--border);
+  border-left:3px solid var(--primary);
+  padding:12px 14px; margin-bottom:14px;
+  animation: slideDown .3s ease;
+}
+.fb-label {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fb);
+  color:var(--primary); margin-bottom:5px;
+}
+.fb-text {
+  font-size:13px; color:var(--text-mid);
+  font-family:var(--fd); line-height:1.9;
+}
+
+/* ── CANDIDATE CARDS (r3) ── */
+.cand-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.cand-card {
+  background:var(--bg);
+  border:1.5px solid var(--border2);
+  border-left:4px solid transparent;
+  padding:14px 16px;
+  cursor:pointer; transition:all .18s;
+}
+.cand-card:hover:not(.answered) {
+  border-left-color:var(--primary);
+  background:var(--surface2);
+  transform:translateX(4px);
+}
+.cand-card:active:not(.answered) { transform:translateX(2px) scale(0.99); }
+.cand-card.picked {
+  border-left-color:var(--accent);
+  background:#f0e8dc; pointer-events:none;
+}
+.cand-card.faded { opacity:.3; pointer-events:none; }
+.cand-name {
+  font-family:var(--fs); font-size:16px; font-weight:700;
+  color:var(--text); margin-bottom:4px;
+}
+.cand-desc {
+  font-size:13px; color:var(--text-mid);
+  font-family:var(--fb); font-weight:300; line-height:1.65;
+}
+.cand-effect {
+  font-size:11px; color:var(--muted);
+  font-family:var(--fb); margin-top:6px; font-style:italic;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  width:100%; padding:14px; border:none;
+  font-family:var(--fs); font-size:14px; font-weight:700;
+  cursor:pointer; transition:all .18s; letter-spacing:.04em;
+  display:block;
+}
+.btn + .btn { margin-top:8px; }
+.btn-primary {
+  background:var(--primary); color:#e8dcc8;
+  border:1.5px solid var(--primary2);
+}
+.btn-primary:hover:not(:disabled) {
+  background:var(--primary2); transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(26,58,92,.25);
+}
+.btn-primary:active { transform:translateY(0) scale(0.97); }
+.btn-primary:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+.btn-accent {
+  background:var(--accent); color:#f0e8e4;
+  border:1.5px solid var(--accent2);
+}
+.btn-accent:hover { background:var(--accent2); transform:translateY(-1px); }
+.btn-accent:active { transform:translateY(0) scale(0.97); }
+.btn-outline {
+  background:transparent; color:var(--muted);
+  border:1.5px solid var(--border2);
+}
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+.btn-outline:active { transform:scale(0.97); }
+
+/* ── FINAL ── */
+.final-banner {
+  text-align:center; padding:24px 20px 18px;
+  border-bottom:1px solid var(--line); margin-bottom:20px;
+}
+.final-icon  { font-size:54px; margin-bottom:12px; }
+.final-title {
+  font-family:var(--fs); font-size:21px; font-weight:700;
+  color:var(--primary); margin-bottom:6px;
+}
+.final-sub {
+  font-size:13px; color:var(--muted);
+  font-family:var(--fb); line-height:1.75;
+}
+
+.summary-box {
+  background:var(--bg); border:1px solid var(--border2);
+  border-left:3px solid var(--primary);
+  padding:12px 14px; margin-bottom:14px;
+}
+.sum-label {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fb);
+  color:var(--primary); margin-bottom:8px;
+}
+.sum-row {
+  display:flex; gap:8px; align-items:flex-start;
+  padding:5px 0; border-top:1px solid var(--line);
+}
+.sum-row:first-of-type { border-top:none; }
+.sum-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.sum-text {
+  font-size:12px; color:var(--text-mid);
+  font-family:var(--fb); line-height:1.7;
+}
+.sum-text strong { color:var(--text); font-weight:700; }
+
+.hist-note {
+  background:var(--bg); border:1px dashed var(--border);
+  border-left:3px solid var(--gold);
+  padding:12px 14px; margin-bottom:16px;
+}
+.hn-label {
+  font-size:9px; letter-spacing:.2em; font-family:var(--fb);
+  color:var(--gold); margin-bottom:6px;
+}
+.hn-text {
+  font-size:12px; color:var(--text-mid);
+  font-family:var(--fd); line-height:2;
+}
+
+.game-footer-copy {
+  text-align:center; padding:14px 0 2px;
+  font-size:11px; font-family:var(--fb);
+  color:rgba(120,100,80,.4);
+}
+
+/* ── TOOLTIP ── */
+.tt {
+  border-bottom:1.5px dashed var(--gold);
+  cursor:pointer; white-space:nowrap; color:inherit;
+  transition:border-color .15s;
+}
+.tt:hover { border-bottom-color:var(--accent); }
+
+#tt-bubble {
+  position:fixed; z-index:9000; max-width:240px;
+  background:var(--primary);
+  border:1px solid rgba(26,58,92,.8);
+  border-radius:3px; padding:10px 13px;
+  box-shadow:0 6px 24px rgba(0,0,0,.25);
+  pointer-events:none; opacity:0;
+  transform:translateY(4px);
+  transition:opacity .18s, transform .18s;
+}
+#tt-bubble.show { opacity:1; transform:translateY(0); }
+#tt-bubble .tb-word {
+  font-size:12px; font-weight:700;
+  color:#f0e8c8; margin-bottom:5px; font-family:var(--fb);
+}
+#tt-bubble .tb-desc {
+  font-size:11px; color:rgba(240,228,192,.85);
+  line-height:1.7; font-family:var(--fb); font-weight:300;
+}
+
+/* misc */
+hr.div {
+  border:none; height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent);
+  margin:16px 0;
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+<script>
+
+// ═══ TIPS ═══
+const TIPS = {
+  '이조전랑': '이조전랑(吏曹佐郞) — 인사 담당 기관 이조의 정5품 관직. 삼사 하급직 인사권과 후임 자천권을 쥔 요직이었다.',
+  '삼사':     '삼사(三司) — 사헌부·사간원·홍문관. 관리 감찰·왕 간언·학문 자문을 담당한 조선의 언론 기관.',
+  '사헌부':   '사헌부(司憲府) — 관리의 비리를 감찰하고 탄핵하는 기관.',
+  '사간원':   '사간원(司諫院) — 왕의 잘못된 결정을 간언하는 기관.',
+  '홍문관':   '홍문관(弘文館) — 왕의 학문적 자문을 맡은 기관. 경연을 주관했다.',
+  '자천권':   '자천권(自薦權) — 이조전랑이 후임자를 스스로 추천하는 권한. 붕당 형성의 핵심 기제.',
+  '척신':     '척신(戚臣) — 왕실과 혼인으로 연결된 외척 신하. 명종 때 윤원형이 대표적 척신이었다.',
+  '사림':     '사림(士林) — 지방에서 성리학을 연구한 사대부 집단. 훈구파와 대립하며 조정을 개혁하려 했다.',
+  '공론':     '공론(公論) — 개인의 사사로운 이익이 아닌 공적 여론. 삼사가 이를 형성하고 대변했다.',
+  '외척':     '외척(外戚) — 왕의 어머니나 왕비 쪽 친족. 심의겸은 인순왕후의 동생으로 외척이었다.',
+  '언관':     '언관(言官) — 삼사에서 간쟁·탄핵을 담당하는 관리.',
+  '동인':     '동인(東人) — 1575년 분당 후 동쪽(김효원의 거처 낙산 방향)에서 이름을 딴 붕당.',
+  '서인':     '서인(西人) — 1575년 분당 후 서쪽(심의겸의 거처 방향)에서 이름을 딴 붕당.',
+  '서경':     '서경(署經) — 새 관리 임명 시 삼사가 동의 서명하는 제도.',
+  '윤원형':   '윤원형(尹元衡) — 명종 때의 대표적 척신. 을사사화를 일으켜 사림을 탄압했다. 선조 즉위 후 몰락했다.',
+  '심충겸':   '심충겸(沈忠謙) — 심의겸의 동생. 1575년 이조전랑 후보로 물망에 올랐으나 김효원의 자천권 행사로 저지됐다. 이것이 동서 분당의 직접적 계기가 됐다.',
+  '심의겸':   '심의겸(沈義謙) — 인순왕후의 동생으로 왕실 외척. 이조 인사에 개입하다 김효원과 충돌했고, 이것이 동서 분당의 직접적 계기가 됐다.',
+  '심충겸':   '심충겸(沈忠謙) — 심의겸의 동생. 1572년 문과 장원급제 후 홍문관 수찬 등을 역임. 그의 이조전랑 임명 시도가 동서 분당의 직접적 도화선이 됐다.',
+  '인순왕후': '인순왕후(仁順王后) — 명종의 왕비. 명종 사후 선조 즉위 과정에서 수렴청정을 맡았다. 심의겸의 누나.',
+  '정철':     '정철(鄭澈) — 조선 중기 문인·관료. 심의겸과 가깝고 서인과 연결된 인물. 훗날 기축옥사를 주도한다.',
+  '을사사화': '을사사화(乙巳士禍) — 1545년(명종 즉위년) 윤원형 등 소윤이 대윤을 제거한 사화. 많은 사림이 피해를 입었다.',
+  '기축옥사': '기축옥사(己丑獄事) — 1589년(선조 22) 정여립의 모반 사건. 서인 정철이 수사를 주도하며 동인이 대거 숙청됐다.',
+  '인조반정': '인조반정(仁祖反正) — 1623년 서인이 광해군을 폐위하고 인조를 왕위에 올린 사건. 서인이 정권을 장악했다.',
+  '남인':     '남인(南人) — 동인에서 갈라진 붕당. 기축옥사 이후 온건파가 분리되어 형성됐다.',
+  '북인':     '북인(北人) — 동인에서 갈라진 붕당. 기축옥사 이후 강경파가 분리되어 형성됐다. 광해군 때 집권했다.',
+  '노론':     '노론(老論) — 서인에서 갈라진 붕당. 송시열 계열로 조선 후기 정치를 주도했다.',
+  '소론':     '소론(少論) — 서인에서 갈라진 붕당. 윤증 계열로 노론과 대립했다.',
+  '파직':     '파직(罷職) — 관리의 직위를 박탈하는 처벌.',
+  '지평':     '지평(持平) — 사헌부의 정5품 관직. 관리 감찰과 탄핵을 담당했다.',
+  '정언':     '정언(正言) — 사간원의 정6품 관직. 왕에게 간언하는 역할을 맡았다.',
+  '부수찬':   '부수찬(副修撰) — 홍문관의 정6품 관직. 왕의 학문 자문과 경연을 담당했다.',
+};
+
+// ═══ CHARACTERS (r1 후보 5인) ═══
+const CHARS = [
+  {
+    id:'ysr', name:'유성룡', hanja:'柳成龍',
+    icon:'📜',
+    history:'척신 정권 내내 낙향하여 학문에만 전념하였다. 출사 기록 없음.',
+    reform:'개혁 추진력: 중간 — 신중하고 온건한 노선을 택한다.',
+    dongIn:1, seoIn:0,
+    future:'훗날 동인의 핵심 인물이 된다.',
+  },
+  {
+    id:'ibal', name:'이발', hanja:'李潑',
+    icon:'⚔️',
+    history:'<span class="tt" data-key="척신" data-word="척신">척신</span> 시절 일체의 벼슬을 거부하였다. 흠결 없음.',
+    reform:'개혁 추진력: 강함 — 타협을 모르는 강경 개혁파.',
+    dongIn:2, seoIn:0,
+    future:'훗날 동인 강경파의 중심이 된다.',
+  },
+  {
+    id:'iyi', name:'이이', hanja:'李珥',
+    icon:'🖊️',
+    history:'벼슬했으나 직언으로 이름을 남겼다.',
+    reform:'개혁 추진력: 중간 — 동서 두 파의 화합을 주장한다.',
+    dongIn:0, seoIn:2,
+    future:'훗날 서인과 연결되며 동서 조정을 시도한다.',
+  },
+  {
+    id:'shn', name:'성혼', hanja:'成渾',
+    icon:'📖',
+    history:'대부분의 시간을 재야에서 보냈다. 이이와 가깝다.',
+    reform:'개혁 추진력: 약함 — 온건하고 신중한 성품.',
+    dongIn:0, seoIn:1,
+    future:'훗날 서인과 연결된다.',
+  },
+  {
+    id:'khw', name:'김효원', hanja:'金孝元',
+    icon:'🏛️',
+    history:'<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span>이 "<span class="tt" data-key="윤원형" data-word="윤원형">윤원형</span> 집에 드나들었다"고 문제를 삼았으나, 조사 결과 식객이 아닌 친구의 지인이었음이 밝혀졌다. 결국 이조전랑에 등용되었다.',
+    reform:'개혁 추진력: 매우 강함 — 척신 청산을 가장 강하게 주장한다.',
+    dongIn:1, seoIn:0,
+    future:'훗날 동인의 출발점이 된 바로 그 인물이다.',
+  },
+];
+
+const POSITIONS = [
+  '사헌부 <span class="tt" data-key="지평" data-word="지평">지평</span>',
+  '사간원 <span class="tt" data-key="정언" data-word="정언">정언</span>',
+  '홍문관 <span class="tt" data-key="부수찬" data-word="부수찬">부수찬</span>',
+];
+
+// ═══ R3 CANDIDATES ═══
+const CANDS = [
+  {
+    id:'ibal_r3', name:'이발(李潑)',
+    desc:'척신 이력이 전혀 없는 강경 개혁파. "이조전랑은 척신과 무관한 자가 맡아야 합니다."',
+    effect:'→ 척신 청산 노선을 이어간다. 심의겸 측의 강한 반발 예상.',
+    dongIn:2, seoIn:0,
+  },
+  {
+    id:'schk', name:'심충겸(沈忠謙)',
+    desc:'<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span>의 동생. 1572년 문과 장원급제 후 홍문관 수찬 등을 거쳤다. <span class="tt" data-key="외척" data-word="외척">외척</span> 가문 출신이나 실력은 인정받는다. 그러나 이 자리를 외척에게 내준다면 — 공론이 가만히 있지 않을 것이다.',
+    effect:'→ "이조전랑이 외척의 자리가 됩니까?" 공론 압박이 거세질 것이다.',
+    dongIn:0, seoIn:2,
+  },
+];
+
+// ═══ STATE ═══
+let S = {
+  phase: 'intro',    // intro|r1|r1_done|r2|r3|final
+  r2idx: 0,          // 0,1,2
+  r2answers: [],     // 'a'|'b' per 안건
+  r2fb: false,       // showing feedback
+  r3choice: null,
+  r3fb: false,
+  selected: [],      // char ids (max 3)
+  dongIn: 0,
+  seoIn: 0,
+};
+
+// ═══ UTILS ═══
+let _toast = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (_toast) clearTimeout(_toast);
+  _toast = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+
+function getChar(id) { return CHARS.find(c=>c.id===id); }
+
+function R() {
+  window.scrollTo(0,0);
+  document.getElementById('app').innerHTML =
+    S.phase==='intro'    ? renderIntro()   :
+    S.phase==='r1'       ? renderR1()      :
+    S.phase==='r1_done'  ? renderR1Done()  :
+    S.phase==='r2'       ? renderR2()      :
+    S.phase==='r3'       ? renderR3()      :
+                           renderFinal();
+}
+
+// ─── step bar ───
+function stepBar(active) {
+  const steps = ['도입', '삼사 인사', '안건 심의', '자천권 행사', '결과'];
+  return `<div class="steps">
+    ${steps.map((s,i)=>`<div class="step ${i<active?'done':i===active?'active':''}">${s}</div>`).join('')}
+  </div>`;
+}
+
+// ─── tt span ───
+function tt(word) {
+  if (!TIPS[word]) return word;
+  return `<span class="tt" data-key="${word}" data-word="${word}">${word}</span>`;
+}
+
+// ═══ RENDER ═══
+
+// ── 인트로 ──
+function renderIntro() {
+  return `
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">조선 전기 · 선조 7년 (1574)</div>
+      <div class="card-title">이조 전랑 자리를 차지하라</div>
+      <div class="card-sub">붕당의 탄생 1575 — 동서 분당의 씨앗이 된 인사 전쟁</div>
+    </div>
+    <div class="card-body">
+      <div class="sit-box">
+        <div class="sit-label">📜 배경</div>
+        <div class="sit-text">
+          <span class="tt" data-key="척신" data-word="척신">척신</span> <span class="tt" data-key="윤원형" data-word="윤원형">윤원형</span>이 몰락한 지 7년.<br>
+          <span class="tt" data-key="사림" data-word="사림">사림</span>이 조정을 가득 채웠다.<br><br>
+          당신은 <strong><span class="tt" data-key="이조전랑" data-word="이조전랑">이조전랑</span></strong>에 임명되었다.<br>
+          정5품의 작은 자리지만,<br>
+          <span class="tt" data-key="삼사" data-word="삼사">삼사</span> <span class="tt" data-key="언관" data-word="언관">언관</span>의 인사권과 <strong><span class="tt" data-key="자천권" data-word="자천권">자천권</span></strong>을 쥔<br>
+          조정의 숨은 핵심이다.<br><br>
+          누구를 삼사에 심을 것인가.<br>
+          그 선택이 조선의 정치 지형을 바꿀 것이다.
+        </div>
+      </div>
+      <div class="sit-box" style="border-left-color:var(--gold);margin-bottom:20px">
+        <div class="sit-label" style="color:var(--gold)">게임 안내</div>
+        <div class="sit-text" style="font-size:13px;color:var(--text-mid)">
+          ① 삼사에 배치할 인물 3명을 고른다<br>
+          ② 탄핵 안건 3건을 처리한다<br>
+          ③ 후임 이조전랑을 자천권으로 추천한다
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="S.phase='r1';R()">이조전랑에 취임하다 →</button>
+    </div>
+  </div>`;
+}
+
+// ── R1: 인물 선택 ──
+function renderR1() {
+  const n = S.selected.length;
+  const done = n===3;
+
+  const charsHtml = CHARS.map(c=>{
+    const isSel = S.selected.includes(c.id);
+    const isDisabled = !isSel && n>=3;
+    return `
+    <div class="char-card${isSel?' selected':''}${isDisabled?' disabled':''}"
+         onclick="toggleChar('${c.id}')">
+      <div class="char-badge">${c.icon}</div>
+      <div class="char-info">
+        <div class="char-name">${c.name} <span class="char-hanja">${c.hanja}</span></div>
+        <div class="char-desc" style="margin-bottom:5px">${c.history}</div>
+        <div class="char-desc" style="color:var(--primary);font-weight:500">${c.reform}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  ${stepBar(1)}
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">1라운드 — 삼사 인사</div>
+      <div class="card-title">삼사의 빈자리를 채워라</div>
+      <div class="card-sub"><span class="tt" data-key="사헌부" data-word="사헌부">사헌부</span>·<span class="tt" data-key="사간원" data-word="사간원">사간원</span>·<span class="tt" data-key="홍문관" data-word="홍문관">홍문관</span> 각 1자리, 총 3곳이 비어 있다</div>
+    </div>
+    <div class="card-body">
+      <div class="sit-box">
+        <div class="sit-label">📜 상황</div>
+        <div class="sit-text">
+          <span class="tt" data-key="사림" data-word="사림">사림</span>이 조정에 쏟아져 들어오고 있다.<br>
+          각 인물의 이력과 성향을 참고하되,<br>
+          <strong>최종 판단은 당신의 몫이다.</strong><br><br>
+          3명을 골라 삼사에 배치하라.
+        </div>
+      </div>
+      <div class="sel-counter">선택 <strong>${n}</strong> / 3명</div>
+      <div class="char-grid">${charsHtml}</div>
+      <button class="btn btn-primary" ${done?'':'disabled'} onclick="confirmR1()">
+        이 인물들을 삼사에 배치한다 →
+      </button>
+    </div>
+  </div>`;
+}
+
+// ── R1 확인 + 즉각 반응 ──
+function renderR1Done() {
+  // 점수 반영 (확정 시 1회만)
+  const samsaHtml = S.selected.map((id, i) => {
+    const c = getChar(id);
+    return `
+    <div class="samsa-row">
+      <span class="samsa-pos">${POSITIONS[i]}</span>
+      <span class="samsa-name">${c.name}(${c.hanja})</span>
+    </div>`;
+  }).join('');
+
+  // 즉각 반응 결정
+  const hasKhw = S.selected.includes('khw');
+  let reactionText;
+  if (hasKhw) {
+    reactionText = `심의겸 측에서 목소리를 높였다. "김효원은 윤원형 집에 드나든 자가 아닙니까. 어찌 삼사에 앉힌단 말이오!" 조정 안에 긴장감이 감돌기 시작했다.`;
+  } else if (S.selected.includes('ibal') && S.selected.includes('ysr')) {
+    reactionText = '"척신과 무관한 인물들로만 채웠군요. 공론은 이 방향을 지지합니다." 신진 사림들의 호응이 일었다.';
+  } else {
+    reactionText = '삼사에 새 인물들이 배치되었다. 조정이 조용히 주목하고 있다.';
+  }
+
+  return `
+  ${stepBar(1)}
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">1라운드 — 배치 완료</div>
+      <div class="card-title">삼사 배치 결과</div>
+    </div>
+    <div class="card-body">
+      <div class="samsa-grid">${samsaHtml}</div>
+      <div class="reaction">
+        <div class="react-label">💬 즉각 반응</div>
+        <div class="react-text">${reactionText}</div>
+      </div>
+      <button class="btn btn-primary" onclick="S.phase='r2';S.r2idx=0;R()">안건 심의로 넘어간다 →</button>
+    </div>
+  </div>`;
+}
+
+// ── R2: 안건 3건 ──
+function getAnken(idx) {
+  if (idx===0) {
+    const hasKhw = S.selected.includes('khw');
+    if (hasKhw) {
+      return {
+        title:'첫 번째 안건 — 탄핵 상소',
+        era:'안건 1 / 3',
+        situation:`<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span> 측에서 삼사를 통해 상소를 올렸습니다.\n\n<strong>"김효원은 척신 윤원형의 집에 드나든 기록이 있사오니 <span class="tt" data-key="파직" data-word="파직">파직</span>을 청합니다."</strong>\n\n당신이 직접 심은 인물입니다. 어떻게 처리하겠습니까?`,
+        a:{ text:'탄핵을 수용한다', quote:'"척신 이력 의혹이 있는 자는 삼사에 있어서는 안 됩니다."', dongIn:1, seoIn:0, fb:'김효원을 삼사에서 물러나게 했다. 명분은 지켰다. 그러나 당신이 심은 인물을 스스로 내쳤다는 사실이 주목받기 시작했다.' },
+        b:{ text:'탄핵을 거부한다', quote:'"확인되지 않은 소문만으로 사람을 파직하는 것은 옳지 않습니다."', dongIn:0, seoIn:1, fb:'탄핵을 막아냈다. 김효원은 자리를 지켰다. 하지만 심의겸 측의 불만이 깊어졌다.' },
+      };
+    } else {
+      return {
+        title:'첫 번째 안건 — 편중 시비',
+        era:'안건 1 / 3',
+        situation:`<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span>이 공론을 제기했습니다.\n\n<strong>"삼사에 특정 성향의 인물들만 포진하고 있습니다. 이것이 공정한 인사입니까?"</strong>\n\n당신은 어떻게 대응하겠습니까?`,
+        a:{ text:'편중이 없다고 반박한다', quote:'"척신과 무관한 인물들을 고른 것뿐입니다. 이것이 공론입니다."', dongIn:1, seoIn:0, fb:'반박이 받아들여졌다. 당신의 원칙이 일정한 지지를 얻었다.' },
+        b:{ text:'인정하고 보완하겠다', quote:'"더 넓게 인재를 구하는 것이 옳습니다."', dongIn:0, seoIn:1, fb:'온건한 대응이었다. 심의겸 측의 비판은 잠시 가라앉았다.' },
+      };
+    }
+  }
+  if (idx===1) {
+    return {
+      title:'두 번째 안건 — 심의겸 탄핵',
+      era:'안건 2 / 3',
+      situation:`동료 <span class="tt" data-key="언관" data-word="언관">언관</span>이 찾아와 말했습니다.\n\n<strong>"<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span>이 이번에도 이조 인사에 의견을 냈다는 소문이 있습니다. 그는 <span class="tt" data-key="인순왕후" data-word="인순왕후">인순왕후</span>의 동생으로 왕실 <span class="tt" data-key="외척" data-word="외척">외척</span>입니다. 외척의 인사 개입은 척신 정치의 재현이 아닙니까. 탄핵 상소를 함께 올리겠습니까?"</strong>`,
+      a:{ text:'탄핵을 함께 지지한다', quote:'"외척이 인사에 개입하는 것은 원칙적으로 막아야 합니다."', dongIn:2, seoIn:0, fb:'탄핵을 지지했다. 조정이 술렁였다. 심의겸과의 균열이 공식화되기 시작했다.' },
+      b:{ text:'탄핵을 만류한다', quote:'"심의겸은 사림으로서 역할을 해왔습니다. 지금 탄핵은 관계를 갈라놓을 뿐입니다."', dongIn:0, seoIn:2, fb:'탄핵을 막았다. 당장의 충돌은 피했지만, 그를 두둔했다는 시선이 생겼다.' },
+    };
+  }
+  // idx === 2
+  return {
+    title:'세 번째 안건 — 자천권 선제 행사',
+    era:'안건 3 / 3',
+    situation:`정보가 들어왔습니다.\n\n<strong>"<span class="tt" data-key="심의겸" data-word="심의겸">심의겸</span> 측에서 <span class="tt" data-key="정철" data-word="정철">정철</span>을 <span class="tt" data-key="이조전랑" data-word="이조전랑">이조전랑</span> 후임으로 밀고 있습니다. 당신의 임기가 3개월 남았습니다."</strong>\n\n<span class="tt" data-key="자천권" data-word="자천권">자천권</span>을 지금 행사하겠습니까?`,
+    a:{ text:'지금 당장 후임을 확정한다', quote:'"선제적으로 자천권을 행사합니다. 정철이 끼어들기 전에 이 자리를 지켜야 합니다."', dongIn:1, seoIn:0, fb:'선수를 쳤다. 정철의 개입을 막았다. 그러나 "사사로운 인사"라는 공론 압박이 시작됐다.' },
+    b:{ text:'공론을 모아 결정한다', quote:'"서두르다 사사로운 인사라는 비판을 받는 것보다, 공론을 따르는 것이 옳습니다."', dongIn:0, seoIn:1, fb:'신중한 대응이었다. 그러나 시간을 벌어준 사이, 심의겸 측의 움직임이 빨라졌다.' },
+  };
+}
+
+function renderR2() {
+  const ak = getAnken(S.r2idx);
+  const answered = S.r2answers[S.r2idx] !== undefined;
+  const ans = S.r2answers[S.r2idx];
+  const fbText = answered ? (ans==='a' ? ak.a.fb : ak.b.fb) : null;
+
+  const situationFormatted = ak.situation.replace(/\n\n/g,'</div><div class="sit-text" style="margin-top:10px">').replace(/\n/g,'<br>');
+
+  const btnA = `<div class="choice-btn${answered?(ans==='a'?' picked':' faded'):''}" onclick="${answered?'':'chooseR2(0,\'a\')'}">
+    <div class="choice-main">${ak.a.text}</div>
+    <div class="choice-quote">${ak.a.quote}</div>
+  </div>`;
+  const btnB = `<div class="choice-btn${answered?(ans==='b'?' picked':' faded'):''}" onclick="${answered?'':'chooseR2(0,\'b\')'}">
+    <div class="choice-main">${ak.b.text}</div>
+    <div class="choice-quote">${ak.b.quote}</div>
+  </div>`;
+
+  const nextLabel = S.r2idx<2 ? `다음 안건으로 (${S.r2idx+2}/3) →` : '자천권 행사로 넘어간다 →';
+
+  return `
+  ${stepBar(2)}
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">${ak.era}</div>
+      <div class="card-title">${ak.title}</div>
+    </div>
+    <div class="card-body">
+      <div class="sit-box">
+        <div class="sit-label">📜 상황</div>
+        <div class="sit-text">${situationFormatted}</div>
+      </div>
+      <div class="choice-stack">${btnA}${btnB}</div>
+      ${answered ? `
+        <div class="feedback">
+          <div class="fb-label">◈ 결과</div>
+          <div class="fb-text">${fbText}</div>
+        </div>
+        <button class="btn btn-primary" onclick="nextR2()">${nextLabel}</button>
+      ` : ''}
+    </div>
+  </div>`;
+}
+
+// ── R3: 자천권 ──
+function renderR3() {
+  const answered = S.r3choice !== null;
+
+  const candsHtml = CANDS.map(c=>{
+    const picked = answered && S.r3choice===c.id;
+    const faded  = answered && S.r3choice!==c.id;
+    return `
+    <div class="cand-card${picked?' picked':faded?' faded':''}"
+         onclick="${answered?'':'chooseR3(\''+c.id+'\')'}">
+      <div class="cand-name">${c.name}</div>
+      <div class="cand-desc">${c.desc}</div>
+      <div class="cand-effect">→ ${c.effect}</div>
+    </div>`;
+  }).join('');
+
+  let fb = '';
+  if (answered) {
+    const c = CANDS.find(x=>x.id===S.r3choice);
+    if (c.id==='ibal_r3') fb='이발을 후임으로 확정했다. 강경 개혁파가 이조전랑을 이었다. 삼사는 더욱 단단해졌고, 심의겸 측의 반발도 극에 달했다. 사림은 두 패로 갈리기 시작했다.';
+    else fb='심충겸을 추천했다. "이조전랑이 외척의 자리가 됩니까!" 동인 쪽 신진 사림들이 들고 일어났다. 분당의 불씨가 거세게 타올랐다.';
+  }
+
+  return `
+  ${stepBar(3)}
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">3라운드 — 자천권 행사</div>
+      <div class="card-title">후임 이조전랑을 추천하라</div>
+      <div class="card-sub">당신이 고른 인물이 이 자리와 삼사의 색깔을 이어간다</div>
+    </div>
+    <div class="card-body">
+      <div class="sit-box">
+        <div class="sit-label">📜 상황</div>
+        <div class="sit-text">
+          임기가 끝났다. 이제 자천권을 행사할 시간이다.<br><br>
+          당신이 고른 후임이 삼사 인사를 이어받고,<br>
+          또 그 후임의 후임을 추천할 것이다.<br>
+          <strong>이것이 자천권의 연쇄다.</strong>
+        </div>
+      </div>
+      <div class="cand-grid">${candsHtml}</div>
+      ${answered ? `
+        <div class="feedback">
+          <div class="fb-label">◈ 결과</div>
+          <div class="fb-text">${fb}</div>
+        </div>
+        <button class="btn btn-primary" onclick="goFinal()">1575년, 결말을 확인한다 →</button>
+      ` : ''}
+    </div>
+  </div>`;
+}
+
+// ── FINAL ──
+function renderFinal() {
+  const result = getResult();
+
+  const OUTCOMES = {
+    dongin: {
+      icon:'🔵', title:'동인 우세',
+      sub:'일관된 강경 노선으로 삼사를 장악했습니다. 1575년, 동인이 조정의 주도권을 쥐었습니다. 그러나 서인의 반격은 이미 시작되고 있었습니다.',
+      ifNote:'만약 이조전랑에게 자천권이 없었다면, 한 사람의 선택이 이렇게까지 파장을 만들 수 있었을까요?',
+    },
+    seoin: {
+      icon:'🔶', title:'서인 우세',
+      sub:'온건한 노선이 명분을 앞세웠습니다. 1575년, 서인이 공론을 이끌기 시작했습니다. 그러나 조정의 갈등은 오히려 깊어졌습니다.',
+      ifNote:'만약 심의겸이 외척이 아니었다면, 척신 청산의 기준선을 둘러싼 갈등은 다른 방향으로 흘렀을까요?',
+    },
+    neutral: {
+      icon:'🌀', title:'분당의 씨앗',
+      sub:'균형을 노렸지만, 1575년 동서 분당은 막을 수 없었습니다. 어떤 선택을 해도 붕당은 만들어졌습니다. 이것이 이조전랑 자리가 품고 있던 구조적 모순이었습니다.',
+      ifNote:'만약 사림이 척신 청산의 기준을 하나로 합의할 수 있었다면, 붕당은 피할 수 있었을까요?',
+    },
+  };
+
+  const out = OUTCOMES[result];
+
+  const samsaHtml = S.selected.map((id,i)=>{
+    const c=getChar(id);
+    return `<div class="sum-row">
+      <span class="sum-icon">${c.icon}</span>
+      <span class="sum-text"><strong>${POSITIONS[i].replace(/<[^>]+>/g,'')}</strong> — ${c.name} · ${c.future}</span>
+    </div>`;
+  }).join('');
+
+  // 안건 요약
+  const ankenLabels = ['척신 탄핵/편중 시비','심의겸 탄핵','자천권 선제 행사'];
+  const ankenHtml = S.r2answers.map((ans,i)=>{
+    const ak = getAnken(i);
+    const choice = ans==='a' ? ak.a.text : ak.b.text;
+    return `<div class="sum-row">
+      <span class="sum-icon">📋</span>
+      <span class="sum-text"><strong>안건 ${i+1}</strong> (${ankenLabels[i]}) — ${choice}</span>
+    </div>`;
+  }).join('');
+
+  // 자천권 요약
+  const r3c = CANDS.find(c=>c.id===S.r3choice);
+  const r3Html = `<div class="sum-row">
+    <span class="sum-icon">🖊️</span>
+    <span class="sum-text"><strong>자천권</strong> — 후임으로 ${r3c ? r3c.name : '미선택'} 추천</span>
+  </div>`;
+
+  // 역사 해설
+  const histMap = {
+    dongin:'선조 8년(1575), 이조전랑 임명을 둘러싼 갈등이 정점에 달했다. 김효원 지지 세력이 동쪽에 많이 살았다 하여 동인, 심의겸 지지 세력이 서쪽에 많이 살았다 하여 서인이라 불렸다. 동인은 초반 우세를 점했으나, <span class="tt" data-key="기축옥사" data-word="기축옥사">기축옥사</span>(1589)를 거치며 <span class="tt" data-key="남인" data-word="남인">남인</span>과 <span class="tt" data-key="북인" data-word="북인">북인</span>으로 다시 갈렸다.',
+    seoin:'선조 8년(1575), 이조전랑 임명을 둘러싼 갈등이 정점에 달했다. 서인은 심의겸 측의 명분을 앞세웠으나 조정의 주도권은 처음에 동인이 잡았다. 서인은 이후 광해군 시기 <span class="tt" data-key="인조반정" data-word="인조반정">인조반정</span>(1623)으로 재기의 발판을 마련한다.',
+    neutral:'선조 8년(1575), 동서 분당은 어느 한 사람의 선택으로 만들어진 것이 아니었다. <span class="tt" data-key="자천권" data-word="자천권">자천권</span>이라는 제도적 구조, 척신 청산을 둘러싼 기준선의 차이, 사림 내부의 인맥 갈등이 쌓이고 쌓여 터진 결과였다. 이이는 끝까지 동서 조정을 시도했지만, 분당을 막지는 못했다.',
+  };
+
+  return `
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-era">선조 8년 (1575) — 동서 분당</div>
+      <div class="card-title">1575년의 기록</div>
+    </div>
+    <div class="card-body">
+      <div class="final-banner">
+        <div class="final-icon">${out.icon}</div>
+        <div class="final-title">${out.title}</div>
+        <div class="final-sub">${out.sub}</div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border2);font-size:12px;color:var(--muted);font-family:var(--fd);font-style:italic;line-height:1.9">💭 ${out.ifNote}</div>
+      </div>
+
+      <div class="summary-box">
+        <div class="sum-label">삼사 배치 기록</div>
+        ${samsaHtml}
+      </div>
+      <div class="summary-box">
+        <div class="sum-label">안건 처리 기록</div>
+        ${ankenHtml}
+        ${r3Html}
+      </div>
+
+      <div class="hist-note">
+        <div class="hn-label">📜 역사 해설 — 동서 분당</div>
+        <div class="hn-text">${histMap[result]}</div>
+      </div>
+
+      <div class="hist-note" style="border-left-color:var(--primary);margin-bottom:20px">
+        <div class="hn-label" style="color:var(--primary)">이후의 역사</div>
+        <div class="hn-text">
+          동인은 훗날 <span class="tt" data-key="동인" data-word="동인">동인</span>·<span class="tt" data-key="서인" data-word="서인">서인</span>으로 나뉜 뒤,<br>
+          동인은 다시 <strong><span class="tt" data-key="남인" data-word="남인">남인</span>과 <span class="tt" data-key="북인" data-word="북인">북인</span></strong>으로,<br>
+          서인은 <strong><span class="tt" data-key="노론" data-word="노론">노론</span>과 <span class="tt" data-key="소론" data-word="소론">소론</span></strong>으로 갈렸다.<br>
+          붕당의 분기는 여기서 끝나지 않았다.
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="copyResult()" style="margin-bottom:8px">
+        📋 결과 복사하기 (패들렛 공유용)
+      </button>
+      <button class="btn btn-outline" onclick="restart()">다시 시작하기</button>
+      <div class="game-footer-copy">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>`;
+}
+
+// ═══ RESULT CALC ═══
+function getResult() {
+  // r3 선택이 결과에 큰 영향
+  if (S.r3choice === 'ibal_r3' && S.dongIn >= S.seoIn) return 'dongin';
+  if (S.r3choice === 'schk' && S.seoIn >= S.dongIn) return 'seoin';
+  if (S.dongIn > S.seoIn + 2) return 'dongin';
+  if (S.seoIn > S.dongIn + 2) return 'seoin';
+  return 'neutral';
+}
+
+// ═══ ACTIONS ═══
+function toggleChar(id) {
+  if (S.selected.includes(id)) {
+    S.selected = S.selected.filter(x=>x!==id);
+  } else {
+    if (S.selected.length >= 3) return;
+    S.selected.push(id);
+  }
+  R();
+}
+
+function confirmR1() {
+  // 점수 계산
+  S.selected.forEach(id=>{
+    const c=getChar(id);
+    S.dongIn += c.dongIn;
+    S.seoIn  += c.seoIn;
+  });
+  S.phase='r1_done';
+  R();
+}
+
+function chooseR2(_, ans) {
+  const ak = getAnken(S.r2idx);
+  S.r2answers[S.r2idx] = ans;
+  const choice = ans==='a' ? ak.a : ak.b;
+  S.dongIn += choice.dongIn;
+  S.seoIn  += choice.seoIn;
+  R();
+}
+
+function nextR2() {
+  if (S.r2idx < 2) {
+    S.r2idx++;
+    R();
+  } else {
+    S.phase = 'r3';
+    R();
+  }
+}
+
+function chooseR3(id) {
+  S.r3choice = id;
+  const c = CANDS.find(x=>x.id===id);
+  S.dongIn += c.dongIn;
+  S.seoIn  += c.seoIn;
+  R();
+}
+
+function goFinal() {
+  S.phase = 'final';
+  R();
+}
+
+function copyResult() {
+  const result = getResult();
+  const resultLabel = {dongin:'동인 우세', seoin:'서인 우세', neutral:'분당의 씨앗'}[result];
+  const ankenLabels = ['척신 탄핵/편중','심의겸 탄핵','자천권 선제'];
+  const r3c = CANDS.find(c=>c.id===S.r3choice);
+
+  const lines = [
+    `🏛️ 이조전랑 — 붕당의 탄생 1575`,
+    `결과: ${resultLabel}`,
+    ``,
+    `삼사 배치:`,
+    ...S.selected.map((id,i)=>{
+      const c=getChar(id);
+      return `  ${POSITIONS[i].replace(/<[^>]+>/g,'')}: ${c.name}`;
+    }),
+    ``,
+    `안건 처리:`,
+    ...S.r2answers.map((ans,i)=>{
+      const ak=getAnken(i);
+      return `  안건${i+1}(${ankenLabels[i]}): ${ans==='a'?ak.a.text:ak.b.text}`;
+    }),
+    `  자천권: ${CANDS.find(c=>c.id===S.r3choice)?.name || '미선택'} 추천`,
+    ``,
+    `— 이조전랑 게임 (붕당의 탄생 1575)`,
+  ].join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(lines).then(()=>toast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=lines; ta.style.cssText='position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); toast('📋 결과가 복사되었습니다!'); }
+    catch(e) { toast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  if (!confirm('기록이 사라집니다. 다시 시작할까요?')) return;
+  S = { phase:'intro', r2idx:0, r2answers:[], r2fb:false, r3choice:null, r3fb:false, selected:[], dongIn:0, seoIn:0 };
+  R();
+}
+
+// ═══ TOOLTIP ═══
+document.body.insertAdjacentHTML('beforeend',
+  '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+const bubble = document.getElementById('tt-bubble');
+let _bubTimer = null;
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    const key = el.dataset.key || el.dataset.word;
+    const tip = TIPS[key] || '';
+    if (!tip) return;
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = tip;
+    const bw=240, rect=el.getBoundingClientRect();
+    let left=Math.max(8,Math.min(rect.left+rect.width/2-bw/2,window.innerWidth-bw-8));
+    bubble.style.width=bw+'px'; bubble.style.left=left+'px'; bubble.style.top='-9999px';
+    bubble.classList.add('show');
+    const h=bubble.offsetHeight;
+    bubble.style.top=(rect.top-h-14<8)?(rect.bottom+10)+'px':(rect.top-h-14)+'px';
+    if (_bubTimer) clearTimeout(_bubTimer);
+    _bubTimer=setTimeout(()=>bubble.classList.remove('show'),4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+R();
+</script>
+</body>
+</html>
