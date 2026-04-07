@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대원군의 결단 — 무너지는 조선을 세워라</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   조선 팔레트
+═══════════════════════════════════ */
+:root {
+  --bg:       #f2ece0;
+  --bg2:      #e8dfd0;
+  --surface:  #ede5d5;
+  --surface2: #e0d5c0;
+  --primary:  #1a3a5c;
+  --accent:   #8b1a1a;
+  --gold:     #b8860b;
+  --gold2:    #d4a82a;
+  --text:     #1c1410;
+  --text-mid: #3a2e20;
+  --muted:    #7a6e5a;
+  --border:   #c8b88a;
+  --border2:  #a09070;
+  --jade:     #2e6e52;
+  --jade2:    #48a07a;
+  --g-king:     #8b1a1a;
+  --g-noble:    #1a3a5c;
+  --g-people:   #2e6e52;
+  --g-treasury: #b8860b;
+  --font-serif: 'Noto Serif KR', 'Gowun Batang', serif;
+  --font-sans:  'Noto Sans KR', sans-serif;
+  --font-doc:   'Gowun Batang', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, #f5ede0 0%, #ece0cc 100%);
+}
+
+#app { max-width: 740px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* ─── 토스트 ─── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--primary); color: #f0e8d4;
+  border-radius: 4px; padding: 10px 22px;
+  font-size: 13px; opacity: 0; pointer-events: none;
+  white-space: nowrap; z-index: 9999; transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+/* ─── 툴팁 ─── */
+.tt { border-bottom: 1.5px dashed var(--gold); cursor: pointer; color: inherit; }
+.tt:hover { border-bottom-color: var(--accent); }
+#tt-bubble {
+  position: fixed; z-index: 9000; max-width: 260px;
+  background: #1c1a14; border: 1px solid rgba(184,134,11,0.55);
+  border-radius: 4px; padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  pointer-events: none; opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--gold2); margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,192,0.85); line-height: 1.7; }
+
+/* ─── 애니메이션 ─── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+@keyframes stampIn {
+  0%  { transform: scale(2.2) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(2deg); opacity: 1; }
+  100%{ transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes gaugePulse { 0%,100%{opacity:1;} 50%{opacity:0.45;} }
+.scene { animation: fadeUp 0.4s ease both; }
+
+/* ─── 페이퍼 ─── */
+.paper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  box-shadow: 0 0 0 4px var(--bg), 0 0 0 5px var(--border2), 0 8px 32px rgba(0,0,0,0.12);
+  position: relative; overflow: hidden;
+}
+.paper::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(160,140,100,0.04) 32px,rgba(160,140,100,0.04) 33px);
+}
+.paper > * { position: relative; z-index: 1; }
+.cr { position:absolute; width:20px; height:20px; border-style:solid; opacity:0.4; z-index:2; border-color:var(--gold); }
+.cr.tl{top:8px;left:8px;border-width:1.5px 0 0 1.5px;}
+.cr.tr{top:8px;right:8px;border-width:1.5px 1.5px 0 0;}
+.cr.bl{bottom:8px;left:8px;border-width:0 0 1.5px 1.5px;}
+.cr.br{bottom:8px;right:8px;border-width:0 1.5px 1.5px 0;}
+
+/* ─── 헤더 ─── */
+.hdr { padding: 28px 24px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.hdr-eyebrow { font-size:11px; letter-spacing:0.25em; color:var(--gold); font-family:var(--font-sans); margin-bottom:10px; }
+.hdr-title { font-family:var(--font-serif); font-size:clamp(1.3rem,3.5vw,1.75rem); font-weight:700; color:var(--primary); line-height:1.4; margin-bottom:6px; }
+.hdr-sub { font-size:13px; color:var(--muted); font-family:var(--font-sans); font-weight:300; }
+
+/* ─── 게이지 바 ─── */
+.gauge-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(242,236,224,0.97);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;
+  backdrop-filter: blur(4px);
+}
+.gauge-item { display:flex; flex-direction:column; gap:4px; }
+.gauge-label { font-size:10px; color:var(--muted); font-family:var(--font-sans); letter-spacing:0.06em; }
+.gauge-track { height:7px; background:rgba(0,0,0,0.08); border-radius:4px; overflow:hidden; }
+.gauge-fill { height:100%; border-radius:4px; transition:width 0.5s cubic-bezier(0.34,1.2,0.64,1); }
+.gauge-fill.king     { background:var(--g-king); }
+.gauge-fill.noble    { background:var(--g-noble); }
+.gauge-fill.people   { background:var(--g-people); }
+.gauge-fill.treasury { background:var(--g-treasury); }
+.gauge-fill.warn     { animation:gaugePulse 0.6s ease infinite; }
+.gauge-val { font-size:10px; font-weight:700; font-family:var(--font-sans); text-align:right; }
+.gauge-val.king{color:var(--g-king);}
+.gauge-val.noble{color:var(--g-noble);}
+.gauge-val.people{color:var(--g-people);}
+.gauge-val.treasury{color:var(--g-treasury);}
+
+/* ─── 도입 대시보드 ─── */
+.intro-lead {
+  font-family:var(--font-serif); font-size:15px; color:var(--text-mid);
+  line-height:2; padding:16px 24px 8px; text-align:center;
+}
+.intro-lead strong { color:var(--accent); }
+
+.dash-section-label {
+  font-size:10px; letter-spacing:0.2em; color:var(--gold);
+  font-family:var(--font-sans); font-weight:700;
+  padding:12px 20px 6px; text-transform:uppercase;
+}
+.dashboard {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  padding:0 20px 8px;
+}
+.dashboard.two-col { grid-template-columns:1fr 1fr; }
+.dash-card {
+  background:var(--surface2); border:1px solid var(--border2);
+  border-radius:3px; padding:12px 13px;
+}
+.dash-icon { font-size:20px; margin-bottom:5px; }
+.dash-label { font-size:10px; letter-spacing:0.1em; color:var(--muted); font-family:var(--font-sans); margin-bottom:3px; }
+.dash-value { font-family:var(--font-serif); font-size:13px; font-weight:700; color:var(--accent); line-height:1.4; }
+.dash-scene { font-size:11px; color:var(--muted); font-family:var(--font-sans); margin-top:4px; line-height:1.5; font-style:italic; }
+
+.intro-divider {
+  margin:8px 20px;
+  padding:12px 16px;
+  background:var(--primary);
+  border-radius:3px;
+  font-family:var(--font-serif);
+  font-size:14px; color:#f0e8d4;
+  line-height:1.8; text-align:center;
+}
+.intro-divider strong { color:var(--gold2); }
+
+.intro-question {
+  margin:8px 20px 0;
+  background:rgba(26,58,92,0.06);
+  border:1px solid rgba(26,58,92,0.15);
+  border-left:3px solid var(--primary);
+  border-radius:0 3px 3px 0;
+  padding:14px 16px;
+  font-family:var(--font-serif);
+  font-size:14px; color:var(--text-mid); line-height:1.9;
+}
+.intro-question strong { color:var(--primary); }
+
+/* ─── 카드 화면 ─── */
+.reform-card {
+  margin:12px 20px 0;
+  background:#faf6ee;
+  border:1px solid var(--border);
+  border-top:3px solid var(--primary);
+  border-radius:3px; padding:18px 18px 16px;
+}
+.rc-eyebrow { font-size:10px; letter-spacing:0.2em; color:var(--gold); font-family:var(--font-sans); margin-bottom:8px; }
+.rc-title { font-family:var(--font-serif); font-size:20px; font-weight:700; color:var(--primary); margin-bottom:6px; }
+.rc-target {
+  display:inline-block; font-size:11px; padding:3px 10px;
+  background:rgba(26,58,92,0.08); border:1px solid rgba(26,58,92,0.2);
+  border-radius:2px; color:var(--primary); font-family:var(--font-sans); margin-bottom:12px;
+}
+.rc-voice {
+  font-family:var(--font-doc); font-size:14px; color:var(--text-mid);
+  line-height:1.9; border-left:3px solid var(--border2);
+  padding-left:12px; margin-bottom:14px; font-style:italic;
+}
+.rc-voice strong { color:var(--accent); font-style:normal; font-weight:700; }
+
+/* ─── 선택 버튼 ─── */
+.choice-area { display:flex; flex-direction:column; gap:10px; padding:16px 20px 24px; }
+.choice-btn {
+  width:100%; background:var(--surface);
+  border:1.5px solid var(--border); border-left:4px solid var(--primary);
+  border-radius:3px; padding:15px 16px;
+  cursor:pointer; text-align:left;
+  transition:all 0.18s; font-family:var(--font-sans);
+}
+.choice-btn:hover { border-color:var(--primary); background:rgba(26,58,92,0.05); transform:translateX(3px); }
+.choice-btn:active { transform:translateX(0) scale(0.98); }
+.choice-btn.b-type { border-left-color:var(--gold); }
+.choice-btn.b-type:hover { border-color:var(--gold); background:rgba(184,134,11,0.05); }
+.cb-label { font-size:11px; letter-spacing:0.12em; color:var(--muted); margin-bottom:5px; font-weight:500; }
+.cb-text { font-size:15px; font-weight:700; color:var(--text); line-height:1.4; font-family:var(--font-serif); }
+.cb-sub { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.5; }
+
+/* ─── 피드백 오버레이 ─── */
+.feedback-overlay {
+  position:fixed; inset:0; background:rgba(28,20,16,0.7);
+  z-index:500; display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.feedback-box {
+  background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  max-width:480px; width:100%; padding:28px 24px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  animation:fadeUp 0.35s ease; position:relative;
+}
+.fb-stamp {
+  position:absolute; top:-12px; right:20px; font-size:36px; line-height:1;
+  animation:stampIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+}
+.fb-title { font-family:var(--font-serif); font-size:18px; font-weight:700; color:var(--primary); margin-bottom:8px; }
+.fb-result { font-size:13px; color:var(--text-mid); line-height:1.9; margin-bottom:14px; font-family:var(--font-sans); }
+.fb-result strong { color:var(--accent); font-weight:700; }
+.fb-unexpected {
+  background:rgba(139,26,26,0.06); border:1px solid rgba(139,26,26,0.2);
+  border-left:3px solid var(--accent); border-radius:0 3px 3px 0;
+  padding:10px 13px; margin-bottom:14px;
+  font-size:13px; font-family:var(--font-serif);
+  color:var(--text-mid); line-height:1.8; font-style:italic;
+}
+.fb-unexpected::before { content:'⚡ 예상치 못한 결과'; display:block; font-size:10px; font-weight:700; font-style:normal; color:var(--accent); letter-spacing:0.15em; margin-bottom:5px; font-family:var(--font-sans); }
+.fb-hist {
+  border:1px dashed var(--border2); border-radius:3px; padding:11px 13px;
+  font-size:12px; color:var(--muted); line-height:1.8; font-family:var(--font-sans); margin-bottom:18px;
+}
+.fb-hist::before { content:'📜 실제 역사'; display:block; font-size:10px; font-weight:700; color:var(--gold); letter-spacing:0.15em; margin-bottom:5px; }
+.fb-changes { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.fb-pill {
+  font-size:12px; padding:4px 11px; border-radius:20px;
+  font-family:var(--font-sans); font-weight:700; border:1px solid;
+}
+.fp-king-up   { background:rgba(139,26,26,0.1); border-color:var(--g-king); color:var(--g-king); }
+.fp-noble-up  { background:rgba(26,58,92,0.1); border-color:var(--g-noble); color:var(--primary); }
+.fp-people-up { background:rgba(46,110,82,0.1); border-color:var(--g-people); color:var(--jade); }
+.fp-people-dn { background:rgba(139,26,26,0.08); border-color:var(--accent); color:var(--accent); }
+.fp-treasury-up { background:rgba(184,134,11,0.1); border-color:var(--g-treasury); color:var(--gold); }
+.fp-treasury-dn { background:rgba(139,26,26,0.08); border-color:var(--accent); color:var(--accent); }
+.fb-btn {
+  width:100%; background:var(--primary); color:#f0e8d4;
+  border:none; border-radius:3px; padding:13px;
+  font-size:14px; font-weight:700; font-family:var(--font-serif);
+  cursor:pointer; transition:all 0.18s; letter-spacing:0.04em;
+}
+.fb-btn:hover { background:#24527a; transform:translateY(-1px); }
+
+/* ─── 버튼 ─── */
+.btn { width:100%; padding:13px; border:none; border-radius:3px; font-family:var(--font-serif); font-size:14px; font-weight:700; cursor:pointer; transition:all 0.18s; letter-spacing:0.04em; }
+.btn + .btn { margin-top:8px; }
+.btn-primary { background:var(--primary); color:#f0e8d4; border:1.5px solid rgba(26,58,92,0.5); }
+.btn-primary:hover { background:#24527a; transform:translateY(-1px); }
+.btn-outline { background:transparent; color:var(--muted); border:1.5px solid var(--border2); }
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+
+/* ─── 고종 이벤트 화면 ─── */
+.gojong-scroll {
+  font-family:var(--font-doc); font-size:14px; color:var(--text-mid);
+  line-height:2; border-left:3px solid var(--accent);
+  padding:14px 16px; margin-bottom:14px;
+  background:rgba(139,26,26,0.04); border-radius:0 3px 3px 0;
+}
+.gojong-scroll::before { content:'📜 최익현의 상소 (1873)'; display:block; font-size:10px; font-weight:700; color:var(--accent); letter-spacing:0.15em; margin-bottom:8px; font-family:var(--font-sans); font-style:normal; }
+
+/* ─── 결과 화면 ─── */
+.result-banner { padding:28px 24px 20px; text-align:center; border-bottom:1px solid var(--border); }
+.result-icon { font-size:52px; margin-bottom:12px; }
+.result-title { font-family:var(--font-serif); font-size:22px; font-weight:700; line-height:1.4; margin-bottom:8px; }
+.result-sub { font-size:13px; color:var(--muted); font-family:var(--font-sans); line-height:1.7; }
+.result-cause {
+  margin:0 20px 16px;
+  background:rgba(26,58,92,0.05); border:1px solid rgba(26,58,92,0.15);
+  border-left:3px solid var(--primary);
+  border-radius:0 3px 3px 0; padding:14px 16px;
+  font-size:14px; color:var(--text-mid); line-height:1.9; font-family:var(--font-serif);
+}
+.result-cause strong { color:var(--accent); }
+
+.result-history {
+  margin:0 20px 16px; border:1px solid var(--border); border-radius:3px; overflow:hidden;
+}
+.rh-title { background:var(--surface2); padding:9px 14px; font-size:11px; font-weight:700; color:var(--primary); letter-spacing:0.1em; font-family:var(--font-sans); }
+.rh-row {
+  display:flex; align-items:center; gap:10px; padding:10px 14px;
+  border-top:1px solid rgba(200,184,138,0.3); font-size:13px;
+}
+.rh-emoji { font-size:18px; flex-shrink:0; }
+.rh-name { flex:1; font-family:var(--font-serif); color:var(--text); }
+.rh-choice { font-size:11px; padding:2px 8px; border-radius:2px; border:1px solid; }
+.rh-choice.a-type { border-color:var(--primary); color:var(--primary); background:rgba(26,58,92,0.07); }
+.rh-choice.b-type { border-color:var(--gold); color:var(--gold); background:rgba(184,134,11,0.07); }
+
+/* ─── 성찰 선택지 ─── */
+.eval-section { margin:0 20px 16px; }
+.eval-question {
+  font-size:10px; letter-spacing:0.12em; color:var(--muted);
+  font-family:var(--font-sans); margin-bottom:8px;
+}
+.eval-highlight {
+  background:var(--primary); border-radius:3px; padding:14px 18px;
+  margin-bottom:12px; text-align:center;
+  font-family:var(--font-serif); color:#f0e8d4; font-size:14px; line-height:1.8;
+}
+.eval-highlight .eq-sub { font-size:10px; letter-spacing:0.2em; color:var(--gold2); margin-bottom:8px; display:block; font-family:var(--font-sans); }
+.eval-btn {
+  width:100%; background:var(--surface2); border:1.5px solid var(--border);
+  border-radius:3px; padding:12px 14px; text-align:left; cursor:pointer;
+  font-family:var(--font-sans); font-size:13px; color:var(--text);
+  transition:all 0.18s; margin-bottom:6px; display:block;
+}
+.eval-btn:hover { border-color:var(--primary); background:rgba(26,58,92,0.06); }
+.eval-btn.selected { background:rgba(26,58,92,0.1); border-color:var(--primary); color:var(--primary); font-weight:700; }
+
+/* ─── 저작권 ─── */
+.copyright { text-align:center; font-size:11px; color:rgba(120,100,80,0.4); padding:12px 0 4px; font-family:var(--font-sans); }
+
+/* ─── 반응형 ─── */
+@media (min-width:600px) {
+  .choice-area { flex-direction:row; }
+  .choice-btn { flex:1; }
+}
+@media (max-width:520px) {
+  .dashboard { grid-template-columns:1fr 1fr; }
+  .gauge-bar { gap:5px; padding:8px 12px; }
+  .gauge-label { font-size:9px; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+
+<script>
+// ══════════════════════════════════════════
+// 툴팁
+// ══════════════════════════════════════════
+const TIPS = {
+  '비변사':    '비변사(備邊司) — 16세기 이후 군국 대사를 총괄하던 최고 기관. 세도 가문이 장악해 왕권을 약화시켰다.',
+  '의정부':    '의정부(議政府) — 조선의 최고 행정 기관. 대원군은 비변사를 폐지하고 의정부 기능을 회복시켰다.',
+  '삼군부':    '삼군부(三軍府) — 군사 업무를 전담하는 기관. 대원군이 부활시켜 정치와 군사를 분리했다.',
+  '서원':      '서원(書院) — 지방 사립 교육 기관. 면세·면역 특권을 누려 국가 재정을 잠식했다.',
+  '호포제':    '호포제(戶布制) — 집집마다 군포를 거두는 제도. 양반도 군포를 내도록 했다.',
+  '사창제':    '사창제(社倉制) — 마을 단위 자치 곡물 창고 제도. 환곡 착복을 막기 위해 도입됐다.',
+  '환곡':      '환곡(還穀) — 봄에 곡식을 빌려주고 가을에 이자를 붙여 거두는 제도. 관리 착복의 온상이었다.',
+  '삼정의 문란':'삼정의 문란(三政紊亂) — 전정·군정·환곡이 모두 부패해 백성을 수탈하던 현상.',
+  '전정':      '전정(田政) — 토지에 부과하는 세금 제도. 지방 관리가 장부를 조작해 정액 이상 징수하는 폐단이 심했다.',
+  '군정':      '군정(軍政) — 군포 징수 제도. 양반은 면제되고 죽은 사람·갓난아이에게도 부과하는 폐단이 심했다.',
+  '은결':      '은결(隱結) — 장부에 숨겨진 토지. 지주나 관리가 세금을 피하려고 등록하지 않은 땅으로, 적발하면 세입이 늘어난다.',
+  '도결':      '도결(都結) — 지방 관리가 공금을 착복한 뒤 부족분을 메우려고 토지세를 정액 이상 마구 징수하는 것.',
+  '원납전':    '원납전(願納錢) — 경복궁 중건을 위해 강제 징수한 헌납금. 사실상 강제였다.',
+  '당백전':    '당백전(當百錢) — 기존 화폐의 100배 가치로 발행한 화폐. 남발로 극심한 인플레이션을 일으켰다.',
+  '경복궁':    '경복궁(景福宮) — 조선 왕조 정궁. 임진왜란 때 소실된 뒤 방치됐다가 대원군이 1865년 중건을 시작했다.',
+  '안동 김씨': '안동 김씨(安東 金氏) — 순조 이후 60여 년간 왕실 외척으로 권력을 독점한 세도 가문.',
+  '세도정치':  '세도정치(勢道政治) — 특정 가문이 왕권을 대신해 국가 권력을 독점하던 정치 형태.',
+  '양전사업':  '양전사업(量田事業) — 전국 토지를 조사해 장부를 정리하는 사업. 숨겨진 땅(은결)을 찾아내 세입을 늘리는 것이 목적이다.',
+};
+
+function tt(word, key) {
+  const tip = TIPS[key || word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+const bubble = document.getElementById('tt-bubble');
+let bubTimer = null;
+document.addEventListener('click', e => {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect(), bw = 260;
+    const left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px'; bubble.style.left = left + 'px'; bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bh = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bh - 14 < 8) ? (rect.bottom + 10) + 'px' : (rect.top - bh - 14) + 'px';
+    if (bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+// ══════════════════════════════════════════
+// 게임 데이터
+// ══════════════════════════════════════════
+const REFORMS = [
+  {
+    id: 'bibyeonsa', emoji: '🏛️', label: '제1호 결단',
+    title: '비변사 폐지',
+    target: '세도 가문의 권력 독점 구조 해체',
+    voice: `"전하, ${tt('비변사')}는 왕의 기관이 아닙니다. ${tt('안동 김씨')} 일문이 장악한 그들만의 조정입니다. 그러나 폐지 방법을 두고 의견이 갈립니다."`,
+    hist: '1864년 대원군은 비변사를 폐지하고 의정부와 삼군부로 기능을 분리했다. 세도 가문이 독점해온 권력 구조를 해체한 첫 조치였다.',
+    choices: [
+      {
+        id: 'A', label: '즉시 완전 폐지',
+        text: '비변사를 당장 없애고 의정부·삼군부로 분리한다',
+        sub: '세도 가문을 한 번에 몰아낸다',
+        delta: { king:+20, noble:-14, people:0, treasury:0 },
+        feedback: {
+          stamp: '⚖️', title: '권력의 심장을 끊다',
+          text: `${tt('비변사')}가 폐지됩니다. ${tt('안동 김씨')} 핵심 인물들이 조정을 떠났습니다. 왕권이 회복되기 시작했습니다.`,
+          unexpected: `그런데 대원군을 지지하던 노대신들마저 불편한 기색을 드러냅니다. "종친이 너무 깊이 국정에 간여한다." 지지자의 침묵이 시작됩니다.`,
+          pills: ['👑 왕권 +20', '📜 양반 반발 +14'],
+          pillCls: ['fp-king-up', 'fp-noble-up'],
+        }
+      },
+      {
+        id: 'B', label: '단계적 해체',
+        text: '기능을 축소하고 인사부터 교체한다',
+        sub: '행정 공백 없이 세도 가문 영향력을 줄인다',
+        delta: { king:+10, noble:-6, people:0, treasury:0 },
+        feedback: {
+          stamp: '📋', title: '뿌리는 살아 있다',
+          text: `${tt('비변사')} 기능을 축소하고 핵심 인사를 교체했습니다. 충돌을 줄이면서 세도 가문의 영향력을 약화시켰습니다.`,
+          unexpected: `그러나 ${tt('안동 김씨')}는 여전히 요직에 남아 있습니다. "대원군이 결국 우리와 타협했다" — 세도 가문은 그렇게 읽습니다.`,
+          pills: ['👑 왕권 +10', '📜 양반 반발 +6'],
+          pillCls: ['fp-king-up', 'fp-noble-up'],
+        }
+      }
+    ]
+  },
+  {
+    id: 'yangj', emoji: '📐', label: '제2호 결단',
+    title: '양전사업',
+    target: `${tt('전정')} 문란 — 숨겨진 토지와 불법 징수 혁파`,
+    voice: `"${tt('은결')}이 전국에 넘칩니다. 장부에 없는 땅에서 관리들이 세금을 거둬 착복합니다. ${tt('도결')}로 백성이 짊어지는 세금은 정액의 몇 배가 됩니다. 전국 ${tt('양전사업')}이 필요합니다."`,
+    hist: '대원군은 양전사업으로 은결을 색출했으나 전국 전면 양전은 시행하지 못했다. 양인 10만 명이 군적에 새로 등록되고 수천 결의 토지가 추가되는 성과를 냈지만, 지방 유력자들의 저항으로 완전한 개혁은 이루어지지 않았다.',
+    choices: [
+      {
+        id: 'A', label: '전국 전면 양전',
+        text: '전국 토지를 전부 재조사해 은결을 모두 드러낸다',
+        sub: '세입이 크게 늘고 불법 징수를 근절한다',
+        delta: { king:+5, noble:-12, people:+8, treasury:+18 },
+        feedback: {
+          stamp: '📐', title: '장부가 현실을 드러내다',
+          text: `전국 양전으로 ${tt('은결')}이 대거 발각됩니다. 국고가 채워지고 백성의 부담이 줄었습니다.`,
+          unexpected: `그러나 땅을 숨겨온 지방 유력자들이 들고일어났습니다. 이들은 지역에서 대원군 반대 여론을 조직하기 시작합니다. 개혁의 수혜자는 백성이지만, 피해자는 지방 권력자들입니다 — 그리고 그들은 목소리가 있습니다.`,
+          pills: ['👑 왕권 +5', '📜 양반 반발 +12', '🌾 백성 지지 +8', '💰 국고 +18'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      },
+      {
+        id: 'B', label: '부분 은결 색출',
+        text: '전면 양전 대신 드러난 은결만 선별 처리한다',
+        sub: '저항을 줄이되 장부 문란은 그대로 남는다',
+        delta: { king:+2, noble:-4, people:+3, treasury:+8 },
+        feedback: {
+          stamp: '📋', title: '장부는 여전히 거짓이다',
+          text: `눈에 띄는 ${tt('은결')}만 처리했습니다. 지방 유력자들의 저항을 줄였지만 세입 효과는 절반에 그쳤습니다.`,
+          unexpected: `그리고 ${tt('도결')}은 계속됩니다. 관리들은 오늘도 장부를 조작해 백성에게 정액 이상의 세금을 걷습니다. 아무것도 하지 않는 것도 선택 — 그 결과도 책임입니다.`,
+          pills: ['👑 왕권 +2', '📜 양반 반발 +4', '🌾 백성 지지 +3', '💰 국고 +8'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      }
+    ]
+  },
+  {
+    id: 'seowon', emoji: '🏫', label: '제3호 결단',
+    title: '서원 철폐',
+    target: '양반 면세·면역 특권 해체 및 국가 재정 확보',
+    voice: `"전국 600여 ${tt('서원')}이 세금도 군역도 내지 않습니다. 양인은 뼈 빠지게 세금을 내는데, 유생들은 선현의 이름 뒤에 숨어 특권을 누립니다. 그런데 전하 — 철폐 방식을 두고 의견이 갈립니다."`,
+    hist: '1871년 대원군은 전국 600여 개 서원 중 47개만 남기고 모두 철폐했다. "백 명이 상소를 올려도 시행한다"며 밀어붙였다. 서원 철폐는 착취로 고통받던 민중의 지지를 받았다.',
+    choices: [
+      {
+        id: 'A', label: '전면 철폐 + 토지 환수',
+        text: '47개만 남기고 전부 철폐, 토지를 국가에 환수한다',
+        sub: '특권 구조를 끊고 재정을 확보한다',
+        delta: { king:+8, noble:-22, people:+10, treasury:+20 },
+        feedback: {
+          stamp: '🔥', title: '지지자가 적이 되는 순간',
+          text: `국고가 채워지고 백성의 부담이 줄었습니다. 대원군을 지지하며 ${tt('세도정치')}를 함께 비판하던 유학자 이항로가 등을 돌립니다.`,
+          unexpected: `"${tt('서원')}을 없애는 것은 유교의 근본을 무너뜨리는 일이오." 그의 제자 최익현도 스승을 따릅니다. 개혁이 만들어낸 첫 번째 적은, 적이 아니라 지지자였습니다.`,
+          pills: ['👑 왕권 +8', '📜 양반 반발 +22', '🌾 백성 지지 +10', '💰 국고 +20'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      },
+      {
+        id: 'B', label: '특권만 박탈',
+        text: '서원은 유지하되 면세·면역 특권만 없앤다',
+        sub: '교육 기능을 인정하고 반발을 줄인다',
+        delta: { king:+4, noble:-10, people:+4, treasury:+10 },
+        feedback: {
+          stamp: '📜', title: '명분과 실체는 붙어 있다',
+          text: `${tt('서원')}의 교육 기능은 살리고 면세 특권만 박탈했습니다. 재정 효과는 절반입니다.`,
+          unexpected: `그런데 유생들의 반발이 예상보다 큽니다. "서원을 유지하면서 세금은 내라? 서원의 존재 의미를 모독하는 것이다." 명분과 특권을 분리하는 것은 생각만큼 쉽지 않습니다.`,
+          pills: ['👑 왕권 +4', '📜 양반 반발 +10', '🌾 백성 지지 +4', '💰 국고 +10'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      }
+    ]
+  },
+  {
+    id: 'hopoje', emoji: '⚖️', label: '제4호 결단',
+    title: '호포제 실시',
+    target: `${tt('군정')} 문란 — 군포 부담의 신분 불평등 혁파`,
+    voice: `"양반은 상투 틀었다고 군포를 내지 않습니다. 나라가 위기인데 양반만 빠질 수 있습니까. 이제 집집마다 ${tt('호포제')}를 시행합니다. 그런데 전하 — 방식을 두고 논란이 있습니다."`,
+    hist: '1871년 시행된 호포제는 조선 최초로 양반에게 군포를 부과했다. 그런데 실제로는 양반의 자존심을 고려해 양반호는 호주명 대신 하인의 이름으로 납입하도록 했다.',
+    choices: [
+      {
+        id: 'A', label: '호주 명의 납부',
+        text: '양반도 본인 이름으로 군포를 낸다',
+        sub: '원칙을 명확히 한다 — 신분에 관계없이 평등',
+        delta: { king:+8, noble:-18, people:+20, treasury:+18 },
+        feedback: {
+          stamp: '⚖️', title: '당연한 것이 혁명이 되다',
+          text: `백성들이 환호합니다. 수백 년간 군포를 면제받던 양반이 이제 본인 이름으로 나라에 세금을 냅니다.`,
+          unexpected: `그런데 더 놀라운 일이 생겼습니다. ${tt('서원')} 철폐에 분노한 사람들과 군포에 분노한 사람들이 처음으로 손을 잡습니다. 각각의 개혁이 각각의 적을 만들었고, 그 적들이 연대하기 시작합니다.`,
+          pills: ['👑 왕권 +8', '📜 양반 반발 +18', '🌾 백성 지지 +20', '💰 국고 +18'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      },
+      {
+        id: 'B', label: '하인 명의 납부',
+        text: '양반도 군포를 내되 — 하인의 이름으로 납입한다',
+        sub: '실질은 같지만 체면을 살려준다',
+        delta: { king:+6, noble:-10, people:+14, treasury:+14 },
+        feedback: {
+          stamp: '📋', title: '원칙이 흐려지다',
+          text: `세금은 걷힙니다. 양반의 저항도 줄었습니다. 그러나 "양반이 군포를 낸다"는 원칙이 하인 이름에 가려졌습니다.`,
+          unexpected: `백성들은 압니다. "양반이 하인 이름 뒤에 숨어서 낸다." 형식적 타협은 실질적 평등을 만들지 못합니다. 그리고 이 타협의 방식은 훗날 양반들이 다시 면제를 주장할 근거가 됩니다.`,
+          pills: ['👑 왕권 +6', '📜 양반 반발 +10', '🌾 백성 지지 +14', '💰 국고 +14'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      }
+    ]
+  },
+  {
+    id: 'sachang', emoji: '🌾', label: '제5호 결단',
+    title: '사창제 실시',
+    target: `${tt('환곡')} 문란 — 관리 착복 구조 혁파`,
+    voice: `"봄에 빌린 쌀 열 말이 가을에 열다섯 말이 됩니다. 그 다섯 말은 관리 주머니로 들어갑니다. ${tt('사창제')}로 마을이 직접 창고를 관리하게 하십시오. 그런데 — 다른 방법도 있습니다."`,
+    hist: '1867년 사창제 시행으로 마을 단위 자치 창고가 도입됐다. 지방 관리의 착복 구조를 크게 줄여 백성들이 가장 기뻐한 개혁이었다.',
+    choices: [
+      {
+        id: 'A', label: '환곡 폐지 + 자치 사창',
+        text: '관청 환곡을 없애고 마을 자치 사창으로 전환한다',
+        sub: '착복 구조 자체를 끊는다',
+        delta: { king:+3, noble:-8, people:+25, treasury:+5 },
+        feedback: {
+          stamp: '🌾', title: '봄의 쌀 열 말을 돌려받다',
+          text: `봄에 빌린 열 말이 가을에 열 말로 돌아옵니다. 그 다섯 말이 처음으로 백성의 손에 남습니다. 백성들이 처음으로 대원군을 <strong>"우리 편"</strong>이라 부릅니다.`,
+          unexpected: `그러나 착복 이권을 잃은 지방 수령들이 조용히 서울의 양반들과 연결되기 시작합니다. 개혁으로 손해 본 사람들이 하나씩 쌓여갑니다.`,
+          pills: ['👑 왕권 +3', '📜 양반 반발 +8', '🌾 백성 지지 +25', '💰 국고 +5'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-up'],
+        }
+      },
+      {
+        id: 'B', label: '감찰 강화',
+        text: '환곡은 유지하되 수령 감찰과 처벌을 강화한다',
+        sub: '구조는 바꾸지 않고 사람을 감시한다',
+        delta: { king:+1, noble:-2, people:-4, treasury:+3 },
+        feedback: {
+          stamp: '📋', title: '감찰관을 누가 감찰하는가',
+          text: `암행어사를 파견하고 횡령자를 처벌했습니다. 초기에는 효과가 있었습니다.`,
+          unexpected: `그러나 시간이 지나자 감찰관도 착복합니다. 구조를 바꾸지 않고 사람만 바꾸면 결과가 달라지지 않습니다. 봄의 쌀 열 말은 올해도 가을에 열다섯 말이 됩니다.`,
+          pills: ['👑 왕권 +1', '📜 양반 반발 +2', '🌾 백성 분노 +4', '💰 국고 +3'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-dn', 'fp-treasury-up'],
+        }
+      }
+    ]
+  },
+  {
+    id: 'gyeongbok', emoji: '🏯', label: '제6호 결단',
+    title: '경복궁 중건',
+    target: '왕권 상징 확립 — 실추된 왕실 위엄 회복',
+    voice: `"임진왜란 이후 270년간 ${tt('경복궁')}은 폐허로 방치되었습니다. 왕이 초라한 궁궐에 앉아 있으니 나라의 위엄이 서질 않습니다. 그러나 전하 — 비용을 어떻게 마련하시겠습니까?"`,
+    hist: '1865년 시작된 경복궁 중건은 원납전 강제 징수와 당백전 남발로 극심한 인플레이션을 일으켰다. 서원 철폐와 사창제로 대원군 편이 됐던 백성들이 부역에 동원되며 등을 돌렸다.',
+    choices: [
+      {
+        id: 'A', label: '원납전·당백전 동원',
+        text: '원납전을 걷고 당백전을 발행해 완공한다',
+        sub: '왕권의 상징을 세운다 — 비용은 감수한다',
+        delta: { king:+25, noble:-5, people:-28, treasury:-28 },
+        feedback: {
+          stamp: '🏯', title: '개혁의 수혜자가 피해자가 되다',
+          text: `${tt('경복궁')}이 웅장하게 다시 섰습니다. 왕권의 상징이 세워졌습니다.`,
+          unexpected: `그러나 ${tt('원납전')} 강제 징수와 ${tt('당백전')} 남발로 쌀값이 세 배가 됩니다. 서원 철폐와 ${tt('사창제')}로 처음으로 "우리 편"이 됐던 백성들이 등을 돌립니다. "부역에 동원하더니 이번엔 물가까지 잡아먹는다." 대원군을 지지했던 바로 그 사람들이 이제 최익현의 상소에 고개를 끄덕입니다.`,
+          pills: ['👑 왕권 +25', '📜 양반 반발 +5', '🌾 백성 분노 +28', '💰 국고 -28'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-dn', 'fp-treasury-dn'],
+        }
+      },
+      {
+        id: 'B', label: '중건 보류',
+        text: '경복궁 중건을 미루고 재원을 민생에 쓴다',
+        sub: '백성의 지지를 유지한다',
+        delta: { king:+5, noble:-2, people:+5, treasury:-5 },
+        feedback: {
+          stamp: '📋', title: '왕권의 상징이 없다',
+          text: `민심을 유지했습니다. 백성들은 안도했습니다.`,
+          unexpected: `그러나 유생들과 대신들이 수군댑니다. "왕이 초라한 궁궐에 앉아 있으니 나라의 위엄이 서지 않는다." 왕권의 상징 없이 섭정의 정당성이 흔들립니다. 고종은 경복궁이 없는 지금이 친정을 선포하기에 더 좋은 때라고 느끼기 시작합니다.`,
+          pills: ['👑 왕권 +5', '📜 양반 반발 +2', '🌾 백성 지지 +5', '💰 국고 -5'],
+          pillCls: ['fp-king-up', 'fp-noble-up', 'fp-people-up', 'fp-treasury-dn'],
+        }
+      }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+// 상태
+// ══════════════════════════════════════════
+let S = {
+  phase: 'intro',  // intro | game | feedback | gojong | result
+  step: 0,
+  gauges: { king:20, noble:0, people:30, treasury:20 },
+  history: [],
+  pendingFeedback: null,
+  evalChoice: null,
+};
+
+// ══════════════════════════════════════════
+// 유틸
+// ══════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+function applyDelta(delta) {
+  S.gauges.king     = clamp(S.gauges.king     + (delta.king     || 0));
+  S.gauges.noble    = clamp(S.gauges.noble    + Math.abs(delta.noble || 0));
+  S.gauges.people   = clamp(S.gauges.people   + (delta.people   || 0));
+  S.gauges.treasury = clamp(S.gauges.treasury + (delta.treasury || 0));
+}
+
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase === 'intro'    ? renderIntro()    :
+    S.phase === 'game'     ? renderGame()     :
+    S.phase === 'feedback' ? renderGame()     :
+    S.phase === 'gojong'   ? renderGojong()   :
+    S.phase === 'result'   ? renderResult()   : '';
+  if (S.phase === 'feedback' && S.pendingFeedback) showFeedbackOverlay(S.pendingFeedback);
+}
+
+// ══════════════════════════════════════════
+// 게이지 바
+// ══════════════════════════════════════════
+function renderGaugeBar() {
+  const g = S.gauges;
+  const kW = g.king <= 20, nW = g.noble >= 60, pW = g.people <= 20, tW = g.treasury <= 15;
+  function item(label, val, cls, warn) {
+    return `<div class="gauge-item">
+      <div class="gauge-label">${label}</div>
+      <div class="gauge-track"><div class="gauge-fill ${cls}${warn?' warn':''}" style="width:${val}%"></div></div>
+      <div class="gauge-val ${cls}${warn?' warn':''}">${val}</div>
+    </div>`;
+  }
+  return `<div class="gauge-bar">
+    ${item('👑 왕권', g.king, 'king', kW)}
+    ${item('📜 양반 반발', g.noble, 'noble', nW)}
+    ${item('🌾 백성 지지', g.people, 'people', pW)}
+    ${item('💰 국고', g.treasury, 'treasury', tW)}
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 인트로
+// ══════════════════════════════════════════
+function renderIntro() {
+  return `
+  <div style="padding-top:32px;">
+  <div class="paper scene">
+    <div class="cr tl"></div><div class="cr tr"></div>
+    <div class="cr bl"></div><div class="cr br"></div>
+
+    <div class="hdr">
+      <div class="hdr-eyebrow">◆ 조선 고종 원년 (1863) ◆</div>
+      <div class="hdr-title">대원군의 결단<br>무너지는 조선을 세워라</div>
+      <div class="hdr-sub">흥선대원군의 참모가 되어 개혁의 무게를 직접 짊어진다</div>
+    </div>
+
+    <div class="intro-lead">
+      ${tt('세도정치')} 60년 — 조선의 기강이 무너지고 있습니다.<br>
+      <strong>흥선대원군이 권력을 잡았습니다.</strong><br>
+      당신은 그의 참모입니다. 이 나라를 어떻게 고치겠습니까?
+    </div>
+
+    <div class="dash-section-label">⚠ 삼정의 문란 — 세 가지 고통</div>
+    <div class="dashboard">
+      <div class="dash-card">
+        <div class="dash-icon">🌾</div>
+        <div class="dash-label">${tt('전정')} (토지세)</div>
+        <div class="dash-value">죽은 자도 낸다</div>
+        <div class="dash-scene">죽은 사람 땅, 돌밭에도 세금이 붙는다. 장부에 없는 땅에서 관리가 착복한다. 이웃이 대신 낸다.</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">⚔️</div>
+        <div class="dash-label">${tt('군정')} (군포)</div>
+        <div class="dash-value">양반만 빠진다</div>
+        <div class="dash-scene">갓난아이도, 죽은 자도 군포를 낸다. 양반은 한 푼도 안 낸다. 옆집이 대신 낸다.</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">🏚️</div>
+        <div class="dash-label">${tt('환곡')} (곡물 대출)</div>
+        <div class="dash-value">빌릴수록 가난해진다</div>
+        <div class="dash-scene">봄에 빌린 쌀 열 말, 가을엔 열다섯 말이 된다. 그 다섯 말은 관리 주머니로 들어간다.</div>
+      </div>
+    </div>
+
+    <div class="dash-section-label">⚠ 구조적 위기</div>
+    <div class="dashboard two-col" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="dash-card">
+        <div class="dash-icon">👑</div>
+        <div class="dash-label">세도정치</div>
+        <div class="dash-value">왕권 사실상 0</div>
+        <div class="dash-scene">왕이 결재해도 ${tt('비변사')}가 뒤집는다. ${tt('안동 김씨')}가 조정이다.</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">🏫</div>
+        <div class="dash-label">${tt('서원')} 특권</div>
+        <div class="dash-value">600여 개, 면세</div>
+        <div class="dash-scene">서원 근처 백성은 세금을 두 배 낸다. 서원 몫까지 떠안기 때문이다.</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">💰</div>
+        <div class="dash-label">국고</div>
+        <div class="dash-value">적자</div>
+        <div class="dash-scene">나라 곳간이 비었다. 군사도 못 먹이고, 홍수가 나도 구휼미가 없다.</div>
+      </div>
+    </div>
+
+    <div class="intro-divider">
+      이 여섯 가지를 고치면 나라가 산다.<br>
+      <strong>그런데 — 모두 누군가의 밥줄이다.</strong>
+    </div>
+
+    <div class="intro-question">
+      개혁은 옳고 그름의 문제가 아닙니다.<br>
+      <strong>누구의 이해관계를 건드릴 것인가</strong>의 문제입니다.<br>
+      당신은 어떤 선택을 하겠습니까?
+    </div>
+
+    <div style="padding:12px 20px 10px; text-align:center;">
+      <span style="font-size:11px; color:var(--muted); font-family:var(--font-sans);">
+        💡 <span style="border-bottom:1.5px dashed var(--gold);">밑줄 단어</span>를 탭하면 뜻 설명이 나옵니다
+      </span>
+    </div>
+    <div style="padding:0 20px 28px;">
+      <button class="btn btn-primary" onclick="startGame()">개혁을 시작한다 →</button>
+    </div>
+  </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 게임 화면
+// ══════════════════════════════════════════
+function renderGame() {
+  const reform = REFORMS[S.step];
+  const g = S.gauges;
+  const warnings = [];
+  if (g.noble >= 55) warnings.push('📜 양반 반발이 위험 수준에 달했습니다.');
+  if (g.people <= 25) warnings.push('🌾 백성의 불만이 임계점에 다가서고 있습니다.');
+  if (g.treasury <= 15) warnings.push('💰 국고가 위태롭습니다.');
+
+  const warnHtml = warnings.length ? `
+    <div style="margin-bottom:12px; padding:10px 13px; background:rgba(139,26,26,0.06); border:1px solid rgba(139,26,26,0.2); border-radius:3px;">
+      <div style="font-size:10px; letter-spacing:0.2em; color:var(--accent); font-family:var(--font-sans); font-weight:700; margin-bottom:5px;">🚨 위기 경보</div>
+      ${warnings.map(w=>`<div style="font-size:13px; color:var(--text-mid); font-family:var(--font-serif); line-height:1.7;">${w}</div>`).join('')}
+    </div>` : '';
+
+  return `
+  ${renderGaugeBar()}
+  <div style="padding-top:16px;">
+  <div class="paper scene">
+    <div class="cr tl"></div><div class="cr tr"></div>
+    <div class="cr bl"></div><div class="cr br"></div>
+    <div class="hdr">
+      <div class="hdr-eyebrow">결단 ${S.step+1} / ${REFORMS.length}</div>
+      <div class="hdr-title">${reform.emoji} ${reform.title}</div>
+      <div class="hdr-sub">${reform.target}</div>
+    </div>
+    <div style="padding:16px 20px 0;">
+      ${warnHtml}
+      <div class="reform-card">
+        <div class="rc-eyebrow">📋 ${reform.label}</div>
+        <div class="rc-title">${reform.title}</div>
+        <div class="rc-target">🎯 ${reform.target}</div>
+        <div class="rc-voice">${reform.voice}</div>
+      </div>
+    </div>
+    <div class="choice-area">
+      <button class="choice-btn" onclick="choose('A')">
+        <div class="cb-label">▶ 선택 A</div>
+        <div class="cb-text">${reform.choices[0].text}</div>
+        <div class="cb-sub">${reform.choices[0].sub}</div>
+      </button>
+      <button class="choice-btn b-type" onclick="choose('B')">
+        <div class="cb-label">▶ 선택 B</div>
+        <div class="cb-text">${reform.choices[1].text}</div>
+        <div class="cb-sub">${reform.choices[1].sub}</div>
+      </button>
+    </div>
+  </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 선택 처리
+// ══════════════════════════════════════════
+function choose(choiceId) {
+  const reform = REFORMS[S.step];
+  const choice = reform.choices.find(c => c.id === choiceId);
+  applyDelta(choice.delta);
+  S.history.push({ id: reform.id, choiceId, title: reform.title, emoji: reform.emoji });
+  S.pendingFeedback = { reform, choice };
+  S.phase = 'feedback';
+  R();
+  gtag('event', 'reform_choice', { reform_id: reform.id, choice_id: choiceId });
+}
+
+function showFeedbackOverlay({ reform, choice }) {
+  const fb = choice.feedback;
+  const isLast = S.step >= REFORMS.length - 1;
+  const btnText = isLast ? '1873년, 역사의 순간으로 →' : `제${S.step+2}호 결단으로 →`;
+
+  const pillsHtml = (fb.pills || []).map((p,i) =>
+    `<span class="fb-pill ${fb.pillCls[i]}">${p}</span>`
+  ).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'feedback-overlay';
+  overlay.innerHTML = `
+  <div class="feedback-box">
+    <div class="fb-stamp">${fb.stamp}</div>
+    <div class="fb-title">${fb.title}</div>
+    <div class="fb-result">${fb.text}</div>
+    ${fb.unexpected ? `<div class="fb-unexpected">${fb.unexpected}</div>` : ''}
+    <div class="fb-changes">${pillsHtml}</div>
+    <div class="fb-hist">${reform.hist}</div>
+    <button class="fb-btn" onclick="nextStep()">${btnText}</button>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+function nextStep() {
+  document.querySelectorAll('.feedback-overlay').forEach(el => el.remove());
+  S.pendingFeedback = null;
+  S.step++;
+  S.phase = S.step >= REFORMS.length ? 'gojong' : 'game';
+  R();
+}
+
+// ══════════════════════════════════════════
+// 고종 이벤트
+// ══════════════════════════════════════════
+function renderGojong() {
+  const g = S.gauges;
+  let context = '';
+  if (g.noble >= 60 && g.people <= 35) {
+    context = `유생·양반의 반발이 극에 달한 상황에서, 경복궁 공사로 백성의 원성까지 쌓였습니다. 최익현은 이 두 가지를 모두 상소에 담았습니다.`;
+  } else if (g.noble >= 60) {
+    context = `개혁으로 쌓인 반발 세력이 최익현을 통해 하나로 묶였습니다. 유생·양반·지방 수령들이 처음으로 공동의 목소리를 냈습니다.`;
+  } else if (g.people <= 35) {
+    context = `경복궁 공사로 민심이 흉흉했습니다. 최익현은 백성의 고통을 근거로 대원군의 국정 간여가 부당하다고 주장했습니다.`;
+  } else {
+    context = `반발은 크지 않았지만 고종은 이미 22세였습니다. 최익현의 상소는 고종이 기다리던 명분이었을 뿐입니다.`;
+  }
+
+  return `
+  ${renderGaugeBar()}
+  <div style="padding-top:16px;">
+  <div class="paper scene">
+    <div class="cr tl"></div><div class="cr tr"></div>
+    <div class="cr bl"></div><div class="cr br"></div>
+    <div class="hdr">
+      <div class="hdr-eyebrow">◆ 1873년 11월 ◆</div>
+      <div class="hdr-title">최익현, 상소를 올리다</div>
+      <div class="hdr-sub">10년 집권의 끝에서</div>
+    </div>
+    <div style="padding:20px 20px 0;">
+      <div class="gojong-scroll" style="font-style:italic;">
+        "종친(宗親)으로서 국정에 간여하는 것은 예법에 어긋납니다.<br>
+        전하께서 이미 성년이시니, 이제 친히 국정을 돌보소서."
+      </div>
+      <div style="font-size:13px; color:var(--text-mid); line-height:1.9; font-family:var(--font-sans); margin-bottom:14px;">
+        ${context}
+      </div>
+      <div style="background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:14px 16px; margin-bottom:16px; font-size:13px; line-height:1.9; font-family:var(--font-sans); color:var(--text-mid);">
+        <strong style="color:var(--primary); font-family:var(--font-serif);">결정적인 사실이 있습니다.</strong><br>
+        평소라면 이 상소는 대원군 측에 의해 차단됐을 것입니다.<br>
+        그러나 이번엔 달랐습니다. <strong>고종이 직접 이 상소를 받아들였습니다.</strong><br>
+        22세의 고종은 아버지의 그늘에서 벗어나기를 원했습니다.<br>
+        명성황후 세력은 최익현을 앞세워 그 명분을 만들었습니다.<br><br>
+        유생의 반발이 방아쇠였지만,<br>
+        <strong>방아쇠를 당긴 건 고종 자신이었습니다.</strong>
+      </div>
+      <div style="background:var(--primary); border-radius:3px; padding:14px 18px; margin-bottom:20px; text-align:center; font-family:var(--font-serif); color:#f0e8d4; font-size:14px; line-height:1.8;">
+        1873년 11월, 고종은 친정을 선포했습니다.<br>
+        <strong style="color:var(--gold2);">흥선대원군 이하응, 10년 집권을 마치고 운현궁으로 물러납니다.</strong>
+      </div>
+    </div>
+    <div style="padding:0 20px 24px;">
+      <button class="btn btn-primary" onclick="S.phase='result'; R();">
+        대원군의 10년을 평가한다 →
+      </button>
+    </div>
+  </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 결과 화면
+// ══════════════════════════════════════════
+function renderResult() {
+  const g = S.gauges;
+  const nobleHigh = g.noble >= 55;
+  const peopleLow = g.people <= 35;
+
+  let icon, titleText, titleColor, cause, sub;
+  if (nobleHigh && peopleLow) {
+    icon = '⚖️'; titleColor = 'var(--accent)';
+    titleText = '모든 세력이 등을 돌리다';
+    cause = `개혁은 기득권의 반발을 샀고, 경복궁은 백성의 원성을 샀습니다. 유생·양반·백성 모두가 최익현의 상소에 고개를 끄덕였습니다. <strong>고종에게는 선택지가 넘쳤습니다.</strong>`;
+    sub = '개혁이 만들어낸 적들이, 고종의 친정 의지와 결합했다.';
+  } else if (nobleHigh) {
+    icon = '📜'; titleColor = 'var(--primary)';
+    titleText = '지지자가 적이 된 결과';
+    cause = `개혁으로 쌓인 반발 세력이 최익현을 통해 하나로 묶였습니다. 백성은 여전히 대원군 편이었지만 <strong>조정 안의 적들이 너무 많았습니다.</strong>`;
+    sub = '개혁의 내용은 옳았다. 그러나 기득권의 연대를 막지 못했다.';
+  } else if (peopleLow) {
+    icon = '🏯'; titleColor = 'var(--gold)';
+    titleText = '개혁의 수혜자를 잃다';
+    cause = `서원 철폐와 사창제로 백성의 지지를 얻었으나, 경복궁 공사로 그 지지를 소모했습니다. <strong>개혁의 수혜자가 피해자가 됐습니다.</strong>`;
+    sub = '좋은 개혁도 나쁜 선택 하나로 무너질 수 있다.';
+  } else {
+    icon = '👑'; titleColor = 'var(--primary)';
+    titleText = '고종이 자랐다';
+    cause = `반발은 크지 않았고 민심도 나쁘지 않았습니다. 그러나 고종은 22세였습니다. <strong>아들이 성인이 되면 아버지의 섭정은 끝납니다.</strong> 최익현의 상소는 명분이었을 뿐입니다.`;
+    sub = '어떻게 해도 결과는 같았을까? 아니면 다를 수 있었을까?';
+  }
+
+  const gaugeCards = [
+    { label:'👑 왕권', val:g.king, cls:'king', color:'var(--g-king)', note:g.king>=60?'강화':g.king>=35?'불안정':'위기' },
+    { label:'📜 양반 반발', val:g.noble, cls:'noble', color:'var(--g-noble)', note:g.noble>=65?'폭발':g.noble>=45?'위험':'관리됨' },
+    { label:'🌾 백성 지지', val:g.people, cls:'people', color:'var(--g-people)', note:g.people>=60?'지지':g.people>=35?'불만':'분노' },
+    { label:'💰 국고', val:g.treasury, cls:'treasury', color:'var(--g-treasury)', note:g.treasury>=50?'안정':g.treasury>=25?'위태':'바닥' },
+  ].map(c => `
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:12px 14px;">
+    <div style="font-size:10px;letter-spacing:0.1em;color:var(--muted);font-family:var(--font-sans);margin-bottom:6px;">${c.label}</div>
+    <div style="height:6px;background:rgba(0,0,0,0.08);border-radius:3px;overflow:hidden;margin-bottom:5px;">
+      <div style="width:${c.val}%;height:100%;background:${c.color};border-radius:3px;"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;font-family:var(--font-sans);color:${c.color};">${c.val} — ${c.note}</div>
+  </div>`).join('');
+
+  const histRows = S.history.map(h => {
+    const r = REFORMS.find(r => r.id === h.id);
+    return `
+    <div class="rh-row">
+      <span class="rh-emoji">${r.emoji}</span>
+      <span class="rh-name">${r.title}</span>
+      <span class="rh-choice ${h.choiceId==='A'?'a-type':'b-type'}">선택 ${h.choiceId}</span>
+    </div>`;
+  }).join('');
+
+  return `
+  ${renderGaugeBar()}
+  <div style="padding-top:16px;">
+  <div class="paper scene">
+    <div class="cr tl"></div><div class="cr tr"></div>
+    <div class="cr bl"></div><div class="cr br"></div>
+    <div class="result-banner">
+      <div class="result-icon">${icon}</div>
+      <div class="result-title" style="color:${titleColor}">${titleText}</div>
+      <div class="result-sub">${sub}</div>
+    </div>
+    <div style="padding:16px 0 0;">
+      <div class="result-cause">${cause}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 20px 16px;">${gaugeCards}</div>
+      <div class="result-history">
+        <div class="rh-title">📋 나의 결단 기록</div>
+        ${histRows}
+      </div>
+
+      <div class="eval-section">
+        <div class="eval-highlight">
+          <span class="eq-sub">✦ 수업 토론 질문 ✦</span>
+          대원군의 10년은 조선을 살린 <strong style="color:var(--gold2);">'골든타임'</strong>이었을까요,<br>
+          아니면 멸망을 늦춘 <strong style="color:rgba(255,160,140,0.9);">'진통제'</strong>였을 뿐일까요?
+          <div style="font-size:12px;color:rgba(240,228,192,0.65);margin-top:6px;font-family:var(--font-sans);">게임 속 경험을 근거로 평가해 봅시다</div>
+        </div>
+        <div class="eval-question">나의 평가는?</div>
+        <button class="eval-btn" onclick="selectEval(this,'골든타임 — 개혁의 방향은 옳았다. 경복궁만 아니었다면')">
+          🟡 골든타임 — 개혁의 방향은 옳았다. 경복궁만 아니었다면
+        </button>
+        <button class="eval-btn" onclick="selectEval(this,'진통제 — 어떻게 해도 결과는 같았다. 고종이 크면 끝이었다')">
+          🔴 진통제 — 어떻게 해도 결과는 같았다. 고종이 크면 끝이었다
+        </button>
+        <button class="eval-btn" onclick="selectEval(this,'둘 다 — 개혁은 필요했지만, 만든 적이 너무 많았다')">
+          ⚖️ 둘 다 — 개혁은 필요했지만, 만든 적이 너무 많았다
+        </button>
+      </div>
+
+      <div style="padding:0 20px 28px;">
+        <button class="btn btn-primary" onclick="copyResult()" style="margin-bottom:8px;">
+          📋 결과 복사 (패들렛 공유용)
+        </button>
+        <button class="btn btn-outline" onclick="restart()">다시 결단하기</button>
+      </div>
+      <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// 공유 & 재시작
+// ══════════════════════════════════════════
+function selectEval(btn, label) {
+  document.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  S.evalChoice = label;
+}
+
+function copyResult() {
+  const g = S.gauges;
+  const nobleHigh = g.noble >= 55, peopleLow = g.people <= 35;
+  let ending = '고종이 자랐다 — 어떤 개혁도 성장을 막지 못한다';
+  if (nobleHigh && peopleLow) ending = '모든 세력이 등을 돌리다';
+  else if (nobleHigh) ending = '지지자가 적이 된 결과';
+  else if (peopleLow) ending = '개혁의 수혜자를 잃다';
+
+  const lines = [
+    '⚖️ 대원군의 결단 — 나의 결단 기록',
+    '',
+    ...S.history.map(h => {
+      const r = REFORMS.find(r => r.id === h.id);
+      const c = r.choices.find(c => c.id === h.choiceId);
+      return `${r.emoji} ${r.title}: 선택${h.choiceId} — ${c.text}`;
+    }),
+    '',
+    `👑 왕권 ${g.king}  📜 양반 반발 ${g.noble}  🌾 백성 지지 ${g.people}  💰 국고 ${g.treasury}`,
+    '',
+    `결말: ${ending}`,
+    '',
+    S.evalChoice ? `나의 평가: ${S.evalChoice}` : '나의 평가: (미선택)',
+    '',
+    '— hischarlie.tistory.com',
+  ];
+  const text = lines.join('\n');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 복사 완료!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('📋 복사 완료!'); }
+    catch(e) { showToast('복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function startGame() { S.phase = 'game'; R(); }
+
+function restart() {
+  S = { phase:'intro', step:0, gauges:{king:20,noble:0,people:30,treasury:20}, history:[], pendingFeedback:null, evalChoice:null };
+  R();
+}
+
+R();
+</script>
+</body>
+</html>
