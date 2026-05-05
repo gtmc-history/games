@@ -1,1 +1,1579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>강화도 협상 테이블 — 1876년 2월</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=Gowun+Batang&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   ROOT — 조선 말기 팔레트 (근현대 + 문서 질감)
+═══════════════════════════════════════ */
+:root {
+  --bg:        #eee8dc;
+  --bg2:       #e4ddd0;
+  --surface:   #f5f0e6;
+  --surface2:  #ede5d4;
+  --primary:   #1a3a5c;   /* 관복 감색 */
+  --primary2:  #244e7a;
+  --accent:    #8b1a1a;   /* 인주 붉은색 */
+  --accent2:   #b02020;
+  --gold:      #8b6914;
+  --gold2:     #b8860b;
+  --sepia:     #6b5430;
+  --ink:       #1c1410;
+  --ink2:      #2d2018;
+  --muted:     #7a6a50;
+  --border:    #c4ae8a;
+  --border2:   #9e8860;
+  --safe:      #2d5a3d;
+  --safe2:     #3d7a52;
+  --warn:      #7a4a10;
+  --danger:    #8b1a1a;
 
+  --font-serif: 'Noto Serif KR', serif;
+  --font-sans:  'Noto Sans KR', sans-serif;
+  --font-doc:   'Gowun Batang', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100dvh;
+  /* 낡은 종이 노이즈 텍스처 */
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(139,105,20,0.06) 0%, transparent 60%);
+  display: flex;
+  justify-content: center;
+  padding: 0 12px 64px;
+}
+
+#app {
+  width: 100%;
+  max-width: 680px;
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--bg);
+  border: 1px solid var(--border2); border-radius: 3px;
+  padding: 10px 20px; font-size: 13px; font-family: var(--font-sans);
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+/* ─── TOOLTIP ─── */
+.tt {
+  border-bottom: 1.5px dashed var(--gold2);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent); }
+
+#tt-bubble {
+  position: fixed; z-index: 9000; max-width: min(260px, 90vw);
+  background: var(--ink); border: 1px solid rgba(139,105,20,0.6);
+  border-radius: 3px; padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  pointer-events: none; opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--gold2); margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(238,232,220,0.88); line-height: 1.7; }
+
+/* ─── SCENE SHELL ─── */
+.scene {
+  animation: sceneIn 0.38s ease forwards;
+  padding-top: 20px;
+}
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PROGRESS BAR ─── */
+.prog-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(238,232,220,0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 18px;
+  display: flex; align-items: center; gap: 12px;
+  backdrop-filter: blur(4px);
+}
+.prog-label { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; white-space: nowrap; font-family: var(--font-sans); }
+.prog-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.prog-fill  { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.4s ease; }
+.prog-score { font-size: 13px; font-weight: 700; color: var(--primary); font-family: var(--font-sans); min-width: 60px; text-align: right; }
+
+/* ─── DOCUMENT CARD ─── */
+.doc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+  overflow: hidden;
+  margin-bottom: 16px;
+  /* 가로줄 텍스처 */
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 27px,
+    rgba(160,140,100,0.06) 27px, rgba(160,140,100,0.06) 28px
+  );
+}
+
+.doc-header {
+  background: var(--primary);
+  color: rgba(238,232,220,0.95);
+  padding: 14px 20px 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.doc-header-icon { font-size: 20px; }
+.doc-header-title { font-family: var(--font-serif); font-size: 16px; font-weight: 600; flex: 1; }
+.doc-header-sub { font-size: 11px; color: rgba(238,232,220,0.6); letter-spacing: 0.1em; }
+
+.doc-body { padding: 20px 20px 22px; }
+
+/* ─── ARTICLE NUMBER BADGE ─── */
+.article-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary); color: rgba(238,232,220,0.95);
+  font-size: 11px; letter-spacing: 0.18em;
+  padding: 3px 10px; border-radius: 2px;
+  font-family: var(--font-sans); margin-bottom: 12px;
+}
+
+/* ─── TREATY TEXT ─── */
+.treaty-text {
+  font-family: var(--font-doc);
+  font-size: 15px; line-height: 1.95;
+  color: var(--ink);
+  border-left: 3px solid var(--border2);
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 0 3px 3px 0;
+  margin-bottom: 14px;
+}
+.treaty-text em { font-style: normal; color: var(--accent); font-weight: 600; }
+
+/* ─── JAPAN NOTE (일본의 의도) ─── */
+.japan-note {
+  font-size: 12px; line-height: 1.75;
+  color: var(--accent);
+  border: 1px dashed rgba(139,26,26,0.35);
+  background: rgba(139,26,26,0.04);
+  border-radius: 3px;
+  padding: 10px 13px;
+  margin-bottom: 16px;
+}
+.japan-note::before {
+  content: '🇯🇵 일본의 의도';
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.18em; color: var(--accent);
+  margin-bottom: 5px;
+}
+
+/* ─── PRESSURE METER ─── */
+.pressure-box {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+  padding: 8px 12px;
+  background: rgba(139,26,26,0.05);
+  border: 1px solid rgba(139,26,26,0.15);
+  border-radius: 3px;
+}
+.pressure-label { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: var(--font-sans); }
+.pressure-track { flex: 1; height: 6px; background: rgba(139,26,26,0.12); border-radius: 3px; overflow: hidden; }
+.pressure-fill  { height: 100%; background: linear-gradient(90deg, var(--warn), var(--accent)); border-radius: 3px; transition: width 0.5s ease; }
+.pressure-val   { font-size: 11px; font-weight: 700; color: var(--accent); font-family: var(--font-sans); min-width: 32px; text-align: right; }
+
+/* ─── CHOICE BUTTONS ─── */
+.choice-label { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 10px; font-family: var(--font-sans); }
+
+.choice-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 6px; }
+
+.choice-btn {
+  display: flex; align-items: flex-start; gap: 13px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  font-family: var(--font-sans);
+  border-left: 4px solid transparent;
+}
+.choice-btn:hover {
+  transform: translateX(4px);
+  background: rgba(255,255,255,0.6);
+}
+.choice-btn.accept { border-left-color: var(--safe); }
+.choice-btn.accept:hover { border-color: var(--safe); border-left-color: var(--safe); }
+.choice-btn.modify { border-left-color: var(--gold2); }
+.choice-btn.modify:hover { border-color: var(--gold2); border-left-color: var(--gold2); }
+.choice-btn.reject { border-left-color: var(--accent); }
+.choice-btn.reject:hover { border-color: var(--accent); border-left-color: var(--accent); }
+
+.choice-icon { font-size: 22px; flex-shrink: 0; line-height: 1.2; }
+.choice-right { flex: 1; }
+.choice-name  { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.choice-btn.accept .choice-name { color: var(--safe); }
+.choice-btn.modify .choice-name { color: var(--warn); }
+.choice-btn.reject .choice-name { color: var(--accent); }
+.choice-desc  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ─── SUB-CHOICE (수정안 선택) ─── */
+.sub-choice-wrap {
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: rgba(184,134,11,0.06);
+  border: 1px solid rgba(184,134,11,0.3);
+  border-radius: 3px;
+  animation: sceneIn 0.3s ease;
+}
+.sub-choice-label { font-size: 12px; color: var(--gold2); letter-spacing: 0.12em; margin-bottom: 10px; font-family: var(--font-sans); font-weight: 600; }
+.sub-choice-grid  { display: flex; flex-direction: column; gap: 7px; }
+.sub-btn {
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px; font-family: var(--font-sans);
+  color: var(--ink); line-height: 1.6;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+}
+.sub-btn:hover {
+  background: rgba(255,255,255,0.7);
+  border-color: var(--gold2);
+  transform: translateX(3px);
+}
+
+/* ─── FEEDBACK ─── */
+.feedback-box {
+  margin-top: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  animation: sceneIn 0.35s ease;
+}
+.fb-result {
+  padding: 12px 16px;
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans);
+}
+.fb-result.accept-fb { background: rgba(45,90,61,0.12); color: var(--safe); border-left: 4px solid var(--safe); }
+.fb-result.modify-fb { background: rgba(122,74,16,0.1); color: var(--warn); border-left: 4px solid var(--gold2); }
+.fb-result.reject-fb { background: rgba(139,26,26,0.1); color: var(--accent); border-left: 4px solid var(--accent); }
+
+.fb-body {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 14px 16px;
+}
+.fb-japan {
+  font-size: 13px; color: var(--ink2); line-height: 1.8;
+  margin-bottom: 10px;
+  font-family: var(--font-sans);
+}
+.fb-history {
+  font-size: 12px; color: var(--muted); line-height: 1.75;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+  font-family: var(--font-sans);
+}
+.fb-history::before {
+  content: '📜 실제 역사';
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.15em; color: var(--gold2);
+  margin-bottom: 5px;
+}
+.fb-next-btn {
+  width: 100%; margin-top: 14px;
+  padding: 13px;
+  background: var(--primary);
+  color: rgba(238,232,220,0.95);
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  letter-spacing: 0.04em;
+}
+.fb-next-btn:hover { background: var(--primary2); transform: translateY(-1px); }
+.fb-next-btn:active { transform: translateY(0) scale(0.98); }
+
+/* ─── INTRO ─── */
+.intro-wrap {
+  padding: 32px 0 0;
+}
+.intro-eyebrow {
+  font-size: 11px; letter-spacing: 0.3em;
+  color: var(--gold2); font-family: var(--font-sans);
+  text-align: center; margin-bottom: 10px;
+}
+.intro-title {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700; text-align: center;
+  color: var(--primary);
+  line-height: 1.4; margin-bottom: 6px;
+}
+.intro-date {
+  text-align: center; font-size: 13px;
+  color: var(--muted); margin-bottom: 28px;
+  font-family: var(--font-sans);
+}
+
+.intro-deco { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.intro-deco::before, .intro-deco::after {
+  content: ''; flex: 1; height: 1px; background: var(--border2);
+}
+.intro-deco span { font-size: 10px; letter-spacing: 0.25em; color: var(--gold2); white-space: nowrap; }
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px 20px 22px;
+  margin-bottom: 16px;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 27px,
+    rgba(160,140,100,0.05) 27px, rgba(160,140,100,0.05) 28px
+  );
+}
+
+.intro-situation {
+  font-size: 14px; line-height: 2; color: var(--ink);
+  font-family: var(--font-sans); font-weight: 300;
+  margin-bottom: 18px;
+}
+.intro-situation strong { color: var(--primary); font-weight: 600; }
+.intro-situation em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+.role-box {
+  background: rgba(26,58,92,0.06);
+  border: 1px solid rgba(26,58,92,0.2);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.role-title { font-size: 11px; letter-spacing: 0.18em; color: var(--primary); margin-bottom: 8px; font-family: var(--font-sans); font-weight: 700; }
+.role-name  { font-size: 16px; font-weight: 700; color: var(--primary); font-family: var(--font-serif); margin-bottom: 4px; }
+.role-desc  { font-size: 12px; color: var(--muted); line-height: 1.7; font-family: var(--font-sans); }
+
+.rule-list {
+  display: flex; flex-direction: column; gap: 7px;
+  margin-bottom: 20px;
+}
+.rule-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: var(--ink2); line-height: 1.6;
+  font-family: var(--font-sans);
+}
+.rule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold2); margin-top: 7px; flex-shrink: 0; }
+
+.start-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--primary);
+  color: rgba(238,232,220,0.95);
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif); font-size: 16px; font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.15s, transform 0.12s;
+}
+.start-btn:hover { background: var(--primary2); transform: translateY(-2px); }
+.start-btn:active { transform: translateY(0) scale(0.97); }
+
+/* ─── PRESSURE EVENT ─── */
+.pressure-event {
+  background: rgba(139,26,26,0.06);
+  border: 1px solid rgba(139,26,26,0.25);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px; line-height: 1.75;
+  color: var(--ink); font-family: var(--font-sans);
+  animation: sceneIn 0.3s ease;
+}
+.pressure-event strong { color: var(--accent); }
+.pressure-event-title {
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--accent); margin-bottom: 6px;
+  font-weight: 700; font-family: var(--font-sans);
+}
+
+/* ─── PRESSURE MAX OVERLAY ─── */
+.pressure-max-overlay {
+  position: fixed; inset: 0;
+  background: rgba(80,0,0,0.55);
+  z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+.pressure-max-box {
+  background: #1a0404;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  padding: 28px 24px;
+  max-width: 380px; width: 100%;
+  animation: sceneIn 0.3s ease;
+  text-align: center;
+}
+.pressure-max-icon  { font-size: 44px; margin-bottom: 14px; }
+.pressure-max-title { font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: #f0a0a0; margin-bottom: 12px; }
+.pressure-max-body  { font-size: 13px; line-height: 1.85; color: rgba(238,220,210,0.85); font-family: var(--font-sans); margin-bottom: 22px; }
+.pressure-max-btn {
+  width: 100%; padding: 13px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.pressure-max-btn:hover { background: var(--accent2); }
+
+/* 거부 버튼 — 압박 MAX 시 경고 연출 */
+.choice-btn.reject.pressure-warn {
+  border-left-color: var(--accent);
+  background: rgba(139,26,26,0.06);
+  animation: rejectWarn 1.8s ease infinite;
+}
+@keyframes rejectWarn {
+  0%, 100% { box-shadow: none; }
+  50%       { box-shadow: inset 0 0 0 1px rgba(139,26,26,0.3); }
+}
+.reject-warn-label {
+  font-size: 10px; color: var(--accent); font-family: var(--font-sans);
+  margin-top: 5px; letter-spacing: 0.05em;
+}
+
+/* ─── CONFIRM DIALOG ─── */
+.confirm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(28,20,16,0.5);
+  z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.confirm-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 24px 22px;
+  max-width: 380px; width: 100%;
+  animation: sceneIn 0.3s ease;
+}
+.confirm-title { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
+.confirm-body  { font-size: 14px; line-height: 1.8; color: var(--ink); font-family: var(--font-sans); margin-bottom: 20px; }
+.confirm-btns  { display: flex; gap: 10px; }
+.confirm-yes {
+  flex: 1; padding: 12px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 3px;
+  font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.confirm-yes:hover { background: var(--accent2); }
+.confirm-no {
+  flex: 1; padding: 12px;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border2); border-radius: 3px;
+  font-family: var(--font-sans); font-size: 14px;
+  cursor: pointer; transition: border-color 0.15s;
+}
+.confirm-no:hover { border-color: var(--border2); color: var(--ink); }
+
+/* ─── FINAL ─── */
+.final-wrap { padding: 24px 0 0; }
+
+.final-banner {
+  text-align: center;
+  padding: 28px 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 16px;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 27px,
+    rgba(160,140,100,0.05) 27px, rgba(160,140,100,0.05) 28px
+  );
+}
+.final-icon  { font-size: 52px; margin-bottom: 14px; }
+.final-title { font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 8px; line-height: 1.35; }
+.final-sub   { font-size: 13px; color: var(--muted); line-height: 1.75; font-family: var(--font-sans); }
+
+.history-log {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.history-log-title {
+  background: var(--ink2); color: rgba(238,232,220,0.9);
+  padding: 10px 16px;
+  font-size: 11px; letter-spacing: 0.18em;
+  font-family: var(--font-sans); font-weight: 700;
+}
+.history-log-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.log-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 12px; font-family: var(--font-sans); line-height: 1.6;
+  padding-bottom: 8px; border-bottom: 1px dashed var(--border);
+}
+.log-row:last-child { border-bottom: none; padding-bottom: 0; }
+.log-article { font-weight: 700; color: var(--primary); flex-shrink: 0; min-width: 50px; }
+.log-choice  { color: var(--ink2); flex: 1; }
+.log-badge   { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.badge-accept { background: rgba(45,90,61,0.15); color: var(--safe2); }
+.badge-modify { background: rgba(122,74,16,0.15); color: var(--warn); }
+.badge-reject { background: rgba(139,26,26,0.15); color: var(--accent); }
+
+.compare-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.compare-title {
+  background: var(--sepia); color: rgba(238,232,220,0.9);
+  padding: 10px 16px;
+  font-size: 11px; letter-spacing: 0.18em;
+  font-family: var(--font-sans); font-weight: 700;
+}
+.compare-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.compare-row  {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding-bottom: 8px; border-bottom: 1px dashed var(--border);
+  font-size: 12px; font-family: var(--font-sans); line-height: 1.6;
+}
+.compare-row:last-child { border-bottom: none; padding-bottom: 0; }
+.compare-article { font-weight: 700; color: var(--sepia); flex-shrink: 0; min-width: 50px; }
+.compare-impact  { color: var(--ink2); flex: 1; }
+.compare-later   { color: var(--accent); font-size: 11px; margin-top: 2px; }
+
+.insight-box {
+  background: rgba(26,58,92,0.06);
+  border: 1px solid rgba(26,58,92,0.2);
+  border-radius: 3px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  font-size: 13px; line-height: 1.85;
+  color: var(--ink); font-family: var(--font-sans);
+}
+.insight-title {
+  font-size: 11px; letter-spacing: 0.18em;
+  color: var(--primary); margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.final-btns { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+.btn-copy {
+  width: 100%; padding: 14px;
+  background: var(--primary); color: rgba(238,232,220,0.95);
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s, transform 0.12s;
+}
+.btn-copy:hover { background: var(--primary2); transform: translateY(-1px); }
+.btn-restart {
+  width: 100%; padding: 12px;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border2); border-radius: 3px;
+  font-family: var(--font-sans); font-size: 13px;
+  cursor: pointer; transition: border-color 0.15s, color 0.15s;
+}
+.btn-restart:hover { border-color: var(--border2); color: var(--ink); }
+
+.footer-credit {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(120,100,80,0.4);
+  padding-bottom: 20px;
+  font-family: var(--font-sans);
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════
+// GA 이벤트 래퍼
+// ═══════════════════════════════════════
+function track(eventName, params = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', eventName, params);
+  }
+}
+
+// ═══════════════════════════════════════
+// TIPS 딕셔너리
+// ═══════════════════════════════════════
+const TIPS = {
+  '운요호': '운요호(雲揚號) — 일본 군함. 1875년 강화도 앞바다에서 도발 사건을 일으켜 조선을 압박하는 빌미가 됨.',
+  '신헌': '신헌(申櫶, 1810~1884) — 조선의 무신. 강화도 조약 체결 당시 조선 측 전권대관으로 협상에 임함.',
+  '구로다 기요타카': '구로다 기요타카(黒田清隆, 1840~1900) — 일본 육군 중장. 강화도 협상 전권대사. 군함 6척을 이끌고 와 무력으로 조선을 압박함.',
+  '병자수호조규': '병자수호조규(丙子修好條規) — 강화도 조약의 공식 명칭. 1876년(병자년) 체결. 조선이 서양 문물을 받아들인 최초의 근대적 조약이자, 불평등 조약의 시작.',
+  '치외법권': '치외법권(治外法權) — 외국인이 체류하는 나라의 법을 적용받지 않는 권리. 일본인이 조선에서 범죄를 저질러도 조선이 재판할 수 없게 됨.',
+  '관세': '관세(關稅) — 수입·수출 상품에 부과하는 세금. 강화도 조약에 관세 조항이 없어 일본 상품이 무관세로 조선에 들어옴.',
+  '최혜국 조항': '최혜국 조항(最惠國條項) — 한 나라가 다른 나라에 준 가장 유리한 조건을, 자동으로 자국에도 적용해 달라는 조항.',
+  '전권대관': '전권대관(全權大官) — 협상과 조약 체결에 관한 모든 권한을 위임받은 최고 대표.',
+  '자주국': '자주국(自主國) — 다른 나라의 간섭 없이 스스로 다스리는 나라. 1조에서 조선을 자주국으로 명시한 것은 청나라의 종주권을 부정하려는 일본의 의도.',
+  '연안 측량': '연안 측량(沿岸 測量) — 해안선·수심·암초 등을 조사하는 활동. 군사 침략을 위한 사전 정보 수집으로 활용될 수 있음.',
+  '거류지': '거류지(居留地) — 외국인이 모여 사는 구역. 조약으로 설정된 거류지에서는 조선의 법이 아닌 일본의 법이 적용됨.',
+};
+
+function tt(word, tipKey) {
+  const tip = TIPS[tipKey || word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+// ═══════════════════════════════════════
+// 조항 데이터
+// ═══════════════════════════════════════
+const ARTICLES = [
+  {
+    id: 1, label: '제1조', tag: '주권',
+    title: '조선의 자주국 지위',
+    treaty: '조선국은 자주국으로, 일본국과 평등한 권리를 가진다.',
+    japanIntent: '역사가들은 이 조항이 청나라와 조선의 전통적 관계를 약화시키려는 의도였다고 분석합니다. "자주국" 표현으로 청의 종주권을 부정하면, 조선 문제에 청이 개입하는 명분이 사라집니다.',
+    realChoice: '수용',
+    realNote: '실제 협상에서 조선은 이 조항에 이의를 제기하지 못했습니다. 군사적 열세 속에서 거부는 전쟁을 의미했습니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 자주국 지위를 확인한다',
+        desc: '조선의 독립을 국제적으로 확인받는 조항으로 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '⚖️', feedbackTitle: '수용했습니다',
+        japan: '구로다는 고개를 끄덕입니다. "자연스러운 판단이오." 협상이 빠르게 진행됩니다.',
+        history: '실제로 조선은 이 조항을 받아들였습니다. 그러나 이 조항은 훗날 청의 개입을 막는 근거로, 또 일본이 조선을 직접 지배하려는 발판으로 활용됩니다. 당장은 불리해 보이지 않지만, 뒤를 내다본 함정이었습니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 청과의 관계 명시를 요청한다',
+        desc: '"자주국"이라는 표현이 청과의 기존 관계를 훼손하지 않도록 단서 조항을 요청한다.',
+        subChoices: [
+          {
+            text: '"조선은 자주국이되, 청과의 전통적 유대는 유지된다"는 문구 추가를 요청한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '🤝', feedbackTitle: '수정을 요구했습니다',
+            japan: '구로다가 미간을 찌푸립니다. "그 문구는 받아들이기 어렵소." 한동안 협상이 교착됩니다. 결국 일본은 해당 단서 없이 원안을 밀어붙입니다.',
+            history: '조선이 이 수정을 시도했지만, 일본은 단호히 거부했습니다. 군함의 포문이 열려 있는 상황에서 조선의 협상력은 제한적이었습니다.',
+            logChoice: '수정 요구 (청 관계 명시)',
+          },
+          {
+            text: '"자주국"의 의미가 대외 주권에만 해당한다는 해석 조항을 요청한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '📋', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 이를 받아들이는 척하면서 해석의 여지를 남깁니다. 표면적으로는 합의한 것처럼 보이나, 이후 일본은 자신들에게 유리한 해석을 고집합니다.',
+            history: '조약 해석을 둘러싼 분쟁은 이후 조선과 일본 사이에 반복됩니다. 명확하지 않은 조약 문구는 언제나 강자에게 유리하게 해석됩니다.',
+            logChoice: '수정 요구 (해석 조항)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 이 조항은 받아들일 수 없다',
+        desc: '"자주국" 표현이 청과의 관계를 해친다는 이유로 강하게 거부한다.',
+        feedbackType: 'reject-fb', feedbackIcon: '⚠️', feedbackTitle: '거부했습니다',
+        japan: '구로다가 자리에서 일어납니다. "그렇다면 협상을 계속할 이유가 없소." 인천 앞바다의 군함이 포문을 열었다는 보고가 들어옵니다.',
+        history: '실제 협상에서 조선은 이 조항에 사실상 이의를 제기하지 못했습니다. 군사적 열세 속에서 거부는 전쟁을 의미했기 때문입니다. 외교력의 한계는 군사력의 한계이기도 했습니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+  {
+    id: 4, label: '제4조', tag: '경제',
+    title: '추가 항구 개항',
+    treaty: '조선은 부산 외에 두 개의 항구를 추가로 개항하고, 일본인의 왕래와 통상을 허가한다.',
+    japanIntent: '부산 하나로는 충분하지 않았습니다. 역사가들은 일본이 서울에 가까운 인천(경제·정치 거점)과 러시아를 견제할 원산(북방 진출 거점)을 의도적으로 노렸다고 봅니다.',
+    realChoice: '수용',
+    realNote: '조선은 이 조항을 수용했습니다. 원산(1880)·인천(1883)이 차례로 개항됩니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 추가 개항에 동의한다',
+        desc: '통상 확대가 조선에도 이익이 될 수 있다고 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '🚢', feedbackTitle: '수용했습니다',
+        japan: '구로다가 만족스러운 표정입니다. "현명한 결정이오." 인천과 원산 개항이 확정됩니다.',
+        history: '실제로 인천(1883)과 원산(1880)이 추가 개항됩니다. 개항장은 일본 상인의 경제 침투 거점이 됩니다. 특히 인천은 서울과 가까워, 일본의 정치적 영향력 확대에도 활용됩니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 개항 조건을 제한한다',
+        desc: '항구 추가는 인정하되, 일본인의 활동 범위와 조건을 조선이 정하도록 요구한다.',
+        subChoices: [
+          {
+            text: '개항장에서 일본인의 활동 범위를 항구 반경 10리 이내로 제한하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '📏', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 마지못해 "잠정적으로" 받아들이는 척합니다. 그러나 이후 추가 협약에서 이 범위는 계속 넓어집니다.',
+            history: '실제로 조일수호조규 부록(1876)에 10리 행동 범위 제한이 포함됩니다. 그러나 일본 상인들은 이를 지속적으로 무력화했습니다.',
+            logChoice: '수정 요구 (활동 범위 제한)',
+          },
+          {
+            text: '추가 개항 항구의 위치를 조선이 지정하도록 요구한다 (서울 인접 항구 제외).',
+            feedbackType: 'modify-fb', feedbackIcon: '🗺️', feedbackTitle: '수정을 요구했습니다',
+            japan: '구로다가 냉담하게 답합니다. "항구 위치는 이미 결정됐소." 일본은 인천 개항을 포기하지 않습니다.',
+            history: '인천은 일본이 반드시 확보하려 했던 거점이었습니다. 서울과의 거리가 짧아 정치·군사적으로 핵심이었기 때문입니다. 이 요구는 현실적으로 받아들여지기 어려웠습니다.',
+            logChoice: '수정 요구 (위치 지정 요구)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 추가 개항은 불가하다',
+        desc: '부산 하나로도 충분하며, 더 이상의 개항은 받아들일 수 없다고 버틴다.',
+        feedbackType: 'reject-fb', feedbackIcon: '🚫', feedbackTitle: '거부했습니다',
+        japan: '구로다가 협상 테이블을 주먹으로 칩니다. "그렇다면 우리 함대가 직접 항구를 선택할 것이오." 협상 분위기가 급격히 악화됩니다.',
+        history: '추가 개항은 일본이 절대 양보하지 않은 핵심 요구 사항이었습니다. 완전한 거부는 군사적 충돌로 이어질 가능성이 높았습니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+  {
+    id: 7, label: '제7조', tag: '군사',
+    title: '일본의 조선 연안 측량권',
+    treaty: '일본국은 조선국의 연해·도서·암초를 자유롭게 측량할 수 있다.',
+    japanIntent: '조약 문면은 "연안 항해의 안전"을 위한다고 적었습니다. 그러나 역사가들은 이를 군사 작전을 위한 사전 정보 수집으로 평가합니다. 수심·상륙 지점·해안선 자료는 언제든 침략의 발판이 될 수 있습니다.',
+    realChoice: '수용',
+    realNote: '조선은 이 조항을 수용했습니다. 일본은 어떠한 감시 없이 조선 전 해안을 측량했습니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 항해 안전을 위한 측량을 허용한다',
+        desc: '연안 측량은 양국 선박의 안전을 위한 것으로 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '🗺️', feedbackTitle: '수용했습니다',
+        japan: '구로다가 흡족해합니다. "현명한 판단이오." 일본 측량선이 즉시 조선 해안 곳곳을 누비기 시작합니다.',
+        history: '일본은 이 조항을 근거로 조선 전 해안을 측량합니다. 청일전쟁(1894)·러일전쟁(1904) 당시 일본 함대가 정확하게 이동할 수 있었던 것은 이 측량 자료 덕분이기도 합니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 측량 범위와 목적을 제한한다',
+        desc: '항해 안전 목적에 한하며, 측량 구역을 조선이 협의하도록 요구한다.',
+        subChoices: [
+          {
+            text: '모든 측량 시 조선 관리가 반드시 동승하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '👁️', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 "그것은 번거롭소"라며 난색을 표합니다. 협상이 교착되고, 결국 동승 요구는 받아들여지지 않습니다.',
+            history: '실제 강화도 조약 제7조에는 조선 관리 동승 조항이 포함되지 않았습니다. 일본은 어떠한 감시 없이 조선 전 해안을 자유롭게 측량했고, 그 자료는 훗날 군사 작전에 활용됩니다.',
+            logChoice: '수정 요구 (관리 동승)',
+          },
+          {
+            text: '군사 요충지·왕도(서울) 인근 해안은 측량 금지 구역으로 지정하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '🚧', feedbackTitle: '수정을 요구했습니다',
+            japan: '"항해 안전을 위한 측량인데 왜 제한하는 것이오?" 일본은 강하게 반발합니다. 금지 구역 요구는 끝내 받아들여지지 않습니다.',
+            history: '실제 강화도 조약에는 측량 금지 구역 조항이 포함되지 않았습니다. 일본 측량선은 서해·남해·동해 전 해안을 자유롭게 누볐고, 인천 앞바다 수심 자료는 이후 일본 함대 작전의 기반이 됩니다.',
+            logChoice: '수정 요구 (금지 구역 지정)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 조선의 바다를 내줄 수 없다',
+        desc: '"자국 영해를 외국이 측량하는 것은 주권 침해"라며 강하게 거부한다.',
+        feedbackType: 'reject-fb', feedbackIcon: '⚓', feedbackTitle: '거부했습니다',
+        japan: '"측량은 항해를 위한 것일 뿐이오!" 일본 대표는 분노를 감추지 않습니다. 협상이 중단 위기에 처하고, 압박의 수위가 높아집니다.',
+        history: '이 조항에 정면으로 거부한 기록은 없습니다. 조선 협상단이 이 조항의 군사적 함의를 충분히 인식하지 못했기 때문이기도 하고, 군사력 열세 탓이기도 합니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+  {
+    id: 10, label: '제10조', tag: '주권',
+    title: '치외법권 (영사재판권)',
+    treaty: '일본인이 조선에서 죄를 범한 경우, 일본 관원이 심판한다.',
+    japanIntent: '이 조항이 의미하는 것은 간단합니다. 조선 땅에서 일본인이 범죄를 저질러도 조선이 재판할 수 없습니다. 당시 일본은 이를 "근대적 법치주의"라 포장했지만, 실제로는 자국민 보호를 위한 치외법권입니다.',
+    realChoice: '수용',
+    realNote: '조선은 이 조항을 수용했습니다. 치외법권은 1910년 강제병합 때까지 유지됩니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 일본 관원의 재판권을 인정한다',
+        desc: '양국 법체계가 다르므로 일본인은 일본법으로 다루는 것이 합리적이라 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '⚖️', feedbackTitle: '수용했습니다',
+        japan: '구로다가 만족스러운 미소를 짓습니다. "현명하오." 이 순간, 조선의 사법 주권 일부가 사라집니다.',
+        history: '치외법권은 강화도 조약 이후 조선에서 일본인 범죄를 방치하는 결정적 구멍이 됩니다. 방곡령 위반, 토지 수탈 등 이후 수많은 사건에서 일본인은 조선 법의 심판을 피해 갑니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 조선인 피해자 보호 조항을 요구한다',
+        desc: '일본인 재판은 인정하되, 피해자가 조선인일 경우 조선 측 참관·증언권을 보장받도록 요구한다.',
+        subChoices: [
+          {
+            text: '조선인이 피해자인 사건은 조선 관원도 재판에 참여하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '🤝', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 "참관"조차 받아들이기 어렵다며 난색을 표합니다. 결국 이 요구는 받아들여지지 않습니다.',
+            history: '실제 강화도 조약에는 조선 측 참관권 조항이 포함되지 않았습니다. 일본 영사재판은 조선인 피해자 보호 장치 없이 운영됐고, 일본인 범죄는 사실상 처벌받지 않는 구조가 굳어집니다.',
+            logChoice: '수정 요구 (피해자 참관권)',
+          },
+          {
+            text: '"5년 후 양국 합의하에 재검토"한다는 한시 조항을 넣도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '📅', feedbackTitle: '수정을 요구했습니다',
+            japan: '"재검토는 가능하오." 일본은 가볍게 동의합니다. 그러나 이후 어떤 재검토도 이루어지지 않습니다.',
+            history: '한시 조항은 아무런 구속력을 갖지 못했습니다. 치외법권은 1910년 강제병합 때까지 유지됐습니다.',
+            logChoice: '수정 요구 (한시 조항)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 조선 땅에서는 조선 법이 적용된다',
+        desc: '"조선 영토에서 일어난 사건은 조선이 재판해야 한다"고 원칙을 주장한다.',
+        feedbackType: 'reject-fb', feedbackIcon: '🏛️', feedbackTitle: '거부했습니다',
+        japan: '"우리 국민을 당신들의 미개한 법으로 다루라는 것이오?" 구로다가 모욕적인 언사를 내뱉습니다. 협상장의 긴장이 최고조에 달합니다.',
+        history: '치외법권 거부는 가장 중요하고 정당한 저항이었습니다. 그러나 실제 협상에서 조선은 이를 막지 못했습니다. 강자의 논리가 법 앞에서도 작동했습니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+  {
+    id: 11, label: '제11조', tag: '경제',
+    title: '관세 규정 누락',
+    treaty: '조선국과 일본국이 통상하는 항구에서 무역하는 규칙은 추후 협의하여 정한다.',
+    japanIntent: '"나중에 정하자"는 유예 조항처럼 보입니다. 그러나 이 "추후 협의"가 관세를 의도적으로 비워둔 함정이었다는 것은, 1876년 조일무역규칙이 체결되고 나서야 분명해집니다.',
+    realChoice: '수용',
+    realNote: '조선은 이 조항을 수용했습니다. 결국 조일무역규칙(1876)에서 무관세 무역이 굳어집니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 추후 협의로 미룬다',
+        desc: '세부 사항은 나중에 정하는 것도 합리적이라 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '📋', feedbackTitle: '수용했습니다',
+        japan: '"물론이오. 나중에 다시 이야기합시다." 구로다의 표정에 안도감이 스칩니다. 그 안도감의 의미를 당신은 아직 알지 못합니다.',
+        history: '이것이 가장 치명적인 조항이었습니다. 조일무역규칙(1876)에서 이 "추후 협의"가 사실상 무관세 무역으로 굳어집니다. 일본 면제품이 조선에 쏟아져 조선 수공업이 붕괴하는 출발점입니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 관세 조항을 이 조약에 명시한다',
+        desc: '"추후 협의"는 불명확하다. 관세율의 원칙이라도 지금 이 조약에 포함시키도록 요구한다.',
+        subChoices: [
+          {
+            text: '"수입 상품에 대해 조선이 관세를 부과할 권리를 보유한다"는 원칙 조항을 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '💰', feedbackTitle: '수정을 요구했습니다',
+            japan: '"관세는 무역의 자유를 방해하오." 일본은 원칙 조항 삽입에 강하게 반발합니다. 협상이 길어집니다.',
+            history: '관세 자주권 확보는 핵심 이익이었습니다. 이 요구를 밀어붙였다면 이후 조선의 경제 주권이 달라졌을 수도 있습니다. 그러나 결국 이 원칙은 조약에 포함되지 않았습니다.',
+            logChoice: '수정 요구 (관세권 원칙 명시)',
+          },
+          {
+            text: '"추후 협의"의 기한을 6개월로 못 박고, 그때까지는 잠정 관세를 적용하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '⏳', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 기한 명시에는 동의하지만, "잠정 관세" 적용에는 난색을 표합니다. 절충 협상이 이어집니다.',
+            history: '기한을 못 박는 것은 현명한 시도였습니다. 그러나 6개월 후 협의에서도 일본은 무관세 원칙을 관철시켰습니다.',
+            logChoice: '수정 요구 (기한 명시)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 관세 규정 없이는 서명할 수 없다',
+        desc: '"관세 조항이 없는 조약은 조선의 경제를 위험에 빠뜨린다"며 서명을 거부한다.',
+        feedbackType: 'reject-fb', feedbackIcon: '🛡️', feedbackTitle: '거부했습니다',
+        japan: '구로다가 의아한 표정을 짓습니다. "이것은 단순한 유예 조항이오. 왜 문제가 되는 것이오?" 일본은 이 조항의 핵심을 들킬까 봐 내심 긴장합니다.',
+        history: '관세 누락에 정면으로 문제를 제기한 것은 탁월한 판단이었습니다. 실제 협상에서 조선은 이 함정을 발견하지 못했습니다. 이 조항이 얼마나 중요한지를 당시에는 알아챈 사람이 거의 없었습니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+  {
+    id: 9, label: '제9조', tag: '경제',
+    title: '자유 무역 (무관세 효과)',
+    treaty: '양국 인민은 각자 임의로 매매하고, 양국 관원은 간섭하지 못한다.',
+    japanIntent: '"자유 무역"은 중립적인 말처럼 들립니다. 그러나 관세가 없는 상태에서의 자유 무역은 산업력이 강한 쪽에 일방적으로 유리합니다. 일본의 공산품과 조선의 수공업품이 같은 조건에서 경쟁하면 어떻게 될까요.',
+    realChoice: '수용',
+    realNote: '조선은 이 조항을 수용했습니다. 개항 이후 일본 상품이 조선 시장을 잠식하기 시작합니다.',
+    choices: [
+      {
+        type: 'accept', icon: '✅',
+        name: '수용 — 자유 무역에 동의한다',
+        desc: '무역의 자유가 상호 이익을 가져올 것이라 보아 받아들인다.',
+        feedbackType: 'accept-fb', feedbackIcon: '🏪', feedbackTitle: '수용했습니다',
+        japan: '구로다가 기쁜 기색을 감추지 못합니다. 협상이 순조롭게 마무리되어 갑니다.',
+        history: '자유 무역 조항은 관세 누락(11조)과 결합해 치명적 효과를 냅니다. 일본의 면제품·잡화가 쏟아지며 조선의 전통 수공업은 경쟁력을 잃어갑니다. 개항 이후 조선 상인들의 몰락이 시작됩니다.',
+        logChoice: '수용', logBadge: 'badge-accept',
+      },
+      {
+        type: 'modify', icon: '✏️',
+        name: '수정 요구 — 조선 특산물 보호 조항을 요구한다',
+        desc: '자유 무역은 인정하되, 조선의 특정 품목은 보호할 수 있는 권리를 요구한다.',
+        subChoices: [
+          {
+            text: '"조선의 주요 산업 품목은 별도 협의로 보호할 수 있다"는 예외 조항을 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '🛡️', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 "자유 무역"의 원칙을 훼손한다며 반발하지만, 협상 여지를 조금 남깁니다.',
+            history: '산업 보호 예외 조항은 이후 각국 불평등 조약에서도 논의됩니다. 실제로 확보하기 어려웠지만, 원칙 제시 자체가 중요했습니다.',
+            logChoice: '수정 요구 (보호 품목 예외)',
+          },
+          {
+            text: '"개항장 내에서만" 자유 무역을 허용하고, 내지(조선 내륙) 통상은 별도 허가제로 하도록 요구한다.',
+            feedbackType: 'modify-fb', feedbackIcon: '🗾', feedbackTitle: '수정을 요구했습니다',
+            japan: '일본은 개항장 제한에는 일단 동의합니다. 그러나 이후 내지 통상도 요구합니다.',
+            history: '개항장 무역 제한은 일정한 효과가 있었습니다. 그러나 1882년 조일수호조규속약으로 일본 상인의 내지 통상이 허용되어 이 방어선도 뚫립니다.',
+            logChoice: '수정 요구 (개항장 내 제한)',
+          },
+        ],
+      },
+      {
+        type: 'reject', icon: '❌',
+        name: '거부 — 관세 없는 자유 무역은 불평등하다',
+        desc: '"관세가 없는 상태에서의 자유 무역은 조선에 일방적으로 불리하다"며 거부한다.',
+        feedbackType: 'reject-fb', feedbackIcon: '⚠️', feedbackTitle: '거부했습니다',
+        japan: '구로다가 어이없다는 표정입니다. "자유 무역이 왜 문제가 된단 말이오?" 그러나 당신의 논리에 순간 말문이 막힙니다.',
+        history: '관세 없는 자유 무역의 불평등함을 간파한 것은 탁월한 통찰이었습니다. 그러나 협상력 부재 속에서 이 거부도 결국 관철되지 못했습니다.',
+        logChoice: '거부', logBadge: 'badge-reject', pressureUp: true,
+      },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════
+// 결과 유형 — 패턴 기반 (점수 없음)
+// ═══════════════════════════════════════
+// tag별 조항 분류
+const TAG_MAP = {
+  경제: [4, 11, 9],
+  군사: [7],
+  주권: [1, 10],
+};
+
+function getPattern(log) {
+  // log 항목별 저항 여부 (수정 or 거부 = 저항)
+  const resistedIds = log
+    .filter(l => l.logBadge !== 'badge-accept')
+    .map(l => {
+      const art = ARTICLES.find(a => a.label === l.label);
+      return art ? art.id : null;
+    }).filter(Boolean);
+
+  const count = (ids) => ids.filter(id => resistedIds.includes(id)).length;
+
+  return {
+    경제: { resisted: count(TAG_MAP.경제), total: TAG_MAP.경제.length },
+    군사: { resisted: count(TAG_MAP.군사), total: TAG_MAP.군사.length },
+    주권: { resisted: count(TAG_MAP.주권), total: TAG_MAP.주권.length },
+    total: resistedIds.length,
+  };
+}
+
+function getResultType(pattern) {
+  const { 경제, 군사, 주권, total } = pattern;
+
+  if (total === 0) return {
+    icon: '📜', title: '현실 타협형',
+    color: '#6b5430',
+    headline: '모든 조항을 수용했습니다.',
+    body: '실제 강화도 조약과 같은 결과입니다. 군사력 열세 속에서 협상단이 할 수 있는 것은 많지 않았습니다. 이것이 당시 조선의 현실이었고, 이 조약이 출발점이 되어 조선은 30년 뒤 주권을 잃게 됩니다.',
+  };
+
+  if (total >= 5) return {
+    icon: '🔥', title: '전방위 저항형',
+    color: '#2d5a3d',
+    headline: '거의 모든 조항에 저항했습니다.',
+    body: '경제·군사·주권 어느 영역도 쉽게 내주지 않으려 했습니다. 원칙은 분명했지만, 군함 6척이 대기 중인 상황에서 협상력은 한계가 있었습니다. 역사는 의지만으로 바꾸기 어렵지만, 문제를 꿰뚫어 본 것 자체가 중요합니다.',
+  };
+
+  // 영역별 패턴 분석
+  const 경제방어 = 경제.resisted >= 2;
+  const 주권방어 = 주권.resisted >= 1;
+  const 군사방어 = 군사.resisted >= 1;
+
+  if (주권방어 && 경제방어 && !군사방어) return {
+    icon: '⚖️', title: '경제·주권 방어형',
+    color: '#1a3a5c',
+    headline: '경제와 주권 조항을 지키려 했지만, 군사 정보는 내줬습니다.',
+    body: '관세·무역·사법권에서 저항했습니다. 그러나 연안 측량권을 허용한 결과, 일본은 조선의 해안선을 군사적으로 파악하게 됩니다. 경제·주권의 형식을 지키면서도 군사적 열위는 굳어졌습니다.',
+  };
+
+  if (경제방어 && !주권방어) return {
+    icon: '💰', title: '경제 방어형',
+    color: '#7a4a10',
+    headline: '경제 조항은 막으려 했지만, 주권 조항에서 타협했습니다.',
+    body: '관세·무역 방어에 집중했습니다. 그러나 치외법권과 자주국 조항을 수용하면서 사법 주권이 사라졌습니다. 경제 방어선은 쳤지만, 법적·정치적 토대가 흔들리는 구조입니다.',
+  };
+
+  if (주권방어 && !경제방어) return {
+    icon: '🏛️', title: '주권 방어형',
+    color: '#1a3a5c',
+    headline: '사법권과 자주권을 지키려 했지만, 경제 조항을 놓쳤습니다.',
+    body: '치외법권·자주국 조항에서 저항했습니다. 그러나 관세 누락과 자유 무역을 수용하면서 경제 주권이 열렸습니다. 주권의 형식은 지켰지만, 경제의 실질은 일본 손에 넘어가는 구조입니다.',
+  };
+
+  return {
+    icon: '📋', title: '부분 저항형',
+    color: '#7a4a10',
+    headline: '일부 조항에서 저항하고, 일부는 수용했습니다.',
+    body: '선택적으로 저항했지만 일관된 방어선을 만들지는 못했습니다. 협상은 각 조항이 따로 작동하지 않습니다. 경제·군사·주권이 서로 연결된 구조라는 것이 이 조약의 핵심입니다.',
+  };
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let S = {
+  phase: 'intro',
+  articleIdx: 0,
+  pressure: 20,
+  log: [],
+  chosenType: null,
+  subChosen: null,
+  feedbackData: null,
+  showConfirm: false,
+  showPressureMax: false,
+  _finalTracked: false,
+};
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+let bubbleTimer = null;
+document.addEventListener('click', function(e) {
+  const bubble = document.getElementById('tt-bubble');
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect();
+    const bw = 260;
+    let left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left  = left + 'px';
+    bubble.style.top   = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bubH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bubH - 14) + 'px';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase==='intro'   ? renderIntro()   :
+    S.phase==='final'   ? renderFinal()   :
+                          renderGame();
+  if (S.showConfirm) {
+    document.body.insertAdjacentHTML('beforeend', renderConfirm());
+  }
+  if (S.showPressureMax) {
+    document.body.insertAdjacentHTML('beforeend', renderPressureMax());
+  }
+}
+
+// ─── INTRO ───
+function renderIntro() {
+  return `
+  <div class="scene intro-wrap">
+    <div class="intro-eyebrow">찰리쌤의 한국사 게임실</div>
+    <h1 class="intro-title">강화도 협상 테이블<br>1876년 2월</h1>
+    <p class="intro-date">조일수호조규(병자수호조규) 협상 — 강화도 연무당</p>
+
+    <div class="intro-deco"><span>◆ 상황 브리핑 ◆</span></div>
+
+    <div class="intro-card">
+      <div class="intro-situation">
+        1875년, 일본 군함 <strong>${tt('운요호')}</strong>가 강화도 앞바다에서 조선 수군에 포격을 가했습니다.
+        일본은 이를 빌미로 <em>군함 6척</em>을 이끌고 와 협상을 요구합니다.<br><br>
+        1876년 2월, 강화도 연무당. 일본 전권대사 <strong>${tt('구로다 기요타카')}</strong>가
+        조약 초안을 내밀었습니다. 조선은 어떻게 대응해야 할까요?
+      </div>
+
+      <div class="role-box">
+        <div class="role-title">👤 당신의 역할</div>
+        <div class="role-name">신헌 — 조선 측 ${tt('전권대관')}</div>
+        <div class="role-desc">
+          조약 체결의 모든 권한을 위임받은 조선 수석 대표입니다.
+          협상장 바깥에는 일본 군함이 대기 중입니다. 군사력은 열세지만,
+          조선의 미래가 당신의 판단에 달려 있습니다.
+        </div>
+      </div>
+
+      <div class="rule-list">
+        <div class="rule-item"><div class="rule-dot"></div><span>핵심 조항 6개를 순서대로 검토합니다</span></div>
+        <div class="rule-item"><div class="rule-dot"></div><span>각 조항마다 <strong>수용 / 수정 요구 / 거부</strong>를 선택하세요</span></div>
+        <div class="rule-item"><div class="rule-dot"></div><span>선택 후 실제 역사와 비교해 결과를 확인합니다</span></div>
+        <div class="rule-item"><div class="rule-dot"></div><span>어떤 선택이 정답인지는 — 선택하기 전엔 알 수 없습니다</span></div>
+      </div>
+
+      <button class="start-btn" onclick="startGame()">협상 테이블에 앉는다 →</button>
+    </div>
+  </div>`;
+}
+
+// ─── PROGRESS BAR ───
+function renderProgBar() {
+  const total = ARTICLES.length;
+  const done  = S.articleIdx;
+  const pct   = Math.round((done / total) * 100);
+  return `
+  <div class="prog-bar">
+    <span class="prog-label">조항 검토</span>
+    <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <span class="prog-score">${done}/${total}</span>
+  </div>`;
+}
+
+// ─── GAME ───
+function renderGame() {
+  const art = ARTICLES[S.articleIdx];
+  const pressurePct = Math.min(100, S.pressure);
+
+  let bodyHtml = '';
+
+  if (!S.feedbackData) {
+    // 선택 전
+    bodyHtml = `
+    <div class="pressure-box">
+      <span class="pressure-label">🇯🇵 압박 수위</span>
+      <div class="pressure-track"><div class="pressure-fill" style="width:${pressurePct}%"></div></div>
+      <span class="pressure-val">${pressurePct}%</span>
+    </div>
+
+    <div class="article-badge">📜 ${art.label}</div>
+    <p style="font-family:var(--font-serif);font-size:17px;font-weight:700;color:var(--primary);margin-bottom:10px;line-height:1.4">${art.title}</p>
+
+    <div class="treaty-text">${art.treaty}</div>
+
+    <div class="japan-note">${art.japanIntent}</div>
+
+    <p class="choice-label">귀하의 대응을 선택하십시오 —</p>
+    <div class="choice-grid">
+      ${renderChoices(art)}
+    </div>
+    ${S.chosenType === 'modify' ? renderSubChoices(art) : ''}
+    `;
+  } else {
+    // 피드백 표시
+    const fb = S.feedbackData;
+    bodyHtml = `
+    <div class="article-badge">📜 ${art.label}</div>
+    <p style="font-family:var(--font-serif);font-size:17px;font-weight:700;color:var(--primary);margin-bottom:10px;line-height:1.4">${art.title}</p>
+    <div class="treaty-text">${art.treaty}</div>
+
+    <div class="feedback-box">
+      <div class="fb-result ${fb.feedbackType}">
+        <span>${fb.feedbackIcon}</span>
+        <span>${fb.feedbackTitle}</span>
+      </div>
+      <div class="fb-body">
+        <div class="fb-japan">🇯🇵 ${fb.japan}</div>
+        <div class="fb-history">${fb.history}</div>
+      </div>
+    </div>
+
+    <button class="fb-next-btn" onclick="nextArticle()">
+      ${S.articleIdx < ARTICLES.length - 1 ? '다음 조항으로 →' : '최종 결과 확인 →'}
+    </button>
+    `;
+  }
+
+  return `
+  ${renderProgBar()}
+  <div class="scene" style="padding-top:16px">
+    <div class="doc-card">
+      <div class="doc-header">
+        <span class="doc-header-icon">📋</span>
+        <span class="doc-header-title">${tt('병자수호조규')} 초안</span>
+        <span class="doc-header-sub">1876. 02</span>
+      </div>
+      <div class="doc-body">${bodyHtml}</div>
+    </div>
+  </div>`;
+}
+
+function renderChoices(art) {
+  const pressureMax = S.pressure >= 100;
+  return art.choices.map(c => {
+    const selected = S.chosenType === c.type;
+    const isRejectWarn = c.type === 'reject' && pressureMax;
+    return `
+    <button class="choice-btn ${c.type}${selected ? ' selected' : ''}${isRejectWarn ? ' pressure-warn' : ''}"
+            onclick="selectChoice('${c.type}')">
+      <span class="choice-icon">${c.icon}</span>
+      <div class="choice-right">
+        <div class="choice-name">${c.name}</div>
+        <div class="choice-desc">${c.desc}</div>
+        ${isRejectWarn ? '<div class="reject-warn-label">⚠ 압박이 극한에 달했습니다. 거부 시 돌이킬 수 없을 수 있습니다.</div>' : ''}
+      </div>
+    </button>`;
+  }).join('');
+}
+
+function renderSubChoices(art) {
+  const modifyChoice = art.choices.find(c => c.type === 'modify');
+  if (!modifyChoice || !modifyChoice.subChoices) return '';
+  return `
+  <div class="sub-choice-wrap">
+    <div class="sub-choice-label">✏️ 어떤 방식으로 수정을 요구하겠습니까?</div>
+    <div class="sub-choice-grid">
+      ${modifyChoice.subChoices.map((sc, idx) => `
+        <button class="sub-btn" onclick="selectSubChoice(${idx})">${sc.text}</button>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+function renderPressureMax() {
+  return `
+  <div class="pressure-max-overlay" id="pressure-max-overlay">
+    <div class="pressure-max-box">
+      <div class="pressure-max-icon">⚔️</div>
+      <div class="pressure-max-title">일본 함대가 움직이기 시작했습니다</div>
+      <div class="pressure-max-body">
+        인천 앞바다의 군함 6척이 포문을 열고 강화도를 향해 접근합니다.<br><br>
+        거부를 거듭한 결과, 협상장의 공기가 달라졌습니다.<br>
+        구로다가 낮은 목소리로 말합니다.<br><br>
+        <strong style="color:#f0a0a0">"이제 더 이상의 거부는 전쟁을 의미하오."</strong><br><br>
+        협상은 계속됩니다. 그러나 당신의 선택지가 얼마나 남아 있는지, 다시 생각해야 합니다.
+      </div>
+      <button class="pressure-max-btn" onclick="closePressureMax()">협상을 계속한다</button>
+    </div>
+  </div>`;
+}
+
+function renderConfirm() {
+  return `
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <div class="confirm-title">⚠️ 정말 거부하겠습니까?</div>
+      <div class="confirm-body">
+        인천 앞바다에 일본 군함 6척이 대기 중입니다.<br>
+        거부하면 협상이 결렬되고, 전쟁으로 이어질 수 있습니다.<br><br>
+        <strong>그래도 원칙을 지키겠습니까?</strong>
+      </div>
+      <div class="confirm-btns">
+        <button class="confirm-yes" onclick="confirmReject()">거부를 고수한다</button>
+        <button class="confirm-no" onclick="cancelReject()">다시 생각한다</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── FINAL ───
+function renderFinal() {
+  const pattern = getPattern(S.log);
+  const result  = getResultType(pattern);
+
+  if (!S._finalTracked) {
+    track('finish_game', {
+      result_type: result.title,
+      resisted_total: pattern.total,
+    });
+    S._finalTracked = true;
+  }
+
+  // 내 선택 로그
+  const logHtml = S.log.map(l => {
+    const art = ARTICLES.find(a => a.label === l.label);
+    const tagLabel = art ? `<span style="font-size:10px;padding:1px 7px;border-radius:2px;background:rgba(26,58,92,0.1);color:var(--primary);font-family:var(--font-sans);margin-left:6px">${art.tag}</span>` : '';
+    const badge = l.logBadge === 'badge-accept' ? '수용' : l.logBadge === 'badge-modify' ? '수정' : '거부';
+    return `
+    <div class="log-row">
+      <span class="log-article">${l.label}${tagLabel}</span>
+      <span class="log-choice">${l.logChoice}</span>
+      <span class="log-badge ${l.logBadge}">${badge}</span>
+    </div>`;
+  }).join('');
+
+  // 실제 역사 비교
+  const compareHtml = ARTICLES.map(art => {
+    const myLog = S.log.find(l => l.label === art.label);
+    const myBadge = myLog ? myLog.logBadge : 'badge-accept';
+    const myChoice = myLog ? myLog.logChoice : '수용';
+    const same = art.realChoice === '수용' ? myBadge === 'badge-accept' : myBadge !== 'badge-accept';
+    return `
+    <div class="compare-row">
+      <span class="compare-article">${art.label}<br><span style="font-size:10px;color:var(--muted)">${art.tag}</span></span>
+      <div class="compare-impact">
+        <div style="display:flex;gap:8px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:11px;font-family:var(--font-sans)">나: <strong class="${myBadge === 'badge-accept'?'':''}"> ${myChoice}</strong></span>
+          <span style="font-size:11px;color:var(--muted);font-family:var(--font-sans)">실제 조선: <strong>${art.realChoice}</strong> ${same?'<span style="color:var(--safe2)">일치</span>':'<span style="color:var(--accent)">차이</span>'}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--font-sans);line-height:1.6">${art.realNote}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 영역별 저항 현황
+  const tagBarHtml = Object.entries(TAG_MAP).map(([tag, ids]) => {
+    const p = pattern[tag];
+    const pct = Math.round((p.resisted / p.total) * 100);
+    const color = pct >= 67 ? 'var(--safe)' : pct >= 34 ? 'var(--warn)' : 'var(--accent)';
+    return `
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:12px;font-family:var(--font-sans);color:var(--ink2)">${tag} 조항 (${ids.length}개)</span>
+        <span style="font-size:12px;font-weight:700;font-family:var(--font-sans);color:${color}">${p.resisted}/${p.total} 저항</span>
+      </div>
+      <div style="height:6px;background:rgba(0,0,0,0.08);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width 0.6s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="scene final-wrap">
+    <div class="final-banner">
+      <div class="final-icon">${result.icon}</div>
+      <div class="final-title" style="color:${result.color}">${result.title}</div>
+      <div style="font-size:14px;color:var(--muted);font-family:var(--font-sans);margin:6px 0 14px">${result.headline}</div>
+      <div class="final-sub">${result.body}</div>
+    </div>
+
+    <div class="history-log">
+      <div class="history-log-title">📊 영역별 저항 현황</div>
+      <div class="history-log-body">${tagBarHtml}</div>
+    </div>
+
+    <div class="history-log">
+      <div class="history-log-title">📋 내 협상 기록</div>
+      <div class="history-log-body">${logHtml}</div>
+    </div>
+
+    <div class="compare-box">
+      <div class="compare-title">🔍 내 선택 vs 실제 역사</div>
+      <div class="compare-body">${compareHtml}</div>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-title">💡 핵심 인사이트</div>
+      강화도 조약은 조선이 체결한 최초의 근대적 조약이었습니다. 그러나 동시에
+      <strong>불평등 조약의 시작</strong>이기도 했습니다. ${tt('치외법권')}과 ${tt('관세')} 누락,
+      연안 ${tt('측량', '연안 측량')}권은 서로 독립된 문제가 아닙니다.
+      군사·경제·주권이 맞물려 작동하면서, 조선은 이후 30년간 이 조약의 구조에서 벗어나지 못했습니다.
+    </div>
+
+    <div class="final-btns">
+      <button class="btn-copy" onclick="copyResult()">📋 내 협상 결과 복사 (패들렛 공유용)</button>
+      <button class="btn-restart" onclick="restart()">처음부터 다시 협상하기</button>
+    </div>
+
+    <div class="footer-credit">© 찰리쌤 · hischarlie.tistory.com</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════
+function startGame() {
+  track('start_game');
+  S.phase = 'game'; R();
+}
+
+function selectChoice(type) {
+  if (S.feedbackData) return;
+  if (type === S.chosenType && type !== 'modify') {
+    S.chosenType = null; R(); return;
+  }
+  S.chosenType = type;
+  S.subChosen  = null;
+
+  if (type === 'reject') {
+    S.showConfirm = true; R(); return;
+  }
+  if (type === 'accept') {
+    applyChoice(type);
+    return;
+  }
+  // modify → 수정 선택지 표시
+  R();
+}
+
+function selectSubChoice(idx) {
+  if (S.feedbackData) return;
+  const art = ARTICLES[S.articleIdx];
+  const modifyChoice = art.choices.find(c => c.type === 'modify');
+  const sc = modifyChoice.subChoices[idx];
+  S.subChosen = idx;
+
+  track('select_sub_choice', {
+    article_id: art.id,
+    sub_index: idx,
+  });
+
+  S.feedbackData = {
+    feedbackType: sc.feedbackType,
+    feedbackIcon: sc.feedbackIcon,
+    feedbackTitle: sc.feedbackTitle,
+    japan: sc.japan,
+    history: sc.history,
+  };
+  S.log.push({
+    label: art.label,
+    logChoice: sc.logChoice || ('수정 요구 ' + (idx + 1)),
+    logBadge: 'badge-modify',
+  });
+  R();
+}
+
+function applyChoice(type) {
+  const art = ARTICLES[S.articleIdx];
+  const choice = art.choices.find(c => c.type === type);
+
+  track('select_choice', {
+    article_id: art.id,
+    choice_type: type,
+    pressure: S.pressure,
+  });
+  const prevPressure = S.pressure;
+  if (choice.pressureUp) S.pressure = Math.min(100, S.pressure + 20);
+
+  S.feedbackData = {
+    feedbackType: choice.feedbackType,
+    feedbackIcon: choice.feedbackIcon,
+    feedbackTitle: choice.feedbackTitle,
+    japan: choice.japan,
+    history: choice.history,
+  };
+  S.log.push({
+    label: art.label,
+    logChoice: choice.logChoice || type,
+    logBadge: choice.logBadge || (type === 'accept' ? 'badge-accept' : 'badge-reject'),
+  });
+
+  // 압박 수위 100% 최초 도달 시 경고 오버레이
+  if (prevPressure < 100 && S.pressure >= 100) {
+    S.showPressureMax = true;
+  }
+
+  R();
+}
+
+function closePressureMax() {
+  document.getElementById('pressure-max-overlay')?.remove();
+  S.showPressureMax = false;
+}
+
+function confirmReject() {
+  document.getElementById('confirm-overlay')?.remove();
+  S.showConfirm = false;
+  applyChoice('reject');
+}
+
+function cancelReject() {
+  document.getElementById('confirm-overlay')?.remove();
+  S.showConfirm = false;
+  S.chosenType = null;
+  R();
+}
+
+function nextArticle() {
+  track('complete_article', {
+    article_id: ARTICLES[S.articleIdx].id,
+  });
+  S.articleIdx++;
+  S.chosenType  = null;
+  S.subChosen   = null;
+  S.feedbackData = null;
+  S.showConfirm  = false;
+  if (S.articleIdx >= ARTICLES.length) {
+    S.phase = 'final';
+  }
+  R();
+}
+
+function copyResult() {
+  const pattern = getPattern(S.log);
+  const result  = getResultType(pattern);
+  const lines = [
+    `📋 강화도 협상 테이블 — 내 결과`,
+    ``,
+    `역할: 조선 측 전권대관 신헌`,
+    `결과 유형: ${result.title}`,
+    `저항 조항: ${pattern.total}/6개`,
+    ``,
+    `── 영역별 저항 ──`,
+    `경제 조항: ${pattern.경제.resisted}/${pattern.경제.total}개 저항`,
+    `군사 조항: ${pattern.군사.resisted}/${pattern.군사.total}개 저항`,
+    `주권 조항: ${pattern.주권.resisted}/${pattern.주권.total}개 저항`,
+    ``,
+    `── 조항별 선택 ──`,
+    ...S.log.map(l => {
+      const badge = l.logBadge === 'badge-accept' ? '수용' : l.logBadge === 'badge-modify' ? '수정 요구' : '거부';
+      return `${l.label}: [${badge}] ${l.logChoice}`;
+    }),
+    ``,
+    `── 한 줄 평가 ──`,
+    result.headline,
+    result.body,
+    ``,
+    `— 찰리쌤의 한국사 게임실`,
+  ];
+  const text = lines.join('\n');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.top = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch (e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = {
+    phase: 'intro', articleIdx: 0, pressure: 20,
+    log: [], chosenType: null, subChosen: null,
+    feedbackData: null, showConfirm: false,
+    showPressureMax: false, _finalTracked: false,
+  };
+  R();
+}
+
+// START
+R();
+</script>
+</body>
+</html>
+`;
