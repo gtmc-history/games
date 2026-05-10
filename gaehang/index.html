@@ -1,1 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개항의 갈림길 — 1876년 전야</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   ROOT — 조선 후기 + 위기감 팔레트
+══════════════════════════════════════ */
+:root {
+  --bg:       #f2ece0;
+  --bg2:      #e8dfd0;
+  --surface:  #faf6ee;
+  --ink:      #1c1410;
+  --ink2:     #3a2e24;
+  --muted:    #7a6e5e;
+  --gold:     #b8860b;
+  --gold2:    #d4a520;
+  --gold-dim: rgba(184,134,11,0.12);
+  --red:      #8b1a1a;
+  --red2:     #c02020;
+  --blue:     #1a3a5c;
+  --blue2:    #2a5080;
+  --blue-dim: rgba(26,58,92,0.10);
+  --border:   rgba(9,11,13,0.14);
+  --border2:  rgba(184,134,11,0.28);
 
+  --serif: 'Noto Serif KR', serif;
+  --sans:  'Noto Sans KR', sans-serif;
+  --doc:   'Gowun Batang', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(115deg, rgba(201,160,82,0.12), transparent 38%),
+    linear-gradient(180deg, #f0ece4, var(--bg)),
+    repeating-linear-gradient(90deg,  rgba(9,11,13,0.022) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(0deg,   rgba(9,11,13,0.016) 0 1px, transparent 1px 9px);
+  color: var(--ink);
+  min-height: 100dvh;
+}
+
+/* ══════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════ */
+#app {
+  width: min(100%, 760px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 22px 16px 64px;
+}
+
+/* ── 상단 바 ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.era-tag {
+  padding: 5px 10px;
+  border: 1px solid rgba(26,58,92,0.22);
+  background: rgba(245,240,232,0.8);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--sans);
+  letter-spacing: 0.05em;
+}
+
+.progress { display: flex; gap: 5px; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(9,11,13,0.15); transition: background 0.3s; }
+.dot.active { background: var(--gold); }
+
+/* ── 씬 카드 ── */
+.scene {
+  border: 1px solid var(--border);
+  background: rgba(245,240,232,0.9);
+  box-shadow: 0 16px 40px rgba(9,11,13,0.14);
+  padding: clamp(20px, 5vw, 36px);
+  animation: sceneIn 0.35s ease both;
+}
+.scene + .scene { margin-top: 14px; }
+section[hidden] { display: none !important; }
+
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 타이포 ── */
+h1, h2, h3 { font-family: var(--serif); line-height: 1.3; }
+h1 { font-size: clamp(28px, 7vw, 48px); margin-bottom: 12px; }
+h2 { font-size: clamp(22px, 5vw, 32px); margin-bottom: 10px; }
+h3 { font-size: 18px; margin-bottom: 8px; }
+p  { font-size: 16px; line-height: 1.8; word-break: keep-all; color: var(--ink2); }
+.lead { font-size: 17px; color: var(--muted); margin-bottom: 20px; }
+
+/* ── 안내 박스 ── */
+.notice {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-left: 4px solid var(--gold);
+  background: rgba(232,224,212,0.7);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+.notice strong { color: var(--gold); }
+
+/* ══════════════════════════════════════
+   TOOLTIP (왕의 결재함 v3 패턴)
+══════════════════════════════════════ */
+.tt {
+  border-bottom: 1.5px dashed var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--red); }
+
+#tt-bubble {
+  position: fixed; z-index: 9000;
+  width: 240px;
+  background: #1c1410;
+  border: 1px solid rgba(184,134,11,0.6);
+  border-radius: 4px;
+  padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  pointer-events: none;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: #d4a520; margin-bottom: 5px; font-family: var(--serif); }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,192,0.9); line-height: 1.7; }
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn {
+  display: block; width: 100%;
+  min-height: 48px; padding: 13px 16px;
+  border: none; border-radius: 3px;
+  font-family: var(--serif); font-size: 16px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+.btn:active:not(:disabled) { transform: translateY(0) scale(0.97); }
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.btn-primary { background: var(--gold); color: #fff; }
+.btn-outline  { background: transparent; border: 1.5px solid var(--gold); color: var(--ink); }
+.btn-ink      { background: var(--ink); color: var(--bg); }
+
+.btn-row { display: grid; gap: 10px; margin-top: 18px; }
+@media (min-width: 540px) { .btn-row.two { grid-template-columns: 1fr 1fr; } }
+
+/* ══════════════════════════════════════
+   역할 카드 (도입)
+══════════════════════════════════════ */
+.role-grid { display: grid; gap: 12px; margin-top: 18px; }
+@media (min-width: 580px) { .role-grid { grid-template-columns: 1fr 1fr; } }
+
+.role-card {
+  border: 1px solid var(--border);
+  background: rgba(232,224,212,0.6);
+  padding: 18px;
+}
+.role-card .rc-name {
+  display: block;
+  font-family: var(--serif); font-size: 19px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.role-card.cheokhwa .rc-name { color: var(--red); }
+.role-card.gaehwa   .rc-name { color: var(--blue); }
+.role-card p { font-size: 14px; line-height: 1.75; margin-bottom: 14px; }
+
+/* ══════════════════════════════════════
+   토론 씬 — 발언 패널
+══════════════════════════════════════ */
+.speaker-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  font-size: 13px; font-weight: 700; font-family: var(--sans);
+  letter-spacing: 0.05em;
+}
+.speaker-tag.cheokhwa { background: var(--red);  color: #fff; }
+.speaker-tag.gaehwa   { background: var(--blue); color: #fff; }
+
+.speech {
+  padding: 14px 16px;
+  border-left: 3px solid;
+  background: rgba(232,224,212,0.55);
+  font-family: var(--doc); font-size: 15px; line-height: 1.9;
+  color: var(--ink2);
+  margin-bottom: 16px;
+  animation: sceneIn 0.4s ease;
+}
+.speech.cheokhwa { border-color: var(--red); }
+.speech.gaehwa   { border-color: var(--blue); }
+
+/* 쟁점 라벨 */
+.issue-label {
+  color: var(--red);
+  font-family: var(--serif); font-weight: 700;
+  font-size: 14px; letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+/* ══════════════════════════════════════
+   학생 질문 입력 영역
+══════════════════════════════════════ */
+.q-box {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.q-box-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--ink); margin-bottom: 6px;
+  font-family: var(--serif);
+}
+.q-hint {
+  font-size: 13px; color: var(--muted);
+  margin-bottom: 10px; line-height: 1.7;
+  font-family: var(--sans);
+}
+.q-hint em { color: var(--gold); font-style: normal; font-weight: 700; }
+
+.q-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-family: var(--doc); font-size: 15px;
+  color: var(--ink); background: var(--surface);
+  resize: vertical; min-height: 80px; line-height: 1.8;
+  transition: border-color 0.2s;
+}
+.q-textarea:focus { outline: none; border-color: var(--gold); }
+.q-meta {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 6px;
+}
+.q-count { font-size: 12px; color: var(--muted); }
+.q-warn  { font-size: 12px; color: var(--red2); display: none; }
+.q-warn.show { display: block; }
+
+/* ══════════════════════════════════════
+   AI 응답 영역
+══════════════════════════════════════ */
+.ai-section {
+  margin-top: 20px; border-top: 1px solid var(--border);
+  padding-top: 20px; animation: sceneIn 0.4s ease;
+}
+.ai-section-title {
+  font-size: 13px; letter-spacing: 0.15em;
+  color: var(--gold); font-weight: 700;
+  font-family: var(--sans); margin-bottom: 14px;
+}
+
+/* 로딩 점 */
+.dots {
+  display: flex; gap: 5px; align-items: center; padding: 14px 0;
+}
+.dots span {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--muted);
+  animation: dotP 1.2s ease infinite;
+}
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotP {
+  0%,100% { opacity: 0.3; transform: scale(0.8); }
+  50%     { opacity: 1;   transform: scale(1); }
+}
+
+/* 내 질문 인용 */
+.my-question {
+  padding: 10px 14px;
+  border-left: 3px solid var(--gold);
+  background: var(--gold-dim);
+  font-family: var(--doc); font-size: 14px;
+  color: var(--ink2); line-height: 1.8;
+  margin-bottom: 16px;
+}
+.my-question::before {
+  content: '나의 질문: ';
+  font-weight: 700; color: var(--gold);
+  font-family: var(--sans); font-size: 12px;
+  display: block; margin-bottom: 4px;
+}
+
+/* ══════════════════════════════════════
+   최종 입장 결정
+══════════════════════════════════════ */
+.stance-grid { display: grid; gap: 12px; margin: 18px 0; }
+@media (min-width: 480px) { .stance-grid { grid-template-columns: 1fr 1fr; } }
+
+.stance-card {
+  border: 2px solid var(--border);
+  padding: 16px 18px; cursor: pointer;
+  background: rgba(232,224,212,0.5);
+  transition: all 0.2s; border-radius: 2px;
+}
+.stance-card:hover { transform: translateY(-2px); }
+.stance-card.sel-red  { border-color: var(--red);  background: rgba(139,26,26,0.06); }
+.stance-card.sel-blue { border-color: var(--blue); background: rgba(26,58,92,0.06); }
+.sc-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+  margin-bottom: 6px; font-family: var(--sans);
+}
+.stance-card.sel-red  .sc-label { color: var(--red); }
+.stance-card.sel-blue .sc-label { color: var(--blue); }
+.stance-card:not(.sel-red):not(.sel-blue) .sc-label { color: var(--muted); }
+.sc-name { font-family: var(--serif); font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+.sc-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+.reason-label { font-size: 14px; color: var(--ink); margin-bottom: 8px; font-family: var(--serif); }
+
+/* ══════════════════════════════════════
+   결과 화면
+══════════════════════════════════════ */
+.result-grid { display: grid; gap: 12px; margin: 18px 0; }
+@media (min-width: 580px) { .result-grid { grid-template-columns: 1fr 1fr; } }
+
+.eval-card {
+  padding: 16px 18px; border: 1px solid var(--border);
+  background: rgba(232,224,212,0.5);
+}
+.eval-card h3 { font-size: 15px; margin-bottom: 8px; }
+.eval-card.cheokhwa h3 { color: var(--red); }
+.eval-card.gaehwa   h3 { color: var(--blue); }
+.eval-card p { font-size: 14px; line-height: 1.8; }
+
+.history-quote {
+  margin: 16px 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(201,160,82,0.4);
+  background: rgba(9,11,13,0.9);
+  color: rgba(245,240,232,0.9);
+  font-family: var(--doc); font-size: 15px; line-height: 1.85;
+}
+
+.paradox-box {
+  margin: 16px 0;
+  padding: 18px 20px;
+  border-left: 4px solid var(--gold);
+  background: var(--gold-dim);
+  font-size: 15px; line-height: 1.8; color: var(--ink2);
+}
+.paradox-box strong { color: var(--gold); }
+
+.my-summary {
+  margin: 16px 0; padding: 16px 18px;
+  border: 1px solid var(--border);
+  background: rgba(232,224,212,0.6);
+}
+.my-summary .ms-label {
+  font-size: 11px; letter-spacing: 0.18em; font-weight: 700;
+  color: var(--gold); margin-bottom: 10px; font-family: var(--sans);
+}
+.my-summary .ms-stance {
+  font-family: var(--serif); font-size: 17px; font-weight: 700;
+  margin-bottom: 6px;
+}
+.my-summary.cheokhwa .ms-stance { color: var(--red); }
+.my-summary.gaehwa   .ms-stance { color: var(--blue); }
+.my-summary .ms-reason {
+  font-family: var(--doc); font-size: 15px;
+  line-height: 1.85; color: var(--ink2);
+}
+
+.copy-area {
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 14px 16px; margin-bottom: 12px;
+  font-family: var(--doc); font-size: 13px;
+  color: var(--ink2); line-height: 1.9; white-space: pre-wrap;
+}
+
+.copyright {
+  font-size: 12px; color: rgba(120,100,80,0.4);
+  text-align: center; margin-top: 28px;
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: #d4a520;
+  border: 1px solid var(--gold); border-radius: 24px;
+  padding: 10px 22px; font-size: 13px; font-family: var(--sans);
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+#toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="toast"></div>
+
+<main id="app">
+  <div class="topbar">
+    <span class="era-tag">개항기 · 1875~1876</span>
+    <div class="progress" aria-label="진행 단계">
+      <span class="dot active" id="dot0"></span>
+      <span class="dot" id="dot1"></span>
+      <span class="dot" id="dot2"></span>
+      <span class="dot" id="dot3"></span>
+      <span class="dot" id="dot4"></span>
+    </div>
+  </div>
+
+  <!-- ══ 씬 0: 도입 ══ -->
+  <section id="s0" class="scene" aria-label="도입">
+    <h1>개항의 갈림길</h1>
+    <p class="lead">왜양일체론 vs 통상개화론 — 1876년 전야</p>
+    <p>
+      1875년 9월, 일본 군함
+      <span class="tt" data-word="운요호" data-tip="%EC%9A%B4%EC%9A%94%ED%98%B8(%E9%9B%B2%E6%8F%9A%E8%99%9F)%20%E2%80%94%20%EC%9D%BC%EB%B3%B8%EC%9D%B4%20%EA%B0%95%ED%99%94%EB%8F%84%20%EC%95%9E%EB%B0%94%EB%8B%A4%EB%A5%BC%20%EC%B9%A8%EB%B2%94%ED%95%B4%20%EC%A1%B0%EC%84%A0%EC%9D%84%20%EB%8F%84%EB%B0%9C%ED%95%9C%20%EC%82%AC%EA%B1%B4.">운요호</span>가
+      강화도 앞바다를 침범했습니다. 일본은 이를 빌미로 조약 체결을 강요합니다.
+      조정에서 두 목소리가 팽팽히 맞섭니다.
+    </p>
+    <div class="notice">
+      이 게임은 정답을 맞히는 게임이 아닙니다. 두 입장이 <strong>무엇을 보았고, 무엇을 놓쳤는지</strong> 직접 질문하며 따져보는 활동입니다.
+    </div>
+    <div class="notice" style="border-color:var(--muted); background:rgba(232,224,212,0.4)">
+      <strong style="color:var(--muted)">※ 역사 안내</strong><br>
+      이 게임의 <strong style="color:var(--blue)">개화파 신하</strong>는
+      <span class="tt" data-word="박규수" data-tip="%EB%B0%95%EA%B7%9C%EC%88%98(%E6%9C%B4%E7%8F%AA%E5%A3%BD%2C%201807~1872)%20%E2%80%94%20%EB%B6%81%ED%95%99%ED%8C%8C%20%EC%8B%A4%ED%95%99%EC%9D%84%20%EA%B3%84%EC%8A%B9%ED%95%9C%20%EA%B0%9C%ED%99%94%EC%82%AC%EC%83%81%EA%B0%80.%201872%EB%85%84%EC%97%90%20%EC%84%B8%EC%83%81%EC%9D%84%20%EB%96%A0%EB%82%AC%EC%9C%BC%EB%82%98%2C%20%EA%B7%B8%20%EC%82%AC%EC%83%81%EC%9D%B4%20%EC%9D%B4%EC%9D%B4%EC%A0%84%EB%90%98%EC%97%88%EB%8B%A4.">박규수</span>가
+      1872년에 세상을 떠난 뒤에도 그 사상을 이어받은 인물입니다.
+    </div>
+    <button class="btn btn-primary" style="margin-top:20px" onclick="goTo(1)">조정으로 들어가다 →</button>
+  </section>
+
+  <!-- ══ 씬 1: 쟁점 1 ══ -->
+  <section id="s1" class="scene" hidden aria-label="쟁점 1">
+    <div class="issue-label">쟁점 1 / 3</div>
+    <h2>일본은 어떤 존재인가?</h2>
+    <p style="margin-bottom:18px">
+      일본은 수교를 요구합니다. 오래된 이웃으로 볼까요,
+      서양식 침략 질서와 연결된 세력으로 볼까요?
+    </p>
+
+    <div class="speaker-tag cheokhwa">🖋️ 최익현</div>
+    <div class="speech cheokhwa">
+      일본은 이미 서양의 제도와 군사력을 받아들인 나라입니다.
+      <span class="tt" data-word="왜양일체론" data-tip="%EC%99%9C%EC%96%91%EC%9D%BC%EC%B2%B4%EB%A1%A0(%E5%80%AD%E6%B4%8B%E4%B8%80%E9%AB%94%E8%AB%96)%20%E2%80%94%20%EC%9D%BC%EB%B3%B8%EA%B3%BC%20%EC%84%9C%EC%96%91%EC%9D%84%20%EA%B0%99%EC%9D%80%20%EC%9C%84%ED%97%98%EC%9C%BC%EB%A1%9C%20%EB%B3%B4%EB%8A%94%20%EC%B5%9C%EC%9D%B5%ED%98%84%EC%9D%98%20%EC%A3%BC%EC%9E%A5.">왜양일체론</span>이라 함은,
+      일본과 통상하는 것이 곧 서양 오랑캐를 들이는 것과 다름없다는 말입니다.
+      <span class="tt" data-word="운요호" data-tip="%EC%9A%B4%EC%9A%94%ED%98%B8(%E9%9B%B2%E6%8F%9A%E8%99%9F)%20%E2%80%94%20%EC%9D%BC%EB%B3%B8%EC%9D%B4%20%EA%B0%95%ED%99%94%EB%8F%84%20%EC%95%9E%EB%B0%94%EB%8B%A4%EB%A5%BC%20%EC%B9%A8%EB%B2%94%ED%95%9C%20%EA%B5%B0%ED%95%A8.">운요호</span>를
+      앞세워 조선을 위협한 것이 바로 그 증거입니다.
+      조약이란 이름을 달아도, 이는 굴복이지 수교가 아닙니다.
+    </div>
+
+    <div class="speaker-tag gaehwa">📯 개화파 신하</div>
+    <div class="speech gaehwa">
+      일본을 무조건 거부하면 세계 정세를 살필 통로도 함께 닫힙니다.
+      <span class="tt" data-word="병인양요" data-tip="%EB%B3%91%EC%9D%B8%EC%96%91%EC%9A%94(%E4%B8%99%E5%AF%85%E6%B4%8B%E6%93%BE)%20%E2%80%94%201866%EB%85%84%20%ED%94%84%EB%9E%91%EC%8A%A4%20%EA%B5%B0%EB%8C%80%EA%B0%80%20%EC%A1%B0%EC%84%A0%EC%9D%84%20%EC%B9%A8%EA%B3%B5%ED%95%9C%20%EC%82%AC%EA%B1%B4.">병인양요</span>와
+      <span class="tt" data-word="신미양요" data-tip="%EC%8B%A0%EB%AF%B8%EC%96%91%EC%9A%94(%E8%BE%9B%E6%9C%AA%E6%B4%8B%E6%93%BE)%20%E2%80%94%201871%EB%85%84%20%EB%AF%B8%EA%B5%AD%20%EA%B5%B0%EB%8C%80%EA%B0%80%20%EA%B0%95%ED%99%94%EB%8F%84%EB%A5%BC%20%EC%B9%A8%EA%B3%B5%ED%95%9C%20%EC%82%AC%EA%B1%B4.">신미양요</span>에서 이미 확인했습니다.
+      서양 군함은 쇄국으로 막을 수 없습니다.
+      수교의 문제는 '열 것인가 말 것인가'가 아니라,
+      '어떤 조건으로 열 것인가'입니다.
+      조선이 먼저 힘을 갖추지 않으면 그 조건도 우리가 정할 수 없습니다.
+    </div>
+
+    <div class="q-box" id="qbox1">
+      <div class="q-box-title">두 입장을 들었습니다. 더 묻고 싶은 것이 있습니까?</div>
+      <div class="q-hint">
+        한 명에게 직접 질문을 써보세요.<br>
+        <em>예시</em> — "최익현 대감, 그렇다면 서양 군함이 쳐들어오면 어떻게 막을 것입니까?"
+      </div>
+      <textarea class="q-textarea" id="q1" maxlength="200"
+        placeholder="질문을 직접 써보세요. (15자 이상)"
+        oninput="updateCount('q1','cnt1','warn1')"></textarea>
+      <div class="q-meta">
+        <span class="q-warn" id="warn1">15자 이상 써야 질문할 수 있습니다.</span>
+        <span class="q-count"><span id="cnt1">0</span>자</span>
+      </div>
+      <button class="btn btn-ink" style="margin-top:12px" id="ask1"
+        onclick="submitQuestion(1)" disabled>
+        이 질문을 드리겠습니다 →
+      </button>
+    </div>
+
+    <div id="ai1" hidden></div>
+  </section>
+
+  <!-- ══ 씬 2: 쟁점 2 ══ -->
+  <section id="s2" class="scene" hidden aria-label="쟁점 2">
+    <div class="issue-label">쟁점 2 / 3</div>
+    <h2>나라를 지키는 방법은 무엇인가?</h2>
+    <p style="margin-bottom:18px">
+      조선은 군사와 산업의 변화 앞에 서 있습니다.
+      전통 질서를 지켜야 할까요, 기술을 받아들여 힘을 길러야 할까요?
+    </p>
+
+    <div class="speaker-tag cheokhwa">🖋️ 최익현</div>
+    <div class="speech cheokhwa">
+      나라의 근본이 흔들리면 새 기술도 백성을 지키지 못합니다.
+      <span class="tt" data-word="위정척사" data-tip="%EC%9C%84%EC%A0%95%EC%B2%99%EC%82%AC(%E8%A1%9B%E6%AD%A3%E6%96%A5%E9%82%AA)%20%E2%80%94%20%EB%B0%94%EB%A5%B8%20%EA%B2%83(%EC%84%B1%EB%A6%AC%ED%95%99)%EC%9D%84%20%EC%A7%80%ED%82%A4%EA%B3%A0%20%EC%82%AC%EC%95%85%ED%95%9C%20%EA%B2%83(%EC%84%9C%EC%96%91%C2%B7%EC%9D%BC%EB%B3%B8)%EC%9D%84%20%EB%B0%B0%EC%B2%99%ED%95%98%EC%9E%90%EB%8A%94%20%EC%82%AC%EC%83%81.">위정척사</span>는
+      단순한 거부가 아닙니다.
+      조선의 도(道)를 지켜야만 어떤 외세에도 굴하지 않는 자주가 가능합니다.
+      외세와의 조약은 침투의 시작입니다.
+      먼저 우리 제도와 방비를 바로잡은 뒤에 외교를 논해야 합니다.
+    </div>
+
+    <div class="speaker-tag gaehwa">📯 개화파 신하</div>
+    <div class="speech gaehwa">
+      근본을 지키려면 힘도 필요합니다.
+      <span class="tt" data-word="양무운동" data-tip="%EC%96%91%EB%AC%B4%EC%9A%B4%EB%8F%99(%E6%B4%8B%E5%8B%99%E9%81%8B%E5%8B%95)%20%E2%80%94%20%EC%B2%AD%EC%9D%B4%20%EC%84%9C%EC%96%91%20%EA%B8%B0%EC%88%A0%EC%9D%84%20%EB%B0%9B%EC%95%84%EB%93%A4%EC%97%AC%20%EB%B6%80%EA%B5%AD%EA%B0%95%EB%B3%91%EC%9D%84%20%EA%BE%80%ED%95%9C%20%EA%B7%BC%EB%8C%80%ED%99%94%20%EC%9A%B4%EB%8F%99(1861~1895).">양무운동</span>을
+      보십시오.
+      청은 서양 기술을 받아들이면서도 자국의 가치를 지켜왔습니다.
+      <span class="tt" data-word="중체서용" data-tip="%EC%A4%91%EC%B2%B4%EC%84%9C%EC%9A%A9(%E4%B8%AD%E9%AB%94%E8%A5%BF%E7%94%A8)%20%E2%80%94%20%EC%A4%91%EA%B5%AD%EC%9D%98%20%EC%A0%84%ED%86%B5%20%EA%B0%80%EC%B9%98%EB%A5%BC%20%EC%A7%80%ED%82%A4%EB%90%98%20%EC%84%9C%EC%96%91%20%EA%B8%B0%EC%88%A0%EC%9D%80%20%EC%88%98%EC%9A%A9%ED%95%9C%EB%8B%A4%EB%8A%94%20%EC%B2%AD%EC%9D%98%20%EA%B0%9C%ED%98%81%20%EB%85%BC%EB%A6%AC.">중체서용</span>의
+      논리입니다.
+      기술과 정보를 거부한 채 자주를 말하면,
+      실제 위기에서 선택지가 줄어들 뿐입니다.
+    </div>
+
+    <div class="q-box" id="qbox2">
+      <div class="q-box-title">두 입장을 들었습니다. 더 묻고 싶은 것이 있습니까?</div>
+      <div class="q-hint">
+        한 명에게 직접 질문을 써보세요.<br>
+        <em>예시</em> — "개화파 대감, 서양 기술을 배우다 보면 우리 가치도 함께 무너지지 않습니까?"
+      </div>
+      <textarea class="q-textarea" id="q2" maxlength="200"
+        placeholder="질문을 직접 써보세요. (15자 이상)"
+        oninput="updateCount('q2','cnt2','warn2')"></textarea>
+      <div class="q-meta">
+        <span class="q-warn" id="warn2">15자 이상 써야 질문할 수 있습니다.</span>
+        <span class="q-count"><span id="cnt2">0</span>자</span>
+      </div>
+      <button class="btn btn-ink" style="margin-top:12px" id="ask2"
+        onclick="submitQuestion(2)" disabled>
+        이 질문을 드리겠습니다 →
+      </button>
+    </div>
+
+    <div id="ai2" hidden></div>
+  </section>
+
+  <!-- ══ 씬 3: 쟁점 3 ══ -->
+  <section id="s3" class="scene" hidden aria-label="쟁점 3">
+    <div class="issue-label">쟁점 3 / 3</div>
+    <h2>백성에게 더 위험한 선택은?</h2>
+    <p style="margin-bottom:18px">
+      개항은 새로운 물건과 정보의 통로가 될 수 있습니다.
+      그러나 경제 침투와 불평등한 조건도 함께 옵니다.
+    </p>
+
+    <div class="speaker-tag cheokhwa">🖋️ 최익현</div>
+    <div class="speech cheokhwa">
+      값싼 일본 물품이 들어오면 조선의 장인과 상인이 먼저 무너집니다.
+      <span class="tt" data-word="조일수호조규" data-tip="%EC%A1%B0%EC%9D%BC%EC%88%98%ED%98%B8%EC%A1%B0%EA%B7%9C(%E6%9C%9D%E6%97%A5%E4%BF%AE%E5%A5%BD%E6%A2%9D%E8%A6%8F)%20%E2%80%94%201876%EB%85%84%20%EA%B0%95%ED%99%94%EB%8F%84%EC%A1%B0%EC%95%BD%EC%9D%98%20%EA%B3%B5%EC%8B%9D%20%EB%AA%85%EC%B9%AD.%20%EB%B6%88%ED%8F%89%EB%93%B1%20%EC%A1%B0%EC%95%BD%20%EC%84%B1%EA%B2%A9.">조일수호조규</span>라는
+      이름으로 맺어지는 조약에 불평등한 조항이 들어가면,
+      조선이 스스로 통제할 힘을 잃게 됩니다.
+      외국 상인과 군함이 들어오고 나면, 다시 문을 닫기는 더 어렵습니다.
+    </div>
+
+    <div class="speaker-tag gaehwa">📯 개화파 신하</div>
+    <div class="speech gaehwa">
+      고립이 길어질수록 백성은 낡은 제도와 약한 국방의 피해를 먼저 봅니다.
+      개항의 위험을 줄이려면 더 정확한 정보와 제도 개혁이 필요합니다.
+      침투가 두렵다면 더더욱 세계의 제도와 기술을 알아야 합니다.
+      모른 채 막기만 하면 대응은 늘 뒤처집니다.
+      상공업과 군사 기술을 키워야 백성의 삶도 지킬 수 있습니다.
+    </div>
+
+    <div class="q-box" id="qbox3">
+      <div class="q-box-title">마지막 쟁점입니다. 더 묻고 싶은 것이 있습니까?</div>
+      <div class="q-hint">
+        한 명에게 직접 질문을 써보세요.<br>
+        <em>예시</em> — "최익현 대감, 문을 닫으면 백성이 더 가난해지지는 않습니까?"
+      </div>
+      <textarea class="q-textarea" id="q3" maxlength="200"
+        placeholder="질문을 직접 써보세요. (15자 이상)"
+        oninput="updateCount('q3','cnt3','warn3')"></textarea>
+      <div class="q-meta">
+        <span class="q-warn" id="warn3">15자 이상 써야 질문할 수 있습니다.</span>
+        <span class="q-count"><span id="cnt3">0</span>자</span>
+      </div>
+      <button class="btn btn-ink" style="margin-top:12px" id="ask3"
+        onclick="submitQuestion(3)" disabled>
+        이 질문을 드리겠습니다 →
+      </button>
+    </div>
+
+    <div id="ai3" hidden></div>
+  </section>
+
+  <!-- ══ 씬 4: 나의 판단 ══ -->
+  <section id="s4" class="scene" hidden aria-label="나의 판단">
+    <h2>나의 판단</h2>
+    <p style="margin-bottom:6px">
+      세 가지 쟁점을 모두 살폈습니다.
+      어떤 선택도 쉽지 않습니다. 당신은 어느 입장에 더 가깝습니까?
+    </p>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:20px">
+      정답이 없는 질문입니다. 지금 내 생각이 무엇인지가 중요합니다.
+    </p>
+
+    <div class="stance-grid">
+      <div class="stance-card" id="sc-cheokhwa" onclick="selectStance('cheokhwa')">
+        <div class="sc-label">척화 입장</div>
+        <div class="sc-name">🖋️ 최익현</div>
+        <div class="sc-desc">일본과의 통상은 서양을 들이는 것과 같다. 문을 닫아야 한다.</div>
+      </div>
+      <div class="stance-card" id="sc-gaehwa" onclick="selectStance('gaehwa')">
+        <div class="sc-label">개화 입장</div>
+        <div class="sc-name">📯 개화파 신하</div>
+        <div class="sc-desc">쇄국으로는 막을 수 없다. 배우고 개혁해야 살아남는다.</div>
+      </div>
+    </div>
+
+    <div class="reason-label">그렇게 생각하는 이유를 한 줄로 써보세요. (15자 이상)</div>
+    <textarea class="q-textarea" id="reason" maxlength="150"
+      placeholder="예) 병인양요를 보면 쇄국으로 서양 군함을 막기 어렵기 때문입니다."
+      oninput="updateReasonCount()"></textarea>
+    <div class="q-meta">
+      <span class="q-warn" id="warn-reason">15자 이상 써야 제출할 수 있습니다.</span>
+      <span class="q-count"><span id="cnt-reason">0</span>자</span>
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:16px" id="btn-submit"
+      onclick="goResult()" disabled>
+      결과 확인하기 →
+    </button>
+  </section>
+
+  <!-- ══ 씬 5: 결과 ══ -->
+  <section id="s5" class="scene" hidden aria-label="결과">
+    <h2>토론 결과</h2>
+
+    <div class="my-summary" id="my-summary">
+      <div class="ms-label">나의 판단</div>
+      <div class="ms-stance" id="ms-stance"></div>
+      <div class="ms-reason" id="ms-reason"></div>
+    </div>
+
+    <div class="result-grid">
+      <article class="eval-card cheokhwa">
+        <h3>최익현 입장의 의미</h3>
+        <p>
+          일본의 침투 가능성과 불평등 조약의 위험을 날카롭게 경계했습니다.
+          개항 이후 조선 상인의 몰락과 경제 잠식은 실제로 일어났습니다.
+          그의 우려는 현실이 되었습니다.
+        </p>
+      </article>
+      <article class="eval-card gaehwa">
+        <h3>개화파 입장의 의미</h3>
+        <p>
+          서구 군사력의 현실을 꿰뚫었습니다.
+          그러나 개화의 조건을 통제하지 못했고,
+          일본에 유리한 조약 구조는 결국 주권 상실로 이어졌습니다.
+        </p>
+      </article>
+    </div>
+
+    <div class="paradox-box">
+      <strong>역사의 역설</strong> — 1876년의 조선에서 두 입장 모두 나름의 합리성을 가지고 있었습니다.
+      최익현의 우려는 현실이 되었고, 개화파의 판단도 틀리지 않았습니다.
+      그러나 조선은 두 선택 중 어느 것도 충분히 실행할 시간을 갖지 못했습니다.
+    </div>
+
+    <div class="history-quote">
+      <span class="tt" data-word="조일수호조규" data-tip="%EC%A1%B0%EC%9D%BC%EC%88%98%ED%98%B8%EC%A1%B0%EA%B7%9C(%E6%9C%9D%E6%97%A5%E4%BF%AE%E5%A5%BD%E6%A2%9D%E8%A6%8F)%20%E2%80%94%201876%EB%85%84%20%EA%B0%95%ED%99%94%EB%8F%84%EC%A1%B0%EC%95%BD%EC%9D%98%20%EA%B3%B5%EC%8B%9D%20%EB%AA%85%EC%B9%AD.%20%EB%B6%88%ED%8F%89%EB%93%B1%20%EC%A1%B0%EC%95%BD%20%EC%84%B1%EA%B2%A9.">조일수호조규</span>(강화도조약)은
+      조선 최초의 근대적 조약이었지만, 일본의 무력 압박 속에서 체결된 불평등 조약이었습니다.
+      최익현의 경계는 이후 일본 침투와 연결되고,
+      개화파의 문제의식은 조선이 변화하는 세계 정세에 대응해야 했다는 점을 보여줍니다.
+      두 입장은 모두 조선이 처한 위험을 보았습니다. 다만 어느 위험을 더 크게 보았느냐가 달랐습니다.
+    </div>
+
+    <div class="copy-area" id="copy-area"></div>
+    <div class="btn-row two">
+      <button class="btn btn-outline" onclick="copyResult()">📋 결과 복사하기</button>
+      <button class="btn btn-primary" onclick="restartGame()">다시 하기</button>
+    </div>
+
+    <p class="copyright">© 찰리쌤 · hischarlie.tistory.com</p>
+  </section>
+</main>
+
+<script>
+/* ══════════════════════════════════════
+   GAS 프록시 엔드포인트
+══════════════════════════════════════ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbz9rS_C6MD1EqI6XEmHXb6mBL-PG4Csr5c6uzWom5jJJ6_yWeXoJKvCoRvwPM6GljW3/exec';
+
+/* ══════════════════════════════════════
+   AI 시스템 프롬프트
+══════════════════════════════════════ */
+const SYS_CHEOKHWA =
+  '당신은 1876년 조선의 유학자 최익현입니다. ' +
+  '왜양일체론(倭洋一體論)의 입장에서 개항에 반대합니다. ' +
+  '핵심 논거: ① 일본은 이미 서양화했으므로 통상은 서양을 들이는 것과 같다 ' +
+  '② 값싼 외국 물품으로 조선 장인·상인이 몰락한다 ' +
+  '③ 소중화(小中華)로서 화이론적 질서를 지켜야 한다. ' +
+  '말투: 단호하고 도덕적 확신에 차 있으며 성리학 논거를 사용합니다. ' +
+  '"소신은", "전하께 아뢰옵니다" 등을 자연스럽게 씁니다. ' +
+  '학생의 질문에 최익현 입장에서만 답합니다. ' +
+  '반드시 한국어로만, 250자 이내로 간결하게 답합니다.';
+
+const SYS_GAEHWA =
+  '당신은 1876년 조선의 개화파 신하입니다. ' +
+  '박규수(1807~1872, 북학파 실학 계승)가 세상을 떠난 뒤 그 사상을 이어받아 개항을 지지합니다. ' +
+  '핵심 논거: ① 병인양요·신미양요에서 확인했듯 쇄국으로 서양을 막을 수 없다 ' +
+  '② 청의 양무운동처럼 기술 수용과 전통 수호는 양립 가능하다 ' +
+  '③ 문을 열어야 신식 무기·기술로 진정한 자주를 이룰 수 있다. ' +
+  '말투: 현실적이고 냉철하며 실증 사례를 활용합니다. ' +
+  '"소신은", "삼가 아뢰옵니다" 등을 자연스럽게 씁니다. ' +
+  '학생의 질문에 개화파 입장에서만 답합니다. ' +
+  '반드시 한국어로만, 250자 이내로 간결하게 답합니다.';
+
+/* ══════════════════════════════════════
+   GAME STATE
+══════════════════════════════════════ */
+const S = {
+  questions: { 1: '', 2: '', 3: '' },
+  stance: '',
+  reason: '',
+};
+
+/* ══════════════════════════════════════
+   GA4
+══════════════════════════════════════ */
+function gaEvent(name, params) {
+  if (typeof gtag === 'function') gtag('event', name, params || {});
+}
+
+/* ══════════════════════════════════════
+   TOOLTIP
+══════════════════════════════════════ */
+const bubble = document.getElementById('tt-bubble');
+let ttTimer = null;
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const bw = 240, rect = el.getBoundingClientRect();
+    const left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left  = left + 'px';
+    bubble.style.top   = '-9999px';
+    bubble.classList.add('show');
+    const bh = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bh - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top  - bh - 14) + 'px';
+    if (ttTimer) clearTimeout(ttTimer);
+    ttTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ══════════════════════════════════════
+   화면 전환
+══════════════════════════════════════ */
+function goTo(n) {
+  for (let i = 0; i <= 5; i++) {
+    const el = document.getElementById('s' + i);
+    if (el) el.hidden = (i !== n);
+  }
+  // 진행 도트
+  for (let i = 0; i <= 4; i++) {
+    const d = document.getElementById('dot' + i);
+    if (d) d.classList.toggle('active', i <= n);
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ══════════════════════════════════════
+   글자 수 카운터
+══════════════════════════════════════ */
+function updateCount(taId, cntId, warnId) {
+  const val = document.getElementById(taId).value;
+  document.getElementById(cntId).textContent = val.length;
+  const ok = val.trim().length >= 15;
+  document.getElementById(warnId).classList.toggle('show', !ok && val.length > 0);
+  // 버튼 번호 추출 (q1→ask1, q2→ask2, q3→ask3)
+  const n = taId.replace('q', '');
+  const btn = document.getElementById('ask' + n);
+  if (btn) btn.disabled = !ok;
+}
+
+function updateReasonCount() {
+  const val = document.getElementById('reason').value;
+  S.reason = val;
+  document.getElementById('cnt-reason').textContent = val.length;
+  const ok = val.trim().length >= 15;
+  document.getElementById('warn-reason').classList.toggle('show', !ok && val.length > 0);
+  document.getElementById('btn-submit').disabled = !(S.stance && ok);
+}
+
+/* ══════════════════════════════════════
+   입장 선택
+══════════════════════════════════════ */
+function selectStance(s) {
+  S.stance = s;
+  document.getElementById('sc-cheokhwa').className =
+    'stance-card' + (s === 'cheokhwa' ? ' sel-red' : '');
+  document.getElementById('sc-gaehwa').className =
+    'stance-card' + (s === 'gaehwa' ? ' sel-blue' : '');
+  const reason = document.getElementById('reason').value;
+  document.getElementById('btn-submit').disabled =
+    !(S.stance && reason.trim().length >= 15);
+}
+
+/* ══════════════════════════════════════
+   AI 호출
+══════════════════════════════════════ */
+async function callAI(system, userMsg) {
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: system,
+        messages: [{ role: 'user', content: userMsg }],
+        thinkingBudget: 0,
+      }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    return data.content || data.text || '(응답을 받지 못했습니다.)';
+  } catch (err) {
+    console.error(err);
+    return '(연결이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.)';
+  }
+}
+
+/* ══════════════════════════════════════
+   질문 제출 (AI 양측 동시 호출)
+══════════════════════════════════════ */
+async function submitQuestion(n) {
+  const q = document.getElementById('q' + n).value.trim();
+  if (q.length < 15) return;
+
+  S.questions[n] = q;
+
+  // 입력 잠금
+  document.getElementById('q' + n).disabled = true;
+  document.getElementById('ask' + n).disabled = true;
+  document.getElementById('qbox' + n).style.opacity = '0.5';
+
+  // AI 응답 영역 표시
+  const aiDiv = document.getElementById('ai' + n);
+  aiDiv.hidden = false;
+  aiDiv.innerHTML =
+    '<div class="ai-section">' +
+      '<div class="ai-section-title">◆ 두 사람의 답변</div>' +
+      '<div class="my-question">' + q + '</div>' +
+      '<div class="speaker-tag cheokhwa">🖋️ 최익현</div>' +
+      '<div class="dots" id="dot-c' + n + '"><span></span><span></span><span></span></div>' +
+      '<div class="speaker-tag gaehwa" style="margin-top:12px">📯 개화파 신하</div>' +
+      '<div class="dots" id="dot-g' + n + '"><span></span><span></span><span></span></div>' +
+    '</div>';
+
+  gaEvent('gaehang_question_submit', { issue: n, q_len: q.length });
+
+  // 양측 동시 호출
+  const [ansC, ansG] = await Promise.all([
+    callAI(SYS_CHEOKHWA, q),
+    callAI(SYS_GAEHWA,   q),
+  ]);
+
+  // 최익현 답변
+  const dotC = document.getElementById('dot-c' + n);
+  if (dotC) {
+    const sp = document.createElement('div');
+    sp.className = 'speech cheokhwa';
+    sp.textContent = ansC;
+    dotC.replaceWith(sp);
+  }
+
+  // 개화파 답변
+  const dotG = document.getElementById('dot-g' + n);
+  if (dotG) {
+    const sp = document.createElement('div');
+    sp.className = 'speech gaehwa';
+    sp.textContent = ansG;
+    dotG.replaceWith(sp);
+  }
+
+  // 다음 버튼
+  const nextLabel = n < 3 ? (n + 1) + '번째 쟁점으로 →' : '나의 판단 내리기 →';
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn btn-primary';
+  nextBtn.style.marginTop = '16px';
+  nextBtn.textContent = nextLabel;
+  nextBtn.onclick = () => n < 3 ? goTo(n + 1) : goTo(4);
+  aiDiv.querySelector('.ai-section').appendChild(nextBtn);
+
+  gaEvent('gaehang_answer_received', { issue: n });
+}
+
+/* ══════════════════════════════════════
+   결과 화면
+══════════════════════════════════════ */
+function goResult() {
+  const reason = document.getElementById('reason').value.trim();
+  if (!S.stance || reason.length < 15) return;
+  S.reason = reason;
+
+  // 내 판단 요약
+  const isC = S.stance === 'cheokhwa';
+  const summaryEl = document.getElementById('my-summary');
+  summaryEl.className = 'my-summary ' + S.stance;
+  document.getElementById('ms-stance').textContent =
+    isC ? '🖋️ 최익현 입장 (왜양일체론 · 척화)' : '📯 개화파 신하 입장 (통상개화론 · 개화)';
+  document.getElementById('ms-reason').textContent = '"' + S.reason + '"';
+
+  // 복사 영역
+  document.getElementById('copy-area').textContent = buildCopyText();
+
+  gaEvent('gaehang_result', { stance: S.stance, reason_len: S.reason.length });
+  goTo(5);
+}
+
+function buildCopyText() {
+  const isC = S.stance === 'cheokhwa';
+  const lines = [
+    '🏯 개항의 갈림길 — 1876년 전야',
+    '',
+    '【나의 판단】 ' + (isC ? '왜양일체론 (척화 · 최익현)' : '통상개화론 (개화 · 박규수 계승)'),
+    '【이유】 ' + S.reason,
+    '',
+    '【내가 던진 질문들】',
+    '  쟁점1: ' + (S.questions[1] || '—'),
+    '  쟁점2: ' + (S.questions[2] || '—'),
+    '  쟁점3: ' + (S.questions[3] || '—'),
+    '',
+    '두 입장 모두 조선이 처한 위험을 보았다.',
+    '최익현은 침투의 위험을, 개화파는 고립의 위험을 더 크게 보았다.',
+    '',
+    '— 찰리쌤의 한국사 게임실 (gtmc-history.github.io)',
+  ];
+  return lines.join('\n');
+}
+
+function copyResult() {
+  const text = buildCopyText();
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch(e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+  gaEvent('gaehang_copy', { stance: S.stance });
+}
+
+function restartGame() {
+  S.questions = { 1: '', 2: '', 3: '' };
+  S.stance = ''; S.reason = '';
+  // 입력 초기화
+  [1,2,3].forEach(n => {
+    const ta = document.getElementById('q' + n);
+    const btn = document.getElementById('ask' + n);
+    const ai  = document.getElementById('ai' + n);
+    const qbox = document.getElementById('qbox' + n);
+    if (ta)   { ta.value = ''; ta.disabled = false; }
+    if (btn)  { btn.disabled = true; }
+    if (ai)   { ai.hidden = true; ai.innerHTML = ''; }
+    if (qbox) { qbox.style.opacity = '1'; }
+    document.getElementById('cnt' + n).textContent = '0';
+    document.getElementById('warn' + n).classList.remove('show');
+  });
+  const ra = document.getElementById('reason');
+  if (ra) { ra.value = ''; }
+  document.getElementById('cnt-reason').textContent = '0';
+  document.getElementById('warn-reason').classList.remove('show');
+  document.getElementById('btn-submit').disabled = true;
+  ['sc-cheokhwa','sc-gaehwa'].forEach(id => {
+    document.getElementById(id).className = 'stance-card';
+  });
+  gaEvent('gaehang_restart');
+  goTo(0);
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+goTo(0);
+</script>
+</body>
+</html>
