@@ -855,7 +855,7 @@ async function callAI(system, userMsg) {
   try {
     const res = await fetch(GAS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' }, // CORS preflight 방지
       body: JSON.stringify({
         system: system,
         messages: [{ role: 'user', content: userMsg }],
