@@ -572,6 +572,40 @@ body::before {
 }
 .btn-restart:hover { border-color: rgba(255,255,255,0.2); color: var(--text-mid); }
 
+/* 소감 입력칸 */
+.comment-box {
+  margin-bottom: 12px;
+}
+.comment-label {
+  font-size: 11px; letter-spacing: 0.12em;
+  color: var(--gold); font-weight: 700;
+  margin-bottom: 6px; display: block;
+}
+.comment-question {
+  font-size: 12px; color: var(--text-dim);
+  line-height: 1.6; margin-bottom: 8px;
+  font-family: var(--font-body); font-weight: 300;
+}
+.comment-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  resize: none;
+  min-height: 72px;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.comment-input::placeholder { color: var(--text-dim); }
+.comment-input:focus {
+  outline: none;
+  border-color: rgba(201,160,82,0.5);
+}
+
 /* 저작권 */
 .copyright {
   text-align: center;
@@ -765,6 +799,42 @@ function showToast(msg) {
    반 구분 (URL 파라미터)
 ═══════════════════════════════════════ */
 const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+/* ═══════════════════════════════════════
+   SUPABASE
+═══════════════════════════════════════ */
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'YOUR_ANON_KEY_HERE'; // ← 실제 키로 교체
+
+function sendToSupabase(comment) {
+  const ending = getEnding();
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'ujeongtonguk',
+      choices: {
+        scene1: S.chosenIds[0] || null,
+        scene2: S.chosenIds[1] || null,
+        scene3: S.chosenIds[2] || null,
+        scene4: S.chosenIds[3] || null,
+        scene5: S.chosenIds[4] || null,
+        final:  S.finalChoice  || null,
+        ending: ending.id,
+        prep:   S.prep,
+        legit:  S.legit,
+        japan:  S.japan,
+      },
+      comment: comment,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {}); // 실패해도 게임 정상 진행
+}
 
 /* ═══════════════════════════════════════
    GAME STATE
@@ -1345,6 +1415,11 @@ function renderEnding() {
         <div class="eq-text">${ending.question}</div>
       </div>
       <div style="text-align:center;font-size:13px;color:var(--text-dim);font-style:italic;margin-bottom:16px;line-height:1.7">${ending.message}</div>
+      <div class="comment-box">
+        <span class="comment-label">✦ 소감 한 줄</span>
+        <div class="comment-question">갑신정변은 왜 실패했는가? 개인의 한계였는가, 구조의 문제였는가 — 또는 오늘 게임을 하며 든 생각을 자유롭게 적어보세요.</div>
+        <textarea class="comment-input" id="comment-input" placeholder="여기에 소감이나 생각을 입력하세요..."></textarea>
+      </div>
       <div class="ending-btns">
         <button class="btn-copy" onclick="copyResult()">📋 내 결과 복사하기 (패들렛 공유용)</button>
         <button class="btn-restart" onclick="restartGame()">다시 플레이하기</button>
@@ -1407,11 +1482,13 @@ function makeFinalChoice(choice) {
   S.phase = 'ending';
   gtag('event', 'final_choice', { game: 'ujeongtonguk', choice });
   gtag('event', 'finish_game', { game: 'ujeongtonguk', ending: getEnding().id });
+  sendToSupabase(''); // 엔딩 진입 시 자동 전송 (소감 없이)
   R();
 }
 
 function copyResult() {
   const ending = getEnding();
+  const comment = (document.getElementById('comment-input')?.value || '').trim();
   const choiceLabels = {
     c1a: '일본 차관 수락', c1b: '독자 자금 조달',
     c2a: '고문단 조건 수락', c2b: '조건 거절',
@@ -1431,11 +1508,16 @@ function copyResult() {
     `결과: ${ending.title.replace('\n', ' ')}`,
     `거사 준비도 ${S.prep}% / 정치적 정당성 ${S.legit}% / 일본 의존도 ${S.japan}%`,
     ``,
+    comment ? `소감: ${comment}` : '',
+    ``,
     `"${ending.message}"`,
     ``,
     `— 찰리쌤 한국사 게임 · hischarlie.tistory.com`,
-  ];
+  ].filter(l => l !== null);
   const text = lines.join('\n');
+
+  // Supabase 전송은 엔딩 진입 시 자동 처리됨
+
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사됐습니다!'));
   } else {
