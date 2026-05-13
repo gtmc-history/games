@@ -1,1 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고부, 1894</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ─── ROOT: 근현대 + 전쟁 혼합 팔레트 ─── */
+:root {
+  --bg:        #1a1410;
+  --surface:   #251c14;
+  --surface2:  #2e231a;
+  --primary:   #c8832a;      /* 들불 주황-금 */
+  --primary2:  #e8a84a;
+  --accent:    #8b1a1a;      /* 붉은 긴장 */
+  --accent2:   #c02828;
+  --text:      #e8dcc8;
+  --text-muted:#9a8e7a;
+  --border:    rgba(200,131,42,0.25);
+  --border2:   rgba(200,131,42,0.5);
+  --sepia:     #8b7355;
+
+  /* 3축 색상 */
+  --axis-a: #c8832a;   /* 반봉건 — 주황금 */
+  --axis-b: #2a6e8b;   /* 반외세 — 청색 */
+  --axis-c: #4a7a4a;   /* 생존   — 녹색 */
+
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-serif:   'Noto Serif KR', serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 12px 60px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 낡은 종이 노이즈 오버레이 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+#app {
+  width: 100%;
+  max-width: 680px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  color: var(--primary2);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 10px 22px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 9999;
+  transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+/* ─── TOOLTIP ─── */
+.tt {
+  border-bottom: 1.5px dashed var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent2); }
+
+#tt-bubble {
+  position: fixed;
+  z-index: 9000;
+  max-width: 240px;
+  background: #0d0a07;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.7);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--primary2); margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(232,220,200,0.85); line-height: 1.7; }
+
+/* ─── SCENE WRAPPER ─── */
+.scene {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  animation: sceneIn 0.4s ease forwards;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent), var(--primary));
+  transition: width 0.6s ease;
+}
+
+/* ─── SCENE HEADER ─── */
+.scene-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.scene-num {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--primary);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+.scene-titles { flex: 1; }
+.scene-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+.scene-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.08em;
+}
+
+/* ─── RUMOR BOX ─── */
+.rumor-box {
+  margin: 16px 24px 0;
+  padding: 11px 14px;
+  background: rgba(0,0,0,0.25);
+  border-left: 2px solid var(--sepia);
+  border-radius: 0 3px 3px 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.7;
+}
+.rumor-box::before {
+  content: '소문 ·';
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--sepia);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ─── SCENE BODY ─── */
+.scene-body {
+  padding: 20px 24px;
+}
+
+/* ─── SITUATION ─── */
+.situation {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.situation strong {
+  color: var(--primary2);
+  font-weight: 700;
+}
+
+/* ─── CHOICE LABEL ─── */
+.choice-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* ─── CHOICE CARDS ─── */
+.choices { display: flex; flex-direction: column; gap: 10px; }
+
+.choice-card {
+  background: var(--surface2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid transparent;
+  border-radius: 3px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.choice-card:hover {
+  border-left-color: var(--primary);
+  background: rgba(200,131,42,0.07);
+  transform: translateX(3px);
+}
+.choice-card.selected {
+  border-left-color: var(--primary2);
+  background: rgba(200,131,42,0.12);
+  border-color: var(--border2);
+}
+.choice-card.selected .choice-marker {
+  background: var(--primary);
+  color: #1a1410;
+  border-color: var(--primary);
+}
+.choice-card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.choice-marker {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.choice-text {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text);
+  padding-top: 2px;
+}
+
+/* ─── FEEDBACK BOX ─── */
+.feedback-box {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--border2);
+  border-radius: 3px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.8;
+  animation: sceneIn 0.35s ease;
+}
+.feedback-box .axis-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+.axis-a-tag { background: rgba(200,131,42,0.2); color: var(--axis-a); border: 1px solid rgba(200,131,42,0.4); }
+.axis-b-tag { background: rgba(42,110,139,0.2); color: #5aaac8; border: 1px solid rgba(42,110,139,0.4); }
+.axis-c-tag { background: rgba(74,122,74,0.2); color: #7aba7a; border: 1px solid rgba(74,122,74,0.4); }
+
+/* ─── AXIS BAR ─── */
+.axis-section {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.axis-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.axis-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.axis-row:last-child { margin-bottom: 0; }
+.axis-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 52px;
+  flex-shrink: 0;
+}
+.axis-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.axis-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.axis-a-fill { background: var(--axis-a); }
+.axis-b-fill { background: var(--axis-b); }
+.axis-c-fill { background: var(--axis-c); }
+.axis-val {
+  font-size: 11px;
+  font-weight: 700;
+  width: 24px;
+  text-align: right;
+}
+.axis-a-val { color: var(--axis-a); }
+.axis-b-val { color: #5aaac8; }
+.axis-c-val { color: #7aba7a; }
+
+/* ─── NEXT BTN ─── */
+.btn-next {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--primary2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+  letter-spacing: 0.05em;
+}
+.btn-next:hover { background: rgba(200,131,42,0.1); transform: translateY(-1px); }
+.btn-next:active { transform: translateY(0) scale(0.98); }
+.btn-next:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* ─── INTRO ─── */
+.intro-top {
+  padding: 40px 28px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.intro-year {
+  font-family: var(--font-display);
+  font-size: 72px;
+  color: var(--primary);
+  line-height: 1;
+  opacity: 0.15;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.intro-badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--primary);
+  border: 1px solid var(--border2);
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+.intro-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.intro-sub {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.9;
+}
+.intro-body { padding: 24px 28px 28px; }
+.intro-desc {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 2;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.intro-desc strong { color: var(--primary2); font-weight: 700; }
+
+.axis-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.axis-intro-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.axis-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.axis-intro-name { font-size: 13px; font-weight: 700; width: 60px; flex-shrink: 0; }
+.axis-intro-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+.btn-start {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+  letter-spacing: 0.06em;
+}
+.btn-start:hover { background: var(--accent2); transform: translateY(-2px); }
+.btn-start:active { transform: translateY(0) scale(0.98); }
+
+/* ─── BETWEEN SCENES ─── */
+.between-wrap {
+  padding: 32px 28px;
+  text-align: center;
+}
+.between-icon { font-size: 48px; margin-bottom: 16px; }
+.between-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--primary2);
+  margin-bottom: 10px;
+}
+.between-desc {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+.history-note {
+  text-align: left;
+  background: rgba(0,0,0,0.25);
+  border: 1px dashed var(--border2);
+  border-radius: 3px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+.history-note::before {
+  content: '실제 역사';
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--primary);
+  margin-bottom: 6px;
+  font-family: var(--font-body);
+}
+
+/* ─── FINAL ─── */
+.final-header {
+  padding: 32px 28px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.final-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 100px;
+  opacity: 0.04;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.final-icon { font-size: 52px; margin-bottom: 14px; }
+.final-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.final-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.9;
+  font-family: var(--font-serif);
+}
+.final-body { padding: 24px 28px 28px; }
+
+.final-axis-section {
+  margin-bottom: 20px;
+}
+.final-axis-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.final-axis-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.final-axis-name {
+  font-size: 13px;
+  font-weight: 700;
+  width: 64px;
+  flex-shrink: 0;
+}
+.final-axis-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.final-axis-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.8s ease;
+}
+.final-axis-val {
+  font-size: 13px;
+  font-weight: 700;
+  width: 28px;
+  text-align: right;
+}
+
+.choice-history {
+  margin-bottom: 20px;
+}
+.ch-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.ch-row {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 6px;
+  align-items: flex-start;
+}
+.ch-scene {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  width: 52px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.ch-text { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+
+.ending-box {
+  padding: 16px;
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--border2);
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.ending-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.ending-text {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 2;
+  color: var(--text);
+}
+
+.comment-section { margin-bottom: 16px; }
+.comment-label {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.comment-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text);
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.7;
+}
+.comment-input:focus { border-color: var(--border2); }
+.comment-input::placeholder { color: var(--text-muted); }
+
+.btn-copy {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  border: none;
+  border-radius: 3px;
+  color: #1a1410;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+  margin-bottom: 8px;
+}
+.btn-copy:hover { background: var(--primary2); transform: translateY(-1px); }
+
+.btn-restart {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s;
+}
+.btn-restart:hover { border-color: var(--border2); color: var(--text); }
+
+.copyright {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(120,100,80,0.4);
+  margin-top: 20px;
+  letter-spacing: 0.1em;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .intro-title { font-size: 34px; }
+  .scene-body  { padding: 16px; }
+  .intro-body, .intro-top, .final-body, .final-header, .between-wrap { padding-left: 18px; padding-right: 18px; }
+  .scene-header { padding: 16px 18px 14px; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhgbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1MjcxNjksImV4cCI6MjA2MjEwMzE2OX0.여기에_실제_anon_key_서명부분_입력';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'gobu1894',
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => {});
+}
+
+// ═══════════════════════════════════════
+// TOOLTIPS
+// ═══════════════════════════════════════
+const TIPS = {
+  '만석보': '만석보(萬石洑) — 고부 군수 조병갑이 농민을 강제 동원해 쌓은 저수지. 수세를 부당하게 거두어 봉기의 직접적 원인이 됨.',
+  '수세': '수세(水稅) — 저수지나 수로를 이용하는 대가로 내는 세금. 조병갑은 만석보를 쌓은 뒤 과도한 수세를 거두어 농민의 분노를 샀음.',
+  '조병갑': '조병갑(趙秉甲) — 고부 군수. 온갖 명목으로 세금을 거두고 백성을 착취해 동학농민운동의 도화선이 됨.',
+  '안핵사': '안핵사(按覈使) — 지방 문제 발생 시 조정이 파견하는 조사관. 고부 봉기 후 이용태가 안핵사로 내려와 봉기 참여자를 탄압하면서 1차 봉기를 촉발함.',
+  '동학': '동학(東學) — 1860년 최제우가 창시한 민족 종교. "사람이 곧 하늘"(인내천)을 가르쳤으며, 억눌린 농민들에게 평등 사상을 전파함.',
+  '접주': '접주(接主) — 동학 조직의 지역 지도자. 전봉준은 고부 지역 접주로서 봉기를 이끌었음.',
+  '집강소': '집강소(執綱所) — 전주 화약 이후 동학농민군이 전라도 각 고을에 설치한 자치 행정 기구. 폐정 개혁을 직접 실행함.',
+  '전주 화약': '전주 화약(全州和約) — 1894년 5월 농민군이 전주를 점령한 후 조정과 맺은 협약. 농민군 해산 대신 폐정 개혁을 약속받음.',
+  '폐정개혁안': '폐정개혁안(弊政改革案) — 동학농민군이 요구한 12개조 개혁 목록. 탐관오리 처벌, 노비 문서 소각, 토지 균분 등 반봉건 내용이 핵심.',
+  '청일전쟁': '청일전쟁(淸日戰爭) — 1894년 조선을 둘러싸고 청·일이 벌인 전쟁. 농민군 요청으로 들어온 청군을 구실로 일본도 파병하면서 발발.',
+  '전봉준': '전봉준(全琫準, 1855~1895) — 동학농민운동의 지도자. "녹두장군"으로 불림. 고부 봉기를 이끌었으나 체포되어 이듬해 처형됨.',
+  '황토현': '황토현(黃土峴) — 1894년 5월 전라도 정읍 인근. 농민군이 관군을 크게 격파한 전투 장소. 동학농민운동 최초의 대규모 승리.',
+  '우금치': '우금치(牛禁峙) — 충청도 공주 인근 고개. 1894년 11월 농민군이 일본군·관군 연합에 패배한 결전지. 이 패배로 농민운동은 사실상 막을 내림.',
+};
+
+function tt(word, tipKey) {
+  const tip = TIPS[tipKey || word] || '';
+  if (!tip) return word;
+  return '<span class="tt" data-tip="' + encodeURIComponent(tip) + '" data-word="' + word + '">' + word + '</span>';
+}
+
+const bubble = document.getElementById('tt-bubble');
+let bubbleTimer = null;
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const bw = 240;
+    const rect = el.getBoundingClientRect();
+    let left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left = left + 'px';
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bubH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bubH - 14) + 'px';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+// ═══════════════════════════════════════
+// GAME DATA
+// ═══════════════════════════════════════
+// axis: A = 반봉건, B = 반외세, C = 생존
+
+const SCENES = [
+  {
+    id: 1,
+    num: '장면 1 / 4',
+    title: '봉기 전야',
+    date: '1894년 1월, 고부',
+    rumor: '"전라 감영에서 ' + tt('안핵사') + '가 내려온다는 소문이 돌고 있다. 사태를 무마하려는 것인지, 주동자를 잡으러 오는 것인지 알 수 없다."',
+    situation: tt('만석보') + '의 ' + tt('수세') + '가 또 올랐다. ' + tt('조병갑') + ' 군수가 새 저수지를 쌓는다며 강제로 사람을 끌어다 쓰고, 곡식을 빼앗은 지 이미 수년째다. 마을 사람들의 분노는 한계에 달했다.<br><br>' + tt('동학') + ' ' + tt('접주') + ' ' + tt('전봉준') + '이 고부 관아 앞에 사람을 모은다는 말이 들려온다. 당신은 어떻게 할 것인가.',
+    histNote: '1894년 1월, 전봉준은 고부 농민 1,000여 명을 이끌고 고부 관아를 점령했다. 무기고를 열고 억울하게 거둔 세금 곡식을 농민에게 돌려주었다. 이것이 동학농민운동의 시작이었다.',
+    choices: [
+      {
+        text: '봉기에 합류한다. 이대로는 살 수가 없다.',
+        feedback: '마을 장정들과 함께 관아로 향했다. 쌓인 분노가 한꺼번에 터져 나왔다. 곡식 창고가 열리고, 사람들은 처음으로 뭔가를 되찾은 느낌을 받았다.',
+        axis: 'A', axisTag: '반봉건', axisClass: 'axis-a-tag'
+      },
+      {
+        text: '가족을 먼저 생각한다. 봉기가 끝나면 어떻게 될지 모른다.',
+        feedback: '관아 쪽에서 함성이 들려왔다. 당신은 문을 걸어 잠그고 아이들을 안쪽으로 불러들였다. 두렵기도 했고, 그것이 틀린 선택인지 확신할 수도 없었다.',
+        axis: 'C', axisTag: '생존', axisClass: 'axis-c-tag'
+      }
+    ]
+  },
+  {
+    id: 2,
+    num: '장면 2 / 4',
+    title: '관아 점령 이후',
+    date: '1894년 2월, 고부 관아 앞',
+    rumor: '"조병갑 군수는 이미 달아났다고 한다. 그런데 전주에서 군대가 내려올 수도 있다는 말도 돌고 있다."',
+    situation: '관아가 점령되었다. 창고에는 조병갑이 부당하게 거둔 곡식이 가득하다. <strong>전봉준</strong>과 접주들이 어떻게 할지 논의 중이다. 마을 사람들은 각자 생각이 다르다.<br><br>누군가는 곡식을 당장 나눠야 한다고 하고, 누군가는 질서를 지켜야 명분이 선다고 말한다.',
+    histNote: '봉기 초기, 농민군은 비교적 질서를 유지했다. 전봉준은 무분별한 약탈을 엄격히 금지했다. 이는 단순한 폭동이 아니라 개혁을 요구하는 봉기임을 스스로 증명하려는 시도였다.',
+    choices: [
+      {
+        text: '곡식을 굶주린 마을 사람들에게 나눠준다. 이게 우리가 봉기한 이유 아닌가.',
+        feedback: '창고 문이 열리고 곡식 포대가 쏟아져 나왔다. 오랫동안 빼앗긴 것을 되찾는 순간이었다. 그러나 일부는 이 모습이 폭도처럼 보일까 봐 걱정했다.',
+        axis: 'A', axisTag: '반봉건', axisClass: 'axis-a-tag'
+      },
+      {
+        text: '함부로 건드리지 말자. 우리가 도적이 아님을 보여야 한다.',
+        feedback: '질서를 지키자는 목소리가 모였다. 창고는 그대로였다. 사람들 중에는 이 신중함이 옳다고 느끼는 이도 있었고, 배를 곯으면서 왜 봉기를 했냐고 묻는 이도 있었다.',
+        axis: 'C', axisTag: '생존', axisClass: 'axis-c-tag'
+      }
+    ]
+  },
+  {
+    id: 3,
+    num: '장면 3 / 4',
+    title: '집강소의 나날',
+    date: '1894년 6월, 전라도 어느 고을',
+    rumor: '"전주에서 화약이 맺어졌다고 한다. 조정이 개혁을 약속했다는데, 믿어야 할지 모르겠다. 청나라 군대가 조선에 들어왔다는 말도 들린다."',
+    situation: '<strong>전주 화약</strong> 이후 농민군은 해산하고 <strong>집강소</strong>가 각 고을에 세워졌다. <strong>폐정개혁안</strong>을 실행에 옮기는 중이다. 양반 하나가 찾아와 협력을 제안한다.<br><br>"우리도 이 고을을 바로잡고 싶소. 함께 하면 더 많은 것을 바꿀 수 있을 것이오."',
+    histNote: '집강소 시기, 전라도 각지에서 실질적인 개혁이 이루어졌다. 노비 문서가 불태워지고, 탐관오리들이 처벌받았다. 그러나 이 시기 청나라와 일본 군대가 조선에 들어오면서 상황은 빠르게 변하고 있었다.',
+    choices: [
+      {
+        text: '협력을 거부한다. 양반이 진심으로 돕겠다는 것을 믿기 어렵다.',
+        feedback: '그 양반은 쓴웃음을 지으며 돌아갔다. 집강소는 스스로의 힘으로만 나아갔다. 느리고 힘들었지만, 그것이 우리의 방식이었다.',
+        axis: 'A', axisTag: '반봉건', axisClass: 'axis-a-tag'
+      },
+      {
+        text: '받아들인다. 세상을 바꾸려면 더 많은 손이 필요하다.',
+        feedback: '뜻밖의 동행이 시작됐다. 그 양반의 진심을 아직 모르겠지만, 지금 당장 할 일이 너무 많았다. 함께하는 편이 더 빨랐다.',
+        axis: 'C', axisTag: '생존', axisClass: 'axis-c-tag'
+      }
+    ]
+  },
+  {
+    id: 4,
+    num: '장면 4 / 4',
+    title: '다시, 선택의 기로',
+    date: '1894년 9월, 전라도',
+    rumor: '"일본군이 경복궁을 점령하고 왕을 가두었다는 말이 들려온다. ' + tt('청일전쟁') + '이 시작되었다고 한다. 조선 땅에서 두 나라가 전쟁을 벌이는 것이다."',
+    situation: '일본군이 조선 전역에 퍼지고 있다. ' + tt('전봉준') + '이 다시 봉기를 선언했다. 이번에는 탐관오리를 물리치기 위한 싸움이 아니다. 외세를 몰아내기 위한 싸움이다.<br><br>봄에 ' + tt('황토현') + '에서 관군을 이겼던 농민군이었다. 하지만 이번 상대는 달랐다. ' + tt('우금치') + '로 향하는 길이 보였다.',
+    histNote: '1894년 9월, 전봉준은 2차 봉기를 일으켰다. 이번에는 반봉건보다 반외세가 핵심이었다. 봄의 황토현 승리와 달리, 우금치 전투에서 근대 무기를 갖춘 일본군에 대패하며 농민운동은 막을 내렸다. 전봉준은 이듬해 처형되었다.',
+    choices: [
+      {
+        text: '다시 봉기에 참여한다. 외세를 그냥 두고 볼 수는 없다.',
+        feedback: '다시 창을 들었다. 이번은 달랐다. 관아도 양반도 아니라, 저 멀리서 온 군대를 향해 나아가는 것이었다. 두렵고, 그래도 멈출 수 없었다.<br><br>' + tt('황토현') + '에서 이겼을 때의 기억이 떠올랐다. 그러나 ' + tt('우금치') + '의 고개에서 마주한 것은 조총과 대포였다. 수만 명이 몰려갔지만, 넘지 못했다. 그 고개를 넘지 못하면서 1894년의 봉기는 막을 내렸다.',
+        axis: 'B', axisTag: '반외세', axisClass: 'axis-b-tag'
+      },
+      {
+        text: '가족을 먼저 피신시킨다. 이 싸움은 이길 수 없을 것 같다.',
+        feedback: '처자식을 데리고 산 속으로 들어갔다. 멀리서 포 소리가 들렸다. 비겁한 것인지, 현명한 것인지, 아직도 모르겠다.',
+        axis: 'C', axisTag: '생존', axisClass: 'axis-c-tag'
+      },
+      {
+        text: '좀 더 지켜본다. 섣불리 나섰다가는 아무것도 남지 않을 수 있다.',
+        feedback: '마을 어귀에서 소식을 기다렸다. 어느 편도 아닌 채로, 그러나 어느 편이기도 한 채로. 당시 많은 사람이 그런 자리에 있었다.',
+        axis: 'C', axisTag: '생존', axisClass: 'axis-c-tag'
+      }
+    ]
+  }
+];
+
+// ─── ENDINGS ───
+function getEnding(axis) {
+  const total = axis.A + axis.B + axis.C;
+  const rA = axis.A / total;
+  const rB = axis.B / total;
+  const rC = axis.C / total;
+  const dom = rA >= rB && rA >= rC ? 'A' : rB >= rA && rB >= rC ? 'B' : 'C';
+
+  // 혼합형 판별
+  const diff = Math.max(rA, rB, rC) - Math.min(rA, rB, rC);
+  if (diff < 0.25) {
+    // 세 축이 고르게 분산 — 흔들리는 이상형
+    return {
+      icon: '🌾',
+      title: '흔들리는 이상',
+      color: '#c8a86a',
+      text: '백성을 위한 세상을 원했지만,\n봉기의 방향은 점점 하나로 설명할 수 없어졌다.\n반봉건도, 반외세도, 살아남는 것도 —\n모두 진짜이고, 모두 충돌했다.\n\n그것이 1894년이었다.'
+    };
+  }
+  if (dom === 'A' && rC > 0.3) {
+    // 반봉건 + 생존 혼합 — 현실적 타협형
+    return {
+      icon: '🔥',
+      title: '불씨를 남기다',
+      color: '#c8832a',
+      text: '사람들은 분노했지만,\n모두가 끝까지 싸울 수는 없었다.\n누군가는 살아남아 그 불씨를 품었다.\n\n봉기는 끝났지만,\n조선은 더 이상 예전의 나라로 돌아갈 수 없었다.'
+    };
+  }
+  // 집강소 선택(반봉건) 이후 생존으로 마무리 — 멈춘 개혁형
+  if (dom === 'A' && S.axis.A >= 2 && S.axis.C >= 1) {
+    return {
+      icon: '📜',
+      title: '멈춘 개혁',
+      color: '#b8a06a',
+      text: '세상을 바꿀 수 있다고 믿었던 순간이 있었다.\n집강소는 실제로 움직였고,\n사람들은 새로운 질서를 상상했다.\n\n그러나 역사는 너무 빨리 흔들렸다.\n개혁은 멈췄지만, 그 기억은 남았다.'
+    };
+  }
+
+  if (dom === 'A') return {
+    icon: '✊',
+    title: '낡은 질서에 맞서다',
+    color: '#c8832a',
+    text: '당신의 분노는 줄곧 낡은 질서를 향했다.\n탐관오리, 불합리한 세금, 양반의 횡포 —\n그것이 먼저였다.\n\n봉기는 진압되었지만,\n그 물음은 사라지지 않았다.\n백성이 사람답게 사는 세상은 어디에 있는가.'
+  };
+  if (dom === 'B') return {
+    icon: '🌊',
+    title: '외세의 전장 속에서',
+    color: '#5aaac8',
+    text: '당신의 눈은 점점 바깥으로 향했다.\n조선 땅에서 벌어지는 전쟁,\n조선 사람의 운명을 가르는 결정들이\n조선 밖에서 내려지고 있었다.\n\n농민군의 싸움은 그 더 큰 흐름 속으로 빨려 들어갔다.'
+  };
+  return {
+    icon: '🌿',
+    title: '살아남은 자의 자리',
+    color: '#7aba7a',
+    text: '사람들은 살아남았다.\n그러나 세상은 누구의 뜻대로도 움직이지 않았다.\n\n그것이 틀린 선택이었는지,\n지금도 확신할 수 없다.\n살아남은 자들이 다음 시대를 만들었다.'
+  };
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let S = {
+  phase: 'intro',   // intro | scene | between | final
+  sceneIdx: 0,
+  chosen: null,
+  choices: [],       // [{scene, choiceText, axis}]
+  axis: { A: 0, B: 0, C: 0 },
+  showFeedback: false,
+  ending: null,
+};
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function axisMaxTotal() {
+  return SCENES.length; // 한 장면당 최대 1점
+}
+
+function axisBar(val, max) {
+  return Math.round((val / Math.max(max, 1)) * 100);
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  if (S.phase === 'intro')   app.innerHTML = renderIntro();
+  else if (S.phase === 'scene')   app.innerHTML = renderScene();
+  else if (S.phase === 'between') app.innerHTML = renderBetween();
+  else                        app.innerHTML = renderFinal();
+}
+
+// ─── INTRO ───
+function renderIntro() {
+  return `
+  <div class="scene">
+    <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+    <div class="intro-top" style="position:relative">
+      <div class="intro-year">1894</div>
+      <div class="intro-badge">동학농민운동 · 1894</div>
+      <div class="intro-title">고부, 1894</div>
+      <div class="intro-sub">
+        당신은 전라도 고부의 평범한 농민이다.<br>
+        1894년, 조선은 뒤흔들리고 있었다.
+      </div>
+    </div>
+    <div class="intro-body">
+      <div class="intro-desc">
+        ${tt('만석보')} ${tt('수세')}가 또 올랐다. ${tt('조병갑')} 군수는 새 창고를 짓는다며 사람을 강제로 끌어다 쓴다.
+        ${tt('동학')}이 번지면서 마을 사람들은 뭔가 달라질 수 있다고 느끼기 시작했다.<br><br>
+        이 게임에서 당신은 <strong>4번의 선택</strong>을 내린다.<br>
+        정답은 없다. 모든 선택은 역사 속에서 실제로 가능한 것들이었다.
+      </div>
+      <div class="axis-intro">
+        <div class="axis-intro-row">
+          <div class="axis-dot" style="background:var(--axis-a)"></div>
+          <div class="axis-intro-name" style="color:var(--axis-a)">반봉건</div>
+          <div class="axis-intro-desc">탐관오리와 낡은 질서에 맞서는 선택</div>
+        </div>
+        <div class="axis-intro-row">
+          <div class="axis-dot" style="background:var(--axis-b)"></div>
+          <div class="axis-intro-name" style="color:#5aaac8">반외세</div>
+          <div class="axis-intro-desc">외세의 개입에 저항하는 선택</div>
+        </div>
+        <div class="axis-intro-row">
+          <div class="axis-dot" style="background:var(--axis-c)"></div>
+          <div class="axis-intro-name" style="color:#7aba7a">생존</div>
+          <div class="axis-intro-desc">가족과 마을을 지키려는 선택</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startGame()">1894년 고부로 들어가다</button>
+    </div>
+  </div>`;
+}
+
+// ─── SCENE ───
+function renderScene() {
+  const scene = SCENES[S.sceneIdx];
+  const progress = ((S.sceneIdx) / SCENES.length) * 100;
+  const maxVal = S.sceneIdx + 1;
+
+  const choicesHtml = scene.choices.map((c, i) => {
+    const isSel = S.chosen === i;
+    const isDisabled = S.showFeedback && !isSel;
+    return `
+    <div class="choice-card${isSel ? ' selected' : ''}${isDisabled ? ' disabled' : ''}"
+         onclick="${S.showFeedback ? '' : 'selectChoice(' + i + ')'}">
+      <div class="choice-marker">${String.fromCharCode(65 + i)}</div>
+      <div class="choice-text">${c.text}</div>
+    </div>`;
+  }).join('');
+
+  const feedbackHtml = S.showFeedback && S.chosen !== null ? `
+  <div class="feedback-box">
+    <div class="axis-tag ${scene.choices[S.chosen].axisClass}">${scene.choices[S.chosen].axisTag}</div>
+    <div>${scene.choices[S.chosen].feedback}</div>
+  </div>
+  <div class="axis-section">
+    <div class="axis-title">누적 선택 경향</div>
+    <div class="axis-row">
+      <div class="axis-name" style="color:var(--axis-a)">반봉건</div>
+      <div class="axis-track"><div class="axis-fill axis-a-fill" style="width:${axisBar(S.axis.A, maxVal)}%"></div></div>
+      <div class="axis-val axis-a-val">${S.axis.A}</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis-name" style="color:#5aaac8">반외세</div>
+      <div class="axis-track"><div class="axis-fill axis-b-fill" style="width:${axisBar(S.axis.B, maxVal)}%"></div></div>
+      <div class="axis-val axis-b-val">${S.axis.B}</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis-name" style="color:#7aba7a">생존</div>
+      <div class="axis-track"><div class="axis-fill axis-c-fill" style="width:${axisBar(S.axis.C, maxVal)}%"></div></div>
+      <div class="axis-val axis-c-val">${S.axis.C}</div>
+    </div>
+  </div>
+  <button class="btn-next" onclick="nextScene()">
+    ${S.sceneIdx < SCENES.length - 1 ? '다음 장면으로 →' : '결말을 확인한다 →'}
+  </button>` : '';
+
+  return `
+  <div class="scene">
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="scene-header">
+      <div class="scene-num">${scene.num}</div>
+      <div class="scene-titles">
+        <div class="scene-title">${scene.title}</div>
+        <div class="scene-date">${scene.date}</div>
+      </div>
+    </div>
+    <div class="rumor-box">${scene.rumor}</div>
+    <div class="scene-body">
+      <div class="situation">${scene.situation}</div>
+      <div class="choice-label">당신의 선택</div>
+      <div class="choices">${choicesHtml}</div>
+      ${feedbackHtml}
+    </div>
+  </div>`;
+}
+
+// ─── BETWEEN ───
+function renderBetween() {
+  const scene = SCENES[S.sceneIdx - 1];
+  const isLast = S.sceneIdx >= SCENES.length;
+  return `
+  <div class="scene">
+    <div class="between-wrap">
+      <div class="between-icon">📜</div>
+      <div class="between-title">${scene.title} — 끝</div>
+      <div class="between-desc">
+        선택은 내려졌다. 시간은 흘렀다.<br>
+        1894년의 조선은 계속 흔들리고 있었다.
+      </div>
+      <div class="history-note">${scene.histNote}</div>
+      <button class="btn-next" onclick="${isLast ? 'goFinal()' : 'goNextScene()'}">
+        ${isLast ? '결말을 확인한다 →' : SCENES[S.sceneIdx].date + ' — 다음 장면으로 →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+// ─── FINAL ───
+function renderFinal() {
+  const ending = S.ending;
+  const total = S.axis.A + S.axis.B + S.axis.C;
+
+  const choiceHistHtml = S.choices.map((c, i) => `
+    <div class="ch-row">
+      <div class="ch-scene">장면 ${i + 1}</div>
+      <div class="ch-text">${c.choiceText}</div>
+    </div>`).join('');
+
+  return `
+  <div class="scene">
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="final-header">
+      <div class="final-bg-text">1894</div>
+      <div class="final-icon">${ending.icon}</div>
+      <div class="final-title" style="color:${ending.color}">${ending.title}</div>
+      <div class="final-sub">당신의 1894년이 끝났다.</div>
+    </div>
+    <div class="final-body">
+      <div class="final-axis-section">
+        <div class="final-axis-title">나의 선택 경향</div>
+        <div class="final-axis-row">
+          <div class="final-axis-name" style="color:var(--axis-a)">반봉건</div>
+          <div class="final-axis-track"><div class="final-axis-fill axis-a-fill" style="width:${Math.round(S.axis.A/total*100)}%"></div></div>
+          <div class="final-axis-val" style="color:var(--axis-a)">${S.axis.A}</div>
+        </div>
+        <div class="final-axis-row">
+          <div class="final-axis-name" style="color:#5aaac8">반외세</div>
+          <div class="final-axis-track"><div class="final-axis-fill axis-b-fill" style="width:${Math.round(S.axis.B/total*100)}%"></div></div>
+          <div class="final-axis-val" style="color:#5aaac8">${S.axis.B}</div>
+        </div>
+        <div class="final-axis-row">
+          <div class="final-axis-name" style="color:#7aba7a">생존</div>
+          <div class="final-axis-track"><div class="final-axis-fill axis-c-fill" style="width:${Math.round(S.axis.C/total*100)}%"></div></div>
+          <div class="final-axis-val" style="color:#7aba7a">${S.axis.C}</div>
+        </div>
+      </div>
+
+      <div class="ending-box">
+        <div class="ending-label">결말</div>
+        <div class="ending-text">${ending.text.replace(/\n/g, '<br>')}</div>
+      </div>
+
+      <div class="choice-history">
+        <div class="ch-title">나의 선택 기록</div>
+        ${choiceHistHtml}
+      </div>
+
+      <div class="comment-section">
+        <div class="comment-label">한 줄 소감 (선택)</div>
+        <textarea class="comment-input" id="comment" rows="2"
+          placeholder="이 게임을 하면서 느낀 점을 한 줄로 남겨보세요."></textarea>
+      </div>
+
+      <button class="btn-copy" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
+      <button class="btn-restart" onclick="restart()">처음으로 돌아가기</button>
+
+      <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════
+function startGame() {
+  gtag('event', 'start_game', { game: 'gobu1894' });
+  S.phase = 'scene';
+  S.sceneIdx = 0;
+  R();
+}
+
+function selectChoice(i) {
+  const scene = SCENES[S.sceneIdx];
+  const c = scene.choices[i];
+  S.chosen = i;
+  S.showFeedback = true;
+  S.axis[c.axis]++;
+  S.choices.push({ scene: scene.title, choiceText: c.text, axis: c.axis });
+  gtag('event', 'select_choice', { game: 'gobu1894', scene: scene.id, choice: i, axis: c.axis });
+  R();
+}
+
+function nextScene() {
+  S.sceneIdx++;
+  S.chosen = null;
+  S.showFeedback = false;
+  if (S.sceneIdx >= SCENES.length) {
+    S.ending = getEnding(S.axis);
+    S.phase = 'final';
+    gtag('event', 'finish_game', { game: 'gobu1894', ending: S.ending.title });
+    sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+    R();
+  } else {
+    S.phase = 'between';
+    R();
+  }
+}
+
+function goNextScene() {
+  S.phase = 'scene';
+  R();
+}
+
+function goFinal() {
+  S.ending = getEnding(S.axis);
+  S.phase = 'final';
+  gtag('event', 'finish_game', { game: 'gobu1894', ending: S.ending.title });
+  sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+  R();
+}
+
+function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+  const ending = S.ending;
+  const axisLabels = { A: '반봉건', B: '반외세', C: '생존' };
+  const lines = [
+    '🌾 고부, 1894 — 나의 선택',
+    '',
+    '[ 선택 기록 ]',
+    ...S.choices.map((c, i) => '장면 ' + (i+1) + ': ' + c.choiceText + ' (' + axisLabels[c.axis] + ')'),
+    '',
+    '[ 선택 경향 ] 반봉건 ' + S.axis.A + ' / 반외세 ' + S.axis.B + ' / 생존 ' + S.axis.C,
+    '',
+    '[ 결말 ] ' + ending.icon + ' ' + ending.title,
+    ending.text,
+    comment ? '\n[ 소감 ] ' + comment : '',
+    '',
+    '— 찰리쌤의 한국사 게임실 · hischarlie.tistory.com',
+  ];
+  const text = lines.filter(l => l !== null).join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch(e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = { phase: 'intro', sceneIdx: 0, chosen: null, choices: [], axis: { A:0, B:0, C:0 }, showFeedback: false, ending: null };
+  R();
+}
+
+R();
+</script>
+</body>
+</html>
