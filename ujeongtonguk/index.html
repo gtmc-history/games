@@ -572,34 +572,6 @@ body::before {
 }
 .btn-restart:hover { border-color: rgba(255,255,255,0.2); color: var(--text-mid); }
 
-/* 소감 입력 */
-.comment-box {
-  margin-bottom: 16px;
-}
-.comment-label {
-  font-size: 11px; letter-spacing: 0.12em;
-  color: var(--gold); font-weight: 700;
-  margin-bottom: 8px; display: block;
-}
-.comment-input {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 14px;
-  padding: 11px 14px;
-  resize: none;
-  transition: border-color 0.2s;
-  line-height: 1.6;
-}
-.comment-input::placeholder { color: var(--text-dim); }
-.comment-input:focus {
-  outline: none;
-  border-color: rgba(201,160,82,0.5);
-}
-
 /* 저작권 */
 .copyright {
   text-align: center;
@@ -688,19 +660,10 @@ body::before {
 .gi-dot.prep  { background: var(--gold); }
 .gi-dot.legit { background: var(--green2); }
 .gi-dot.japan { background: var(--red); }
-.gi-label { font-size: 11px; color: var(--text-dim); line-height: 1.4; font-weight: 600; margin-bottom: 4px; }
-.gi-desc  { font-size: 10px; color: var(--text-dim); line-height: 1.5; opacity: 0.7; }
-
-.recon-note {
-  font-size: 11px; color: var(--text-dim);
-  line-height: 1.7; margin-bottom: 16px;
-  padding: 10px 12px;
-  border: 1px dashed rgba(201,160,82,0.2);
-  border-radius: 3px;
-  font-family: var(--font-body);
-}
+.gi-label { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
 
 .start-btn {
+  width: 100%; padding: 15px;
   background: linear-gradient(135deg, rgba(201,160,82,0.15), rgba(201,160,82,0.08));
   border: 1px solid var(--gold);
   border-radius: 3px;
@@ -746,6 +709,7 @@ const TIPS = {
   '급진 개화파': '급진 개화파(急進開化派) — 일본 메이지 유신을 모델로 빠른 개혁을 추구한 세력. 김옥균·박영효·홍영식 등.',
   '위안스카이': '위안스카이(袁世凱) — 당시 조선에 주둔한 청나라 군 지휘관. 갑신정변 진압에 결정적 역할을 함.',
   '다케조에': '다케조에(竹添進一郞) — 조선 주재 일본 공사. 개화파에게 군사 지원을 약속했으나 청군 개입 후 철수.',
+  '서경권': '서경권(署經權) — 조선 언론 삼사(사헌부·사간원·홍문관)가 관리 임명에 동의 여부를 표시하는 권한.',
   '거사': '거사(擧事) — 대규모 정치적 행동을 일으킨다는 뜻. 여기서는 갑신정변을 가리킴.',
   '고문단': '고문단(顧問團) — 정부 운영에 조언을 제공하는 외국인 전문가 집단. 실질적 내정 간섭 수단이 됨.',
   '신정부': '신정부(新政府) — 갑신정변으로 수립하려 한 개화파 주도 정부. 14개조 개혁 정강을 발표했으나 3일 만에 붕괴.',
@@ -798,31 +762,9 @@ function showToast(msg) {
 }
 
 /* ═══════════════════════════════════════
-   CONFIG
+   반 구분 (URL 파라미터)
 ═══════════════════════════════════════ */
 const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
-
-const SUPABASE_URL  = 'https://xgniwztlrakkrbzcfklb.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
-
-function sendToSupabase(choiceData, comment) {
-  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal',
-    },
-    body: JSON.stringify({
-      class: CLASS,
-      game: 'ujeongtonguk',
-      choices: choiceData,
-      comment: comment,
-      timestamp: new Date().toISOString(),
-    }),
-  }).catch(() => {}); // 실패해도 게임 정상 진행
-}
 
 /* ═══════════════════════════════════════
    GAME STATE
@@ -838,8 +780,6 @@ const S = {
   selectedChoice: null,  // 현재 장면 선택
   showingFeedback: false,
   finalChoice: null,     // exile | fight
-  comment: '',           // 소감 입력
-  submitted: false,      // 중복 제출 방지
 };
 
 /* ═══════════════════════════════════════
@@ -1259,25 +1199,9 @@ function renderIntro() {
         </div>
       </div>
       <div class="gauge-intro">
-        <div class="gi-item">
-          <div class="gi-dot prep"></div>
-          <div class="gi-label">거사 준비도</div>
-          <div class="gi-desc">병력·자금.<br>높을수록 실행에 유리</div>
-        </div>
-        <div class="gi-item">
-          <div class="gi-dot legit"></div>
-          <div class="gi-label">정치적 정당성</div>
-          <div class="gi-desc">조정의 지지.<br>낮으면 역적으로 몰림</div>
-        </div>
-        <div class="gi-item">
-          <div class="gi-dot japan"></div>
-          <div class="gi-label">일본 의존도</div>
-          <div class="gi-desc">낮을수록 자주적.<br>높으면 일본의 정변</div>
-        </div>
-      </div>
-      <div class="recon-note">
-        ※ 이 게임의 선택지와 수치(자금·병력 등)는 역사적 상황을 바탕으로 재구성한 가상의 딜레마입니다.
-        14개조 정강·청군 개입·3일천하 등 핵심 사실은 실제 역사에 근거합니다.
+        <div class="gi-item"><div class="gi-dot prep"></div><div class="gi-label">거사<br>준비도</div></div>
+        <div class="gi-item"><div class="gi-dot legit"></div><div class="gi-label">정치적<br>정당성</div></div>
+        <div class="gi-item"><div class="gi-dot japan"></div><div class="gi-label">일본<br>의존도</div></div>
       </div>
       <button class="start-btn" onclick="startGame()">1884년 12월 3일 저녁으로 →</button>
     </div>
@@ -1422,13 +1346,6 @@ function renderEnding() {
       </div>
       <div style="text-align:center;font-size:13px;color:var(--text-dim);font-style:italic;margin-bottom:16px;line-height:1.7">${ending.message}</div>
       <div class="ending-btns">
-        <div class="comment-box">
-          <span class="comment-label">✦ 한 줄 소감 (복사 시 함께 포함됩니다)</span>
-          <textarea class="comment-input" id="comment-input" rows="2"
-            placeholder="이 정변은 왜 실패했는가? 한 줄로 남겨보세요. (이름·학번 제외)"
-            maxlength="100"
-            oninput="S.comment = this.value"></textarea>
-        </div>
         <button class="btn-copy" onclick="copyResult()">📋 내 결과 복사하기 (패들렛 공유용)</button>
         <button class="btn-restart" onclick="restartGame()">다시 플레이하기</button>
       </div>
@@ -1503,24 +1420,9 @@ function copyResult() {
     c5a: '청과 협상 시도', c5b: '끝까지 저항',
   };
   const finalLabel = S.finalChoice === 'exile' ? '망명' : '끝까지 저항';
-
-  // 중복 제출 방지 — 첫 복사 시에만 Supabase 전송
-  if (!S.submitted) {
-    sendToSupabase({
-      choices: S.chosenIds,
-      finalChoice: S.finalChoice,
-      ending: ending.id,
-      prep: S.prep,
-      legit: S.legit,
-      japan: S.japan,
-    }, S.comment.trim());
-    S.submitted = true;
-    const btn = document.querySelector('.btn-copy');
-    if (btn) { btn.textContent = '✅ 제출 완료 (다시 복사하기)'; }
-  }
-
   const lines = [
     `⚔️ 우정총국의 밤 — 갑신정변 1884`,
+    CLASS !== '미입력' ? `반: ${CLASS}` : '',
     ``,
     `나의 선택:`,
     ...S.chosenIds.map((id, i) => `  ${i+1}. ${choiceLabels[id] || id}`),
@@ -1530,7 +1432,6 @@ function copyResult() {
     `거사 준비도 ${S.prep}% / 정치적 정당성 ${S.legit}% / 일본 의존도 ${S.japan}%`,
     ``,
     `"${ending.message}"`,
-    ...(S.comment.trim() ? [``, `소감: ${S.comment.trim()}`] : []),
     ``,
     `— 찰리쌤 한국사 게임 · hischarlie.tistory.com`,
   ];
@@ -1551,8 +1452,7 @@ function restartGame() {
   S.phase = 'intro'; S.sceneIdx = 0;
   S.prep = 50; S.legit = 60; S.japan = 20;
   S.chosenIds = []; S.log = [];
-  S.selectedChoice = null; S.showingFeedback = false;
-  S.finalChoice = null; S.comment = ''; S.submitted = false;
+  S.selectedChoice = null; S.showingFeedback = false; S.finalChoice = null;
   R();
 }
 
