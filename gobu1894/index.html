@@ -724,8 +724,7 @@ body::before {
 // SUPABASE
 // ═══════════════════════════════════════
 const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhgbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1MjcxNjksImV4cCI6MjA2MjEwMzE2OX0.여기에_실제_anon_key_서명부분_입력';
-const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
 
 function sendToSupabase(choiceData, comment) {
   fetch(SUPABASE_URL + '/rest/v1/game_results', {
