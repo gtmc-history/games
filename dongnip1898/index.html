@@ -1,1 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>황제와 맞서다 — 1898 독립협회</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════
+   DESIGN TOKENS — 근현대 테마
+   태극의 청홍, 독립의 결기, 낡은 사진 질감
+══════════════════════════════════ */
+:root {
+  --bg:        #1a1410;   /* 야회(夜會) 어둠 — 긴박한 밤 분위기 */
+  --bg2:       #231c16;
+  --surface:   #2e2318;
+  --surface2:  #3a2d20;
+  --primary:   #003087;   /* 태극 청색 */
+  --primary2:  #1a4fa8;
+  --accent:    #cd2e3a;   /* 태극 적색 */
+  --accent2:   #e8404e;
+  --gold:      #c9a052;
+  --gold2:     #e8c97a;
+  --text:      #f0e8d8;
+  --text-mid:  #c8b898;
+  --text-muted:#8a7a64;
+  --border:    rgba(201,160,82,0.25);
+  --border2:   rgba(201,160,82,0.12);
+  --sepia:     #8b7355;
 
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-serif:   'Noto Serif KR', serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 0 0 60px;
+
+  /* 낡은 종이 질감 */
+  background-image:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(205,46,58,0.04) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a052' fill-opacity='0.025'%3E%3Crect x='0' y='0' width='1' height='80'/%3E%3Crect x='0' y='0' width='80' height='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#app {
+  width: 100%;
+  max-width: 680px;
+  padding: 0 16px;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: var(--surface2); color: var(--gold2);
+  border: 1px solid var(--gold); border-radius: 24px;
+  padding: 10px 24px; font-size: 13px;
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#toast.show { opacity: 1; }
+
+/* ── TOOLTIP ── */
+.tt {
+  border-bottom: 1.5px dashed var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent); }
+
+#tt-bubble {
+  position: fixed; z-index: 9000; max-width: 260px;
+  background: #0d0a06; border: 1px solid rgba(201,160,82,0.5);
+  border-radius: 4px; padding: 10px 14px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.7);
+  pointer-events: none; opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 11px; font-weight: 700; color: var(--gold2); margin-bottom: 5px; letter-spacing: 0.08em; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,232,216,0.85); line-height: 1.7; }
+
+/* ── SCENE SHELL ── */
+.scene {
+  animation: sceneIn 0.4s ease forwards;
+  padding-top: 24px;
+}
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(26,20,16,0.95);
+  border-bottom: 1px solid var(--border2);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px;
+  backdrop-filter: blur(4px);
+}
+.progress-label {
+  font-size: 11px; color: var(--gold); letter-spacing: 0.15em;
+  white-space: nowrap; font-family: var(--font-serif);
+}
+.progress-track {
+  flex: 1; display: flex; gap: 4px;
+}
+.prog-pip {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.4s;
+}
+.prog-pip.done   { background: var(--gold); }
+.prog-pip.active { background: var(--accent); }
+.progress-step {
+  font-size: 11px; color: var(--text-muted);
+  font-family: var(--font-body); white-space: nowrap;
+}
+
+/* ── CARD FRAME ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 모서리 장식 */
+.card::before, .card::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border-style: solid;
+  border-color: var(--gold);
+  opacity: 0.4;
+}
+.card::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+.card::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
+
+.card-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border2);
+}
+.card-era {
+  font-size: 10px; letter-spacing: 0.2em; color: var(--gold);
+  margin-bottom: 8px; font-family: var(--font-serif);
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 4vw, 24px);
+  color: var(--text);
+  line-height: 1.3;
+}
+.card-sub {
+  font-size: 12px; color: var(--text-muted);
+  margin-top: 6px; letter-spacing: 0.04em;
+  font-family: var(--font-serif);
+}
+.card-body { padding: 20px 24px 28px; }
+
+/* ── INTRO ── */
+.intro-img {
+  width: 100%; height: 140px;
+  background: linear-gradient(180deg, #0d0a06 0%, var(--surface) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px; letter-spacing: 8px;
+  border-bottom: 1px solid var(--border2);
+  position: relative; overflow: hidden;
+}
+.intro-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+}
+.intro-text {
+  font-size: 15px; line-height: 2; color: var(--text-mid);
+  font-family: var(--font-serif); font-weight: 300;
+  margin-bottom: 20px;
+}
+.intro-text strong { color: var(--text); font-weight: 600; }
+
+.intro-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 14px 16px; margin-bottom: 24px;
+  font-size: 13px; line-height: 1.9; color: var(--text-mid);
+  font-family: var(--font-serif);
+}
+.intro-box .ib-title {
+  font-size: 10px; letter-spacing: 0.15em; color: var(--accent);
+  margin-bottom: 8px; font-weight: 700;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+}
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.btn:active { transform: translateY(0) scale(0.97); }
+.btn + .btn { margin-top: 8px; }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: 1px solid var(--primary2);
+}
+.btn-primary:hover { background: var(--primary2); }
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent2);
+}
+.btn-accent:hover { background: var(--accent2); }
+
+.btn-gold {
+  background: var(--gold);
+  color: #1a1410;
+  border: 1px solid var(--gold2);
+  font-weight: 700;
+}
+.btn-gold:hover { background: var(--gold2); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(150,130,100,0.3);
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--text); }
+
+.btn:disabled {
+  opacity: 0.35; cursor: not-allowed;
+  transform: none; box-shadow: none;
+}
+
+/* ── ROUND SCENE ── */
+.round-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px;
+  font-size: 11px; letter-spacing: 0.12em; color: var(--gold);
+  font-family: var(--font-serif); margin-bottom: 16px;
+}
+
+.issue-box {
+  background: rgba(0,48,135,0.12);
+  border: 1px solid rgba(0,48,135,0.35);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 3px 3px 0;
+  padding: 14px 16px; margin-bottom: 20px;
+}
+.issue-box .iss-label {
+  font-size: 10px; letter-spacing: 0.18em; color: var(--primary2);
+  margin-bottom: 6px; font-weight: 700;
+}
+.issue-box .iss-text {
+  font-size: 14px; font-family: var(--font-serif);
+  line-height: 1.8; color: var(--text);
+}
+
+/* 익명서 사건 컷신 */
+.briefing-box {
+  background: rgba(205,46,58,0.08);
+  border: 1px solid rgba(205,46,58,0.3);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 14px 16px; margin-bottom: 16px;
+}
+.briefing-box .br-label {
+  font-size: 10px; letter-spacing: 0.18em; color: var(--accent);
+  margin-bottom: 6px; font-weight: 700;
+}
+.briefing-box .br-text {
+  font-size: 13px; font-family: var(--font-serif);
+  line-height: 1.9; color: var(--text-mid);
+}
+
+/* 선택지 카드 */
+.choice-label {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 10px; letter-spacing: 0.06em;
+  font-family: var(--font-serif);
+}
+.choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+.choice-card {
+  background: var(--surface2);
+  border: 1.5px solid rgba(201,160,82,0.2);
+  border-left: 3px solid transparent;
+  border-radius: 0 3px 3px 0;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  position: relative;
+}
+.choice-card:hover {
+  border-left-color: var(--primary2);
+  background: rgba(0,48,135,0.12);
+  transform: translateX(4px);
+}
+.choice-card.selected {
+  border-left-color: var(--gold);
+  border-color: rgba(201,160,82,0.5);
+  background: rgba(201,160,82,0.08);
+}
+.choice-card.selected::after {
+  content: '✓';
+  position: absolute; top: 12px; right: 14px;
+  font-size: 14px; color: var(--gold); font-weight: 700;
+}
+.choice-card.disabled { opacity: 0.5; cursor: not-allowed; }
+.choice-card.disabled:hover { transform: none; border-left-color: transparent; background: var(--surface2); }
+
+.choice-strength {
+  font-size: 9px; letter-spacing: 0.1em;
+  margin-bottom: 5px; font-weight: 700;
+}
+.str-strong { color: var(--primary2); }
+.str-mid    { color: var(--gold); }
+.str-weak   { color: var(--text-muted); }
+
+.choice-text {
+  font-size: 14px; font-family: var(--font-serif);
+  line-height: 1.7; color: var(--text);
+}
+.choice-sub {
+  font-size: 12px; color: var(--text-muted);
+  margin-top: 5px; line-height: 1.6;
+}
+
+/* ── AI 응답 ── */
+.emperor-wrap {
+  margin-top: 20px; animation: sceneIn 0.5s ease;
+}
+
+.emperor-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.emperor-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--surface2), #0d0a06);
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.emperor-name {
+  font-family: var(--font-serif); font-size: 13px;
+  color: var(--gold); font-weight: 600;
+}
+.emperor-title {
+  font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.emperor-bubble {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 6px;
+  padding: 16px 18px;
+  font-family: var(--font-serif);
+  font-size: 14px; line-height: 2; color: var(--text-mid);
+  position: relative;
+}
+.emperor-bubble::before {
+  content: ''; position: absolute;
+  top: -1px; left: -16px;
+  border: 8px solid transparent;
+  border-right-color: var(--gold);
+  border-top: 0;
+}
+
+.loading-dots {
+  display: flex; gap: 5px; align-items: center; padding: 4px 0;
+}
+.loading-dots span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold2); opacity: 0.4;
+  animation: dotPulse 1.2s ease infinite;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.1); }
+}
+
+.saryoh-tag {
+  display: inline-block; font-size: 10px;
+  background: rgba(201,160,82,0.15); border: 1px solid rgba(201,160,82,0.3);
+  border-radius: 2px; padding: 1px 7px; color: var(--gold2);
+  letter-spacing: 0.06em; margin-bottom: 6px;
+}
+
+/* ── 해산 씬 ── */
+.dissolution-scene {
+  min-height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 48px 24px;
+  animation: dissolveIn 1.2s ease;
+}
+@keyframes dissolveIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.diss-date {
+  font-size: 11px; letter-spacing: 0.25em; color: var(--text-muted);
+  margin-bottom: 40px; font-family: var(--font-serif);
+}
+.diss-icon { font-size: 56px; margin-bottom: 24px; opacity: 0.9; }
+.diss-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 5vw, 32px);
+  color: var(--accent);
+  margin-bottom: 16px; line-height: 1.3;
+}
+.diss-decree {
+  background: rgba(205,46,58,0.08);
+  border: 1px solid rgba(205,46,58,0.25);
+  border-radius: 3px;
+  padding: 16px 20px; margin: 20px 0;
+  font-family: var(--font-serif); font-size: 14px;
+  line-height: 1.9; color: var(--text-mid); text-align: left;
+}
+.diss-decree .dd-label {
+  font-size: 10px; letter-spacing: 0.18em; color: var(--accent);
+  margin-bottom: 8px; font-weight: 700;
+}
+.diss-question {
+  font-family: var(--font-serif); font-size: 15px;
+  color: var(--gold2); line-height: 1.9; margin-top: 8px;
+  font-style: italic;
+}
+
+/* ── 결과 씬 ── */
+.result-header {
+  text-align: center; padding: 28px 0 20px;
+  border-bottom: 1px solid var(--border2); margin-bottom: 20px;
+}
+.result-icon { font-size: 52px; margin-bottom: 12px; }
+.result-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 26px); color: var(--text); margin-bottom: 8px;
+}
+.result-sub { font-size: 13px; color: var(--text-muted); font-family: var(--font-serif); }
+
+/* 선택 흐름 */
+.flow-title {
+  font-size: 11px; letter-spacing: 0.18em; color: var(--gold);
+  margin-bottom: 10px; font-family: var(--font-serif);
+}
+.flow-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.flow-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border2); border-radius: 3px;
+}
+.flow-round {
+  font-size: 10px; color: var(--gold2); font-weight: 700;
+  white-space: nowrap; margin-top: 2px; letter-spacing: 0.06em;
+  min-width: 36px;
+}
+.flow-choice {
+  font-size: 13px; font-family: var(--font-serif);
+  color: var(--text-mid); line-height: 1.6; flex: 1;
+}
+
+.final-decree {
+  background: rgba(205,46,58,0.07);
+  border: 1px solid rgba(205,46,58,0.25);
+  border-radius: 3px; padding: 14px 16px; margin-bottom: 16px;
+  text-align: center;
+}
+.fd-label {
+  font-size: 10px; letter-spacing: 0.15em; color: var(--accent);
+  margin-bottom: 8px;
+}
+.fd-text {
+  font-family: var(--font-serif); font-size: 14px;
+  color: var(--text-mid); line-height: 1.8; font-style: italic;
+}
+
+.hist-result {
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed rgba(201,160,82,0.3);
+  border-radius: 3px; padding: 14px 16px; margin-bottom: 20px;
+}
+.hr-label {
+  font-size: 10px; letter-spacing: 0.15em; color: var(--gold);
+  margin-bottom: 8px;
+}
+.hr-text {
+  font-family: var(--font-serif); font-size: 13px;
+  color: var(--text-muted); line-height: 1.9;
+}
+
+/* 소감 */
+.comment-wrap { margin-bottom: 20px; }
+.comment-label {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 8px; letter-spacing: 0.04em;
+}
+.comment-wrap textarea {
+  width: 100%; border-radius: 3px; resize: none;
+  background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--font-serif); font-size: 14px;
+  padding: 12px 14px; line-height: 1.7;
+  transition: border-color 0.2s;
+}
+.comment-wrap textarea:focus {
+  outline: none; border-color: rgba(201,160,82,0.5);
+}
+.comment-wrap textarea::placeholder { color: var(--text-muted); }
+
+/* 저작권 */
+.copyright {
+  text-align: center; padding-top: 20px; margin-top: 8px;
+  font-size: 11px; color: rgba(120,100,80,0.5);
+  font-family: var(--font-body); letter-spacing: 0.04em;
+}
+
+/* 구분선 */
+hr.div { border: none; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 20px 0;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 480px) {
+  .card-body { padding: 16px 16px 24px; }
+  .card-header { padding: 16px 16px 14px; }
+  .emperor-bubble { font-size: 13px; }
+  .choice-text { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+
+<script>
+/* ══════════════════════════════════
+   CONFIG
+══════════════════════════════════ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzMhtKXi60lJsKfAHpWOUDJI2oZblVAC4C-EFl3RFcJm49SBpGDJiJFkGEjU3Qw8WvA/exec';
+
+const LOADING_MSGS = [
+  '경운궁 편전에서 답신을 기다리는 중...',
+  '황제가 어전 회의를 열고 있습니다...',
+  '내관이 칙서를 들고 오고 있습니다...',
+  '황국협회 측의 보고가 올라가고 있습니다...',
+  '승정원에서 황제의 뜻을 정리하는 중...',
+];
+
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+/* ══════════════════════════════════
+   TOOLTIPS
+══════════════════════════════════ */
+const TIPS = {
+  '독립협회': '독립협회(獨立協會) — 1896년 서재필·윤치호 등이 설립한 근대적 사회·정치 단체. 자주독립·자유민권·자강개혁을 주장.',
+  '만민공동회': '만민공동회(萬民共同會) — 독립협회가 주도한 대규모 민중 집회. 1898년 황국협회 해산 요구 등 주요 정치 현안을 공개 토론.',
+  '중추원': '중추원(中樞院) — 대한제국의 자문 기관. 독립협회는 이를 의회식으로 개편하여 민선 의원을 포함시킬 것을 요구함.',
+  '관선': '관선(官選) — 정부(황제)가 임명하는 방식. 반대어는 민선(民選).',
+  '민선': '민선(民選) — 백성(국민)이 선출하는 방식.',
+  '대한국 국제': '대한국 국제(大韓國 國制) — 1899년 반포된 대한제국의 헌법에 해당하는 문서. 9개 조항으로 구성. 2조에 "대한제국의 정치는 만세불변의 전제정치"라고 명시.',
+  '전제정치': '전제정치(專制政治) — 군주가 모든 권력을 단독으로 행사하는 정치 체제. 입헌군주제·의회정치의 대립 개념.',
+  '광무개혁': '광무개혁(光武改革) — 1897~1904년 대한제국 고종이 추진한 근대화 개혁. 황제권 강화 + 점진적 산업·군사 개혁을 특징으로 함.',
+  '황국협회': '황국협회(皇國協會) — 보수 세력이 조직한 단체. 독립협회에 반대하며 황제권 강화를 지지. 보부상 세력을 동원해 독립협회와 충돌.',
+  '익명서': '익명서(匿名書) — 작성자를 밝히지 않은 문서. 1898년 독립협회가 황제를 폐위하려 한다는 내용의 익명서가 유포되어 해산의 빌미가 됨.',
+  '입헌군주제': '입헌군주제(立憲君主制) — 헌법으로 군주의 권한을 제한하고 의회가 국정에 참여하는 정치 체제.',
+  '민권': '민권(民權) — 국민이 갖는 정치적 권리. 참정권·집회결사의 자유 등.',
+  '외세': '외세(外勢) — 외부 세력. 당시 러시아·일본·미국 등 열강의 내정 간섭을 가리킴.',
+};
+
+function tt(word, key) {
+  const tip = TIPS[key || word];
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+/* ══════════════════════════════════
+   ROUNDS DATA
+══════════════════════════════════ */
+const ROUNDS = [
+  {
+    id: 'r1',
+    label: '1라운드',
+    issue: `${tt('중추원')} 개편 — 의회식 운영 요구`,
+    issueDesc: `1898년 10월, ${tt('독립협회')}와 ${tt('만민공동회')}는 ${tt('중추원')}을 개편하여<br>
+      절반을 ${tt('민선')} 의원으로 구성할 것을 요구했습니다.<br>
+      황제가 잠시 수용하는 듯했으나 곧 입장을 바꾸었습니다.`,
+    briefing: null,
+    choices: [
+      {
+        id: 'r1_a', strength: 'strong',
+        text: `백성이 참여하는 정치 구조가 있어야 대한제국도 지속될 수 있습니다. ${tt('중추원')}에 ${tt('민선')} 의원을 넣는 것은 폐하의 권력을 빼앗는 게 아니라 그 토대를 넓히는 일입니다.`,
+        sub: '(구조·원칙 중심 논거)',
+      },
+      {
+        id: 'r1_b', strength: 'mid',
+        text: `전부가 아니어도 됩니다. ${tt('중추원')} 의원 중 일부만이라도 민간의 의견을 대표할 수 있다면, 백성은 국가를 자신의 것으로 여기게 될 것입니다.`,
+        sub: '(현실적 타협 논거)',
+      },
+      {
+        id: 'r1_c', strength: 'weak',
+        text: `백성들도 답답합니다. 나라 일이 어떻게 돌아가는지 알 수도 없고, 의견을 낼 곳도 없습니다.`,
+        sub: '(감정·추상 논거)',
+      },
+    ],
+    emperorContext: `학생이 "${tt('중추원')}" 민선 의원 요구에 대해 아래 논거를 선택했다. 고종 황제로서 이 논거에 논리적으로 반박하라.`,
+  },
+  {
+    id: 'r2',
+    label: '2라운드',
+    issue: `독립협회 해산 명령 — ${tt('익명서')} 사건`,
+    issueDesc: `황제는 독립협회에 해산을 명령했습니다. 그 빌미는 ${tt('익명서')} 사건이었습니다.`,
+    briefing: `1898년 11월, ${tt('황국협회')}와 보수 세력은 독립협회가 황제를 폐위하고 공화정을 세우려 한다는 소문을 퍼뜨렸습니다. 이것이 이른바 '${tt('익명서')} 사건'입니다.<br><br>
+      황제는 이를 근거로 독립협회 지도부를 체포하고 해산을 명령했습니다.`,
+    choices: [
+      {
+        id: 'r2_a', strength: 'strong',
+        text: `${tt('익명서')}는 작성자도, 근거도 없는 정치적 모함입니다. 법적 절차 없이 익명의 소문만으로 집회결사의 자유를 박탈하는 것은 폐하의 권위를 오히려 손상시킵니다.`,
+        sub: '(법 원칙·절차 중심 논거)',
+      },
+      {
+        id: 'r2_b', strength: 'mid',
+        text: `독립협회는 황제 폐위를 주장한 적이 없습니다. 지도부를 직접 조사하여 사실을 확인한 뒤 결정하셔도 늦지 않습니다.`,
+        sub: '(사실 확인 요청 논거)',
+      },
+      {
+        id: 'r2_c', strength: 'weak',
+        text: `우리는 나쁜 뜻이 없습니다. 나라를 걱정하는 마음뿐입니다. 믿어주십시오.`,
+        sub: '(감정 호소 논거)',
+      },
+    ],
+    emperorContext: `학생이 독립협회 강제 해산 명령에 대해 아래 논거로 반박했다. 고종 황제로서 이 논거에 논리적으로 대응하라.`,
+  },
+  {
+    id: 'r3',
+    label: '3라운드',
+    issue: `${tt('대한국 국제')} 2조 — ${tt('전제정치')} 선포`,
+    issueDesc: `1899년 반포된 ${tt('대한국 국제')} 2조는 이렇게 선언합니다.<br>
+      <em style="color:var(--gold2);font-style:normal">"대한국의 정치는 만세불변의 전제정치이다."</em><br>
+      독립협회가 요구한 ${tt('민권')}과 의회는 이 조항으로 원천 봉쇄되었습니다.`,
+    briefing: null,
+    choices: [
+      {
+        id: 'r3_a', strength: 'strong',
+        text: `${tt('전제정치')}는 자주독립과 다릅니다. 자주독립이란 열강에 굴복하지 않는 것이지, 백성의 권리를 억압하는 것이 아닙니다. ${tt('입헌군주제')}도 자주국가가 될 수 있습니다.`,
+        sub: '(개념 구분·원칙 논거)',
+      },
+      {
+        id: 'r3_b', strength: 'mid',
+        text: `${tt('민권')}을 인정하는 것이 오히려 열강에 맞서는 힘이 됩니다. 백성이 나라와 하나가 되어야 외세에 저항할 수 있습니다.`,
+        sub: '(국력·단결 논거)',
+      },
+      {
+        id: 'r3_c', strength: 'weak',
+        text: `이 조항은 너무 가혹합니다. 세상이 변하고 있는데 만세불변이라는 말이 가능한가요?`,
+        sub: '(시대 변화 호소 논거)',
+      },
+    ],
+    emperorContext: `학생이 대한국 국제 2조(전제정치 조항)에 대해 아래 논거로 반박했다. 고종 황제로서 대한제국의 자주독립·광무개혁 논리를 바탕으로 이 논거에 논리적으로 대응하라.`,
+  },
+];
+
+/* ══════════════════════════════════
+   STATE
+══════════════════════════════════ */
+let S = {
+  phase: 'intro',   // intro | round | dissolution | result
+  ri: 0,            // round index
+  selections: [],   // [{roundId, choiceId, choiceText, strength}]
+  emperorReplies: [],
+  currentChoice: null,
+  loading: false,
+  submitted: false,
+};
+
+/* ══════════════════════════════════
+   SUPABASE
+══════════════════════════════════ */
+function sendToSupabase(choiceData, comment) {
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'dongnip1898',
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+
+/* ══════════════════════════════════
+   GEMINI API (GAS 프록시)
+══════════════════════════════════ */
+async function callEmperor(roundData, choiceText, strength) {
+  const strengthHint = {
+    strong: '학생의 논거가 날카롭고 구조적이다. 황제는 한 발 물러서는 듯 "그 점은 인정하나…"로 시작하되 결국 전제황권 논리로 귀결한다.',
+    mid:    '학생의 논거가 현실적이나 타협적이다. 황제는 냉정하게 현실 논리로 반박한다.',
+    weak:   '학생의 논거가 감정적이고 추상적이다. 황제는 단호하게 일축한다.',
+  }[strength];
+
+  const systemPrompt = `당신은 1898년 대한제국의 황제 고종이다.
+규칙:
+- 반드시 한국어로만 답하라.
+- 응답은 2~4문장, 130자 이내로 간결하게.
+- 감정적 분노 없이 냉정한 통치 논리로 말한다.
+- 대한제국의 자주독립 수호, 광무개혁 추진, 열강 각축 속 황제권 중심 근대화 논리를 바탕으로 한다.
+- 필요시 대한국 국제 조문을 인용할 수 있다.
+- 어떤 경우에도 독립협회의 요구를 수용하거나 해산을 철회하지 않는다.
+- 현대 민주주의 관점으로 자기비판하지 않는다.
+- 1898년 대한제국 황제의 역사적 관점만 유지한다.
+- 말투: 짐/과인, 격식체 (~하오, ~이오, ~하노라).
+${strengthHint}`;
+
+  const userPrompt = `${roundData.emperorContext}
+
+학생이 선택한 논거:
+"${choiceText}"
+
+황제의 응답:`;
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: systemPrompt,
+        prompt: userPrompt,
+        maxTokens: 120,
+      }),
+    });
+    const data = await res.json();
+    return data.response || data.text || '짐은 이 요구를 받아들일 수 없소.';
+  } catch {
+    // fallback
+    const fallbacks = {
+      r1: '지금 대한제국은 외세의 압박 속에서 겨우 자주권을 지키고 있소. 국정의 권한을 분산하면 외세가 그 틈을 파고들 것이오. 짐이 홀로 이 짐을 지는 것은 선택이 아니라 책임이오.',
+      r2: '짐을 폐위하려 했다는 소문이 도는 이상, 짐은 국가의 안정을 위해 결단할 수밖에 없소. 의심이 사실이 아니길 바라나, 위험을 감수할 수는 없소.',
+      r3: '대한국 국제 2조는 우리가 자주독립국임을 세상에 선언한 것이오. 전제정치란 황제가 독단적으로 군림한다는 뜻이 아니라, 외세의 간섭 없이 짐이 직접 국정을 책임진다는 뜻이오.',
+    };
+    return fallbacks[roundData.id] || '짐은 이 요구를 받아들일 수 없소.';
+  }
+}
+
+/* ══════════════════════════════════
+   UTILS
+══════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase === 'intro'       ? renderIntro() :
+    S.phase === 'round'       ? renderRound() :
+    S.phase === 'dissolution' ? renderDissolution() :
+                                renderResult();
+  initTooltip();
+}
+
+let tooltipInitialized = false;
+function initTooltip() {
+  if (tooltipInitialized) return;
+  tooltipInitialized = true;
+  const bubble = document.getElementById('tt-bubble');
+  let timer = null;
+  document.addEventListener('click', function handler(e) {
+    const el = e.target.closest('.tt');
+    if (el) {
+      e.stopPropagation();
+      bubble.querySelector('.tb-word').textContent = el.dataset.word;
+      bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+      const rect = el.getBoundingClientRect();
+      const bw = 260;
+      const left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+      bubble.style.width = bw + 'px';
+      bubble.style.left  = left + 'px';
+      bubble.style.top   = '-9999px';
+      bubble.classList.add('show');
+      const bubH = bubble.offsetHeight;
+      bubble.style.top = (rect.top - bubH - 14 < 8)
+        ? (rect.bottom + 10) + 'px'
+        : (rect.top - bubH - 14) + 'px';
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => bubble.classList.remove('show'), 4000);
+    } else {
+      bubble.classList.remove('show');
+    }
+  });
+}
+
+function progressBar() {
+  const total = ROUNDS.length + 1; // rounds + dissolution
+  const done  = S.ri;
+  const pips  = Array.from({ length: total }, (_, i) => {
+    let cls = 'prog-pip';
+    if (i < done) cls += ' done';
+    else if (i === done) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  return `
+  <div class="progress-wrap">
+    <span class="progress-label">🏛 독립협회</span>
+    <div class="progress-track">${pips}</div>
+    <span class="progress-step">${done + 1} / ${total}</span>
+  </div>`;
+}
+
+/* ══════════════════════════════════
+   RENDERS
+══════════════════════════════════ */
+function renderIntro() {
+  return `
+  <div class="scene">
+    <div class="card" style="margin-top:0">
+      <div class="intro-img">📜 🏛 ⚡</div>
+      <div class="card-header">
+        <div class="card-era">근대 · 1898년 서울</div>
+        <div class="card-title">황제와 맞서다</div>
+        <div class="card-sub">1898 독립협회 — 민권이냐, 황권이냐</div>
+      </div>
+      <div class="card-body">
+        <div class="intro-text">
+          1898년, ${tt('독립협회')}는 대규모 ${tt('만민공동회')}를 열어 ${tt('중추원')} 개편을 요구했습니다.
+          백성이 참여하는 의회를 만들자는 외침이었습니다.<br><br>
+          황제 고종은 이를 <strong>외세의 개입과 국정 혼란을 불러올 위험한 시도</strong>로 보았습니다.
+          그리고 1898년 12월 25일, 독립협회는 강제 해산됩니다.
+        </div>
+
+        <div class="intro-box">
+          <div class="ib-title">📌 당신의 역할</div>
+          당신은 독립협회 민권파입니다. 3번의 논쟁에서 황제에게 맞섭니다.<br>
+          논거를 선택하면 황제 AI가 직접 반박합니다.<br>
+          <strong style="color:var(--text)">어떤 논거를 골라도 결말은 정해져 있습니다.</strong> 중요한 것은 '왜'입니다.
+        </div>
+
+        <div class="intro-box" style="border-left-color:var(--gold);border-color:rgba(201,160,82,0.3);background:rgba(201,160,82,0.05)">
+          <div class="ib-title" style="color:var(--gold)">📖 핵심 사료</div>
+          <span class="saryoh-tag">대한국 국제 2조 (1899)</span><br>
+          <em style="color:var(--text-mid);font-style:normal;font-family:var(--font-serif);font-size:14px;line-height:1.9">
+            "대한국의 정치는 만세불변의 ${tt('전제정치')}이다."
+          </em>
+        </div>
+
+        <button class="btn btn-accent" onclick="startGame()">논쟁을 시작한다 →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderRound() {
+  const round = ROUNDS[S.ri];
+  const sel   = S.currentChoice;
+  const reply = S.emperorReplies[S.ri];
+
+  const choicesHtml = round.choices.map(c => {
+    const strLabel = { strong: '▲ 원칙 중심', mid: '● 현실 대응', weak: '◆ 민심 호소' }[c.strength];
+    const strCls   = { strong: 'str-strong', mid: 'str-mid', weak: 'str-weak' }[c.strength];
+    const isDisabled = (sel !== null) || S.loading;
+    const isSelected = sel === c.id;
+
+    return `
+    <div class="choice-card ${isSelected ? 'selected' : ''} ${isDisabled && !isSelected ? 'disabled' : ''}"
+         onclick="${isDisabled ? '' : `selectChoice('${c.id}')`}">
+      <div class="choice-strength ${strCls}">${strLabel}</div>
+      <div class="choice-text">${c.text}</div>
+      <div class="choice-sub">${c.sub}</div>
+    </div>`;
+  }).join('');
+
+  const emperorHtml = (() => {
+    if (!sel) return '';
+    return `
+    <div class="emperor-wrap">
+      <div class="emperor-header">
+        <div class="emperor-avatar">👑</div>
+        <div>
+          <div class="emperor-name">황제 고종</div>
+          <div class="emperor-title">대한제국 황제 · ${tt('광무개혁')} 추진 중</div>
+        </div>
+      </div>
+      <div class="emperor-bubble">
+        ${reply
+          ? reply
+          : `<div style="display:flex;align-items:center;gap:10px">
+               <div class="loading-dots"><span></span><span></span><span></span></div>
+               <span style="font-size:12px;color:var(--text-muted);font-family:var(--font-serif);font-style:italic" id="loading-msg"></span>
+             </div>`
+        }
+      </div>
+    </div>`;
+  })();
+
+  const briefingHtml = round.briefing ? `
+  <div class="briefing-box">
+    <div class="br-label">⚠ 사건 브리핑</div>
+    <div class="br-text">${round.briefing}</div>
+  </div>` : '';
+
+  const nextBtn = (() => {
+    if (!reply) return '';
+    const isLast = S.ri === ROUNDS.length - 1;
+    const label  = isLast ? '마지막 논쟁이 끝났다 →' : `${ROUNDS[S.ri+1].label}으로 →`;
+    return `<button class="btn btn-primary" style="margin-top:20px" onclick="${isLast ? 'goDissolution()' : 'nextRound()'}">${label}</button>`;
+  })();
+
+  return `
+  ${progressBar()}
+  <div class="scene">
+    <div class="card" style="margin-top:16px">
+      <div class="card-header">
+        <div class="round-badge">⚔ ${round.label}</div>
+        <div class="card-title" style="font-size:clamp(16px,3.5vw,20px)">${round.issue}</div>
+      </div>
+      <div class="card-body">
+        ${briefingHtml}
+        <div class="issue-box">
+          <div class="iss-label">📌 상황</div>
+          <div class="iss-text">${round.issueDesc}</div>
+        </div>
+
+        <div class="choice-label">당신의 논거를 선택하세요</div>
+        <div class="choices">${choicesHtml}</div>
+
+        ${emperorHtml}
+        ${nextBtn}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDissolution() {
+  return `
+  <div class="scene">
+    <div class="dissolution-scene">
+      <div class="diss-date">1898년 12월 25일 · 서울 종로</div>
+      <div class="diss-icon">🕯</div>
+      <div class="diss-title">독립협회,<br>강제 해산되다</div>
+
+      <div class="diss-decree">
+        <div class="dd-label">📜 황제의 칙령</div>
+        독립협회는 국가의 안녕을 어지럽히는 불온한 단체이니 즉각 해산을 명한다.
+        짐은 대한제국의 안정과 자주독립을 위해 이 결단을 내리노라.
+      </div>
+
+      <div class="diss-question">
+        "그러나 질문은 남았다."
+      </div>
+    </div>
+    <div style="padding:0 16px 32px">
+      <button class="btn btn-gold" onclick="goResult()">결과 돌아보기 →</button>
+    </div>
+  </div>`;
+}
+
+function renderResult() {
+  const flowHtml = S.selections.map((sel, i) => {
+    const round = ROUNDS[i];
+    return `
+    <div class="flow-item">
+      <div class="flow-round">${round.label}</div>
+      <div class="flow-choice">${sel.choiceText.replace(/<[^>]+>/g, '')}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="scene">
+    <div class="card" style="margin-top:16px">
+      <div class="card-body">
+        <div class="result-header">
+          <div class="result-icon">📜</div>
+          <div class="result-title">논쟁의 기록</div>
+          <div class="result-sub">당신은 3번 황제와 논쟁했습니다.<br>그러나 대한제국의 방향은 바뀌지 않았습니다.</div>
+        </div>
+
+        <div class="flow-title">▪ 나의 선택 흐름</div>
+        <div class="flow-list">${flowHtml}</div>
+
+        <div class="final-decree">
+          <div class="fd-label">황제의 최종 판단</div>
+          <div class="fd-text">"짐은 대한제국의 안정을 위해 독립협회를 해산한다. 이것이 짐의 결단이오."</div>
+        </div>
+
+        <div class="hist-result">
+          <div class="hr-label">📅 역사의 결말</div>
+          <div class="hr-text">
+            1898년 12월 25일, 독립협회는 강제 해산되었습니다.<br>
+            이듬해 1899년, ${tt('대한국 국제')}가 반포되며 ${tt('전제정치')}가 공식화되었습니다.<br>
+            ${tt('민권')}과 의회의 꿈은 이후 1919년 3·1운동까지 기다려야 했습니다.
+          </div>
+        </div>
+
+        <div class="intro-box" style="border-left-color:var(--gold);border-color:rgba(201,160,82,0.25);background:rgba(201,160,82,0.05);margin-bottom:20px">
+          <div class="ib-title" style="color:var(--gold)">🤔 생각해봅시다</div>
+          논쟁을 마친 지금, 고종을 어떻게 평가하게 되었습니까?<br>
+          <span style="color:var(--text-muted);font-size:13px">단순한 독재자였을까요, 아니면 나름의 논리를 가진 통치자였을까요?</span>
+        </div>
+
+        <hr class="div">
+
+        <div class="comment-wrap">
+          <div class="comment-label">💬 한 줄 소감을 남겨보세요 (이름·학번 제외)</div>
+          <textarea id="comment" rows="3"
+            placeholder="독립협회는 왜 황제를 설득하지 못했을까요?"
+            maxlength="100"></textarea>
+        </div>
+
+        <button class="btn btn-gold" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
+        <button class="btn btn-outline" style="margin-top:8px" onclick="restart()">다시 맞서기</button>
+
+        <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════
+   EVENTS
+══════════════════════════════════ */
+function startGame() {
+  S.phase = 'round'; S.ri = 0;
+  S.currentChoice = null; S.loading = false;
+  R();
+}
+
+async function selectChoice(choiceId) {
+  if (S.loading || S.currentChoice) return;
+  const round  = ROUNDS[S.ri];
+  const choice = round.choices.find(c => c.id === choiceId);
+  if (!choice) return;
+
+  S.currentChoice = choiceId;
+  S.loading = true;
+  S.selections[S.ri] = {
+    roundId: round.id,
+    choiceId,
+    choiceText: choice.text,
+    strength: choice.strength,
+  };
+  R(); // show loading
+
+  // 역사 테마 로딩 문구 삽입
+  const msgEl = document.getElementById('loading-msg');
+  if (msgEl) {
+    msgEl.textContent = LOADING_MSGS[Math.floor(Math.random() * LOADING_MSGS.length)];
+  }
+
+  const reply = await callEmperor(round, choice.text.replace(/<[^>]+>/g, ''), choice.strength);
+  S.emperorReplies[S.ri] = reply;
+  S.loading = false;
+  R();
+}
+
+function nextRound() {
+  S.ri++;
+  S.currentChoice = null;
+  S.loading = false;
+  R();
+}
+
+function goDissolution() {
+  S.phase = 'dissolution';
+  R();
+}
+
+function goResult() {
+  S.phase = 'result';
+
+  if (!S.submitted) {
+    sendToSupabase({
+      selections: S.selections.map(sel => ({
+        round: sel.roundId,
+        choice: sel.choiceId,
+        strength: sel.strength,
+      })),
+    }, '');
+    S.submitted = true;
+  }
+  R();
+}
+
+function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+
+  if (comment) {
+    sendToSupabase({
+      selections: S.selections.map(sel => ({
+        round: sel.roundId,
+        choice: sel.choiceId,
+        strength: sel.strength,
+      })),
+    }, comment);
+  }
+
+  const lines = [
+    '📜 황제와 맞서다 — 1898 독립협회',
+    '',
+    '▪ 나의 선택',
+    ...S.selections.map((sel, i) => {
+      const round = ROUNDS[i];
+      return `${round.label}: ${sel.choiceText.replace(/<[^>]+>/g, '')}`;
+    }),
+    '',
+    '▪ 황제의 최종 판단',
+    '"짐은 대한제국의 안정을 위해 독립협회를 해산한다."',
+    '',
+    '▪ 역사의 결말',
+    '1898년 12월 25일, 독립협회는 강제 해산되었다.',
+    comment ? `\n▪ 소감\n${comment}` : '',
+    '',
+    '— 찰리쌤의 한국사 게임실 · hischarlie.tistory.com',
+  ].filter(l => l !== undefined).join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(lines).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = lines; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch { showToast('❌ 복사 실패. 직접 선택해 복사해주세요.'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = {
+    phase: 'intro', ri: 0,
+    selections: [], emperorReplies: [],
+    currentChoice: null, loading: false, submitted: false,
+  };
+  R();
+}
+
+/* ── START ── */
+R();
+</script>
+</body>
+</html>
