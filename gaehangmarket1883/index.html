@@ -1,1 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>내 돈이 사라진다 — 개항장 상인 1883</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   근현대 테마 — 세피아 + 개항기 분위기
+   ═══════════════════════════════════ */
+:root {
+  --bg:        #1a1410;
+  --bg2:       #231c16;
+  --surface:   #2e2519;
+  --surface2:  #3a2f22;
+  --primary:   #c8892a;   /* 황동색 — 개항기 동전 */
+  --primary2:  #e8aa4a;
+  --accent:    #8b1a1a;   /* 적색 — 위기 */
+  --safe:      #2d5a3d;   /* 녹색 — 이익 */
+  --safe2:     #4a8a5d;
+  --text:      #f0e6d0;
+  --text-mid:  #c8b89a;
+  --text-dim:  #8a7a62;
+  --border:    rgba(200,137,42,0.25);
+  --border2:   rgba(200,137,42,0.5);
+  --sepia:     #8b7355;
 
+  --font-title: 'Black Han Sans', sans-serif;
+  --font-serif: 'Noto Serif KR', serif;
+  --font-body:  'Noto Sans KR', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 12px 12px 60px;
+  /* 낡은 종이 노이즈 */
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(200,137,42,0.06) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c8892a' fill-opacity='0.025'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='20' y='20' width='1' height='1'/%3E%3Crect x='40' y='60' width='1' height='1'/%3E%3Crect x='60' y='10' width='1' height='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#app { width: 100%; max-width: 520px; }
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--surface2); color: var(--primary2);
+  border: 1px solid var(--primary); border-radius: 4px;
+  padding: 10px 20px; font-size: 13px;
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+/* ─── TOOLTIP ─── */
+.tt {
+  border-bottom: 1.5px dashed var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent); }
+#tt-bubble {
+  position: fixed; z-index: 9000;
+  max-width: 240px;
+  background: var(--bg2);
+  border: 1px solid rgba(200,137,42,0.6);
+  border-radius: 4px;
+  padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.7);
+  pointer-events: none;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--primary2); margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,192,0.85); line-height: 1.7; }
+
+/* ─── PANEL ─── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  animation: fadeUp 0.35s ease;
+  position: relative;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 모서리 장식 */
+.panel::before, .panel::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  border-style: solid;
+  border-color: var(--primary);
+  opacity: 0.4; z-index: 2;
+}
+.panel::before { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
+.panel::after  { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
+
+/* ─── HEADER BAR ─── */
+.hbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  position: sticky; top: 0; z-index: 50;
+}
+.hbar-title {
+  font-family: var(--font-serif);
+  font-size: 13px; color: var(--primary);
+  letter-spacing: 0.05em;
+}
+.hbar-capital {
+  font-size: 13px; font-weight: 700;
+  font-family: var(--font-body);
+}
+.capital-num {
+  font-size: 18px; font-weight: 700;
+  transition: color 0.4s;
+}
+.capital-up   { color: var(--safe2); }
+.capital-mid  { color: var(--primary2); }
+.capital-down { color: var(--accent); animation: warnPulse 0.8s ease infinite alternate; }
+@keyframes warnPulse { from{opacity:1;} to{opacity:0.5;} }
+
+/* 라운드 pip */
+.round-pips { display: flex; gap: 5px; align-items: center; }
+.pip {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.pip.done    { background: var(--text-dim); }
+.pip.active  { background: var(--primary); }
+.pip.danger  { background: var(--accent); }
+
+/* ─── INTRO ─── */
+.intro-hdr {
+  padding: 28px 24px 20px; text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.intro-badge {
+  width: 70px; height: 70px; border-radius: 50%;
+  border: 2px solid var(--primary);
+  background: var(--bg2);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 32px; margin-bottom: 16px;
+}
+.intro-title {
+  font-family: var(--font-title);
+  font-size: 26px; color: var(--text);
+  margin-bottom: 6px;
+}
+.intro-sub {
+  font-size: 12px; color: var(--text-dim);
+  letter-spacing: 0.2em; margin-top: 6px;
+}
+.intro-body { padding: 20px 22px 28px; }
+.intro-desc {
+  font-size: 14px; line-height: 2; color: var(--text-mid);
+  font-family: var(--font-serif);
+  border-left: 3px solid var(--primary);
+  padding: 12px 16px;
+  background: rgba(200,137,42,0.06);
+  border-radius: 0 3px 3px 0;
+  margin-bottom: 20px;
+}
+.intro-desc strong { color: var(--primary2); }
+
+.setup-row {
+  display: flex; gap: 10px; margin-bottom: 20px;
+}
+.setup-card {
+  flex: 1; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 14px 12px; text-align: center;
+}
+.setup-val { font-size: 22px; font-weight: 700; color: var(--primary2); margin-bottom: 4px; }
+.setup-key { font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; }
+
+/* ─── SCENE (라운드 화면) ─── */
+.scene-hdr {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.round-badge {
+  display: inline-block;
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--primary); border: 1px solid var(--border2);
+  padding: 3px 10px; border-radius: 2px; margin-bottom: 10px;
+}
+.scene-title {
+  font-family: var(--font-serif);
+  font-size: 19px; font-weight: 700;
+  color: var(--text); line-height: 1.4; margin-bottom: 6px;
+}
+.scene-year {
+  font-size: 11px; color: var(--text-dim); letter-spacing: 0.12em;
+}
+.scene-body { padding: 18px 22px 24px; }
+
+/* 상황 설명 박스 */
+.situation {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px; padding: 14px 16px; margin-bottom: 18px;
+  font-size: 13px; line-height: 1.9; color: var(--text-mid);
+}
+.situation strong { color: var(--text); }
+
+/* 선택지 카드 */
+.choices { display: flex; flex-direction: column; gap: 9px; margin-bottom: 6px; }
+.choice {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 3px; padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.15s;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.choice:hover {
+  border-left-color: var(--primary);
+  background: rgba(200,137,42,0.08);
+  transform: translateX(3px);
+}
+.choice.selected {
+  border-color: var(--primary);
+  border-left-color: var(--primary);
+  background: rgba(200,137,42,0.12);
+}
+.choice-icon { font-size: 22px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.choice-text { flex: 1; }
+.choice-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.choice-why {
+  font-size: 12px; color: var(--text-mid); line-height: 1.6;
+  font-style: italic;
+}
+.choice-why em { color: var(--safe2); font-style: normal; font-weight: 700; }
+
+/* ─── RESULT (1차 결과 — 희망) ─── */
+.result-hope {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.result-hope-icon { font-size: 48px; margin-bottom: 10px; }
+.result-hope-title {
+  font-family: var(--font-serif);
+  font-size: 18px; color: var(--safe2); margin-bottom: 6px;
+}
+.gain-badge {
+  display: inline-block;
+  background: rgba(45,90,61,0.3);
+  border: 1px solid var(--safe2);
+  border-radius: 3px; padding: 6px 18px;
+  font-size: 20px; font-weight: 700; color: var(--safe2);
+  font-family: var(--font-body);
+  margin-top: 8px;
+}
+
+/* ─── RESULT (2차 결과 — 규칙 개입) ─── */
+.rule-box {
+  margin: 0 22px 18px;
+  border: 1px solid rgba(139,26,26,0.5);
+  border-radius: 3px; overflow: hidden;
+  animation: ruleIn 0.5s 0.3s ease both;
+}
+@keyframes ruleIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rule-header {
+  background: rgba(139,26,26,0.25);
+  padding: 10px 14px;
+  font-size: 11px; font-weight: 700;
+  color: #d44; letter-spacing: 0.15em;
+  display: flex; align-items: center; gap: 8px;
+}
+.rule-body {
+  padding: 14px 16px;
+  background: rgba(139,26,26,0.08);
+}
+.rule-name {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-bottom: 8px;
+}
+.rule-desc {
+  font-size: 12px; color: var(--text-mid); line-height: 1.8;
+  margin-bottom: 10px;
+}
+.rule-effect {
+  display: flex; gap: 8px; align-items: center;
+  padding-top: 8px; border-top: 1px dashed rgba(139,26,26,0.3);
+}
+.before-val {
+  font-size: 13px; color: var(--safe2); font-weight: 700;
+  text-decoration: line-through; opacity: 0.6;
+}
+.arrow-txt { font-size: 13px; color: var(--text-dim); }
+.after-val { font-size: 16px; color: var(--accent); font-weight: 700; }
+.loss-note { font-size: 11px; color: #d44; margin-left: auto; font-style: italic; }
+
+/* 최종 자산 표시 */
+.capital-result {
+  margin: 0 22px 22px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cr-label { font-size: 12px; color: var(--text-dim); }
+.cr-val {
+  font-size: 20px; font-weight: 700;
+  font-family: var(--font-body);
+}
+
+/* ─── 화폐정리 미션 ─── */
+.currency-mission {
+  padding: 20px 22px 24px;
+}
+.mission-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 16px; margin-bottom: 16px;
+}
+.mission-label {
+  font-size: 11px; letter-spacing: 0.15em; color: var(--primary);
+  margin-bottom: 10px;
+}
+.currency-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px dashed rgba(200,137,42,0.15);
+}
+.currency-row:last-child { border-bottom: none; }
+.c-name { font-size: 13px; color: var(--text-mid); }
+.c-val  { font-size: 16px; font-weight: 700; color: var(--text); }
+.c-rate { font-size: 11px; color: var(--accent); }
+
+.exchange-calc {
+  background: rgba(139,26,26,0.1);
+  border: 1px solid rgba(139,26,26,0.4);
+  border-radius: 3px; padding: 16px; margin-bottom: 16px;
+}
+.calc-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.calc-step {
+  font-size: 12px; color: var(--text-mid); line-height: 2;
+}
+.calc-step .hi { color: var(--accent); font-weight: 700; }
+
+.exchange-btn {
+  width: 100%; padding: 16px;
+  background: var(--accent);
+  border: none; border-radius: 3px;
+  color: #fff; font-size: 15px; font-weight: 700;
+  font-family: var(--font-serif);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-bottom: 8px;
+}
+.exchange-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(139,26,26,0.4);
+}
+.exchange-btn:active { transform: scale(0.97); }
+
+/* ─── 자산 감소 애니메이션 ─── */
+@keyframes capitalDrop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.15); color: var(--accent); }
+  100% { transform: scale(1); }
+}
+.capital-drop { animation: capitalDrop 0.6s ease; }
+
+/* ─── FINAL ─── */
+.final-banner {
+  padding: 28px 22px 20px; text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.final-icon { font-size: 56px; margin-bottom: 12px; }
+.final-title {
+  font-family: var(--font-title); font-size: 24px;
+  color: var(--text); margin-bottom: 8px;
+}
+.final-sub {
+  font-size: 13px; color: var(--text-mid); line-height: 1.8;
+}
+.final-capital {
+  font-size: 13px; color: var(--text-dim); margin-top: 8px;
+}
+.final-body { padding: 20px 22px 28px; }
+
+/* 라운드 요약 */
+.round-summary { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.rs-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 3px; border: 1px solid transparent;
+  font-size: 12px;
+}
+.rs-row.green { background: rgba(45,90,61,0.12); border-color: rgba(74,138,93,0.3); }
+.rs-row.red   { background: rgba(139,26,26,0.10); border-color: rgba(139,26,26,0.3); }
+.rs-icon  { font-size: 16px; flex-shrink: 0; }
+.rs-name  { flex: 1; color: var(--text-mid); }
+.rs-delta { font-weight: 700; }
+.rs-delta.pos { color: var(--safe2); }
+.rs-delta.neg { color: var(--accent); }
+
+/* 역사 해설 박스 */
+.hist-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 3px 3px 0; padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.hist-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--primary); margin-bottom: 8px;
+}
+.hist-text {
+  font-size: 12px; color: var(--text-mid); line-height: 1.9;
+}
+.hist-text strong { color: var(--text); }
+
+/* 발문 */
+.question-box {
+  background: rgba(200,137,42,0.08);
+  border: 1px solid var(--border2);
+  border-radius: 3px; padding: 16px; margin-bottom: 20px;
+}
+.q-label {
+  font-size: 10px; letter-spacing: 0.2em; color: var(--primary);
+  margin-bottom: 10px;
+}
+.q-text {
+  font-family: var(--font-serif);
+  font-size: 14px; color: var(--text); line-height: 1.9;
+}
+.q-text li { margin-left: 16px; margin-bottom: 4px; }
+
+/* 소감 */
+.comment-area {
+  width: 100%;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 12px 14px;
+  color: var(--text); font-family: var(--font-body); font-size: 13px;
+  resize: none; outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 10px;
+}
+.comment-area:focus { border-color: var(--primary); }
+.comment-area::placeholder { color: var(--text-dim); }
+
+/* 저작권 */
+.copyright {
+  font-size: 11px; color: rgba(120,100,80,0.4);
+  text-align: center; margin-top: 14px;
+}
+
+/* ─── BUTTON ─── */
+.btn {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 3px;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn + .btn { margin-top: 8px; }
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--primary); color: var(--bg); }
+.btn-primary:hover:not(:disabled) { background: var(--primary2); }
+.btn-safe    { background: var(--safe); color: #fff; }
+.btn-outline { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--primary); color: var(--text); }
+
+/* ─── 씬 전환 ─── */
+.scene-enter { animation: fadeUp 0.35s ease; }
+
+/* ─── 역사 해설 (라운드 결과 하단) ─── */
+.hist-note {
+  margin: 0 22px 18px;
+  background: rgba(200,137,42,0.05);
+  border: 1px dashed rgba(200,137,42,0.3);
+  border-radius: 3px; padding: 12px 14px;
+  font-size: 12px; color: var(--text-dim); line-height: 1.9;
+}
+.hist-note::before {
+  content: '📜 역사 기록';
+  display: block; font-size: 10px; font-weight: 700;
+  color: var(--primary); letter-spacing: 0.15em; margin-bottom: 6px;
+}
+
+/* ─── 희망 결과 타이머 ─── */
+.hope-wait {
+  font-size: 12px; color: var(--text-dim); text-align: center;
+  margin-bottom: 16px; font-style: italic;
+  animation: dotPulse 1.2s ease infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONFIG
+   ═══════════════════════════════════════════ */
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+const START_CAPITAL = 100; // 냥
+
+/* ═══════════════════════════════════════════
+   TOOLTIP SYSTEM
+   ═══════════════════════════════════════════ */
+const TIPS = {
+  '객주': '객주(客主) — 상인들의 물건을 위탁 판매하고 숙박·금융 서비스를 제공하던 조선의 중개 상인.',
+  '여각': '여각(旅閣) — 상인들의 물건을 보관·중개하던 조선의 창고 겸 숙박 시설.',
+  '거류지': '거류지(居留地) — 개항장에서 외국인이 거주·영업할 수 있도록 허가된 구역. 조선 법이 적용되지 않음.',
+  '내지행상': '내지행상(內地行商) — 개항장 밖, 즉 조선 내륙까지 들어와 직접 장사하는 것.',
+  '관세': '관세(關稅) — 수입품에 매기는 세금. 이 세금이 높으면 외국 상품이 비싸져 국내 상품이 경쟁력을 가짐.',
+  '최혜국': '최혜국(最惠國) 조항 — 어떤 나라에 특별한 혜택을 주면 자동으로 자국도 같은 혜택을 받는 조항.',
+  '백동화': '백동화(白銅貨) — 구리와 아연의 합금으로 만든 조선의 화폐. 1894년 이후 남발되어 가치가 폭락함.',
+  '제일은행권': '제일은행권(第一銀行券) — 일본 제일은행이 발행한 지폐. 화폐정리사업으로 백동화를 대체하게 됨.',
+  '화폐정리사업': '화폐정리사업(貨幣整理事業) — 1905년 메가타 다네타로가 주도한 화폐 교환 사업. 백동화를 제일은행권으로 교환시켜 조선인의 자산을 크게 감소시킴.',
+  '조청상민수륙무역장정': '조청상민수륙무역장정(朝淸商民水陸貿易章程) — 1882년 조선과 청이 맺은 무역 협약. 청 상인에게 내지 행상권을 허용함.',
+  '조일통상장정': '조일통상장정(朝日通商章程) — 1876년 강화도 조약 이후 체결된 세부 통상 협정. 일본에 유리한 관세 구조를 담고 있음.',
+};
+
+function tt(word, tipKey) {
+  const k = tipKey || word;
+  const tip = TIPS[k] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+/* ═══════════════════════════════════════════
+   GAME DATA
+   ═══════════════════════════════════════════ */
+const ROUNDS = [
+  {
+    id: 'r1',
+    label: '1라운드',
+    year: '1876년 — 개항 직후',
+    title: '장사가 잘 된다',
+    emotion: '자신감',
+    situation: `개항 이후 인천 개항장에 당신의 ${tt('객주')}·${tt('여각')} 가게를 열었습니다.<br>
+일본 상인들은 아직 ${tt('거류지')} 안에서만 장사할 수 있고, 조선 상인이 내륙과 개항장 사이 거래를 독점합니다.<br>
+<strong>지금은 기회입니다.</strong> 어디에 집중할까요?`,
+    choices: [
+      {
+        id: 'c1a', icon: '🌾', name: '쌀 중개 집중',
+        why: '내륙 쌀을 사들여 개항장에서 팔면 <em>차익이 크다</em>. 일본 상인들이 사 가니 수요도 안정적.',
+        hope: { gain: 28, msg: '내륙에서 쌀을 대량 매입해 일본 상인에게 팔았습니다.' },
+        rule: null,
+        finalGain: 28,
+      },
+      {
+        id: 'c1b', icon: '🧵', name: '면포 중개 집중',
+        why: '면포는 꾸준한 수요가 있고 <em>운반이 쉬워</em> 안정적인 수익을 낸다.',
+        hope: { gain: 22, msg: '면포를 중개해 꾸준한 수익을 올렸습니다.' },
+        rule: null,
+        finalGain: 22,
+      },
+      {
+        id: 'c1c', icon: '🏪', name: '창고업·숙박 확장',
+        why: '거래가 늘수록 창고와 숙박 수요도 <em>자동으로 늘어난다</em>. 위험 없이 안정 수익.',
+        hope: { gain: 18, msg: '창고와 숙박업으로 안정적인 수입을 확보했습니다.' },
+        rule: null,
+        finalGain: 18,
+      },
+    ],
+    histNote: '개항 초기 조선 상인은 외국 상인이 내륙에 들어오지 못했기 때문에 중간 거래를 독점할 수 있었습니다. 이 시기 객주·여각은 일시적으로 호황을 누렸습니다.',
+  },
+  {
+    id: 'r2',
+    label: '2라운드',
+    year: '1876~1882년 — 거류지 무역 확대',
+    title: '일본 상인이 파고든다',
+    emotion: '의문',
+    situation: `장사가 잘 되나 싶었는데, 일본 상인들이 조선 상인을 통하지 않고 <strong>직접 거래</strong>를 늘리기 시작했습니다.<br>
+${tt('거류지')} 밖으로는 못 나오지만, 조선 상인들을 앞세워 내륙 거래를 대리시킵니다.<br>
+어떻게 대응할까요?`,
+    choices: [
+      {
+        id: 'c2a', icon: '🤝', name: '일본 상인과 협력',
+        why: '저항보다 <em>협력이 현명하다</em>. 일본 상인의 물건을 대리 판매하면 수익이 유지된다.',
+        hope: { gain: 25, msg: '일본 상인의 물건을 대리 판매해 수익을 확보했습니다.' },
+        rule: {
+          name: '거류지 무역 확대',
+          desc: '일본 상인들이 조선 상인 대리인을 통해 거류지 밖으로 영향력을 넓혔습니다. 대리 수수료가 줄어들고, 직접 거래에서 밀려나기 시작합니다.<br><br><strong style="color:#d44">→ 당신의 선택과 상관없이 손해가 발생합니다.</strong>',
+          before: 25,
+          after: 12,
+          note: '중개 마진 대폭 감소',
+        },
+        finalGain: 12,
+      },
+      {
+        id: 'c2b', icon: '📦', name: '내륙 직거래 강화',
+        why: '일본 상인이 못 들어오는 <em>내륙 시장을 공략</em>하면 경쟁을 피할 수 있다.',
+        hope: { gain: 30, msg: '내륙 직거래로 일본 상인과의 경쟁을 피했습니다.' },
+        rule: {
+          name: '거류지 무역 확대',
+          desc: '일본 상인들이 더 많은 조선 상인을 대리인으로 고용해 내륙에 침투합니다. 당신의 독점적 내륙 루트가 흔들리기 시작합니다.<br><br><strong style="color:#d44">→ 당신의 선택과 상관없이 손해가 발생합니다.</strong>',
+          before: 30,
+          after: 16,
+          note: '내륙 독점 구조 붕괴',
+        },
+        finalGain: 16,
+      },
+      {
+        id: 'c2c', icon: '💰', name: '고급 사치품 특화',
+        why: '일본 상인이 다루지 않는 <em>고급 시장</em>에 집중해 차별화한다.',
+        hope: { gain: 20, msg: '고급 시장에서 차별화된 수익을 올렸습니다.' },
+        rule: {
+          name: '거류지 무역 확대',
+          desc: '일본 수입 상품이 저가 공세를 펼치면서 소비자들이 조선산 고급품 대신 저렴한 일본 제품으로 이동합니다.<br><br><strong style="color:#d44">→ 당신의 선택과 상관없이 손해가 발생합니다.</strong>',
+          before: 20,
+          after: 10,
+          note: '일본 저가 상품에 시장 잠식',
+        },
+        finalGain: 10,
+      },
+    ],
+    histNote: '거류지 무역 체제에서 일본 상인들은 조선 내륙에 직접 들어오지 못했지만, 조선인 중간상인을 활용해 사실상 내륙까지 영향력을 확대했습니다. 이 과정에서 객주·여각의 전통적 역할이 약화되기 시작했습니다.',
+  },
+  {
+    id: 'r3',
+    label: '3라운드',
+    year: '1882년 — 조청상민수륙무역장정',
+    title: '청 상인까지 밀려온다',
+    emotion: '억울함',
+    situation: `새 협약이 체결되었습니다. ${tt('조청상민수륙무역장정')}으로 청 상인들이 이제 <strong>${tt('내지행상')} 권리</strong>를 얻었습니다.<br>
+개항장뿐 아니라 당신의 내륙 시장까지 청 상인이 직접 들어올 수 있게 됐습니다.<br>
+이제 어떻게 버텨야 할까요?`,
+    choices: [
+      {
+        id: 'c3a', icon: '🏘️', name: '지역 네트워크 강화',
+        why: '청 상인이 모르는 <em>지역 인맥과 신뢰</em>로 단골 고객을 지키자.',
+        hope: { gain: 22, msg: '지역 신뢰를 바탕으로 단골 고객을 지켜냈습니다.' },
+        rule: {
+          name: '조청상민수륙무역장정 시행',
+          desc: '청 상인들이 더 저렴한 중국산 물건을 직접 들고 내륙에 들어왔습니다. 가격 경쟁에서 밀린 단골 고객들이 청 상인에게 이동합니다.<br><br><strong style="color:#d44">→ 어떤 선택을 했어도 결과는 같습니다. 규칙이 바뀐 것입니다.</strong>',
+          before: 22,
+          after: 7,
+          note: '가격 경쟁 완전히 불리',
+        },
+        finalGain: 7,
+      },
+      {
+        id: 'c3b', icon: '🔄', name: '청 상인과 합작',
+        why: '적이 되기보다 <em>같이 협력</em>하면 중국 물건을 중개할 기회가 생긴다.',
+        hope: { gain: 28, msg: '청 상인과 협력해 중국 상품 중개 기회를 얻었습니다.' },
+        rule: {
+          name: '조청상민수륙무역장정 시행',
+          desc: '청 상인들은 조선 중간상인이 필요 없습니다. 내지행상 권리가 있으니 직접 팔면 되기 때문입니다. 합작 제안이 거절됩니다.<br><br><strong style="color:#d44">→ 어떤 선택을 했어도 결과는 같습니다. 규칙이 바뀐 것입니다.</strong>',
+          before: 28,
+          after: 5,
+          note: '합작 거절 — 직접 판매가 더 유리',
+        },
+        finalGain: 5,
+      },
+      {
+        id: 'c3c', icon: '🌊', name: '해산물·특산물 특화',
+        why: '청 상인이 잘 모르는 <em>조선 특산물</em>로 틈새를 찾는다.',
+        hope: { gain: 18, msg: '조선 특산물로 틈새시장을 확보했습니다.' },
+        rule: {
+          name: '조청상민수륙무역장정 시행',
+          desc: '청 상인들이 조선 특산물 시장까지 빠르게 파악해 직접 매입을 시작합니다. 산지 가격이 올라 마진이 거의 남지 않습니다.<br><br><strong style="color:#d44">→ 어떤 선택을 했어도 결과는 같습니다. 규칙이 바뀐 것입니다.</strong>',
+          before: 18,
+          after: 6,
+          note: '산지 직매입으로 마진 소멸',
+        },
+        finalGain: 6,
+      },
+    ],
+    histNote: '1882년 체결된 조청상민수륙무역장정은 청 상인에게 조선 내지 행상권을 부여했습니다. 이로써 조선 상인이 독점하던 내륙 중개 기능이 무너지기 시작했고, 객주·여각은 급격히 쇠퇴했습니다.',
+  },
+  {
+    id: 'r4',
+    label: '4라운드',
+    year: '1883~1890년대 — 조일통상장정',
+    title: '일본 상품이 쏟아진다',
+    emotion: '분노',
+    situation: `${tt('조일통상장정')}에는 조선에 불리한 ${tt('관세')} 조항이 있습니다.<br>
+일본 수입품엔 낮은 세금만 붙고, 조선 물건은 아무 보호를 받지 못합니다.<br>
+게다가 ${tt('최혜국')} 조항으로 다른 나라도 같은 혜택을 가져갑니다.<br>
+<strong>어떻게 해서든 살아남아야 합니다.</strong>`,
+    choices: [
+      {
+        id: 'c4a', icon: '📊', name: '수입품 유통 전환',
+        why: '조선 상품 대신 <em>일본 수입품을 유통</em>하면 낮은 관세 혜택을 역이용할 수 있다.',
+        hope: { gain: 24, msg: '일본 수입품 유통으로 전환해 일시적으로 수익이 늘었습니다.' },
+        rule: {
+          name: '조일통상장정 — 관세 불균형',
+          desc: '일본 상인들이 직접 낮은 관세로 들여온 물건을 조선 상인 없이 직접 팝니다. 유통 중간 단계가 사라지면서 당신의 수수료 수익이 증발합니다.<br><br><strong style="color:#d44">→ 이건 당신의 전략 실패가 아닙니다. 조약이 중간 상인의 존재 자체를 불필요하게 만든 것입니다.</strong>',
+          before: 24,
+          after: 8,
+          note: '중간 유통 단계 제거됨',
+        },
+        finalGain: 8,
+      },
+      {
+        id: 'c4b', icon: '🌾', name: '조선 전통 상품 고수',
+        why: '조선산 특산물은 <em>외국이 흉내 낼 수 없다</em>. 품질로 승부한다.',
+        hope: { gain: 20, msg: '조선 전통 상품으로 충성 고객을 유지했습니다.' },
+        rule: {
+          name: '조일통상장정 — 무관세 수입품 공세',
+          desc: '일본에서 들어오는 면직물이 조선 전통 면포보다 2~3배 저렴합니다. 소비자들이 가격이 싼 수입품으로 대거 이동합니다.<br><br><strong style="color:#d44">→ 이건 당신의 전략 실패가 아닙니다. 조약이 중간 상인의 존재 자체를 불필요하게 만든 것입니다.</strong>',
+          before: 20,
+          after: 6,
+          note: '가격 경쟁 원천 불가',
+        },
+        finalGain: 6,
+      },
+      {
+        id: 'c4c', icon: '🏗️', name: '창고·운송업 집중',
+        why: '거래가 늘면 <em>물류가 필요하다</em>. 직접 장사 대신 운송·보관에서 수익을 낸다.',
+        hope: { gain: 22, msg: '물류·창고업으로 안정적인 수익 기반을 잡았습니다.' },
+        rule: {
+          name: '조일통상장정 — 일본 기선 진출',
+          desc: '일본 기선 회사들이 인천~부산~원산 항로를 장악하며 조선 운송업을 빠르게 대체합니다. 창고 이용 수요도 일본 업체로 이동합니다.<br><br><strong style="color:#d44">→ 이건 당신의 전략 실패가 아닙니다. 조약이 중간 상인의 존재 자체를 불필요하게 만든 것입니다.</strong>',
+          before: 22,
+          after: 9,
+          note: '일본 기선에 운송업 잠식',
+        },
+        finalGain: 9,
+      },
+    ],
+    histNote: '조일통상장정의 관세 조항은 일본 수입품에 극히 낮은 세금을 부과했습니다. 이로 인해 값싼 일본산 면직물이 쏟아져 들어오면서 조선의 수공업과 전통 상인층이 치명적인 타격을 받았습니다.',
+  },
+  {
+    id: 'r5',
+    label: '5라운드',
+    year: '1905년 — 화폐정리사업',
+    title: '마지막 망치',
+    emotion: '체념 + 깨달음',
+    situation: null, // 화폐정리 미션은 별도 렌더링
+    choices: [], // 화폐정리는 선택 없음
+    histNote: '화폐정리사업은 일제의 재정 고문 메가타 다네타로가 주도했습니다. 교환 비율이 불공정하게 적용된 데다 교환 기간마저 짧아, 조선 상인과 민중은 축적한 자산의 상당 부분을 하루아침에 잃었습니다.',
+  },
+];
+
+/* ═══════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════ */
+let S = {
+  phase: 'intro',   // intro | select | hope | rule | currency | final
+  ri: 0,            // 라운드 인덱스
+  capital: START_CAPITAL,
+  chosen: null,     // 현재 라운드 선택 카드
+  history: [],      // [{round, choiceId, hope, final, delta}]
+  submitted: false,
+  exchanged: false, // 화폐정리 교환 완료
+};
+
+/* ═══════════════════════════════════════════
+   SUPABASE
+   ═══════════════════════════════════════════ */
+function sendToSupabase(comment) {
+  const choices = {};
+  S.history.forEach((h, i) => {
+    choices[`r${i+1}`] = { choiceId: h.choiceId, finalGain: h.final };
+  });
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'gaehangmarket1883',
+      choices,
+      comment: comment || '',
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+
+/* ═══════════════════════════════════════════
+   UTILS
+   ═══════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function capitalColor() {
+  const pct = S.capital / START_CAPITAL;
+  if (pct >= 0.6) return 'capital-up';
+  if (pct >= 0.3) return 'capital-mid';
+  return 'capital-down';
+}
+
+function pipHtml() {
+  return ROUNDS.map((r, i) => {
+    let cls = 'pip';
+    if (i < S.ri) cls += ' done';
+    else if (i === S.ri) cls += S.ri >= 3 ? ' danger active' : ' active';
+    return `<div class="${cls}" title="${r.label}"></div>`;
+  }).join('');
+}
+
+function hbar() {
+  return `
+  <div class="hbar">
+    <div class="hbar-title">개항장 상인</div>
+    <div class="round-pips">${pipHtml()}</div>
+    <div class="hbar-capital">
+      <span class="capital-num ${capitalColor()}">${S.capital}</span>
+      <span style="font-size:11px;color:var(--text-dim)"> 냥</span>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════ */
+function R() {
+  window.scrollTo(0, 0);
+  document.getElementById('app').innerHTML =
+    S.phase === 'intro'    ? renderIntro()    :
+    S.phase === 'select'   ? renderSelect()   :
+    S.phase === 'hope'     ? renderHope()     :
+    S.phase === 'rule'     ? renderRule()     :
+    S.phase === 'currency' ? renderCurrency() :
+                             renderFinal();
+}
+
+/* ─── INTRO ─── */
+function renderIntro() {
+  return `
+  <div class="panel scene-enter">
+    <div class="intro-hdr">
+      <div class="intro-badge">🏪</div>
+      <div class="intro-title">내 돈이 사라진다</div>
+      <div style="font-size:13px;color:var(--primary);margin-top:6px;font-family:var(--font-serif)">개항장 ${tt('객주')} 1883</div>
+      <div class="intro-sub">열강의 경제 침탈 체험 시뮬레이션</div>
+    </div>
+    <div class="intro-body">
+      <div class="intro-desc">
+        때는 <strong>1876년, 강화도 조약</strong> 이후.<br>
+        당신은 인천 개항장에서 ${tt('객주')}·${tt('여각')} 가게를 운영하는 상인입니다.<br>
+        자본금 <strong>100냥</strong>으로 시작해 5번의 시대 변화를 헤쳐나가야 합니다.<br><br>
+        <strong>당신이 못해서 망하는 게 아닐 수도 있습니다.</strong>
+      </div>
+      <div class="setup-row">
+        <div class="setup-card">
+          <div class="setup-val">100냥</div>
+          <div class="setup-key">시작 자본</div>
+        </div>
+        <div class="setup-card">
+          <div class="setup-val">5라운드</div>
+          <div class="setup-key">시대 변화</div>
+        </div>
+        <div class="setup-card">
+          <div class="setup-val">목표</div>
+          <div class="setup-key">살아남기</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="startGame()">1876년, 개항장으로 →</button>
+    </div>
+  </div>`;
+}
+
+/* ─── SELECT ─── */
+function renderSelect() {
+  const round = ROUNDS[S.ri];
+  const choicesHtml = round.choices.map(c => `
+    <div class="choice ${S.chosen === c.id ? 'selected' : ''}" onclick="selectChoice('${c.id}')">
+      <div class="choice-icon">${c.icon}</div>
+      <div class="choice-text">
+        <div class="choice-name">${c.name}</div>
+        <div class="choice-why">${c.why}</div>
+      </div>
+    </div>`).join('');
+
+  return `
+  ${hbar()}
+  <div class="panel scene-enter">
+    <div class="scene-hdr">
+      <div class="round-badge">${round.label} · ${round.emotion}</div>
+      <div class="scene-title">${round.title}</div>
+      <div class="scene-year">📅 ${round.year}</div>
+    </div>
+    <div class="scene-body">
+      <div class="situation">${round.situation}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;letter-spacing:0.06em">
+        전략을 하나 선택하세요
+      </div>
+      <div class="choices">${choicesHtml}</div>
+      <button class="btn btn-primary" style="margin-top:16px"
+        ${S.chosen ? '' : 'disabled'}
+        onclick="submitChoice()">
+        이 전략으로 ${round.label}을 버텨낸다 →
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ─── HOPE (1차 결과 — 희망) ─── */
+function renderHope() {
+  const round = ROUNDS[S.ri];
+  const card = round.choices.find(c => c.id === S.chosen);
+
+  return `
+  ${hbar()}
+  <div class="panel scene-enter">
+    <div class="result-hope">
+      <div class="result-hope-icon">✨</div>
+      <div class="result-hope-title">${card.hope.msg}</div>
+      <div class="gain-badge">+${card.hope.gain}냥 이익!</div>
+    </div>
+    <div style="padding:18px 22px;">
+      <div class="hope-wait">잠깐, 그런데…</div>
+      <button class="btn btn-primary" onclick="showRule()">다음 →</button>
+    </div>
+  </div>`;
+}
+
+/* ─── RULE (2차 결과 — 규칙 개입) ─── */
+function renderRule() {
+  const round = ROUNDS[S.ri];
+  const card = round.choices.find(c => c.id === S.chosen);
+  const rule = card.rule;
+  const delta = card.finalGain;
+
+  // 자본 갱신은 여기서
+  const newCapital = S.capital + delta;
+  const capColor = delta > 0 ? 'var(--safe2)' : 'var(--accent)';
+
+  return `
+  ${hbar()}
+  <div class="panel scene-enter">
+    <div class="result-hope" style="padding-bottom:14px">
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">처음엔 이랬는데…</div>
+      <div class="gain-badge" style="opacity:0.4;text-decoration:line-through">+${card.hope.gain}냥</div>
+    </div>
+
+    ${rule ? `
+    <div class="rule-box">
+      <div class="rule-header">⚠ 규칙이 바뀌었습니다</div>
+      <div class="rule-body">
+        <div class="rule-name">${rule.name}</div>
+        <div class="rule-desc">${rule.desc}</div>
+        <div class="rule-effect">
+          <span class="before-val">+${rule.before}냥</span>
+          <span class="arrow-txt">→</span>
+          <span class="after-val">+${rule.after}냥</span>
+          <span class="loss-note">${rule.note}</span>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <div class="capital-result">
+      <span class="cr-label">이번 라운드 실제 수익</span>
+      <span class="cr-val" style="color:${capColor}">+${delta}냥</span>
+    </div>
+
+    <div class="hist-note">${round.histNote}</div>
+
+    <div style="padding:0 22px 22px;">
+      <button class="btn btn-primary" onclick="nextRound()">
+        ${S.ri < ROUNDS.length - 2 ? (ROUNDS[S.ri + 1].label + '으로 →') : '마지막으로 →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ─── CURRENCY (5라운드 — 화폐정리사업) ─── */
+function renderCurrency() {
+  const myBaekdong = S.capital; // 현재 자본 = 백동화
+  // 교환 비율: 백동화 2냥 = 제일은행권 1전 (실질 50% 손실 반영, 교육용 단순화)
+  const exchanged = Math.floor(myBaekdong * 0.4); // 40%만 살아남음
+
+  return `
+  ${hbar()}
+  <div class="panel scene-enter">
+    <div class="scene-hdr">
+      <div class="round-badge">5라운드 · 체념 + 깨달음</div>
+      <div class="scene-title">마지막 망치</div>
+      <div class="scene-year">📅 1905년 — ${tt('화폐정리사업')}</div>
+    </div>
+    <div class="currency-mission">
+      <div class="situation">
+        4년에 걸쳐 버텨왔지만, 이제 마지막 타격이 왔습니다.<br>
+        정부가 새 화폐 교환 명령을 내렸습니다.<br>
+        당신이 가진 <strong>${tt('백동화')} ${myBaekdong}냥</strong>을 <strong>${tt('제일은행권')}</strong>으로 교환해야 합니다.
+      </div>
+
+      <div class="mission-box">
+        <div class="mission-label">💱 교환 조건</div>
+        <div class="currency-row">
+          <span class="c-name">내가 가진 백동화</span>
+          <span class="c-val">${myBaekdong}냥</span>
+        </div>
+        <div class="currency-row">
+          <span class="c-name">공식 교환 비율</span>
+          <span class="c-val c-rate">2냥 → 제일은행권 0.8전</span>
+        </div>
+        <div class="currency-row">
+          <span class="c-name" style="color:var(--accent)">실제 적용 비율</span>
+          <span class="c-val c-rate">⚠ 시장가보다 60% 저평가</span>
+        </div>
+      </div>
+
+      ${!S.exchanged ? `
+      <div class="exchange-calc">
+        <div class="calc-title">⚠ 교환 조건 안내</div>
+        <div class="calc-step">
+          내가 가진 백동화: <span class="hi">${myBaekdong}냥</span><br>
+          교환 후 받는 금액: <span class="hi" style="color:var(--text-dim)">교환 후 확인 가능</span><br>
+          <br>
+          <span style="color:var(--text-dim);font-style:italic">교환 기간이 끝나면 백동화는 효력을 잃습니다.</span>
+        </div>
+      </div>
+      <button class="exchange-btn" onclick="doExchange(${exchanged})">
+        교환 신청하기
+      </button>
+      <div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px">
+        버튼을 누르면 즉시 교환이 진행됩니다.
+      </div>` : `
+      <div class="exchange-calc" style="border-color:rgba(139,26,26,0.6);background:rgba(139,26,26,0.12)">
+        <div class="calc-title">📐 교환 결과</div>
+        <div class="calc-step">
+          교환 전: <span class="hi">${myBaekdong}냥</span><br>
+          교환 후: <span class="hi">${exchanged}냥</span><br>
+          <br>
+          손실: <span class="hi">${myBaekdong - exchanged}냥 (${myBaekdong > 0 ? Math.round((1 - exchanged/myBaekdong)*100) : 0}% 증발)</span>
+        </div>
+      </div>
+      <div style="text-align:center;padding:16px 0 8px">
+        <div style="font-size:36px;margin-bottom:10px">💀</div>
+        <div style="font-size:16px;font-weight:700;color:var(--accent)">교환 완료</div>
+        <div style="font-size:13px;color:var(--text-mid);margin-top:6px">
+          ${myBaekdong}냥 → <strong style="color:var(--accent)">${exchanged}냥</strong>
+        </div>
+        <div style="font-size:12px;color:#d44;margin-top:8px;font-style:italic">당신이 잘못한 게 있었나요?</div>
+      </div>
+      <div class="hist-note">${ROUNDS[4].histNote}</div>
+      <button class="btn btn-primary" onclick="goFinal()">최종 결과 확인 →</button>
+      `}
+    </div>
+  </div>`;
+}
+
+/* ─── FINAL ─── */
+function renderFinal() {
+  const pct = S.capital / START_CAPITAL;
+  let icon, title, titleColor, sub;
+
+  if (pct >= 0.8) {
+    icon = '🏆'; title = '기적의 생존'; titleColor = 'var(--primary2)';
+    sub = '어떻게 이렇게 버텼을까요? 하지만 주위를 보면 동료 상인들은 대부분 폐업했습니다.';
+  } else if (pct >= 0.5) {
+    icon = '😤'; title = '버텨냈지만…'; titleColor = 'var(--primary)';
+    sub = '겨우 살아남았습니다. 처음보다 절반 가까이 잃었습니다. 내가 못해서일까요, 규칙이 문제였을까요?';
+  } else if (pct >= 0.25) {
+    icon = '📉'; title = '거의 다 잃었다'; titleColor = 'var(--sepia)';
+    sub = '시작보다 3/4를 잃었습니다. 어느 라운드부터 이상했는지 돌아보세요.';
+  } else {
+    icon = '💸'; title = '파산'; titleColor = 'var(--accent)';
+    sub = '100냥이 이렇게 됐습니다. 당신이 잘못한 게 있었나요?';
+  }
+
+  const histRows = S.history.map((h, i) => {
+    const round = ROUNDS[i];
+    const card = round.choices.find(c => c.id === h.choiceId);
+    const isPos = h.final > 0;
+    return `
+    <div class="rs-row ${isPos ? 'green' : 'red'}">
+      <span class="rs-icon">${card ? card.icon : '💰'}</span>
+      <span class="rs-name">${round.label} — ${card ? card.name : '화폐교환'}</span>
+      <span class="rs-delta ${isPos ? 'pos' : 'neg'}">${isPos ? '+' : ''}${h.final}냥</span>
+    </div>`;
+  }).join('');
+
+  // 화폐정리 행
+  const currencyDelta = S.capital - (S.history.reduce((a, h) => a + h.final, START_CAPITAL));
+  const currRow = `
+  <div class="rs-row red">
+    <span class="rs-icon">💱</span>
+    <span class="rs-name">5라운드 — 화폐정리사업</span>
+    <span class="rs-delta neg">${currencyDelta}냥</span>
+  </div>`;
+
+  return `
+  <div class="panel scene-enter">
+    <div class="final-banner">
+      <div class="final-icon">${icon}</div>
+      <div class="final-title" style="color:${titleColor}">${title}</div>
+      <div class="final-sub">${sub}</div>
+      <div class="final-capital">최종 자본: <strong>${S.capital}냥</strong> / 시작 100냥</div>
+    </div>
+    <div class="final-body">
+      <div style="font-size:12px;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:10px">📋 라운드별 기록</div>
+      <div class="round-summary">${histRows}${currRow}</div>
+
+      <div class="question-box">
+        <div class="q-label">💬 수업 토론 질문</div>
+        <div class="q-text">
+          <ul>
+            <li>당신이 못해서 망한 건가요?</li>
+            <li>어느 라운드부터 이상하다고 느꼈나요?</li>
+            <li>누가 규칙을 바꿨나요? 왜?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hist-box">
+        <div class="hist-label">📖 역사적 정리</div>
+        <div class="hist-text">
+          열강의 경제 침탈은 <strong>거류지 무역 → 내지행상 허용 → 관세 불균형 → 화폐정리</strong> 순서로
+          조선 상인의 선택 공간을 단계적으로 좁혀갔습니다.
+          조선 상인이 무능해서가 아니라, <strong>규칙 자체가 불리하게 설계된 구조</strong>였습니다.
+        </div>
+      </div>
+
+      <textarea class="comment-area" id="comment" rows="2"
+        placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)"
+        maxlength="100"></textarea>
+
+      <button class="btn btn-primary" onclick="copyResult()" style="margin-bottom:8px">
+        📋 결과 복사하기 (패들렛 공유)
+      </button>
+      <button class="btn btn-outline" onclick="restart()">처음부터 다시</button>
+
+      <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════ */
+function startGame() {
+  S.ri = 0;
+  S.phase = 'select';
+  R();
+}
+
+function selectChoice(id) {
+  S.chosen = id;
+  R();
+}
+
+function submitChoice() {
+  if (!S.chosen) return;
+  S.phase = 'hope';
+  R();
+}
+
+function showRule() {
+  const round = ROUNDS[S.ri];
+  const card = round.choices.find(c => c.id === S.chosen);
+
+  // 자본 갱신
+  S.capital += card.finalGain;
+  if (S.capital < 0) S.capital = 0;
+
+  // 기록 저장
+  S.history.push({
+    round: round.id,
+    choiceId: S.chosen,
+    hope: card.hope.gain,
+    final: card.finalGain,
+    delta: card.finalGain,
+  });
+
+  S.phase = 'rule';
+  R();
+}
+
+function nextRound() {
+  S.ri++;
+  S.chosen = null;
+
+  if (S.ri === ROUNDS.length - 1) {
+    // 5라운드 = 화폐정리
+    S.phase = 'currency';
+  } else {
+    S.phase = 'select';
+  }
+  R();
+}
+
+function doExchange(exchanged) {
+  const before = S.capital;
+  S.capital = exchanged;
+  S.exchanged = true;
+
+  // 화폐정리 기록
+  S.history.push({
+    round: 'r5',
+    choiceId: 'currency',
+    hope: before,
+    final: -(before - exchanged),
+    delta: -(before - exchanged),
+  });
+
+  R();
+}
+
+function goFinal() {
+  S.phase = 'final';
+  if (!S.submitted) {
+    sendToSupabase('');
+    S.submitted = true;
+  }
+  R();
+}
+
+function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+  if (comment) sendToSupabase(comment);
+
+  const pct = Math.round(S.capital / START_CAPITAL * 100);
+  const lines = [
+    `💸 개항장 상인 1883 — 최종 자본: ${S.capital}냥 (시작 100냥의 ${pct}%)`,
+    '',
+    ...S.history.map((h, i) => {
+      const round = ROUNDS[Math.min(i, ROUNDS.length - 1)];
+      const sign = h.final >= 0 ? '+' : '';
+      return `${round.label}: ${sign}${h.final}냥`;
+    }),
+    '',
+    comment ? `소감: ${comment}` : '',
+    '— 찰리쌤의 한국사 게임실',
+  ].filter(l => l !== undefined);
+
+  const text = lines.join('\n');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast('📋 복사되었습니다!'); }
+    catch (e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = {
+    phase: 'intro', ri: 0, capital: START_CAPITAL,
+    chosen: null, history: [], submitted: false, exchanged: false,
+  };
+  R();
+}
+
+/* ═══════════════════════════════════════════
+   TOOLTIP EVENTS
+   ═══════════════════════════════════════════ */
+const bubble = document.getElementById('tt-bubble');
+let bubTimer = null;
+
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect();
+    const bw = 240;
+    const left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left = left + 'px';
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bH - 14) + 'px';
+    if (bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+/* ═══════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════ */
+R();
+</script>
+</body>
+</html>
