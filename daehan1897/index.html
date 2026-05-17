@@ -1,1 +1,1183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>대한제국 1897 — 당신의 기준으로 평가하라</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  /* 근현대 테마 — 낡은 사진·태극 */
+  --bg:        #f0ece4;
+  --surface:   #e8e0d4;
+  --surface2:  #ddd5c6;
+  --primary:   #003087;
+  --accent:    #cd2e3a;
+  --text:      #1a1a1a;
+  --text-mid:  #4a4035;
+  --text-muted:#8b7355;
+  --sepia:     #8b7355;
+  --border:    #c4b49a;
+  --border2:   rgba(139,115,85,0.3);
+
+  --pos-bg:    #e8f4ec;
+  --pos-border:#2d7a4f;
+  --pos-text:  #1a5c36;
+  --neg-bg:    #faeaea;
+  --neg-border:#b83030;
+  --neg-text:  #8b1c1c;
+  --amb-bg:    #f4f0e4;
+  --amb-border:#8b7355;
+  --amb-text:  #5a4a2a;
+
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-serif:   'Noto Serif KR', serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 0 0 64px;
+  /* 낡은 종이 노이즈 */
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(0,48,135,0.04) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238b7355' fill-opacity='0.04'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='40' y='40' width='1' height='1'/%3E%3Crect x='20' y='60' width='1' height='1'/%3E%3Crect x='60' y='20' width='1' height='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#app { width: 100%; max-width: 640px; padding: 0 16px; }
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary); color: #fff;
+  border-radius: 4px; padding: 10px 22px;
+  font-size: 13px; font-family: var(--font-body);
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+#toast.show { opacity: 1; }
+
+/* ═══════════════════════════════════
+   TOOLTIP
+═══════════════════════════════════ */
+.tt {
+  border-bottom: 1.5px dashed var(--sepia);
+  cursor: pointer;
+  white-space: nowrap;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent); }
+
+#tt-bubble {
+  position: fixed; z-index: 9000;
+  max-width: 240px;
+  background: #1a1208;
+  border: 1px solid rgba(139,115,85,0.6);
+  border-radius: 4px;
+  padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  pointer-events: none;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: #d4a84b; margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,192,0.85); line-height: 1.7; }
+
+/* ═══════════════════════════════════
+   SCREEN SHELL
+═══════════════════════════════════ */
+.screen {
+  animation: sceneIn 0.4s ease forwards;
+  padding-top: 32px;
+}
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════ */
+.progress-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(240,236,228,0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px;
+  backdrop-filter: blur(4px);
+}
+.prog-label {
+  font-size: 11px; color: var(--text-muted);
+  letter-spacing: 0.1em; white-space: nowrap;
+  font-family: var(--font-body);
+}
+.prog-track {
+  flex: 1; display: flex; gap: 4px;
+}
+.prog-pip {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.prog-pip.done    { background: var(--primary); }
+.prog-pip.active  { background: var(--accent); }
+.prog-count {
+  font-size: 12px; font-weight: 700;
+  color: var(--primary); white-space: nowrap;
+  font-family: var(--font-body);
+}
+
+/* ═══════════════════════════════════
+   INTRO SCREEN
+═══════════════════════════════════ */
+.intro-head {
+  text-align: center;
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.intro-deco {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 20px;
+}
+.deco-line {
+  height: 1px; width: 60px;
+  background: linear-gradient(to right, transparent, var(--sepia));
+}
+.deco-line.r { background: linear-gradient(to left, transparent, var(--sepia)); }
+.deco-diamond {
+  width: 7px; height: 7px;
+  background: var(--sepia); transform: rotate(45deg);
+}
+.intro-era {
+  font-size: 11px; letter-spacing: 0.25em;
+  color: var(--sepia); margin-bottom: 16px;
+  font-family: var(--font-body);
+}
+.intro-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 5vw, 32px);
+  color: var(--primary);
+  line-height: 1.3; margin-bottom: 8px;
+}
+.intro-sub {
+  font-family: var(--font-serif);
+  font-size: 14px; color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.intro-context {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 4px 4px 0;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+  font-size: 14px; line-height: 1.9;
+  color: var(--text-mid);
+  font-family: var(--font-serif);
+}
+.intro-context strong { color: var(--primary); font-weight: 700; }
+
+.intro-how {
+  margin-bottom: 28px;
+}
+.how-title {
+  font-size: 11px; letter-spacing: 0.2em;
+  color: var(--sepia); margin-bottom: 12px;
+  font-family: var(--font-body);
+}
+.how-steps {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.how-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+}
+.step-num {
+  width: 22px; height: 22px;
+  background: var(--primary); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+  font-family: var(--font-body);
+}
+.step-text {
+  font-size: 13px; color: var(--text-mid);
+  line-height: 1.6; font-family: var(--font-body);
+}
+.step-text strong { color: var(--text); }
+
+/* ═══════════════════════════════════
+   CARD SCREEN
+═══════════════════════════════════ */
+.card-wrapper {
+  padding-top: 24px;
+}
+
+.evidence-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.card-header {
+  background: var(--primary);
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-header-year {
+  font-size: 11px; letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.7);
+  font-family: var(--font-body);
+}
+.card-header-num {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  font-family: var(--font-body);
+}
+
+.card-body { padding: 18px 18px 14px; }
+
+.card-title-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 10px;
+}
+.card-icon { font-size: 24px; flex-shrink: 0; line-height: 1.2; }
+.card-name {
+  font-family: var(--font-serif);
+  font-size: 17px; font-weight: 700;
+  color: var(--text); line-height: 1.4;
+}
+
+.card-desc {
+  font-size: 13px; color: var(--text-mid);
+  line-height: 1.8; margin-bottom: 14px;
+  font-family: var(--font-body); font-weight: 300;
+}
+
+/* choices */
+.choice-row {
+  display: flex; gap: 8px;
+}
+.choice-btn {
+  flex: 1; padding: 10px 6px;
+  border-radius: 4px; border: 1.5px solid;
+  cursor: pointer; font-size: 13px; font-weight: 700;
+  font-family: var(--font-body); letter-spacing: 0.02em;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  text-align: center;
+}
+.choice-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.choice-btn:active { transform: translateY(0) scale(0.97); }
+
+.choice-btn.pos {
+  background: var(--pos-bg); border-color: var(--pos-border); color: var(--pos-text);
+}
+.choice-btn.neg {
+  background: var(--neg-bg); border-color: var(--neg-border); color: var(--neg-text);
+}
+.choice-btn.amb {
+  background: var(--amb-bg); border-color: var(--amb-border); color: var(--amb-text);
+}
+.choice-btn.selected.pos { background: var(--pos-border); color: #fff; border-color: var(--pos-border); }
+.choice-btn.selected.neg { background: var(--neg-border); color: #fff; border-color: var(--neg-border); }
+.choice-btn.selected.amb { background: var(--sepia); color: #fff; border-color: var(--sepia); }
+.choice-btn.locked { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* mini feedback */
+.mini-feedback {
+  margin-top: 12px;
+  padding: 10px 13px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 3px;
+  border-left: 3px solid var(--border);
+  font-size: 12px; color: var(--text-mid);
+  line-height: 1.7; font-family: var(--font-body); font-weight: 300;
+  animation: sceneIn 0.3s ease;
+}
+.mini-feedback.pos-fb { border-color: var(--pos-border); }
+.mini-feedback.neg-fb { border-color: var(--neg-border); }
+.mini-feedback.amb-fb { border-color: var(--sepia); }
+
+/* ═══════════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════════ */
+.result-head {
+  text-align: center;
+  padding: 40px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.result-badge {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--primary); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 32px; margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(0,48,135,0.25);
+}
+.result-title {
+  font-family: var(--font-display);
+  font-size: 24px; color: var(--primary);
+  margin-bottom: 6px;
+}
+.result-sub {
+  font-size: 13px; color: var(--text-muted);
+  font-family: var(--font-body);
+}
+
+/* criteria reveal */
+.criteria-section {
+  margin-bottom: 28px;
+}
+.section-label {
+  font-size: 11px; letter-spacing: 0.2em;
+  color: var(--sepia); margin-bottom: 12px;
+  font-family: var(--font-body);
+}
+
+.criteria-cards {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 16px;
+}
+.criteria-card {
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  padding: 13px 14px;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface);
+  transition: border-color 0.3s, background 0.3s;
+}
+.criteria-card.highlight {
+  border-color: var(--primary);
+  background: rgba(0,48,135,0.06);
+}
+.criteria-card.highlight-mix {
+  border-color: var(--sepia);
+  background: rgba(139,115,85,0.08);
+}
+.cr-icon { font-size: 22px; flex-shrink: 0; }
+.cr-right { flex: 1; }
+.cr-name {
+  font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 3px;
+}
+.cr-desc {
+  font-size: 12px; color: var(--text-muted);
+  font-family: var(--font-body); line-height: 1.5;
+}
+.cr-bar-wrap { margin-top: 6px; background: var(--border2); border-radius: 2px; height: 4px; }
+.cr-bar { height: 4px; border-radius: 2px; background: var(--primary); transition: width 0.8s 0.3s ease; }
+
+.criteria-insight {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+  font-size: 13px; color: var(--text-mid);
+  line-height: 1.8; font-family: var(--font-serif);
+}
+.criteria-insight strong { color: var(--accent); }
+
+/* my choices summary */
+.choices-summary {
+  margin-bottom: 28px;
+}
+.summary-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 12px;
+}
+.sum-cell {
+  border: 1px solid var(--border);
+  border-radius: 4px; padding: 12px 8px;
+  text-align: center; background: var(--surface);
+}
+.sum-count {
+  font-size: 28px; font-weight: 700;
+  font-family: var(--font-body);
+}
+.sum-count.pos { color: var(--pos-text); }
+.sum-count.neg { color: var(--neg-text); }
+.sum-count.amb { color: var(--amb-text); }
+.sum-label {
+  font-size: 11px; color: var(--text-muted);
+  margin-top: 3px; font-family: var(--font-body);
+}
+
+/* ambiguity note */
+.amb-note {
+  padding: 10px 14px;
+  background: var(--amb-bg);
+  border: 1px solid var(--amb-border);
+  border-radius: 4px;
+  font-size: 12px; color: var(--amb-text);
+  line-height: 1.7; font-family: var(--font-body);
+}
+
+/* diff note — 타인과의 차이 */
+.diff-note {
+  padding: 12px 14px;
+  background: rgba(0,48,135,0.05);
+  border: 1px solid rgba(0,48,135,0.18);
+  border-radius: 4px;
+  font-size: 12px; color: var(--text-mid);
+  line-height: 1.7; font-family: var(--font-body);
+  margin-bottom: 24px;
+}
+.diff-note strong { color: var(--primary); }
+
+/* final verdict */
+.verdict-section {
+  margin-bottom: 24px;
+}
+.verdict-q {
+  font-family: var(--font-serif);
+  font-size: 17px; font-weight: 700;
+  color: var(--text); margin-bottom: 14px;
+  text-align: center;
+  line-height: 1.5;
+}
+.verdict-btns {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.verdict-btn {
+  width: 100%; padding: 14px;
+  border-radius: 4px; border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-size: 14px; font-weight: 700; font-family: var(--font-body);
+  cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: 12px;
+  transition: transform 0.15s, border-color 0.2s, background 0.2s;
+}
+.verdict-btn:hover { transform: translateX(4px); border-color: var(--primary); }
+.verdict-btn:active { transform: scale(0.98); }
+.verdict-btn.selected {
+  border-color: var(--primary);
+  background: rgba(0,48,135,0.08);
+}
+.verdict-icon { font-size: 22px; }
+.verdict-right {}
+.verdict-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.verdict-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 300; }
+
+.verdict-feedback {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(0,48,135,0.06);
+  border: 1px solid rgba(0,48,135,0.2);
+  border-radius: 4px;
+  font-size: 13px; color: var(--text-mid);
+  line-height: 1.8; font-family: var(--font-serif);
+  animation: sceneIn 0.4s ease;
+}
+
+/* comment */
+.comment-section { margin-bottom: 20px; }
+.comment-label {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 8px; font-family: var(--font-body);
+}
+#comment {
+  width: 100%; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; font-size: 14px;
+  font-family: var(--font-body); color: var(--text);
+  resize: none; line-height: 1.6;
+}
+#comment:focus { outline: none; border-color: var(--primary); }
+
+/* copyright */
+.copyright {
+  text-align: center; margin-top: 16px;
+  font-size: 11px; color: rgba(120,100,80,0.4);
+  font-family: var(--font-body);
+}
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+.btn {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 4px;
+  font-family: var(--font-serif); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.03em;
+}
+.btn + .btn { margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-accent  { background: var(--accent); color: #fff; }
+.btn-outline {
+  background: transparent; color: var(--text-muted);
+  border: 1.5px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+/* ═══════════════════════════════════
+   CONFIG
+═══════════════════════════════════ */
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+/* ═══════════════════════════════════
+   TOOLTIPS
+═══════════════════════════════════ */
+const TIPS = {
+  '대한국 국제': '大韓國 國制 — 1899년 반포. 황제의 권한이 무한함을 명문화한 헌법적 문서.',
+  '원수부': '元帥府 — 황제 직속 최고 군사 기관. 군 통수권을 황제에게 집중시켰다.',
+  '양전사업': '量田事業 — 전국 토지를 근대적 방식으로 측량한 사업. 1898년 시작.',
+  '지계': '地契 — 근대적 토지 소유권 증명서. 양전사업의 결과물.',
+  '식산흥업': '殖産興業 — 산업을 발전시켜 국가를 부강하게 한다는 뜻. 광업·섬유 공장 설립.',
+  '칙령 41호': '1900년 고종이 반포한 칙령. 울릉도를 군으로 승격하고 독도(석도)를 관할 구역으로 명시.',
+  '내장원': '內藏院 — 황실 재정을 관리하는 기구. 광무개혁 시기 전국 광산·역둔토 수익을 관장.',
+  '만민공동회': '萬民共同會 — 독립협회가 주도한 민회. 1898년 황국협회의 공격과 고종의 해산령으로 강제 해산.',
+  '구본신참': '舊本新參 — 옛 것을 근본으로 삼고 새 것을 참고한다. 광무개혁의 핵심 방향.',
+  '아관파천': '俄館播遷 — 1896년 고종이 러시아 공사관으로 피신한 사건.',
+};
+
+function tt(word, key) {
+  const tip = TIPS[key || word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+/* ═══════════════════════════════════
+   CARD DATA
+═══════════════════════════════════ */
+const CARDS = [
+  {
+    id: 'daehan_gukje',
+    year: '1899년',
+    icon: '📜',
+    name: '대한국 국제 반포',
+    desc: '황제가 직접 육해군을 통솔하고 법률을 제정·폐지하는 권한을 가진다고 명문화한 문서를 반포했다. <strong>황제 1인에게 모든 권력을 집중</strong>하고, 외세에 흔들리지 않는 자주 국가임을 선언한 것이다.',
+    tipWords: [['대한국 국제', '대한국 국제']],
+    fb: {
+      pos: '황제권 강화를 통해 외세 간섭을 차단하고 자주 국가의 법적 근거를 세우려 했다고 볼 수 있습니다.',
+      neg: '의회와 헌법 없이 황제 1인에게 권력을 집중시킨 것은 근대 국가의 기본 조건에서 멀어진 것이라고 볼 수 있습니다.',
+      amb: '자주독립의 선언인지 전제 권력의 강화인지 — 이 문서는 보는 기준에 따라 정반대로 해석됩니다.',
+    },
+    criteria: { pos: ['survival'], neg: ['civil'], amb: [] },
+  },
+  {
+    id: 'wonsubu',
+    year: '1899년',
+    icon: '⚔️',
+    name: '원수부 설치와 군제 개혁',
+    desc: '황제 직속의 최고 군사 기구인 원수부를 설치하고, 근대식 군사 훈련과 장비 도입을 추진했다. <strong>군 통수권을 황제에게 집중</strong>시켜 외세 의존을 끊으려 했다.',
+    tipWords: [['원수부', '원수부']],
+    fb: {
+      pos: '근대식 군 편제를 갖추고 독립적인 군사력을 확보하려는 시도였다고 볼 수 있습니다.',
+      neg: '실제 전투력 향상보다 황권 집중에 가까웠으며, 제도의 외형만 근대적이었다고 볼 수 있습니다.',
+      amb: '자주 국방과 황권 집중 — 두 목적이 동시에 작동한 정책으로, 어느 쪽을 더 무겁게 보느냐의 문제입니다.',
+    },
+    criteria: { pos: ['survival'], neg: ['modern'], amb: [] },
+  },
+  {
+    id: 'yangjeonsaeop',
+    year: '1898~1904년',
+    icon: '🗺️',
+    name: '양전사업과 지계 발급',
+    desc: '전국의 토지를 근대적 측량 방식으로 조사하고, <strong>소유권을 증명하는 지계를 발급</strong>했다. 조선 시대에 없던 근대적 토지 소유권 체계를 만들려 했으나, 러일전쟁으로 사업이 중단되었다.',
+    tipWords: [['양전사업', '양전사업'], ['지계', '지계']],
+    fb: {
+      pos: '조선 시대에 없던 근대적 토지 소유권 제도를 처음 도입했다는 점에서 의미 있는 시도였다고 볼 수 있습니다.',
+      neg: '외세 변수로 완료되지 못했다면, 제도의 효과보다 한계를 더 무겁게 봐야 한다고 볼 수 있습니다.',
+      amb: '제도 설계는 근대적이었지만 완성되지 못했습니다 — 의지와 결과 중 어느 쪽을 기준으로 보느냐가 갈립니다.',
+    },
+    criteria: { pos: ['modern'], neg: ['survival'], amb: [] },
+  },
+  {
+    id: 'siksanhungeop',
+    year: '1897~1904년',
+    icon: '🏭',
+    name: '식산흥업 — 근대 산업 육성',
+    desc: '섬유 공장, 광업 회사, 철도 등 <strong>근대 산업 시설을 국가 주도로 설립</strong>했다. 일부 민간 자본도 참여했으나 외세의 이권 침탈로 실질적 발전은 제약을 받았다.',
+    tipWords: [['식산흥업', '식산흥업']],
+    fb: {
+      pos: '국가가 직접 산업을 일으키려 했다는 점에서 근대 국가 건설의 의지를 읽을 수 있다고 볼 수 있습니다.',
+      neg: '외세 이권 침탈 앞에 실질적 성과가 미미했다면, 의지만으로 근대화를 평가하기 어렵다고 볼 수 있습니다.',
+      amb: '같은 사업을 두고 "근대화의 의지"로 볼 수도, "외세에 막힌 한계"로 볼 수도 있습니다.',
+    },
+    criteria: { pos: ['modern'], neg: ['survival'], amb: [] },
+  },
+  {
+    id: 'dokdo',
+    year: '1900년',
+    icon: '🏝️',
+    name: '칙령 41호 — 울릉도·독도 관할',
+    desc: '울릉도를 군으로 승격하고 <strong>독도(석도)를 울도군 관할로 명시</strong>하는 칙령을 반포했다. 법적 근거는 마련했지만, 이후 일본의 시마네 현 편입(1905)을 막지 못했다.',
+    tipWords: [['칙령 41호', '칙령 41호']],
+    fb: {
+      pos: '영토에 대한 주권을 법으로 명시한 것은 근대 국가로서 당연한 조치였다고 볼 수 있습니다.',
+      neg: '칙령이 있어도 실효 지배가 따르지 못했다면, 선언만으로는 주권을 지키기 어렵다고 볼 수 있습니다.',
+      amb: '법적 근거와 실효 지배 — 근대 국가의 주권을 어느 쪽으로 판단하느냐에 따라 결론이 달라집니다.',
+    },
+    criteria: { pos: ['modern'], neg: ['survival'], amb: [] },
+  },
+  {
+    id: 'gojong_exile',
+    year: '1898~1905년',
+    icon: '🤝',
+    name: '고종의 외세 지원 요청',
+    desc: '고종은 러시아·미국·프랑스 등에 <strong>차관 도입과 군사 지원을 요청</strong>하는 외교를 펼쳤다. 열강을 서로 견제시켜 독립을 유지하려는 전략이었다.',
+    tipWords: [['아관파천', '아관파천']],
+    fb: {
+      pos: '강대국 사이의 균형을 활용해 독립을 유지하려는 현실적 외교 전략이었다고 볼 수 있습니다.',
+      neg: '외세에 의존할수록 자주권이 약해진다는 점에서 이 선택이 오히려 위기를 키웠다고 볼 수 있습니다.',
+      amb: '자주 외교와 외세 의존 — 당시 조건에서 이 둘의 경계를 가르기 어렵습니다.',
+    },
+    criteria: { pos: ['survival'], neg: ['civil'], amb: [] },
+  },
+  {
+    id: 'dongnip_haesaan',
+    year: '1898년',
+    icon: '✊',
+    name: '독립협회 강제 해산',
+    desc: '만민공동회가 <strong>의회 설립과 황제권 제한</strong>을 요구하자, 고종은 황국협회를 동원해 독립협회를 강제 해산했다. 민권·입헌 군주제로의 전환을 스스로 막은 결정이었다.',
+    tipWords: [['만민공동회', '만민공동회']],
+    fb: {
+      pos: '열강이 침투하는 상황에서 황제권 강화가 국가를 지키는 현실적 선택이었다고 볼 수 있습니다.',
+      neg: '스스로 민권과 의회를 막은 것은 근대 국가로 가는 길을 포기한 것이라고 볼 수 있습니다.',
+      amb: '국가 생존과 민권 확대가 정면으로 충돌한 카드입니다 — 하나를 선택하면 하나를 포기해야 했습니다.',
+    },
+    criteria: { pos: ['survival'], neg: ['civil', 'modern'], amb: [] },
+  },
+  {
+    id: 'naejangwon',
+    year: '1897~1904년',
+    icon: '💰',
+    name: '황실 재정 확대 — 내장원',
+    desc: '내장원을 통해 전국 광산·역둔토·홍삼 전매 수익을 <strong>황실 재정으로 집중</strong>시켰다. 외세 차관 없이 개혁을 추진할 재원을 마련했지만, 국가 재정과 황실 재정의 경계가 불분명해졌다.',
+    tipWords: [['내장원', '내장원']],
+    fb: {
+      pos: '외세 차관 없이 황실이 직접 재원을 마련해 개혁을 추진하려 했다는 점에서 자주적 시도로 볼 수 있습니다.',
+      neg: '국가 재정과 황실 재정이 뒤섞이면서 공공성이 약화되었다는 점에서 근대 국가의 기준에 못 미쳤다고 볼 수 있습니다.',
+      amb: '자주 재정과 황실 사유화 — 같은 정책을 두고 두 기준이 동시에 적용됩니다.',
+    },
+    criteria: { pos: ['survival'], neg: ['modern'], amb: [] },
+  },
+];
+
+/* ═══════════════════════════════════
+   CRITERIA DEF
+═══════════════════════════════════ */
+const CRITERIA = [
+  {
+    id: 'survival',
+    icon: '🛡️',
+    name: '국가 생존 우선',
+    desc: '외세의 압박 속에서 국가가 살아남았는가를 중심으로 판단.',
+  },
+  {
+    id: 'modern',
+    icon: '🏛️',
+    name: '근대 제도 우선',
+    desc: '근대적 법·제도·산업의 틀을 갖췄는가를 중심으로 판단.',
+  },
+  {
+    id: 'civil',
+    icon: '👥',
+    name: '민권 확대 우선',
+    desc: '백성의 권리와 정치 참여가 보장되었는가를 중심으로 판단.',
+  },
+];
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let S = {
+  phase: 'intro',   // intro | cards | result
+  ci: 0,            // current card index
+  choices: {},      // cardId → 'pos'|'neg'|'amb'
+  verdict: null,    // 'yes'|'no'|'defer'
+  submitted: false,
+};
+
+/* ═══════════════════════════════════
+   SUPABASE
+═══════════════════════════════════ */
+function sendToSupabase(choiceData, comment) {
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'daehan1897',
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+
+/* ═══════════════════════════════════
+   UTILS
+═══════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function applyTips(html, tipWords) {
+  if (!tipWords) return html;
+  let result = html;
+  tipWords.forEach(([word, key]) => {
+    const span = `<span class="tt" data-tip="${encodeURIComponent(TIPS[key] || '')}" data-word="${word}">${word}</span>`;
+    result = result.replace(new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), span);
+  });
+  return result;
+}
+
+/* ═══════════════════════════════════
+   CRITERIA ANALYSIS
+═══════════════════════════════════ */
+function analyzeChoices() {
+  const scores = { survival: 0, modern: 0, civil: 0 };
+  const counts = { pos: 0, neg: 0, amb: 0 };
+
+  Object.entries(S.choices).forEach(([cardId, choice]) => {
+    counts[choice]++;
+    const card = CARDS.find(c => c.id === cardId);
+    if (!card) return;
+    const mapping = card.criteria[choice];
+    if (mapping) mapping.forEach(cr => { scores[cr]++; });
+  });
+
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+  const pcts = {};
+  Object.keys(scores).forEach(k => { pcts[k] = Math.round(scores[k] / total * 100); });
+
+  const maxScore = Math.max(...Object.values(scores));
+  const topCriteria = Object.entries(scores)
+    .filter(([, v]) => v === maxScore)
+    .map(([k]) => k);
+
+  const isMixed = topCriteria.length > 1 || maxScore <= 2;
+
+  // 충돌 카드 감지 — pos/neg가 서로 다른 기준으로 이어지는 카드 중
+  // 학생이 선택한 방향이 주된 기준과 반대인 카드를 최대 2개 추출
+  const conflictCards = [];
+  if (!isMixed && topCriteria.length === 1) {
+    const dominant = topCriteria[0];
+    Object.entries(S.choices).forEach(([cardId, choice]) => {
+      if (choice === 'amb') return;
+      const card = CARDS.find(c => c.id === cardId);
+      if (!card) return;
+      const thisCriteria = card.criteria[choice] || [];
+      // 선택한 결과가 dominant와 다른 기준으로만 이어진 경우
+      if (thisCriteria.length > 0 && !thisCriteria.includes(dominant)) {
+        conflictCards.push(card.name);
+      }
+    });
+  }
+
+  return { scores, pcts, counts, topCriteria, isMixed, conflictCards };
+}
+
+/* ═══════════════════════════════════
+   RENDER
+═══════════════════════════════════ */
+function R() {
+  window.scrollTo(0, 0);
+  document.getElementById('app').innerHTML =
+    S.phase === 'intro'  ? renderIntro()  :
+    S.phase === 'cards'  ? renderCards()  :
+                           renderResult();
+}
+
+/* ─── INTRO ─── */
+function renderIntro() {
+  return `
+  <div class="screen">
+    <div class="intro-head">
+      <div class="intro-deco">
+        <div class="deco-line"></div>
+        <div class="deco-diamond"></div>
+        <div class="deco-line r"></div>
+      </div>
+      <div class="intro-era">대한제국 · 1897–1910</div>
+      <div class="intro-title">대한제국 1897</div>
+      <div class="intro-sub">당신의 기준으로 평가하라</div>
+    </div>
+
+    <div class="intro-context">
+      1897년, 고종은 황제를 선언하고 <strong>대한제국</strong>을 수립했다.
+      독립협회의 민권 운동이 좌절된 직후였다.
+      황제는 <strong>${tt('구본신참', '구본신참')}</strong>의 원칙 아래 근대화를 추진했다.
+      이 개혁은 무엇을 달성했고, 무엇을 남겨두었는가.
+    </div>
+
+    <div class="intro-how">
+      <div class="how-title">◆ 진행 방식</div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>8개의 사료 카드</strong>를 읽고 긍정 · 부정 · 판단유보 중 하나를 선택합니다. 이유를 설명할 필요는 없습니다.</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">2</div>
+          <div class="step-text">판단이 끝나면 <strong>당신이 어떤 기준으로 봤는지</strong>를 분석해 드립니다.</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>대한제국은 근대 국가였는가?</strong> 최종 판단을 내리고 반 친구들과 비교합니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startCards()">평가를 시작한다 →</button>
+  </div>`;
+}
+
+/* ─── CARDS ─── */
+function renderCards() {
+  const card = CARDS[S.ci];
+  const chosen = S.choices[card.id];
+  const showFb = !!chosen;
+
+  const pips = CARDS.map((_, i) => {
+    let cls = 'prog-pip';
+    if (i < S.ci) cls += ' done';
+    else if (i === S.ci) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  const descHtml = applyTips(card.desc, card.tipWords);
+
+  const mkBtn = (type, label) => {
+    const cls = `choice-btn ${type}${chosen === type ? ' selected' : ''}${chosen && chosen !== type ? ' locked' : ''}`;
+    return `<button class="${cls}" onclick="${chosen ? '' : `chooseCard('${type}')`}">${label}</button>`;
+  };
+
+  const fbHtml = showFb ? `
+    <div class="mini-feedback ${chosen}-fb">
+      ${card.fb[chosen]}
+    </div>` : '';
+
+  const nextLabel = S.ci < CARDS.length - 1 ? '다음 카드 →' : '결과 분석으로 →';
+  const nextBtn = showFb
+    ? `<button class="btn btn-primary" style="margin-top:16px" onclick="nextCard()">${nextLabel}</button>`
+    : '';
+
+  return `
+  <div class="progress-bar">
+    <span class="prog-label">카드 판단</span>
+    <div class="prog-track">${pips}</div>
+    <span class="prog-count">${S.ci + 1} / ${CARDS.length}</span>
+  </div>
+  <div class="screen card-wrapper">
+    <div class="evidence-card">
+      <div class="card-header">
+        <span class="card-header-year">${card.year}</span>
+        <span class="card-header-num">${S.ci + 1}/${CARDS.length}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title-row">
+          <span class="card-icon">${card.icon}</span>
+          <span class="card-name">${card.name}</span>
+        </div>
+        <div class="card-desc">${descHtml}</div>
+        <div class="choice-row">
+          ${mkBtn('pos', '✅ 긍정')}
+          ${mkBtn('neg', '❌ 부정')}
+          ${mkBtn('amb', '⚖️ 기준 충돌')}
+        </div>
+        ${fbHtml}
+      </div>
+    </div>
+    ${nextBtn}
+  </div>`;
+}
+
+/* ─── RESULT ─── */
+function renderResult() {
+  const { scores, pcts, counts, topCriteria, isMixed, conflictCards } = analyzeChoices();
+
+  // ambiguity note
+  const ambPct = Math.round(counts.amb / CARDS.length * 100);
+  let ambNote = '';
+  if (ambPct >= 50) {
+    ambNote = `<div class="amb-note">⚖️ 기준 충돌을 많이 선택했습니다. 당시 사람들도 확신하기 어려웠습니다 — 두 기준이 동시에 보이는 복합적 상황이었다는 뜻입니다.</div>`;
+  } else if (ambPct === 0) {
+    ambNote = `<div class="amb-note">📌 모든 카드에 명확한 판단을 내렸습니다. 같은 카드를 기준 충돌로 본 친구가 있다면 왜 다르게 봤는지 이야기해보세요.</div>`;
+  }
+
+  // criteria insight — 충돌 카드 포함
+  let insightText = '';
+  if (isMixed) {
+    insightText = `당신의 판단은 <strong>한 가지 기준에 딱 맞지 않습니다.</strong> 여러 기준이 섞여 있다는 것은, 역사를 단순화하지 않고 복합적으로 보고 있다는 뜻이기도 합니다.`;
+  } else {
+    const top = CRITERIA.find(c => c.id === topCriteria[0]);
+    insightText = `당신은 전반적으로 <strong>${top.name}</strong> 기준으로 판단하는 경향이 강합니다.`;
+    if (conflictCards.length > 0) {
+      const cardNames = conflictCards.slice(0, 2).join(', ');
+      insightText += ` 다만 <strong>${cardNames}</strong> 카드에서는 다른 기준이 작동했습니다 — 어떤 점이 달라 보였는지 생각해보세요.`;
+    } else {
+      insightText += ` 같은 카드라도 다른 기준으로 본 친구가 있다면 왜 달라졌는지 이야기해보세요.`;
+    }
+  }
+
+  // verdict feedback
+  const verdictFb = {
+    yes: '대한제국은 황제권·군사·토지·산업 등 여러 분야에서 근대 국가의 틀을 갖추려 했습니다. 외세 속에서도 자주적 근대화를 시도했다는 점에서 근대 국가로 볼 수 있습니다.',
+    no:  '의회 없이 황제 1인에게 권력이 집중되었고, 독립협회를 해산해 민권을 억압했습니다. 근대 국가의 핵심 조건인 민주적 제도가 부재했다는 점에서 한계가 분명합니다.',
+    defer: '대한제국을 "근대 국가였는가"로 단순하게 판단하기 어렵다는 입장입니다. 역사학자들도 아직 이 질문에 다양한 답을 제시합니다. 어떤 기준을 택하느냐에 따라 결론이 달라집니다.',
+  };
+
+  const crCards = CRITERIA.map(cr => {
+    const pct = pcts[cr.id] || 0;
+    const isTop = !isMixed && topCriteria.includes(cr.id);
+    return `
+    <div class="criteria-card ${isTop ? 'highlight' : isMixed ? 'highlight-mix' : ''}">
+      <span class="cr-icon">${cr.icon}</span>
+      <div class="cr-right">
+        <div class="cr-name">${cr.name}</div>
+        <div class="cr-desc">${cr.desc}</div>
+        <div class="cr-bar-wrap">
+          <div class="cr-bar" style="width:${pct}%"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const vBtns = [
+    { id: 'yes',   icon: '🏛️', name: '근대 국가였다', desc: '제도·자주성·산업 측면에서 근대 국가의 조건을 갖췄다' },
+    { id: 'no',    icon: '⚠️', name: '근대 국가가 아니었다', desc: '민권 부재·황권 집중·의회 없음이 결정적 한계다' },
+    { id: 'defer', icon: '❓', name: '판단을 유보한다', desc: '기준에 따라 다르게 볼 수 있어 단정하기 어렵다' },
+  ];
+
+  const vBtnsHtml = vBtns.map(v => `
+    <button class="verdict-btn${S.verdict === v.id ? ' selected' : ''}" onclick="setVerdict('${v.id}')">
+      <span class="verdict-icon">${v.icon}</span>
+      <div class="verdict-right">
+        <div class="verdict-name">${v.name}</div>
+        <div class="verdict-desc">${v.desc}</div>
+      </div>
+    </button>`).join('');
+
+  const vFbHtml = S.verdict
+    ? `<div class="verdict-feedback">${verdictFb[S.verdict]}</div>` : '';
+
+  return `
+  <div class="screen">
+    <div class="result-head">
+      <div class="result-badge">📋</div>
+      <div class="result-title">당신의 평가 분석</div>
+      <div class="result-sub">8개 카드 판단 완료</div>
+    </div>
+
+    <div class="criteria-section">
+      <div class="section-label">◆ 당신이 사용한 기준</div>
+      <div class="criteria-cards">${crCards}</div>
+      <div class="criteria-insight">${insightText}</div>
+    </div>
+
+    <div class="choices-summary">
+      <div class="section-label">◆ 나의 판단 분포</div>
+      <div class="summary-grid">
+        <div class="sum-cell">
+          <div class="sum-count pos">${counts.pos}</div>
+          <div class="sum-label">긍정</div>
+        </div>
+        <div class="sum-cell">
+          <div class="sum-count neg">${counts.neg}</div>
+          <div class="sum-label">부정</div>
+        </div>
+        <div class="sum-cell">
+          <div class="sum-count amb">${counts.amb}</div>
+          <div class="sum-label">기준 충돌</div>
+        </div>
+      </div>
+      ${ambNote}
+    </div>
+
+    <div class="diff-note">
+      💬 같은 카드를 보고도 반 친구들은 다르게 판단했을 수 있습니다. 특히 <strong>독립협회 해산</strong>과 <strong>대한국 국제</strong> 카드에서 의견이 자주 갈립니다. 왜 다르게 봤는지 이야기해 보세요.
+    </div>
+
+    <div class="verdict-section">
+      <div class="verdict-q">대한제국은 근대 국가였는가?</div>
+      <div class="verdict-btns">${vBtnsHtml}</div>
+      ${vFbHtml}
+    </div>
+
+    <div class="comment-section">
+      <div class="comment-label">한 줄 소감을 남겨보세요. (이름·학번 제외)</div>
+      <textarea id="comment" rows="2" maxlength="100"
+        placeholder="예) 같은 카드를 다르게 판단한 게 신기했다"></textarea>
+    </div>
+
+    <button class="btn btn-accent" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="restart()">다시 평가하기</button>
+
+    <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════
+   EVENTS
+═══════════════════════════════════ */
+function startCards() {
+  S.phase = 'cards'; S.ci = 0; R();
+}
+
+function chooseCard(type) {
+  const card = CARDS[S.ci];
+  S.choices[card.id] = type;
+  R();
+}
+
+function nextCard() {
+  if (S.ci < CARDS.length - 1) {
+    S.ci++;
+    S.phase = 'cards';
+  } else {
+    S.phase = 'result';
+    if (!S.submitted) {
+      sendToSupabase(S.choices, '');
+      S.submitted = true;
+    }
+  }
+  R();
+}
+
+function setVerdict(v) {
+  S.verdict = v; R();
+  setTimeout(() => {
+    const el = document.querySelector('.verdict-feedback');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
+function copyResult() {
+  const { counts, topCriteria, isMixed } = analyzeChoices();
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+
+  if (comment) sendToSupabase(S.choices, comment);
+
+  const criteriaName = isMixed
+    ? '복합적 기준'
+    : (CRITERIA.find(c => c.id === topCriteria[0])?.name || '');
+
+  const verdictMap = { yes: '근대 국가였다', no: '근대 국가가 아니었다', defer: '판단 유보' };
+
+  const lines = [
+    `📋 대한제국 1897 — 당신의 기준으로 평가하라`,
+    ``,
+    `나의 판단 기준: ${criteriaName}`,
+    `긍정 ${counts.pos}개 / 부정 ${counts.neg}개 / 기준 충돌 ${counts.amb}개`,
+    ``,
+    `최종 판단: ${S.verdict ? verdictMap[S.verdict] : '선택 안 함'}`,
+    ...(comment ? [`소감: ${comment}`] : []),
+    ``,
+    `— 대한제국 1897 게임 (찰리쌤의 한국사 게임실)`,
+  ].filter(l => l !== '').join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(lines).then(() => showToast('📋 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = lines; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast('📋 복사되었습니다!'); }
+    catch { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = { phase: 'intro', ci: 0, choices: {}, verdict: null, submitted: false };
+  R();
+}
+
+/* ═══════════════════════════════════
+   TOOLTIP SYSTEM
+═══════════════════════════════════ */
+document.body.insertAdjacentHTML('beforeend',
+  '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+
+const bubble = document.getElementById('tt-bubble');
+let bubTimer = null;
+
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect();
+    const bw = 240;
+    const left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left = left + 'px';
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bubH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bubH - 14) + 'px';
+    if (bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+R();
+</script>
+</body>
+</html>
