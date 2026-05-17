@@ -1,1 +1,728 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<title>1905 — 남겨진 선택</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f0ece4;
+  --surface: #e8e0d4;
+  --primary: #003087;
+  --accent:  #cd2e3a;
+  --text:    #1a1a1a;
+  --sepia:   #8b7355;
+  --muted:   #6b6055;
+  --border:  #c8b89a;
+  --disabled-bg:     rgba(180,160,140,0.18);
+  --disabled-text:   rgba(100,90,80,0.42);
+  --disabled-border: rgba(180,160,140,0.32);
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-serif:   'Noto Serif KR', serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+  --round-sat: 1;
+  --round-dim: 1;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 0 0 80px;
+  filter: saturate(var(--round-sat)) brightness(var(--round-dim));
+  transition: filter 1.4s ease;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, #f4efe6 0%, #ece4d6 100%);
+}
+#app { width: 100%; max-width: 680px; padding: 0 16px; }
 
+/* TOAST */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: #f0ece4;
+  border-radius: 3px; padding: 10px 20px;
+  font-size: 13px; opacity: 0; pointer-events: none;
+  z-index: 9999; transition: opacity 0.3s; white-space: nowrap;
+}
+#toast.show { opacity: 1; }
+
+/* TOOLTIP */
+.tt { border-bottom: 1.5px dashed var(--sepia); cursor: pointer; white-space: nowrap; transition: border-color 0.15s; }
+.tt:hover { border-bottom-color: var(--accent); }
+#tt-bubble {
+  position: fixed; z-index: 9000; max-width: 260px;
+  background: #1a1208; border: 1px solid rgba(139,115,85,0.5);
+  border-radius: 3px; padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  pointer-events: none; opacity: 0;
+  transform: translateY(4px); transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: #e8c97a; margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,192,0.85); line-height: 1.7; }
+
+/* SCENE */
+@keyframes sceneIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.scene { animation: sceneIn 0.45s ease; }
+
+/* HEADER */
+.hdr {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(240,236,228,0.95);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 -16px; padding: 12px 16px;
+}
+.hdr-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hdr-round { font-family: var(--font-display); font-size: 13px; color: var(--accent); }
+.hdr-year  { font-family: var(--font-serif); font-size: 13px; color: var(--muted); }
+.hdr-goal {
+  font-size: 11px; padding: 3px 10px; border: 1px solid; border-radius: 2px;
+  white-space: nowrap; transition: all 0.8s ease; flex-shrink: 0;
+}
+.hdr-goal.goal-1 { color: var(--primary); border-color: rgba(0,48,135,0.3); }
+.hdr-goal.goal-2 { color: #5a4000; border-color: rgba(90,64,0,0.3); background: rgba(90,64,0,0.05); }
+.hdr-goal.goal-3 { color: var(--accent); border-color: rgba(205,46,58,0.3); background: rgba(205,46,58,0.05); }
+.hdr-goal.goal-4 { color: var(--muted); border-color: rgba(107,96,85,0.3); background: rgba(107,96,85,0.06); }
+
+/* INTRO */
+.intro-wrap { padding: 48px 0 32px; }
+.intro-year { font-family: var(--font-display); font-size: clamp(72px,18vw,120px); color: var(--accent); line-height: 1; opacity: 0.9; }
+.intro-title { font-family: var(--font-serif); font-size: clamp(18px,4vw,24px); color: var(--text); margin: 8px 0 20px; letter-spacing: 0.05em; font-weight: 600; }
+.intro-divider { width: 48px; height: 2px; background: var(--accent); margin: 0 0 24px; }
+.intro-body { font-size: 15px; line-height: 2.1; color: var(--muted); font-weight: 300; max-width: 520px; margin-bottom: 10px; }
+.intro-body strong { color: var(--text); font-weight: 500; }
+.intro-warning { font-size: 13px; color: rgba(139,115,85,0.8); font-style: italic; margin-bottom: 32px; line-height: 1.8; }
+.intro-role { display: inline-block; border: 1px solid var(--border); border-radius: 2px; padding: 12px 20px; font-size: 13px; color: var(--sepia); letter-spacing: 0.08em; margin-bottom: 40px; font-family: var(--font-serif); }
+
+/* ROUND */
+.round-wrap { padding-top: 28px; }
+.round-context { border-left: 2px solid var(--sepia); padding: 12px 16px; margin-bottom: 24px; background: rgba(139,115,85,0.06); }
+.round-context-label { font-size: 10px; letter-spacing: 0.2em; color: var(--sepia); margin-bottom: 6px; font-weight: 500; }
+.round-context-text { font-size: 14px; line-height: 1.95; color: var(--text); font-weight: 300; }
+.round-context-text strong { font-weight: 500; color: var(--primary); }
+.choices-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.choices-label { font-size: 11px; letter-spacing: 0.15em; color: var(--muted); }
+.choices-avail { font-size: 11px; color: var(--sepia); font-family: var(--font-serif); }
+.choices-avail span { color: var(--accent); font-weight: 600; }
+
+/* CHOICE CARD */
+.choice-card {
+  border: 1px solid var(--border); border-left: 3px solid transparent;
+  border-radius: 2px; padding: 16px 18px; margin-bottom: 10px;
+  cursor: pointer; background: rgba(255,255,255,0.5);
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.15s;
+  position: relative; -webkit-tap-highlight-color: rgba(0,48,135,0.08);
+}
+.choice-card:hover { border-left-color: var(--primary); background: rgba(0,48,135,0.04); transform: translateX(3px); }
+.choice-card:active { transform: translateX(3px) scale(0.985); background: rgba(0,48,135,0.07); }
+.choice-card.selected { border-left-color: var(--primary); border-color: rgba(0,48,135,0.4); background: rgba(0,48,135,0.06); }
+.choice-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; font-family: var(--font-serif); }
+.choice-desc  { font-size: 12px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+/* DISABLED */
+.choice-card.disabled { cursor: not-allowed; background: var(--disabled-bg); border-color: var(--disabled-border); border-left-color: transparent; }
+.choice-card.disabled:hover, .choice-card.disabled:active { transform: none; background: var(--disabled-bg); }
+.choice-card.disabled .choice-title { color: var(--disabled-text); text-decoration: line-through; text-decoration-color: rgba(100,90,80,0.35); }
+.choice-card.disabled .choice-desc { color: var(--disabled-text); }
+.disabled-reason { display: block; margin-top: 8px; font-size: 11px; color: rgba(139,115,85,0.65); font-style: italic; line-height: 1.65; padding-top: 8px; border-top: 1px dashed rgba(139,115,85,0.22); }
+.choice-card.disabled::after { content: '✕'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: rgba(139,115,85,0.28); }
+
+/* BUTTONS */
+.btn { width: 100%; padding: 14px; border: none; border-radius: 2px; font-family: var(--font-serif); font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s; -webkit-tap-highlight-color: transparent; }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.14); }
+.btn:active:not(:disabled) { transform: scale(0.98); box-shadow: none; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: #f0ece4; margin-top: 8px; }
+.btn-outline  { background: transparent; color: var(--muted); border: 1px solid var(--border); margin-top: 8px; }
+
+/* BETWEEN */
+.between-wrap { padding-top: 28px; }
+.between-choice-echo { border-left: 3px solid var(--primary); padding: 12px 16px; margin-bottom: 20px; background: rgba(0,48,135,0.04); }
+.between-choice-label { font-size: 10px; letter-spacing: 0.2em; color: var(--primary); margin-bottom: 6px; font-weight: 500; }
+.between-choice-text  { font-size: 15px; font-family: var(--font-serif); font-weight: 600; color: var(--text); }
+.between-outcome { margin-bottom: 24px; }
+.between-outcome-item { padding: 14px 0; border-bottom: 1px solid rgba(139,115,85,0.18); display: flex; gap: 14px; align-items: flex-start; }
+.between-outcome-item:last-child { border-bottom: none; }
+.between-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sepia); flex-shrink: 0; margin-top: 8px; }
+.between-outcome-text { font-size: 14px; line-height: 1.9; color: var(--text); font-weight: 300; }
+.between-outcome-text strong { font-weight: 500; color: var(--accent); }
+/* 일본 맥락 박스 */
+.japan-context {
+  background: rgba(139,115,85,0.07);
+  border: 1px dashed rgba(139,115,85,0.35);
+  border-radius: 2px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-style: italic;
+}
+.japan-context-label {
+  font-size: 10px; letter-spacing: 0.15em;
+  color: var(--sepia); font-weight: 500; font-style: normal;
+  margin-bottom: 4px; display: block;
+}
+.between-next { border: 1px solid var(--border); border-radius: 2px; padding: 14px 16px; margin-bottom: 20px; background: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 12px; }
+.between-next-arrow { font-size: 18px; color: var(--sepia); flex-shrink: 0; }
+.between-next-text { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.between-next-text strong { color: var(--text); font-weight: 500; }
+
+/* RESULT */
+.result-wrap { padding-top: 28px; }
+.result-ending { padding: 20px 20px 16px; border: 1px solid var(--border); border-top: 3px solid var(--accent); background: rgba(255,255,255,0.4); margin-bottom: 20px; }
+.result-ending-label { font-size: 10px; letter-spacing: 0.2em; color: var(--sepia); margin-bottom: 10px; font-weight: 500; }
+.result-ending-title { font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
+.result-ending-text  { font-size: 14px; line-height: 1.95; color: var(--text); font-weight: 300; }
+
+/* 선택지 감소 바 그래프 */
+.result-track { margin-bottom: 20px; }
+.result-track-label { font-size: 10px; letter-spacing: 0.2em; color: var(--sepia); margin-bottom: 12px; font-weight: 500; }
+.track-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.track-row-year  { font-family: var(--font-display); font-size: 11px; color: var(--accent); min-width: 42px; flex-shrink: 0; }
+.track-row-event { font-size: 11px; color: var(--muted); min-width: 120px; flex-shrink: 0; }
+.track-bar-wrap  { flex: 1; display: flex; gap: 3px; align-items: center; }
+.track-bar-block {
+  height: 14px; flex: 1; border-radius: 2px;
+  background: var(--primary); opacity: 0.7;
+  transition: width 0.6s ease;
+}
+.track-bar-block.empty {
+  background: rgba(139,115,85,0.18);
+  opacity: 1;
+}
+.track-count { font-size: 11px; color: var(--accent); font-weight: 600; min-width: 28px; text-align: right; font-family: var(--font-serif); }
+
+/* 선택 이력 */
+.history-section { margin-bottom: 20px; }
+.history-label { font-size: 10px; letter-spacing: 0.2em; color: var(--sepia); margin-bottom: 10px; font-weight: 500; }
+.history-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(139,115,85,0.15); font-size: 13px; }
+.history-row:last-child { border-bottom: none; }
+.history-year   { font-family: var(--font-display); font-size: 12px; color: var(--accent); min-width: 42px; padding-top: 1px; }
+.history-choice { color: var(--text); font-weight: 500; font-family: var(--font-serif); flex: 1; }
+.history-goal   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.ending-common { border: 1px dashed rgba(139,115,85,0.4); padding: 16px 18px; margin: 20px 0; font-size: 13px; color: var(--muted); line-height: 1.9; font-style: italic; font-family: var(--font-serif); text-align: center; }
+.comment-section { margin: 20px 0; }
+.comment-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+.comment-section textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 2px; background: rgba(255,255,255,0.6); font-family: var(--font-body); font-size: 13px; color: var(--text); resize: none; line-height: 1.7; transition: border-color 0.2s; }
+.comment-section textarea:focus { outline: none; border-color: var(--primary); }
+.copyright { text-align: center; font-size: 11px; color: rgba(120,100,80,0.4); margin-top: 8px; }
+
+@media (max-width: 480px) {
+  .intro-year { font-size: 80px; }
+  .choice-card { padding: 14px; }
+  .hdr-year { display: none; }
+  .track-row-event { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="app"></div>
+<script>
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+/* ── TOOLTIP ── */
+const TIPS = {
+  '어전회의':           '어전회의(御前會議) — 황제 앞에서 열리는 최고위 국정 회의.',
+  '포츠머스 조약':      '포츠머스 조약(1905.9) — 러일전쟁 종결 강화조약. 미국 루스벨트 중재. 러시아가 한반도에서의 일본 우위를 인정.',
+  '가쓰라-태프트 밀약': '가쓰라-태프트 밀약(1905.7) — 미국은 일본의 한국 지배를, 일본은 미국의 필리핀 지배를 상호 인정한 비밀 협약.',
+  '영일동맹':           '영일동맹(1902, 1905 갱신) — 영국·일본 군사 동맹. 1905년 갱신으로 한국에서의 일본 우위를 명시적으로 인정.',
+  '을사늑약':           '을사늑약(1905.11) — 일본이 대한제국 외교권을 박탈한 조약. 고종 서명 거부에도 강제 체결.',
+  '한일의정서':         '한일의정서(1904.2) — 러일전쟁 발발 직후 일본이 강요한 조약. 한반도 내 일본군 주둔·전략 요지 사용 허용.',
+  '헤이그 특사':        '헤이그 특사(1907) — 을사늑약 부당함을 알리기 위해 네덜란드 헤이그 만국평화회의에 파견한 밀사. 이준·이상설·이위종.',
+  '통감부':             '통감부(統監府) — 을사늑약 후 일본이 서울에 설치한 한국 외교 장악 기관. 초대 통감 이토 히로부미.',
+  '군대 해산':          '군대 해산(1907.8) — 한일신협약에 따라 대한제국 군대가 강제 해산된 사건. 이후 해산 군인 다수가 의병에 합류.',
+  '의병':               '의병(義兵) — 외적 침략에 맞서 자발적으로 일어난 민간 군사 조직. 을사늑약·군대해산 이후 전국 각지에서 대규모로 봉기.',
+  '만국평화회의':       '만국평화회의 — 1907년 네덜란드 헤이그에서 열린 국제 평화 회의. 대한제국 대표는 발언권을 거부당했다.',
+  '러일전쟁':           '러일전쟁(1904–1905) — 만주·한반도 지배권을 둘러싼 러시아·일본 간 전쟁. 일본 승리로 종결. 대한제국의 외교 공간이 급격히 좁아졌다.',
+};
+function tt(word, key) {
+  const tip = TIPS[key||word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+const bubble = document.getElementById('tt-bubble');
+let bubTimer = null;
+document.addEventListener('click', e => {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect(), bw = 260;
+    const left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw+'px'; bubble.style.left = left+'px'; bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bh = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bh - 14 < 8) ? (rect.bottom+10)+'px' : (rect.top-bh-14)+'px';
+    if (bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else { bubble.classList.remove('show'); }
+});
+
+/* ══════════════════════════════════════
+   GAME DATA
+   ══════════════════════════════════════ */
+const ROUNDS = [
+  {
+    id:1, year:'1904', event:'러일전쟁 발발',
+    goalText:'독립 유지', goalClass:'goal-1',
+    saturation:1.0, brightness:1.0,
+    context:`${tt('러일전쟁')}이 한반도를 무대로 시작되었습니다. 일본은 ${tt('한일의정서')}를 강요하며 한반도 내 군사 거점 사용권을 요구했습니다. ${tt('어전회의')}가 소집되었습니다. 아직 선택지가 있습니다.`,
+    choices:[
+      { id:'russia',  title:'러시아에 지원 요청',  desc:'러시아와의 관계를 강화해 일본을 견제한다.',                 disabled:false, type:'diplomacy'  },
+      { id:'usa',     title:'미국에 중재 요청',     desc:'미국을 외교 중재자로 끌어들여 열강의 관심을 유도한다.',     disabled:false, type:'diplomacy'  },
+      { id:'neutral', title:'중립국 선언 추진',     desc:'전쟁과 무관한 중립국 지위를 국제사회에 선언한다.',          disabled:false, type:'diplomacy'  },
+      { id:'reform',  title:'군비·행정 내실 강화', desc:'외교보다 내부 역량을 키우는 데 집중한다.',                  disabled:false, type:'resistance' },
+    ],
+    outcomes:{
+      russia: {
+        choiceEcho:'러시아에 지원 요청',
+        lines:[
+          `러시아는 일본과의 전쟁에 집중하고 있었다. 대한제국을 위한 움직임은 없었다.`,
+          `1905년 9월, ${tt('포츠머스 조약')}이 체결되었다. 러시아는 한반도에서 물러났고, 대한제국에 기댈 수 있는 열강이 사라졌다.`,
+        ],
+        japan:`일본은 ${tt('러일전쟁')}으로 막대한 전쟁 비용과 인명 피해를 입었다. 국내에서는 강화 조건에 불만을 품은 폭동(히비야 방화 사건)이 일어날 정도였다. 그러나 일본 지도부는 지금 대한제국을 장악하지 못하면 다시 열강 경쟁이 시작된다고 판단했고, 그 압박 속에서 밀어붙였다.`,
+      },
+      usa: {
+        choiceEcho:'미국에 중재 요청',
+        lines:[
+          `루스벨트 대통령은 러일전쟁의 중재를 수락했다. 그러나 그것은 대한제국을 위한 중재가 아니었다.`,
+          `1905년 7월, ${tt('가쓰라-태프트 밀약')}이 체결되었다. 미국은 일본의 한국 지배를 인정하는 대가로 필리핀을 확보했다. 중재 요청은 효력을 잃었다.`,
+        ],
+        japan:`일본은 전쟁 비용 부담과 국내 불만을 안고 있었지만, 외교전에서는 치밀했다. ${tt('영일동맹')} 갱신과 ${tt('가쓰라-태프트 밀약')}으로 열강을 자기편으로 만들어두었다. 대한제국이 호소할 공간은 사전에 차단되어 있었다.`,
+      },
+      neutral: {
+        choiceEcho:'중립국 선언 추진',
+        lines:[
+          `중립 선언 시도는 열강의 반응을 얻지 못했다. 한반도는 이미 러일 양국의 전장이 되어 있었다.`,
+          `${tt('한일의정서')} 체결로 대한제국의 독자적 외교 행위는 사실상 봉쇄되었다.`,
+        ],
+        japan:`일본은 전쟁 개시 직후 ${tt('한일의정서')}를 강요해 대한제국의 외교 공간을 선제적으로 차단했다. 전쟁 피해와 재정 부담 속에서도 한반도 장악을 전쟁 목표의 핵심으로 삼았기 때문이다.`,
+      },
+      reform: {
+        choiceEcho:'군비·행정 내실 강화',
+        lines:[
+          `내부 정비는 시작되었으나 시간이 부족했다. 전쟁은 이미 한반도 위에서 벌어지고 있었다.`,
+          `1905년 11월, 일본은 ${tt('을사늑약')}을 강요했다. 외교권이 사라졌다.`,
+        ],
+        japan:`일본은 ${tt('러일전쟁')} 승리 이후 국내 여론의 불만을 외부 팽창으로 돌려야 하는 압박도 있었다. 대한제국 장악은 선택이 아니라 일본 지도부에게 필수 과제였고, 그만큼 빠르게 움직였다.`,
+      },
+    },
+    nextPreview:{ year:'1905', event:'을사늑약', desc:'외교권이 사라집니다. 선택지가 봉쇄됩니다.' },
+  },
+  {
+    id:2, year:'1905', event:'을사늑약',
+    goalText:'자치권 유지', goalClass:'goal-2',
+    saturation:0.82, brightness:0.97,
+    context:`일본은 ${tt('을사늑약')}을 강요했습니다. 고종은 서명을 거부했지만 조약은 체결되었습니다. ${tt('통감부')}가 설치되어 외교권이 사라졌습니다.`,
+    choices:[
+      { id:'russia2',  title:'러시아에 지원 요청',    desc:'러시아를 통한 외교 돌파구를 찾는다.',
+        disabled:true, disabledReason:`${tt('포츠머스 조약')}(1905.9) 체결로 러시아는 한반도 문제에서 물러났다.`, type:'diplomacy' },
+      { id:'neutral2', title:'중립국 선언 추진',      desc:'국제사회에 중립 선언을 다시 시도한다.',
+        disabled:true, disabledReason:`${tt('한일의정서')} 체결로 대한제국의 독자적 외교 행위는 봉쇄되었다. ${tt('을사늑약')}으로 외교권 자체가 사라졌다.`, type:'diplomacy' },
+      { id:'petition', title:'황제 친서로 열강에 호소', desc:'고종이 직접 서명한 친서를 미국·영국에 보내 을사늑약의 무효를 주장한다.', disabled:false, type:'diplomacy' },
+      { id:'publicop', title:'반대 상소·국내 여론 결집', desc:'조약 반대 상소와 언론을 통해 국내 저항 여론을 조직화한다.', disabled:false, type:'resistance' },
+    ],
+    outcomes:{
+      petition: {
+        choiceEcho:'황제 친서로 열강에 호소',
+        lines:[
+          `고종의 친서는 미국·영국에 전달되었다. 두 나라 모두 공식 반응을 내놓지 않았다.`,
+          `${tt('영일동맹')}과 ${tt('가쓰라-태프트 밀약')} 속에서 열강은 이미 일본 편에 서 있었다. 친서는 국제적 효력을 갖지 못했다.`,
+        ],
+        japan:`일본은 ${tt('을사늑약')} 체결 전 ${tt('영일동맹')} 갱신(1905.8)과 ${tt('가쓰라-태프트 밀약')}(1905.7)으로 외교적 포위망을 완성해두었다. 대한제국이 호소할 열강이 남아 있지 않았다.`,
+      },
+      publicop: {
+        choiceEcho:'반대 상소·국내 여론 결집',
+        lines:[
+          `전국 각지에서 을사늑약 반대 상소가 올라왔다. 민영환은 자결로 저항 의지를 표했다.`,
+          `그러나 ${tt('통감부')}는 이미 설치되어 있었다. 국내 여론은 결집되었지만 조약을 되돌리지는 못했다.`,
+        ],
+        japan:`일본은 ${tt('통감부')}를 통해 언론과 집회를 통제하기 시작했다. 여론 결집이 조직적 저항으로 이어지기 어려운 구조가 만들어지고 있었다.`,
+      },
+    },
+    nextPreview:{ year:'1907', event:'헤이그 특사 · 고종 강제 퇴위', desc:'마지막 외교 시도가 실패합니다.' },
+  },
+  {
+    id:3, year:'1907', event:'헤이그 특사 · 강제 퇴위',
+    goalText:'피해 최소화', goalClass:'goal-3',
+    saturation:0.62, brightness:0.94,
+    context:`고종은 ${tt('헤이그 특사')}를 파견했습니다. ${tt('만국평화회의')}는 대한제국 대표의 발언을 거부했습니다. 일본은 이를 빌미로 고종을 강제 퇴위시켰습니다. 선택지가 거의 남아 있지 않습니다.`,
+    choices:[
+      { id:'intl',     title:'국제 외교로 조약 무효화', desc:'열강에 을사늑약의 불법성을 계속 호소한다.',
+        disabled:true, disabledReason:`${tt('만국평화회의')}는 대한제국 대표의 발언을 거부했다. ${tt('가쓰라-태프트 밀약')}과 ${tt('영일동맹')}으로 주요 열강은 이미 일본 편에 서 있었다.`, type:'diplomacy' },
+      { id:'imperial', title:'황실 권위로 저항 결집',   desc:'고종의 황제 권위를 기반으로 저항 세력을 모은다.',
+        disabled:true, disabledReason:`고종이 강제 퇴위되었다. 황실 권위를 통한 저항의 구심점이 사라졌다.`, type:'resistance' },
+      { id:'envoy',    title:'해외 여론전 지속', desc:'미국·유럽에 비공식 외교망을 유지하며 국제 여론을 움직이는 데 집중한다.', disabled:false, type:'diplomacy' },
+      { id:'domestic', title:'국내 민심 결집',   desc:'외교가 막힌 지금, 국내 민중의 저항 조직화에 집중한다.', disabled:false, type:'resistance' },
+    ],
+    outcomes:{
+      envoy: {
+        choiceEcho:'해외 여론전 지속',
+        lines:[
+          `이상설 등 해외 망명 인사들이 외교 활동을 이어갔다. 그러나 공식 외교 채널은 이미 ${tt('통감부')}가 장악하고 있었다.`,
+          `국제 여론은 일부 움직였으나, 어떤 열강도 개입하지 않았다.`,
+        ],
+        japan:`일본은 ${tt('러일전쟁')} 승리 이후 국제사회의 공인을 확보했다. 1905년 미국의 루스벨트 대통령이 중재한 강화조약은 일본의 승리를 열강이 공식 인정한 자리였다. 대한제국을 위해 이 질서에 반기를 들 나라는 없었다.`,
+      },
+      domestic: {
+        choiceEcho:'국내 민심 결집',
+        lines:[
+          `전국 각지에서 저항 움직임이 일어났다. 해산 군인들이 각지의 ${tt('의병')} 세력에 합류하기 시작했다.`,
+          `그러나 조직화된 지도부와 무기가 부족했다. 저항은 분산되어 있었다.`,
+        ],
+        japan:`일본은 한반도에 이미 대규모 군대를 주둔시키고 있었다. ${tt('러일전쟁')}을 치른 정규군이 그대로 남아 있었고, 의병의 저항을 진압하는 데 동원되었다.`,
+      },
+    },
+    nextPreview:{ year:'1907–', event:'군대 해산', desc:'제도권 안의 선택지가 거의 사라집니다.' },
+  },
+  {
+    id:4, year:'1907–', event:'군대 해산',
+    goalText:'없음', goalClass:'goal-4',
+    saturation:0.4, brightness:0.9,
+    context:`${tt('군대 해산')}이 강행되었습니다. 제도권 안에서 선택할 수 있는 길은 거의 사라졌습니다.`,
+    choices:[
+      { id:'inst', title:'제도권 내 저항',   desc:'의정부나 내각을 통해 정책적으로 맞선다.',
+        disabled:true, disabledReason:`군대가 해산되고 ${tt('통감부')}가 내정을 장악했다. 제도권 내 저항 수단은 이미 봉쇄되었다.`, type:'resistance' },
+      { id:'dipl', title:'외교적 해결 모색', desc:'열강과의 협상으로 상황을 되돌린다.',
+        disabled:true, disabledReason:`외교권이 없다. ${tt('통감부')}가 모든 외교 채널을 통제하고 있다.`, type:'diplomacy' },
+      { id:'uibyeong', title:'의병 연결 시도', desc:'군대 해산 후 각지에서 일어난 의병 세력과 연결을 도모한다.', disabled:false, type:'resistance' },
+      { id:'admin',    title:'행정 유지·민간 피해 최소화', desc:'저항보다 생존을 선택한다. 남은 행정 체계를 유지해 민간의 피해를 줄이는 데 집중한다.', disabled:false, type:'admin' },
+    ],
+    outcomes:{
+      uibyeong: {
+        choiceEcho:'의병 연결 시도',
+        lines:[
+          `${tt('의병')}은 전국으로 확대되었다. 해산 군인들이 합류하며 규모는 커졌다.`,
+          `그러나 일본 정규군에 비해 조직과 무기에서 열세였다. 저항은 지속되었으나, 국가 체계를 복원하기에는 역부족이었다.`,
+        ],
+        japan:`일본은 ${tt('러일전쟁')} 이후 한반도에 정규군을 주둔시키고 있었다. 신식 무기와 체계적인 지휘 구조를 갖춘 정규군 앞에서 의병의 저항은 한계가 있었다.`,
+      },
+      admin: {
+        choiceEcho:'행정 유지·민간 피해 최소화',
+        lines:[
+          `민간 행정 체계를 유지하며 일상의 붕괴를 최소화하려 했다.`,
+          `그러나 ${tt('통감부')}의 간섭은 계속되었다. 1910년, 한일병합이 선언되었다.`,
+        ],
+        japan:`일본은 통치 효율을 높이기 위해 기존 행정 체계를 일부 온존시켰다. 이는 병합 이후 식민지 통치 구조로 흡수되었다.`,
+      },
+    },
+    nextPreview:null,
+  },
+];
+
+/* ── 엔딩 (admin 루트 추가) ── */
+function getEnding(choices) {
+  let d=0, r=0, a=0;
+  choices.forEach((cid,i) => {
+    const card = ROUNDS[i].choices.find(c=>c.id===cid);
+    if (!card) return;
+    if (card.type==='diplomacy')  d++;
+    if (card.type==='resistance') r++;
+    if (card.type==='admin')      a++;
+  });
+  // admin 엔딩: 마지막 라운드 admin 선택 + 전체 패턴이 저항보다 수습 지향
+  if (a >= 1 && d <= 1 && r <= 1) return {
+    type:'admin', title:'현실 수습형',
+    text:`국가 체계는 무너졌지만, 일부 관료와 지역 행정은 민간의 피해를 줄이기 위해 움직였다. 저항도, 외교도 아닌 생존의 선택이었다. 그것이 옳았는지 그렇지 않았는지는, 당시의 현실 앞에서 단순하게 말하기 어렵다.`,
+  };
+  if (d >= 2 && d > r) return {
+    type:'diplomacy', title:'국제 호소형',
+    text:`대한제국은 끝까지 국제사회에 호소했다. 그러나 국제사회는 끝내 개입하지 않았다. ${tt('가쓰라-태프트 밀약')}과 ${tt('영일동맹')}으로 주요 열강은 이미 일본의 한국 지배를 인정한 상태였다.`,
+  };
+  if (r >= 2 && r > d) return {
+    type:'resistance', title:'저항 좌절형',
+    text:`${tt('의병')}은 전국 각지에서 확대되었다. 그러나 조직과 무기에서 일본 정규군에 열세였다. 저항은 지속되었으나, 국가 체계를 복원하기에는 역부족이었다.`,
+  };
+  return {
+    type:'mixed', title:'내부 분열형',
+    text:`외교도 시도하고 저항도 시도했지만, 정부 내부의 대응은 하나로 모이지 못했다. 일본의 압박이 거세질수록 의견은 갈렸고, 통일된 전략을 세우기 어려웠다.`,
+  };
+}
+
+/* ── STATE ── */
+let S = { phase:'intro', roundIdx:0, selected:null, choices:[], submitted:false };
+
+/* ── SUPABASE ── */
+function sendToSupabase(choiceData, comment) {
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method:'POST',
+    headers:{ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
+    body: JSON.stringify({ class:CLASS, game:'1905', choices:choiceData, comment:comment, timestamp:new Date().toISOString() }),
+  }).catch(()=>{});
+}
+
+/* ── TOAST ── */
+let toastTimer=null;
+function showToast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+/* ── RENDER ── */
+function R() {
+  window.scrollTo(0,0);
+  const html =
+    S.phase==='intro'   ? renderIntro()   :
+    S.phase==='round'   ? renderRound()   :
+    S.phase==='between' ? renderBetween() :
+                          renderResult();
+  document.getElementById('app').innerHTML = `<div class="scene">${html}</div>`;
+  const rd = ROUNDS[Math.min(S.roundIdx, ROUNDS.length-1)];
+  if (S.phase==='result') {
+    document.documentElement.style.setProperty('--round-sat','0.35');
+    document.documentElement.style.setProperty('--round-dim','0.88');
+  } else if (S.phase!=='intro') {
+    document.documentElement.style.setProperty('--round-sat', rd.saturation);
+    document.documentElement.style.setProperty('--round-dim', rd.brightness);
+  }
+}
+
+function renderIntro() {
+  document.documentElement.style.setProperty('--round-sat','1');
+  document.documentElement.style.setProperty('--round-dim','1');
+  return `
+  <div class="intro-wrap">
+    <div class="intro-year">1905</div>
+    <div class="intro-title">남겨진 선택</div>
+    <div class="intro-divider"></div>
+    <div class="intro-body">
+      러일전쟁이 한반도를 덮쳤습니다. 열강은 각자의 이해관계로 움직이고 있습니다.<br>
+      <strong>당신은 대한제국 어전회의의 참모입니다.</strong><br><br>
+      4번의 국면을 거치며 선택하게 됩니다.<br>
+      시간이 흐를수록 선택지가 줄어들 것입니다.<br>
+      어떤 선택도 완벽하지 않습니다.
+    </div>
+    <div class="intro-warning">사라진 선택지는 다시 돌아오지 않습니다.</div>
+    <div class="intro-role">1904–1907 · 대한제국 어전회의 참모</div>
+    <button class="btn btn-primary" onclick="startGame()" style="max-width:320px">회의를 시작한다 →</button>
+  </div>`;
+}
+
+function renderRound() {
+  const rd = ROUNDS[S.roundIdx];
+  const avail = rd.choices.filter(c=>!c.disabled).length;
+  const goalDisplay = rd.goalClass==='goal-4'
+    ? `<span style="text-decoration:line-through;opacity:0.5">목표: 없음</span>`
+    : `목표: ${rd.goalText}`;
+  const choicesHtml = rd.choices.map(c => {
+    if (c.disabled) return `
+    <div class="choice-card disabled">
+      <div class="choice-title">${c.title}</div>
+      <div class="choice-desc">${c.desc}</div>
+      <span class="disabled-reason">${c.disabledReason}</span>
+    </div>`;
+    const sel = S.selected===c.id?' selected':'';
+    return `
+    <div class="choice-card${sel}" onclick="selectChoice('${c.id}')">
+      <div class="choice-title">${c.title}</div>
+      <div class="choice-desc">${c.desc}</div>
+    </div>`;
+  }).join('');
+  return `
+  <div class="hdr">
+    <div class="hdr-left">
+      <span class="hdr-round">${rd.id}/4</span>
+      <span class="hdr-year">${rd.year} · ${rd.event}</span>
+    </div>
+    <div class="hdr-goal ${rd.goalClass}">${goalDisplay}</div>
+  </div>
+  <div class="round-wrap">
+    <div class="round-context">
+      <div class="round-context-label">◆ 상황</div>
+      <div class="round-context-text">${rd.context}</div>
+    </div>
+    <div class="choices-meta">
+      <div class="choices-label">하나를 선택하십시오</div>
+      <div class="choices-avail">가능한 선택 <span>${avail}</span> / 4</div>
+    </div>
+    ${choicesHtml}
+    <button class="btn btn-primary" ${S.selected?'':'disabled'} onclick="confirmChoice()">
+      ${S.selected?'이 방향으로 결정한다 →':'선택하지 않음'}
+    </button>
+  </div>`;
+}
+
+function renderBetween() {
+  const rd = ROUNDS[S.roundIdx];
+  const cid = S.choices[S.choices.length-1];
+  const outcome = rd.outcomes[cid];
+  const isLast = S.roundIdx >= ROUNDS.length-1;
+
+  const linesHtml = (outcome?.lines||[]).map(line=>`
+  <div class="between-outcome-item">
+    <div class="between-dot"></div>
+    <div class="between-outcome-text">${line}</div>
+  </div>`).join('');
+
+  // 일본 맥락 박스
+  const japanHtml = outcome?.japan ? `
+  <div class="japan-context">
+    <span class="japan-context-label">◆ 당시 일본은</span>
+    ${outcome.japan}
+  </div>` : '';
+
+  const nextHtml = (!isLast&&rd.nextPreview) ? `
+  <div class="between-next">
+    <div class="between-next-arrow">→</div>
+    <div class="between-next-text">
+      <strong>${rd.nextPreview.year} · ${rd.nextPreview.event}</strong><br>${rd.nextPreview.desc}
+    </div>
+  </div>` : '';
+
+  return `
+  <div class="hdr">
+    <div class="hdr-left">
+      <span class="hdr-round">${rd.id}/4</span>
+      <span class="hdr-year">${rd.year} — 결과</span>
+    </div>
+    <div class="hdr-goal ${rd.goalClass}">목표: ${rd.goalText}</div>
+  </div>
+  <div class="between-wrap">
+    <div class="between-choice-echo">
+      <div class="between-choice-label">◆ 나의 선택</div>
+      <div class="between-choice-text">${outcome?.choiceEcho||cid}</div>
+    </div>
+    <div class="between-outcome">${linesHtml}</div>
+    ${japanHtml}
+    ${nextHtml}
+    <button class="btn btn-primary" onclick="${isLast?'goResult()':'goNextRound()'}">
+      ${isLast?'최종 결과 확인 →':'다음 국면으로 →'}
+    </button>
+  </div>`;
+}
+
+function renderResult() {
+  const ending = getEnding(S.choices);
+
+  // 바 그래프
+  const availCounts = ROUNDS.map(rd => rd.choices.filter(c=>!c.disabled).length);
+  const trackHtml = ROUNDS.map((rd,i) => {
+    const avail = availCounts[i];
+    const blocks = Array.from({length:4}, (_,j) => {
+      const filled = j < avail;
+      return `<div class="track-bar-block${filled?'':' empty'}"></div>`;
+    }).join('');
+    return `
+    <div class="track-row">
+      <span class="track-row-year">${rd.year}</span>
+      <span class="track-row-event">${rd.event}</span>
+      <div class="track-bar-wrap">${blocks}</div>
+      <span class="track-count">${avail}/4</span>
+    </div>`;
+  }).join('');
+
+  // 선택 이력
+  const historyHtml = S.choices.map((cid,i)=>{
+    const rd=ROUNDS[i], card=rd.choices.find(c=>c.id===cid);
+    const name=(card?.title||cid).replace(/<[^>]+>/g,'');
+    return `
+    <div class="history-row">
+      <span class="history-year">${rd.year}</span>
+      <div>
+        <div class="history-choice">${name}</div>
+        <div class="history-goal">당시 목표: ${rd.goalText}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="hdr">
+    <div class="hdr-left"><span class="hdr-round">결과</span><span class="hdr-year">1905 — 남겨진 선택</span></div>
+    <div class="hdr-goal goal-4">종료</div>
+  </div>
+  <div class="result-wrap">
+    <div class="result-ending">
+      <div class="result-ending-label">◆ 최종 국면</div>
+      <div class="result-ending-title">${ending.title}</div>
+      <div class="result-ending-text">${ending.text}</div>
+    </div>
+    <div class="result-track">
+      <div class="result-track-label">◆ 선택지 변화 — 4번의 국면</div>
+      ${trackHtml}
+    </div>
+    <div class="history-section">
+      <div class="history-label">◆ 나의 선택 이력</div>
+      ${historyHtml}
+    </div>
+    <div class="ending-common">1905년 이후 대한제국의 선택지는 점점 줄어들고 있었다.<br>남아 있는 선택이 작아질수록, 선택의 무게는 더 커졌다.</div>
+    <div class="comment-section">
+      <span class="comment-label">한 줄 소감 (이름·학번 제외)</span>
+      <textarea id="comment" rows="2" placeholder="이 게임을 통해 느낀 점을 남겨보세요." maxlength="100"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
+    <button class="btn btn-outline" onclick="restart()">처음으로 돌아가기</button>
+    <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+  </div>`;
+}
+
+/* ── EVENTS ── */
+function startGame()      { S.phase='round'; S.roundIdx=0; R(); }
+function selectChoice(id) { S.selected=id; R(); }
+function confirmChoice()  {
+  if(!S.selected) return;
+  S.choices.push(S.selected); S.selected=null; S.phase='between'; R();
+}
+function goNextRound() { S.roundIdx++; S.phase='round'; R(); }
+function goResult() {
+  S.phase='result';
+  if(!S.submitted){ sendToSupabase({choices:S.choices,ending:getEnding(S.choices).type},''); S.submitted=true; }
+  R();
+}
+function copyResult() {
+  const ending=getEnding(S.choices);
+  const comment=document.getElementById('comment')?.value?.trim()||'';
+  if(comment) sendToSupabase({choices:S.choices,ending:ending.type},comment);
+  const lines=[
+    `【1905 — 남겨진 선택】`,`엔딩: ${ending.title}`,``,
+    ...S.choices.map((cid,i)=>{
+      const rd=ROUNDS[i],card=rd.choices.find(c=>c.id===cid);
+      return `${rd.year} · ${rd.event}: ${(card?.title||cid).replace(/<[^>]+>/g,'')}`;
+    }),
+    ``,`1905년 이후 대한제국의 선택지는 점점 줄어들고 있었다.`,
+    comment?`소감: ${comment}`:'',
+  ].filter(l=>l!==undefined).join('\n').trimEnd();
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(lines).then(()=>showToast('📋 복사되었습니다!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=lines; ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); showToast('📋 복사되었습니다!'); }catch(e){ showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+function restart() {
+  S={phase:'intro',roundIdx:0,selected:null,choices:[],submitted:false};
+  document.documentElement.style.setProperty('--round-sat','1');
+  document.documentElement.style.setProperty('--round-dim','1');
+  R();
+}
+R();
+</script>
+</body>
+</html>
