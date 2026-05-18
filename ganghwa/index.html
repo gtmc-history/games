@@ -1536,7 +1536,7 @@ function nextArticle() {
   S.feedbackData = null;
   S.showConfirm  = false;
   if (S.articleIdx >= ARTICLES.length) {
-    if (!S._submitted) { S._submitted=true; sendToSupabase({log:S.log},''); }
+    if (!S._submitted) { S._submitted=true; sendToSupabase({log:S.log,ending:getResultType(getPattern(S.log)).title||''},''); }
     S.phase = 'final';
   }
   R();

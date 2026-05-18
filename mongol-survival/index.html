@@ -790,7 +790,7 @@ function choose(next, tag, text) {
 function advance(next) {
   S.history.push(S.current);
   S.current = next;
-  if (next === 'final') { if (!S._submitted) { S._submitted=true; sendToSupabase({choices:S.choices},''); } S.phase = 'final'; }
+  if (next === 'final') { if (!S._submitted) { S._submitted=true; const _h=S.history; const _end=(_h.includes('cheoin')&&_h.includes('jungju_fight')&&_h.includes('sam_join'))?'끝까지 싸운 사람':(_h.includes('cheoin')&&_h.includes('jungju_fight'))?'민중 항전의 증인':_h.includes('sam_join')?'마지막 저항':_h.includes('jungju_fight')?'충주성의 기억':_h.includes('cheoin')?'처인성의 증인':'피란민의 기록'; sendToSupabase({choices:S.choices,ending:_end},''); } S.phase = 'final'; }
   R();
 }
 

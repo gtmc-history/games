@@ -1210,7 +1210,7 @@ function nextAgenda() {
   }
   S.agendaIdx++;
   if (S.agendaIdx >= AGENDAS.length) {
-    if (!S._submitted) { S._submitted=true; sendToSupabase({history:S.history,trust:S.trust,gonron:S.gonron},''); }
+    if (!S._submitted) { S._submitted=true; sendToSupabase({history:S.history,trust:S.trust,gonron:S.gonron,ending:S.role?.title||''},''); }
     S.phase = 'final';
   } else {
     S.decision = null;

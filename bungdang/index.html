@@ -1035,7 +1035,7 @@ function chooseR3(id) {
 }
 
 function goFinal() {
-  if (!S._submitted) { S._submitted=true; sendToSupabase({r2answers:S.r2answers,r3choice:S.r3choice},''); }
+  if (!S._submitted) { S._submitted=true; sendToSupabase({r2answers:S.r2answers,r3choice:S.r3choice,ending:({dongin:'동인 우세',seoin:'서인 우세',neutral:'분당의 씨앗'})[getResult()]||''},''); }
   S.phase = 'final';
   R();
 }

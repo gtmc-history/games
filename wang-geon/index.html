@@ -1028,13 +1028,13 @@ function forceFail() {
   // 파산으로 인한 자동 실패
   S.results.push({fi:S.fi, trust:0, success:false, bankrupt:true, counter:null, counterChoice:null});
   S.fi++;
-  if (S.fi >= FACTIONS.length) { if (!S._submitted) { S._submitted=true; sendToSupabase({results:S.results,pp:S.pp},''); } S.phase='final'; }
+  if (S.fi >= FACTIONS.length) { if (!S._submitted) { S._submitted=true; sendToSupabase({results:S.results,pp:S.pp,ending:getTitle(S)?.name||''},''); } S.phase='final'; }
   else { S.phase='between'; }
   R();
 }
 
 function goNextFaction() { S.sel=[]; S.phase='select'; R(); }
-function goFinal()        { if (!S._submitted) { S._submitted=true; sendToSupabase({results:S.results,pp:S.pp},''); } S.phase='final'; R(); }
+function goFinal()        { if (!S._submitted) { S._submitted=true; sendToSupabase({results:S.results,pp:S.pp,ending:getTitle(S)?.name||''},''); } S.phase='final'; R(); }
 
 function restart() {
   S = { phase:'intro', pp:MAX_PP, fi:0, sel:[], rolls:[], trust:0, reactionType:null, results:[], rollingStep:-1, usedCards:[], failCount:0 };

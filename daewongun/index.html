@@ -1078,7 +1078,7 @@ function selectEval(btn, label) {
 }
 
 function goResult() {
-  if (!S._submitted) { S._submitted=true; sendToSupabase({gauges:S.gauges,history:S.history},''); }
+  if (!S._submitted) { S._submitted=true; sendToSupabase({king:S.gauges?.king||0,noble:S.gauges?.noble||0,people:S.gauges?.people||0,treasury:S.gauges?.treasury||0,history:S.history},''); }
   S.phase = 'result'; R();
 }
 

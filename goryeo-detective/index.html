@@ -657,7 +657,7 @@ function selectPower(id){
 }
 function nextCard(){
   S.ci++;
-  if(S.ci>=CARDS.length){ if(!S._submitted){S._submitted=true;sendToSupabase({score:S.score,results:S.results},'');} S.phase='final';R();}
+  if(S.ci>=CARDS.length){ if(!S._submitted){S._submitted=true;sendToSupabase({score:S.score,results:S.results,ending:RANKS.find(r=>S.score>=r.min)?.grade||''},'');} S.phase='final';R();}
   else{S.answered=false;S.selectedId=null;R();}
 }
 function confirmRestart(){

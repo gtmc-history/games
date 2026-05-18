@@ -1352,7 +1352,7 @@ function startRolling() {
 }
 
 function goNextGen() { S.sel=[]; S.phase='select'; R(); }
-function goFinal()   { if (!S._submitted) { S._submitted=true; sendToSupabase({score:S.score,tier:S.tier?.id},''); } S.phase='final'; R(); }
+function goFinal()   { if (!S._submitted) { S._submitted=true; sendToSupabase({score:S.score,tier:S.tier?.id,ending:(S.tier?.label||'')+(S.score>=TARGET?' 달성':' 미달')},''); } S.phase='final'; R(); }
 
 function copyResult() {
   const comment = document.getElementById('comment')?.value?.trim() || '';
