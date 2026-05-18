@@ -430,12 +430,28 @@ hr.div {
   background:linear-gradient(90deg, transparent, var(--border), transparent);
   margin:16px 0;
 }
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;letter-spacing:.15em;font-weight:700;margin-bottom:8px;opacity:.6;font-family:'Noto Sans KR',sans-serif;}
+.comment-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(200,170,100,.3);border-radius:3px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:var(--paper);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:rgba(200,170,100,.6);outline:none;}
+.comment-input::placeholder{opacity:.35;}
 </style>
 </head>
 <body>
 <div id="toast"></div>
 <div id="app"></div>
 <script>
+
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ class: CLASS, game: 'bungdang', choices: choiceData, comment: comment, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
 
 // ═══ TIPS ═══
 const TIPS = {
@@ -946,6 +962,10 @@ function renderFinal() {
         </div>
       </div>
 
+      <div class="comment-section">
+        <div class="comment-label">수업 소감 (선택)</div>
+        <textarea id="comment" class="comment-input" rows="3" placeholder="오늘 수업에서 새롭게 알게 된 점이나 느낀 점을 자유롭게 적어보세요."></textarea>
+      </div>
       <button class="btn btn-accent" onclick="copyResult()" style="margin-bottom:8px">
         📋 결과 복사하기 (패들렛 공유용)
       </button>
@@ -1015,11 +1035,13 @@ function chooseR3(id) {
 }
 
 function goFinal() {
+  if (!S._submitted) { S._submitted=true; sendToSupabase({r2answers:S.r2answers,r3choice:S.r3choice},''); }
   S.phase = 'final';
   R();
 }
 
 function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
   const result = getResult();
   const resultLabel = {dongin:'동인 우세', seoin:'서인 우세', neutral:'분당의 씨앗'}[result];
   const ankenLabels = ['척신 탄핵/편중','심의겸 탄핵','자천권 선제'];
@@ -1043,7 +1065,7 @@ function copyResult() {
     `  자천권: ${CANDS.find(c=>c.id===S.r3choice)?.name || '미선택'} 추천`,
     ``,
     `— 이조전랑 게임 (붕당의 탄생 1575)`,
-  ].join('\n');
+  ].join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
 
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(lines).then(()=>toast('📋 결과가 복사되었습니다!'));

@@ -529,6 +529,12 @@ body {
 .final-score { font-size:12px; color:var(--muted); margin-top:6px; font-family:var(--font-sans); }
 
 hr.divider { border:none; height:1px; background:linear-gradient(90deg,transparent,rgba(180,150,100,0.4),transparent); margin:16px 0; }
+
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;letter-spacing:.15em;font-weight:700;margin-bottom:8px;opacity:.6;font-family:'Noto Sans KR',sans-serif;}
+.comment-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(180,150,100,.3);border-radius:3px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:var(--text);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:rgba(180,150,100,.6);outline:none;}
+.comment-input::placeholder{opacity:.35;}
 </style>
 </head>
 <body>
@@ -536,6 +542,17 @@ hr.divider { border:none; height:1px; background:linear-gradient(90deg,transpare
 <div id="app"></div>
 
 <script>
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ class: CLASS, game: 'skycastle', choices: choiceData, comment: comment, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
+
 // ═══════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════
@@ -1194,6 +1211,10 @@ function renderFinal() {
         <div class="title-desc">${title.desc}</div>
       </div>
 
+      <div class="comment-section">
+        <div class="comment-label">수업 소감 (선택)</div>
+        <textarea id="comment" class="comment-input" rows="3" placeholder="오늘 수업에서 새롭게 알게 된 점이나 느낀 점을 자유롭게 적어보세요."></textarea>
+      </div>
       <button class="btn btn-jade" onclick="copyResult()" style="margin-bottom:8px">
         📋 내 결과 복사하기 (패들렛 공유용)
       </button>
@@ -1331,9 +1352,10 @@ function startRolling() {
 }
 
 function goNextGen() { S.sel=[]; S.phase='select'; R(); }
-function goFinal()   { S.phase='final'; R(); }
+function goFinal()   { if (!S._submitted) { S._submitted=true; sendToSupabase({score:S.score,tier:S.tier?.id},''); } S.phase='final'; R(); }
 
 function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
   const achieved = S.score>=TARGET;
   const title = getTitle(S);
   const lines=[
@@ -1350,7 +1372,7 @@ function copyResult() {
     `✨ 칭호: ${title.emoji} ${title.name}`,
     `— 고려에서 환생했다 (문벌의 사다리)`,
   ];
-  const text=lines.join('\n');
+  const text=lines.join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
   if(navigator.clipboard && window.isSecureContext){
     navigator.clipboard.writeText(text).then(()=>showToast('📋 결과가 복사되었습니다!'));
   } else {

@@ -359,6 +359,11 @@ body {
   .gauge-bar { gap:5px; padding:8px 12px; }
   .gauge-label { font-size:9px; }
 }
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;letter-spacing:.15em;font-weight:700;margin-bottom:8px;opacity:.6;font-family:'Noto Sans KR',sans-serif;}
+.comment-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(184,134,11,.3);border-radius:3px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:var(--text);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:rgba(184,134,11,.6);outline:none;}
+.comment-input::placeholder{opacity:.35;}
 </style>
 </head>
 <body>
@@ -367,6 +372,17 @@ body {
 <div id="app"></div>
 
 <script>
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ class: CLASS, game: 'daewongun', choices: choiceData, comment: comment, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
+
 // ══════════════════════════════════════════
 // 툴팁
 // ══════════════════════════════════════════
@@ -935,7 +951,7 @@ function renderGojong() {
       </div>
     </div>
     <div style="padding:0 20px 24px;">
-      <button class="btn btn-primary" onclick="S.phase='result'; R();">
+      <button class="btn btn-primary" onclick="goResult()">
         대원군의 10년을 평가한다 →
       </button>
     </div>
@@ -1037,6 +1053,10 @@ function renderResult() {
       </div>
 
       <div style="padding:0 20px 28px;">
+        <div class="comment-section">
+          <div class="comment-label">수업 소감 (선택)</div>
+          <textarea id="comment" class="comment-input" rows="3" placeholder="오늘 수업에서 새롭게 알게 된 점이나 느낀 점을 자유롭게 적어보세요."></textarea>
+        </div>
         <button class="btn btn-primary" onclick="copyResult()" style="margin-bottom:8px;">
           📋 결과 복사 (패들렛 공유용)
         </button>
@@ -1057,7 +1077,13 @@ function selectEval(btn, label) {
   S.evalChoice = label;
 }
 
+function goResult() {
+  if (!S._submitted) { S._submitted=true; sendToSupabase({gauges:S.gauges,history:S.history},''); }
+  S.phase = 'result'; R();
+}
+
 function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
   const g = S.gauges;
   const nobleHigh = g.noble >= 55, peopleLow = g.people <= 35;
   let ending = '고종이 자랐다 — 어떤 개혁도 성장을 막지 못한다';
@@ -1082,7 +1108,7 @@ function copyResult() {
     '',
     '— hischarlie.tistory.com',
   ];
-  const text = lines.join('\n');
+  const text = lines.join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => showToast('📋 복사 완료!'));
   } else {

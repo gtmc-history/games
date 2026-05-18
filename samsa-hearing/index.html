@@ -389,6 +389,12 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
   .hdr-title { font-size: 17px; }
   .agenda-title { font-size: 15px; }
 }
+
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;letter-spacing:.15em;font-weight:700;margin-bottom:8px;opacity:.6;font-family:var(--font-sans);}
+.comment-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(201,160,82,.3);border-radius:3px;padding:10px 12px;font-size:13px;font-family:var(--font-sans);color:var(--text);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:rgba(201,160,82,.6);outline:none;}
+.comment-input::placeholder{opacity:.35;}
 </style>
 </head>
 <body>
@@ -396,6 +402,17 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
 <div id="app"></div>
 
 <script>
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ class: CLASS, game: 'samsa-hearing', choices: choiceData, comment: comment, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
+
 // ══════════════════════════════════════
 // 툴팁
 // ══════════════════════════════════════
@@ -1061,6 +1078,10 @@ function renderFinal() {
           <div class="gauge-bar"><div class="gauge-fill" style="width:${g}%"></div></div>
         </div>
       </div>
+      <div class="comment-section">
+        <div class="comment-label">수업 소감 (선택)</div>
+        <textarea id="comment" class="comment-input" rows="3" placeholder="오늘 수업에서 새롭게 알게 된 점이나 느낀 점을 자유롭게 적어보세요."></textarea>
+      </div>
       <button class="btn btn-gold" onclick="copyResult()" style="margin-bottom:8px">
         📋 결과 복사하기 (패들렛 공유용)
       </button>
@@ -1189,6 +1210,7 @@ function nextAgenda() {
   }
   S.agendaIdx++;
   if (S.agendaIdx >= AGENDAS.length) {
+    if (!S._submitted) { S._submitted=true; sendToSupabase({history:S.history,trust:S.trust,gonron:S.gonron},''); }
     S.phase = 'final';
   } else {
     S.decision = null;
@@ -1204,6 +1226,7 @@ function continueToBetween() {
 }
 
 function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
   const lines = [
     `⚖️ 3사 청문회 — ${S.role.title}로 플레이`,
     `👑 왕 신뢰도: ${S.trust} / 🌿 공론 지지도: ${S.gonron}`,
@@ -1213,7 +1236,7 @@ function copyResult() {
       return `${i+1}. ${ag.title} → ${decisionLabel(h.decision, h.agendaId)} (👑${h.trustChange>=0?'+':''}${h.trustChange} / 🌿${h.gonronChange>=0?'+':''}${h.gonronChange})`;
     }),
   ];
-  const text = lines.join('\n');
+  const text = lines.join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
   } else {

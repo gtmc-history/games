@@ -381,6 +381,12 @@ hr.div {
   font-family:var(--fk); line-height:1.8;
 }
 .intro-note strong { color:#c4a060; }
+
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;letter-spacing:.15em;font-weight:700;margin-bottom:8px;color:var(--amber);font-family:var(--fk);}
+.comment-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(196,160,80,.25);border-radius:3px;padding:10px 12px;font-size:13px;font-family:var(--fk);color:var(--paper);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:rgba(196,160,80,.55);outline:none;}
+.comment-input::placeholder{opacity:.35;}
 </style>
 </head>
 <body>
@@ -389,6 +395,17 @@ hr.div {
 <div id="app"></div>
 
 <script>
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ class: CLASS, game: 'mongol-survival', choices: choiceData, comment: comment, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
+
 // ═══ DATA ═══
 
 const NODES = {
@@ -746,6 +763,10 @@ function renderFinal() {
         <div class="kl-row"><span class="kl-n">②</span>처인성(1232)에서 승려 김윤후가 살리타를 사살했고, 충주성(1253)에서 노비·부곡민이 성을 지켰다. 민중이 항전의 주체였다.</div>
         <div class="kl-row"><span class="kl-n">③</span>1259년 강화 체결 후 삼별초(1270~1273)가 개경 환도를 거부하고 끝까지 저항했다. 강화→진도→제주도로 이어진 마지막 항전이었다.</div>
       </div>
+      <div class="comment-section">
+        <div class="comment-label">수업 소감 (선택)</div>
+        <textarea id="comment" class="comment-input" rows="3" placeholder="오늘 수업에서 새롭게 알게 된 점이나 느낀 점을 자유롭게 적어보세요."></textarea>
+      </div>
       <button class="btn-jade" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
       <button class="btn-outline" onclick="restart()">다시 생존하기</button>
       <div class="game-footer-copy">© 찰리쌤 · hischarlie.tistory.com</div>
@@ -769,7 +790,7 @@ function choose(next, tag, text) {
 function advance(next) {
   S.history.push(S.current);
   S.current = next;
-  if (next === 'final') { S.phase = 'final'; }
+  if (next === 'final') { if (!S._submitted) { S._submitted=true; sendToSupabase({choices:S.choices},''); } S.phase = 'final'; }
   R();
 }
 
@@ -780,6 +801,7 @@ function restart() {
 }
 
 function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
   const pathLabels = {
     flee:'피란(입보) 선택', fight:'항전 선택',
     daejang:'1236년 팔만대장경', dae_part:'조판 참여', dae_wait:'섬에서 대기',
@@ -815,7 +837,7 @@ function copyResult() {
     `③ 삼별초 항쟁(1270~1273) — 강화→진도→제주 끝까지 저항`,
     ``,
     `— 고려 대몽 항쟁 생존 선택 게임`,
-  ].join('\n');
+  ].join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
 
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(()=>toast('📋 결과가 복사되었습니다!'));
