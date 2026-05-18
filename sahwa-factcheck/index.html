@@ -193,6 +193,12 @@ hr.div{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(
 .t-icon{font-size:34px;margin-bottom:5px;}
 .t-name{font-size:17px;font-weight:800;color:var(--paper);margin-bottom:5px;}
 .t-desc{font-size:12px;color:rgba(240,220,170,0.65);line-height:1.6;}
+
+.comment-section{margin:16px 0;}
+.comment-label{font-size:11px;color:var(--gold);letter-spacing:0.15em;font-weight:700;margin-bottom:8px;}
+.comment-input{width:100%;background:rgba(42,31,16,0.05);border:1.5px solid rgba(139,106,32,0.3);border-radius:2px;padding:10px 12px;font-size:13px;font-family:var(--font-s);color:var(--ink);resize:none;line-height:1.7;}
+.comment-input:focus{border-color:var(--gold);outline:none;}
+.comment-input::placeholder{color:var(--muted);}
 </style>
 </head>
 <body>
@@ -200,6 +206,30 @@ hr.div{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(
 <div id="gloss-popup"><span class="g-close" onclick="closeGloss()">✕</span><div class="g-term" id="g-term"></div><div id="g-def"></div></div>
 <div id="app"></div>
 <script>
+// ═══ SUPABASE ═══
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+function sendToSupabase(choiceData, comment) {
+  fetch(SUPABASE_URL + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: 'sahwa-factcheck',
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => {});
+}
+
 // ═══ 용어 사전 ═══
 const GLOSSARY = {
   사초:     {term:'사초(史草)', def:'사관(역사 기록 담당 관리)이 직접 보고 들은 것을 날마다 기록한 역사 초안. 왕도 볼 수 없었으며, 후대에 실록을 편찬할 때 사용했습니다.'},
@@ -515,6 +545,11 @@ function renderFinal(){
         <div class="t-name">${rank.rank} — ${rank.name}</div>
         <div class="t-desc">4대 사화 모두 표면적 명분과 실제 원인이 달랐습니다. 역사의 공식 문서를 비판적으로 읽는 것 — 이것이 역사적 사고의 첫걸음입니다.</div>
       </div>
+      <div class="comment-section">
+        <div class="comment-label">한 줄 소감 (선택)</div>
+        <textarea class="comment-input" id="comment" rows="2"
+          placeholder="이 게임을 하면서 느낀 점을 한 줄로 남겨보세요."></textarea>
+      </div>
       <button class="btn btn-jade" onclick="copyResult()" style="margin-bottom:8px">📋 내 결과 복사하기 (패들렛 공유용)</button>
       <button class="btn btn-outline" onclick="confirmRestart()">다시 조사하기</button>
       <div style="text-align:center;padding:12px 0 0;font-size:10px;color:rgba(120,100,80,0.4);font-family:var(--font-s)">© 찰리쌤 · hischarlie.tistory.com</div>
@@ -538,8 +573,11 @@ function selectAnswer(id){
 }
 function nextCase(){
   S.ci++;
-  if(S.ci>=CASES.length){S.phase='final';R();}
-  else{S.answered=false;S.selectedId=null;R();}
+  if(S.ci>=CASES.length){
+    S.phase='final';
+    sendToSupabase({results:S.results,score:S.score},'');
+    R();
+  } else{S.answered=false;S.selectedId=null;R();}
 }
 function confirmRestart(){
   if(confirm('처음부터 다시 조사하시겠습니까?')){
@@ -548,6 +586,7 @@ function confirmRestart(){
   }
 }
 function copyResult(){
+  const comment=document.getElementById('comment')?.value?.trim()||'';
   const rank=RANKS.find(r=>S.score>=r.min);
   const lines=[
     '⚖️ 조보청 특별 조사관 — 사화의 진실','',
@@ -563,6 +602,7 @@ function copyResult(){
     '',
     `📋 정확도: ${S.score}/${CASES.length}`,
     `✨ 등급: ${rank.rank} — ${rank.name}`,
+    comment?'\n[ 소감 ] '+comment:'',
     '— 조보청 특별 조사관 (사림의 성장과 사화)',
   ];
   const text=lines.join('\n');
