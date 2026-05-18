@@ -625,6 +625,64 @@ const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
 const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
 
+/* ── GAME_CONFIG — 대시보드 자동 등록용 ──
+   첫 접속 시 game_meta 테이블에 upsert됨.
+   신규 게임 제작 시 반드시 포함할 것. */
+const GAME_CONFIG = {
+  game_id: 'gabo1894',
+  label:   '갑오개혁',
+  era:     '갑오개혁 · 1894~1895',
+  axes:    [],
+  scenes: [
+    { key: 's1_sinbun',     label: '신분 제도', choices: [
+      { id: 'immediate', label: '즉시 철폐',       color: 'c-blue'  },
+      { id: 'gradual',   label: '단계적 폐지',     color: 'c-amber' },
+    ]},
+    { key: 's1_jaejeong',   label: '재정', choices: [
+      { id: 'unified',   label: '탁지아문 일원화', color: 'c-blue'  },
+      { id: 'partial',   label: '부분 개혁',       color: 'c-amber' },
+    ]},
+    { key: 's1_haengjeong', label: '행정', choices: [
+      { id: 'cabinet',   label: '내각제 도입',     color: 'c-blue'  },
+      { id: 'mixed',     label: '왕권 유지형',     color: 'c-amber' },
+    ]},
+    { key: 's1_sabeopg',    label: '사법·교육', choices: [
+      { id: 'modern',    label: '근대 사법·학교',  color: 'c-blue'  },
+      { id: 'gwageuje',  label: '과거제 유지',     color: 'c-amber' },
+    ]},
+  ],
+  sliders:   [],
+  final_key: 'scene3',
+  final_a:   { key: 'japan_coop', label: '일본 주도 수용' },
+  final_b:   { key: 'min_resist', label: '최소한의 저항' },
+};
+
+/* ── game_meta 자동 upsert (첫 접속 시 1회) ── */
+function upsertGameMeta() {
+  fetch(`${SUPABASE_URL}/rest/v1/game_meta`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates,return=minimal',
+    },
+    body: JSON.stringify({
+      game_id:   GAME_CONFIG.game_id,
+      label:     GAME_CONFIG.label,
+      era:       GAME_CONFIG.era,
+      axes:      GAME_CONFIG.axes,
+      scenes:    GAME_CONFIG.scenes,
+      sliders:   GAME_CONFIG.sliders,
+      final_key: GAME_CONFIG.final_key,
+      final_a:   GAME_CONFIG.final_a,
+      final_b:   GAME_CONFIG.final_b,
+      updated_at: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+upsertGameMeta();
+
 /* ── SUPABASE ── */
 function sendToSupabase(choiceData, comment) {
   fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
