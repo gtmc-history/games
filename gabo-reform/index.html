@@ -629,7 +629,7 @@ const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
    첫 접속 시 game_meta 테이블에 upsert됨.
    신규 게임 제작 시 반드시 포함할 것. */
 const GAME_CONFIG = {
-  game_id: 'gabo1894',
+  game_id: 'gabo-reform',
   label:   '갑오개혁',
   era:     '갑오개혁 · 1894~1895',
   axes:    [],
@@ -695,7 +695,7 @@ function sendToSupabase(choiceData, comment) {
     },
     body: JSON.stringify({
       class: CLASS,
-      game: 'gabo1894',
+      game: 'gabo-reform',
       choices: choiceData,
       comment: comment,
       timestamp: new Date().toISOString(),
@@ -1101,15 +1101,15 @@ function renderResult() {
 /* ── ACTIONS ── */
 function go(phase) {
   S.phase = phase;
-  if (phase === 'event1') gtag('event', 'complete_scene1', { game: 'gabo1894' });
-  if (phase === 'scene3') gtag('event', 'complete_event1', { game: 'gabo1894' });
-  if (phase === 'event2') gtag('event', 'complete_scene3', { game: 'gabo1894' });
+  if (phase === 'event1') gtag('event', 'complete_scene1', { game: 'gabo-reform' });
+  if (phase === 'scene3') gtag('event', 'complete_event1', { game: 'gabo-reform' });
+  if (phase === 'event2') gtag('event', 'complete_scene3', { game: 'gabo-reform' });
   R();
 }
 
 function goResult() {
   S.phase = 'result';
-  gtag('event', 'finish_game', { game: 'gabo1894' });
+  gtag('event', 'finish_game', { game: 'gabo-reform' });
   if (!S.submitted) {
     sendToSupabase({
       scene1: S.choices.scene1 || {},
@@ -1223,7 +1223,7 @@ function triggerShake() {
 }
 
 /* ── INIT ── */
-gtag('event', 'start_game', { game: 'gabo1894' });
+gtag('event', 'start_game', { game: 'gabo-reform' });
 R();
 setTimeout(triggerShake, 400);
 </script>
