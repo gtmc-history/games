@@ -1107,14 +1107,26 @@ function go(phase) {
   R();
 }
 
+function _flatSceneChoices(scene1) {
+  const flat = {};
+  GAME_CONFIG.scenes.forEach(sc => {
+    const val = scene1[sc.key];
+    if (val !== undefined) {
+      const num = sc.key.replace(/\D/g, '');
+      const idx = sc.choices.findIndex(c => c.id === val);
+      flat[sc.key] = 'c' + num + (idx === 0 ? 'a' : 'b');
+    }
+  });
+  return flat;
+}
+
 function goResult() {
   S.phase = 'result';
   gtag('event', 'finish_game', { game: 'gabo-reform' });
   if (!S.submitted) {
-    sendToSupabase({
-      scene1: S.choices.scene1 || {},
-      scene3: S.choices.scene3 || null,
-    }, '');
+    const flat = _flatSceneChoices(S.choices.scene1 || {});
+    flat.scene3 = S.choices.scene3 || null;
+    sendToSupabase(flat, '');
     S.submitted = true;
   }
   R();
@@ -1156,7 +1168,9 @@ function copyResult() {
   if (comment) {
     lines.push('');
     lines.push(`▶ 소감: ${comment}`);
-    sendToSupabase({ scene1: sel, scene3: s3 }, comment);
+    const flat = _flatSceneChoices(sel);
+    flat.scene3 = s3;
+    sendToSupabase(flat, comment);
   }
   lines.push('');
   lines.push('— 찰리쌤의 한국사 게임실 | gtmc-history.github.io');
