@@ -713,6 +713,7 @@ let S = {
   currentChoice: null,
   loading: false,
   submitted: false,
+  choicesData: null,
 };
 
 /* ══════════════════════════════════
@@ -1121,13 +1122,29 @@ function goResult() {
   S.phase = 'result';
 
   if (!S.submitted) {
-    sendToSupabase({
+    const toScene = id => { const m = id?.match(/r(\d+)_([abc])/); return m ? 'c'+m[1]+m[2] : null; };
+    const axis = S.selections.reduce((acc, sel) => {
+      acc[sel.strength] = (acc[sel.strength] || 0) + 1;
+      return acc;
+    }, {});
+    const strongCount = axis.strong || 0;
+    const weakCount   = axis.weak   || 0;
+    const ending = strongCount >= 2 ? 'reform' : weakCount >= 2 ? 'suppress' : 'compromise';
+
+    S.choicesData = {
+      r1: toScene(S.selections[0]?.choiceId),
+      r2: toScene(S.selections[1]?.choiceId),
+      r3: toScene(S.selections[2]?.choiceId),
+      axis,
+      ending,
       selections: S.selections.map(sel => ({
         round: sel.roundId,
         choice: sel.choiceId,
         strength: sel.strength,
       })),
-    }, '');
+    };
+
+    sendToSupabase(S.choicesData, '');
     S.submitted = true;
   }
   R();
@@ -1137,13 +1154,7 @@ function copyResult() {
   const comment = document.getElementById('comment')?.value?.trim() || '';
 
   if (comment) {
-    sendToSupabase({
-      selections: S.selections.map(sel => ({
-        round: sel.roundId,
-        choice: sel.choiceId,
-        strength: sel.strength,
-      })),
-    }, comment);
+    sendToSupabase(S.choicesData, comment);
   }
 
   const lines = [
@@ -1182,6 +1193,7 @@ function restart() {
     phase: 'intro', ri: 0,
     selections: [], emperorReplies: [],
     currentChoice: null, loading: false, submitted: false,
+    choicesData: null,
   };
   R();
 }
