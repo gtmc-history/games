@@ -962,6 +962,7 @@ function goFinal() {
     sendToSupabase({
       route: S.route,
       scene5: S.scene5Choice,
+      ending: S.route,
     }, '');
     S.submitted = true;
   }
@@ -974,6 +975,7 @@ function copyResult() {
     sendToSupabase({
       route: S.route,
       scene5: S.scene5Choice,
+      ending: S.route,
     }, comment);
   }
 

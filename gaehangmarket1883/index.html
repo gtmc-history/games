@@ -797,8 +797,10 @@ let S = {
 function sendToSupabase(comment) {
   const choices = {};
   S.history.forEach((h, i) => {
-    choices[`r${i+1}`] = { choiceId: h.choiceId, finalGain: h.final };
+    choices[`r${i+1}`] = h.choiceId;
   });
+  const pct = S.capital / START_CAPITAL;
+  choices.ending = pct >= 0.8 ? 'survive' : pct >= 0.5 ? 'struggle' : pct >= 0.25 ? 'lost' : 'bankrupt';
   fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
     method: 'POST',
     headers: {
