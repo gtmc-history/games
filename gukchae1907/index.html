@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>대한신문 1907 — 오늘의 1면을 써라</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Black+Han+Sans&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════
+   GAME CONFIG (for dashboard)
+   ═══════════════════════════════════════ */
+/*
+GAME_CONFIG = {
+  id: 'gukchae1907',
+  title: '대한신문 1907',
+  unit: '열강의 경제 침탈과 경제적 구국 운동',
+  era: '근현대',
+  duration: '15~20분'
+}
+*/
+
+:root {
+  /* 근현대 팔레트 — 낡은 신문지 + 태극 */
+  --bg:        #f0ece4;
+  --surface:   #e8e0d4;
+  --surface2:  #ddd5c8;
+  --paper:     #f5f1eb;
+  --primary:   #003087;   /* 태극 청색 */
+  --accent:    #cd2e3a;   /* 태극 적색 */
+  --text:      #1a1a1a;
+  --text-mid:  #3a3530;
+  --text-dim:  #7a6e62;
+  --sepia:     #8b7355;
+  --sepia2:    #c4a882;
+  --gold:      #c9a052;
+  --border:    rgba(139,115,85,0.35);
+  --border2:   rgba(139,115,85,0.18);
+  --ink:       #0d0d0d;
+  --safe:      #1e5c3a;
+  --safe2:     #2d8a57;
+  --warn:      #b85c00;
+  --danger:    #8b1a1a;
+
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-serif:   'Noto Serif KR', serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  /* 낡은 종이 노이즈 */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  display: flex;
+  justify-content: center;
+  padding: 0 0 60px;
+}
+
+#app { width: 100%; max-width: 680px; padding: 0 16px; }
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #f0e8d0;
+  border: 1px solid var(--sepia); border-radius: 3px;
+  padding: 10px 22px; font-size: 13px; font-family: var(--font-body);
+  opacity: 0; pointer-events: none; white-space: nowrap;
+  z-index: 9999; transition: opacity 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#toast.show { opacity: 1; }
+
+/* ─── TOOLTIP ─── */
+.tt {
+  border-bottom: 1.5px dashed var(--sepia);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s;
+}
+.tt:hover { border-bottom-color: var(--accent); }
+
+#tt-bubble {
+  position: fixed; z-index: 9000; max-width: 260px;
+  background: var(--ink);
+  border: 1px solid rgba(200,168,100,0.5);
+  border-radius: 3px; padding: 10px 13px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  pointer-events: none; opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity: 1; transform: translateY(0); }
+#tt-bubble .tb-word { font-size: 12px; font-weight: 700; color: var(--sepia2); margin-bottom: 5px; }
+#tt-bubble .tb-desc { font-size: 12px; color: rgba(240,228,200,0.85); line-height: 1.7; }
+
+/* ─── NEWSPRINT MASTHEAD ─── */
+.masthead {
+  border-bottom: 3px double var(--text);
+  padding: 20px 0 12px;
+  text-align: center;
+  margin-bottom: 0;
+  position: sticky; top: 0; z-index: 100;
+  background: var(--paper);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.masthead-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 5vw, 32px);
+  letter-spacing: 0.15em;
+  color: var(--text);
+  line-height: 1;
+}
+.masthead-sub {
+  font-size: 11px; color: var(--text-dim);
+  letter-spacing: 0.2em; margin-top: 6px;
+  font-family: var(--font-serif);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.masthead-sub::before, .masthead-sub::after {
+  content: ''; display: block;
+  height: 1px; width: 40px; background: var(--border);
+}
+.masthead-progress {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 6px 0 0;
+  font-size: 11px; color: var(--text-dim); font-family: var(--font-body);
+}
+.prog-pip {
+  width: 20px; height: 3px;
+  background: var(--border2); border-radius: 2px;
+  transition: background 0.3s;
+}
+.prog-pip.done { background: var(--primary); }
+.prog-pip.active { background: var(--accent); }
+
+/* ─── PANEL (씬 컨테이너) ─── */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 28px 24px 32px;
+  animation: scene-in 0.38s ease forwards;
+}
+
+@keyframes scene-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTION RULE ─── */
+.rule-line {
+  border: none; border-top: 1px solid var(--border); margin: 20px 0;
+}
+.rule-double {
+  border: none;
+  border-top: 3px double var(--border);
+  margin: 20px 0;
+}
+
+/* ─── 씬 헤더 ─── */
+.scene-hdr { margin-bottom: 20px; }
+.scene-eyebrow {
+  font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
+  font-family: var(--font-body); font-weight: 700; margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.scene-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 26px);
+  color: var(--text); line-height: 1.3;
+  letter-spacing: 0.05em;
+}
+.scene-year {
+  font-size: 12px; color: var(--text-dim); margin-top: 5px;
+  font-family: var(--font-serif);
+}
+
+/* ─── EDITORIAL BRIEF (편집장 지시) ─── */
+.brief-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 14px 16px; margin-bottom: 20px;
+  font-size: 14px; color: var(--text-mid); line-height: 1.9;
+  font-family: var(--font-serif);
+}
+.brief-box strong { color: var(--primary); }
+.brief-from {
+  font-size: 11px; color: var(--text-dim); margin-top: 8px;
+  font-family: var(--font-body); letter-spacing: 0.08em;
+}
+
+/* ─── 취재 카드 ─── */
+.field-hdr {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.field-badge {
+  background: var(--text); color: var(--paper);
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  letter-spacing: 0.12em; font-family: var(--font-body);
+  flex-shrink: 0;
+}
+.field-year {
+  font-size: 12px; color: var(--text-dim);
+  font-family: var(--font-serif); font-style: italic;
+}
+.field-headline {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 3vw, 20px);
+  color: var(--text); margin-bottom: 8px;
+  letter-spacing: 0.04em; line-height: 1.35;
+}
+.field-body {
+  font-size: 14px; color: var(--text-mid); line-height: 1.9;
+  font-family: var(--font-serif); margin-bottom: 16px;
+}
+.field-body strong { color: var(--text); font-weight: 700; }
+
+/* ─── 기사 각도 선택 ─── */
+.angle-label {
+  font-size: 12px; color: var(--text-dim); letter-spacing: 0.1em;
+  font-family: var(--font-body); margin-bottom: 10px;
+  border-top: 1px dashed var(--border); padding-top: 12px;
+}
+.angle-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+.angle-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  padding: 13px 16px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.15s;
+  display: flex; align-items: flex-start; gap: 12px;
+  border-left: 4px solid transparent;
+}
+.angle-card:hover {
+  border-color: var(--sepia);
+  border-left-color: var(--primary);
+  background: rgba(0,48,135,0.05);
+  transform: translateX(3px);
+}
+.angle-card.selected {
+  border-color: var(--primary);
+  border-left-color: var(--primary);
+  background: rgba(0,48,135,0.08);
+}
+.angle-card.selected::after {
+  content: '✓';
+  font-size: 13px; color: var(--primary); font-weight: 700;
+  margin-left: auto; flex-shrink: 0; align-self: center;
+}
+.angle-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 2px 7px; border: 1px solid var(--border);
+  color: var(--text-dim); white-space: nowrap; flex-shrink: 0;
+  margin-top: 2px;
+}
+.angle-right { flex: 1; }
+.angle-q {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  line-height: 1.5; margin-bottom: 4px;
+  font-family: var(--font-serif);
+}
+.angle-hint {
+  font-size: 12px; color: var(--text-dim); line-height: 1.6;
+  font-family: var(--font-body);
+}
+
+/* ─── 역사 각주 ─── */
+.hist-footnote {
+  background: var(--surface2);
+  border: 1px dashed var(--border);
+  padding: 10px 14px; margin-top: -8px; margin-bottom: 16px;
+  font-size: 12px; color: var(--text-dim); line-height: 1.7;
+  font-family: var(--font-body);
+}
+.hist-footnote::before {
+  content: '📜 역사 메모 ';
+  font-weight: 700; color: var(--sepia);
+}
+
+/* ─── 진행 상황 미니 요약 (취재 완료 후) ─── */
+.coverage-log {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 10px 14px; margin-bottom: 16px;
+}
+.coverage-log-title {
+  font-size: 11px; letter-spacing: 0.15em; color: var(--text-dim);
+  font-family: var(--font-body); margin-bottom: 8px;
+}
+.coverage-item {
+  display: flex; gap: 8px; align-items: baseline;
+  font-size: 12px; color: var(--text-mid); padding: 3px 0;
+  border-bottom: 1px solid var(--border2); font-family: var(--font-serif);
+}
+.coverage-item:last-child { border-bottom: none; }
+.ci-num {
+  font-size: 11px; color: var(--text-dim); font-family: var(--font-body);
+  flex-shrink: 0; width: 14px;
+}
+.ci-topic { flex: 1; }
+.ci-angle { font-size: 11px; color: var(--primary); font-family: var(--font-body); }
+
+/* ─── 1면 편집 ─── */
+.headline-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+.headline-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 4px solid transparent;
+}
+.headline-card:hover {
+  border-color: var(--sepia);
+  border-left-color: var(--accent);
+  background: rgba(205,46,58,0.05);
+}
+.headline-card.selected {
+  border-color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(205,46,58,0.06);
+}
+.headline-card.selected::after {
+  content: '✓ 선택됨';
+  float: right;
+  font-size: 11px; color: var(--accent); font-weight: 700;
+  font-family: var(--font-body); letter-spacing: 0.08em;
+}
+.hc-title {
+  font-family: var(--font-display);
+  font-size: 17px; color: var(--text);
+  letter-spacing: 0.04em; margin-bottom: 6px;
+}
+.hc-desc {
+  font-size: 13px; color: var(--text-dim); line-height: 1.7;
+  font-family: var(--font-serif);
+}
+
+/* ─── 신문 1면 프리뷰 ─── */
+.newspaper-preview {
+  background: var(--paper);
+  border: 2px solid var(--text);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+}
+.np-masthead {
+  text-align: center;
+  border-bottom: 3px double var(--text);
+  padding-bottom: 10px; margin-bottom: 14px;
+}
+.np-title {
+  font-family: var(--font-display);
+  font-size: 24px; letter-spacing: 0.2em;
+}
+.np-date {
+  font-size: 11px; color: var(--text-dim);
+  font-family: var(--font-serif); margin-top: 4px;
+}
+.np-headline {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 3vw, 20px);
+  line-height: 1.4; margin-bottom: 10px;
+  color: var(--text); letter-spacing: 0.04em;
+}
+.np-byline {
+  font-size: 11px; color: var(--text-dim);
+  font-family: var(--font-serif); margin-bottom: 10px;
+  font-style: italic;
+}
+.np-body {
+  font-size: 13px; line-height: 1.95;
+  font-family: var(--font-serif); color: var(--text-mid);
+  column-count: 2; column-gap: 16px;
+}
+.np-censored {
+  display: inline; background: var(--text);
+  color: transparent; user-select: none;
+  padding: 0 4px;
+}
+
+/* ─── 검열 결과 ─── */
+.censor-stamp {
+  text-align: center; padding: 24px 0 16px;
+}
+.stamp-circle {
+  display: inline-block;
+  width: 100px; height: 100px;
+  border: 4px solid; border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 16px; letter-spacing: 0.1em;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+  animation: stamp-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes stamp-in {
+  0% { transform: scale(2) rotate(-10deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.stamp-circle.blocked { border-color: var(--danger); color: var(--danger); }
+.stamp-circle.partial { border-color: var(--warn); color: var(--warn); }
+.stamp-circle.passed  { border-color: var(--safe); color: var(--safe); }
+
+.censor-result-title {
+  font-family: var(--font-display);
+  font-size: 20px; letter-spacing: 0.08em; margin-bottom: 8px;
+}
+.censor-result-title.blocked { color: var(--danger); }
+.censor-result-title.partial { color: var(--warn); }
+.censor-result-title.passed  { color: var(--safe); }
+
+.censor-reason {
+  font-size: 13px; color: var(--text-mid); line-height: 1.8;
+  font-family: var(--font-serif); margin: 0 auto;
+  max-width: 480px; padding: 0 8px;
+}
+
+.hist-meaning {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 14px 16px; margin: 16px 0;
+  font-size: 13px; color: var(--text-mid); line-height: 1.9;
+  font-family: var(--font-serif);
+}
+.hist-meaning::before {
+  content: '역사적 의미 ';
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--primary); font-family: var(--font-body);
+  display: block; margin-bottom: 6px;
+}
+
+/* ─── 최종 결과 ─── */
+.final-banner {
+  text-align: center; padding: 24px 0 20px;
+  border-bottom: 2px double var(--border); margin-bottom: 20px;
+}
+.final-icon { font-size: 52px; margin-bottom: 12px; }
+.final-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 26px);
+  color: var(--text); letter-spacing: 0.06em; margin-bottom: 8px;
+}
+.final-sub {
+  font-size: 13px; color: var(--text-dim); line-height: 1.8;
+  font-family: var(--font-serif); max-width: 500px; margin: 0 auto;
+}
+
+.record-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 18px; margin-bottom: 16px;
+}
+.record-box-title {
+  font-size: 11px; letter-spacing: 0.18em; color: var(--text-dim);
+  font-family: var(--font-body); margin-bottom: 12px;
+  border-bottom: 1px solid var(--border2); padding-bottom: 8px;
+}
+.record-row {
+  display: flex; gap: 10px; align-items: baseline;
+  font-size: 13px; padding: 5px 0;
+  border-bottom: 1px dashed var(--border2);
+  font-family: var(--font-serif); color: var(--text-mid);
+}
+.record-row:last-child { border-bottom: none; }
+.rr-num { font-size: 11px; color: var(--text-dim); font-family: var(--font-body); width: 18px; flex-shrink: 0; }
+.rr-topic { flex: 1; }
+.rr-angle { font-size: 12px; color: var(--primary); font-family: var(--font-body); }
+
+.final-connection {
+  background: rgba(0,48,135,0.06);
+  border: 1px solid rgba(0,48,135,0.2);
+  padding: 14px 16px; margin-bottom: 16px;
+  font-size: 13px; color: var(--text-mid); line-height: 1.8;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+.final-question {
+  background: var(--surface2);
+  border: 2px solid var(--sepia);
+  padding: 16px 18px; margin-bottom: 20px;
+  font-size: 14px; font-weight: 700; color: var(--text);
+  line-height: 1.8; font-family: var(--font-serif);
+  text-align: center;
+}
+.final-question::before {
+  content: '🗞 수업 발문';
+  display: block; font-size: 11px; font-weight: 400;
+  letter-spacing: 0.18em; color: var(--sepia);
+  font-family: var(--font-body); margin-bottom: 8px;
+}
+
+/* ─── 소감 입력 ─── */
+.comment-area {
+  margin-bottom: 16px;
+}
+.comment-area label {
+  display: block; font-size: 12px; color: var(--text-dim);
+  letter-spacing: 0.08em; margin-bottom: 6px;
+  font-family: var(--font-body);
+}
+.comment-area textarea {
+  width: 100%; padding: 10px 12px;
+  background: var(--paper); border: 1px solid var(--border);
+  font-family: var(--font-serif); font-size: 14px; color: var(--text);
+  resize: none; line-height: 1.7;
+  transition: border-color 0.2s;
+}
+.comment-area textarea:focus {
+  outline: none; border-color: var(--primary);
+}
+.comment-area .char-note {
+  font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: right;
+  font-family: var(--font-body);
+}
+
+/* ─── 저작권 ─── */
+.copyright {
+  text-align: center; font-size: 11px;
+  color: rgba(120,100,80,0.4); margin-top: 8px;
+  font-family: var(--font-body); letter-spacing: 0.05em;
+}
+
+/* ─── 버튼 ─── */
+.btn {
+  width: 100%; padding: 14px; border: none;
+  font-family: var(--font-serif); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.04em; display: block;
+}
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
+.btn + .btn { margin-top: 8px; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-accent  { background: var(--accent);  color: #fff; }
+.btn-sepia   { background: var(--sepia);   color: #fff; }
+.btn-outline {
+  background: transparent; color: var(--text-dim);
+  border: 1.5px solid var(--border);
+}
+.btn-outline:hover:not(:disabled) { border-color: var(--sepia); color: var(--text); }
+
+/* ─── 인트로 특수 ─── */
+.intro-dateline {
+  text-align: center; padding: 32px 0 24px;
+}
+.intro-date {
+  font-family: var(--font-serif); font-size: 13px;
+  color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 20px;
+}
+.intro-lead {
+  font-family: var(--font-serif); font-size: 15px;
+  color: var(--text-mid); line-height: 2; margin-bottom: 24px;
+}
+.intro-lead strong { color: var(--text); font-weight: 700; }
+
+.mission-box {
+  background: var(--surface2);
+  border: 2px solid var(--sepia);
+  padding: 18px 20px; margin-bottom: 24px;
+  text-align: center;
+}
+.mission-box-title {
+  font-size: 11px; letter-spacing: 0.2em; color: var(--sepia);
+  font-family: var(--font-body); font-weight: 700; margin-bottom: 10px;
+}
+.mission-box-text {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 3vw, 18px);
+  color: var(--text); line-height: 1.7; letter-spacing: 0.06em;
+}
+
+.flow-list {
+  display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px;
+}
+.flow-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 13px; color: var(--text-mid); font-family: var(--font-serif);
+}
+.flow-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--text); color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; font-family: var(--font-body);
+  flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+  #app { padding: 0 10px; }
+  .panel { padding: 20px 16px 24px; }
+  .np-body { column-count: 1; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+/* ═══════════════════════════════════════
+   GAME CONFIG
+   ═══════════════════════════════════════ */
+const GAME_CONFIG = {
+  id: 'gukchae1907',
+  title: '대한신문 1907',
+  unit: '열강의 경제 침탈과 경제적 구국 운동',
+};
+
+/* ═══════════════════════════════════════
+   SUPABASE
+   ═══════════════════════════════════════ */
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+function sendToSupabase(choiceData, comment) {
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: GAME_CONFIG.id,
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+
+/* ═══════════════════════════════════════
+   GAME DATA
+   ═══════════════════════════════════════ */
+const TIPS = {
+  '방곡령': '방곡령(防穀令) — 흉년·기근 시 곡물의 외부 반출을 금지하는 명령.',
+  '조·일 통상 장정': '조·일 통상 장정(1883) — 개항 후 조선과 일본이 맺은 무역 협약. 방곡령 발동 1개월 전 사전 통보 조항이 포함됨.',
+  '황국중앙총상회': '황국중앙총상회(皇國中央總商會, 1898) — 한성의 시전 상인들이 외국 상인 침투에 맞서 결성한 상인 단체.',
+  '철시 투쟁': '철시(撤市) 투쟁 — 상인들이 일제히 점포 문을 닫고 영업을 거부하는 집단 저항 방식.',
+  '이권': '이권(利權) — 광산·철도·삼림 등 경제적 이익을 낼 수 있는 자원의 사용권.',
+  '국채': '국채(國債) — 나라가 진 빚. 1907년 대한제국이 일본에게 진 차관(借款)이 1,300만 원에 달했음.',
+  '대한매일신보': '대한매일신보(大韓每日申報) — 1904년 영국인 베델이 창간한 신문. 통감부 검열을 피해 민족 운동을 지원함.',
+  '통감부': '통감부(統監府) — 1906년 을사늑약 이후 일제가 대한제국을 지배하기 위해 설치한 기관. 언론 탄압을 자행함.',
+  '서상돈': '서상돈(徐相敦) — 대구 출신 거상. 1907년 국채보상운동을 처음 제창한 인물.',
+};
+
+function tt(word, key) {
+  const tip = TIPS[key || word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+/* ─── 4개 취재 현장 데이터 ─── */
+const FIELDS = [
+  {
+    id: 'bangok',
+    badge: '취재 현장 01',
+    year: '1889년 함경도',
+    headline: '곡물을 지키려 한 관찰사, 결국 배상금을 물다',
+    body: `함경도 관찰사 조병식은 흉년으로 굶주리는 백성을 위해 ${tt('방곡령')}을 선포했습니다.
+그러나 일본 상인들은 ${tt('조·일 통상 장정')}의 <strong>'1개월 전 사전 통보' 조항</strong>을 근거로 강하게 항의했습니다.
+배상금 요구를 받은 조선 정부는 결국 방곡령을 철회하고 11만 원을 배상했습니다.
+백성을 구하려 한 지방관의 노력은 조약의 함정에 막혔습니다.`,
+    footnote: '방곡령은 지방관이 독자적으로 발동할 수 있는 권한이었지만, 조·일 통상 장정의 사전 통보 조항 때문에 실질적으로 무력화되었습니다. 이 사건은 불평등 조약의 구조적 문제를 상징적으로 보여줍니다.',
+    angles: [
+      {
+        id: 'a', tag: '민생 관점',
+        q: '백성은 왜 곡식을 빼앗긴다고 느꼈는가',
+        hint: '흉년 속 곡물 유출, 굶주리는 농민의 현실',
+      },
+      {
+        id: 'b', tag: '조약 구조 관점',
+        q: '조선은 왜 막았는데도 배상해야 했는가',
+        hint: '1개월 전 통보 조항 — 선의의 방곡령을 무력화한 조약의 함정',
+      },
+    ],
+  },
+  {
+    id: 'sanghoe',
+    badge: '취재 현장 02',
+    year: '1898년 한성',
+    headline: '시전 상인들, 점포 문을 닫고 일제히 맞서다',
+    body: `${tt('조·일 통상 장정')}과 조청상민수륙무역장정 이후, 일본·청 상인들이 서울 내지까지 들어와 직접 거래를 시작했습니다.
+전통 중개 상인(객주·여각)들은 생존 위기에 처했습니다.
+한성의 시전 상인들은 ${tt('황국중앙총상회')}를 결성하고 ${tt('철시 투쟁')}을 벌였습니다.
+그들의 요구는 하나였습니다. "외국 상인은 지정된 개항장에서만 거래하라."`,
+    footnote: '황국중앙총상회는 단순한 상인 조합이 아니라 경제 주권 수호 운동의 성격을 가졌습니다. 철시 투쟁은 상인들이 조직적으로 저항한 최초의 경제 운동 중 하나였습니다.',
+    angles: [
+      {
+        id: 'a', tag: '저항 관점',
+        q: '조선 상인들은 왜 문을 닫고 맞섰는가',
+        hint: '철시 투쟁의 의미 — 상인들의 집단 저항과 상권 수호 의지',
+      },
+      {
+        id: 'b', tag: '구조 관점',
+        q: '외국 상인의 내지 진출이 조선 상권을 어떻게 흔들었는가',
+        hint: '중개 상인(객주·여각)의 몰락 — 규칙이 바뀌면서 생긴 피해',
+      },
+    ],
+  },
+  {
+    id: 'igung',
+    badge: '취재 현장 03',
+    year: '1898~1904년',
+    headline: '광산, 철도, 삼림 — 이권을 빼앗기면 나라가 흔들린다',
+    body: `열강은 조선과 맺은 각종 조약을 근거로 광산·철도·전기·삼림 등 핵심 ${tt('이권')}을 가져갔습니다.
+러시아는 삼림 이권을 요구했고, 일본은 경부·경의선 철도 부설권을 쥐었습니다.
+독립협회와 시민들은 이에 맞서 이권 수호 상소와 집회를 벌였습니다.
+그러나 외교적 압력 앞에서 정부의 저항은 번번이 무너졌습니다.`,
+    footnote: '이권 침탈은 단순한 경제 문제가 아니었습니다. 철도 이권은 군사·물류를 장악하는 것이었고, 광산 이권은 지하자원 전체를 잃는 것이었습니다. 독립협회의 이권 수호 운동은 경제와 주권을 함께 바라본 최초의 민간 운동이었습니다.',
+    angles: [
+      {
+        id: 'a', tag: '상실 관점',
+        q: '철도·광산·삼림을 빼앗기면 무엇을 잃는가',
+        hint: '이권 침탈의 실질적 피해 — 자원, 군사력, 국가 기반 상실',
+      },
+      {
+        id: 'b', tag: '저항 관점',
+        q: '사람들은 왜 이권 침탈을 나라의 위기로 보았는가',
+        hint: '독립협회의 이권 수호 운동 — 경제 침탈과 국권 상실의 연결',
+      },
+    ],
+  },
+  {
+    id: 'gukchae',
+    badge: '취재 현장 04',
+    year: '1907년 전국',
+    headline: '1,300만 원의 빚을 갚자 — 비녀까지 내놓은 사람들',
+    body: `1907년, 대한제국이 일본에게 진 ${tt('국채')}는 1,300만 원에 달했습니다.
+대구의 ${tt('서상돈')}이 "금연·금주로 국채를 갚자"고 제창하자, 전국이 호응했습니다.
+여성들은 비녀와 가락지를 내놓았고, ${tt('대한매일신보')}는 모금 상황을 연일 보도했습니다.
+그러나 ${tt('통감부')}는 이 운동을 방해하기 시작했습니다.`,
+    footnote: '국채보상운동은 반상(班常)·남녀·지역을 초월한 최초의 전국적 민중 운동이었습니다. 모금은 전국적으로 확산되었지만, 통감부의 탄압과 핵심 인물 구속으로 결국 중단되었습니다. 그러나 이 운동은 이후 민족운동의 정신적 토대가 되었으며, 2017년 유네스코 세계기록유산에 등재되었습니다.',
+    angles: [
+      {
+        id: 'a', tag: '국민 연대 관점',
+        q: '1,300만 원의 빚은 왜 국민의 문제가 되었는가',
+        hint: '국채 = 나라 전체의 빚 — 국민이 직접 갚겠다는 자발적 연대의 의미',
+      },
+      {
+        id: 'b', tag: '참여 확산 관점',
+        q: '신분·성별을 넘어선 참여는 무엇을 보여주는가',
+        hint: '비녀 기부, 금연·금주 결의 — 전 계층이 하나로 움직인 민족 연대',
+      },
+    ],
+  },
+];
+
+/* ─── 1면 헤드라인 옵션 ─── */
+const HEADLINES = [
+  {
+    id: 'resist',
+    title: '조선 사람들은 가만히 있지 않았다',
+    desc: '방곡령, 철시, 이권수호, 국채보상 — 침탈에 맞선 경제 구국 운동의 기록',
+  },
+  {
+    id: 'structure',
+    title: '노력했지만, 불평등한 구조에 막혔다',
+    desc: '조약의 함정, 외세의 압력, 통감부의 탄압 — 구조적 한계가 낳은 비극',
+  },
+  {
+    id: 'unity',
+    title: '국민이 함께 나라를 지키려 했다',
+    desc: '상인, 농민, 여성, 지식인 — 계층을 넘어 하나가 된 경제 구국 운동의 연대',
+  },
+];
+
+/* ─── 검열 로직 ─── */
+function getCensorResult(headlineId, angleChoices) {
+  const structureAngles = angleChoices.filter(a => a === 'b').length;
+  if (headlineId === 'structure' && structureAngles >= 2) {
+    return 'blocked';
+  }
+  if (headlineId === 'resist' || headlineId === 'unity') {
+    return 'passed';
+  }
+  return 'partial';
+}
+
+const CENSOR_DATA = {
+  blocked: {
+    icon: '🚫',
+    stamp: '게재 금지',
+    title: '이 기사는 게재할 수 없습니다',
+    reason: `통감부 검열관은 기사의 핵심 문장들에 붉은 선을 그었습니다.<br><br>
+"조약의 함정"이라는 표현, "불평등한 구조"라는 서술, 일본 정책에 대한 직접적 비판 —<br>
+이 모두가 <strong>치안 방해</strong>에 해당한다는 이유였습니다.<br><br>
+오늘 대한신문 1면은 <strong>백지</strong>로 나갑니다.`,
+    meaning: `대한매일신보는 영국인 베델이 발행인이었기에 일정 기간 검열을 피할 수 있었습니다. 그러나 1907년 통감부는 신문지법을 제정해 언론 탄압을 강화했고, 결국 1910년 국권 피탈 직후 폐간되었습니다. 권력이 가장 두려워하는 것은 구조적 진실을 드러내는 글이었습니다.`,
+  },
+  partial: {
+    icon: '✂️',
+    stamp: '일부 삭제',
+    title: '핵심 표현이 잘린 채 나갑니다',
+    reason: `검열관은 몇 개의 단락에 검은 줄을 그었습니다.<br><br>
+"배상금", "불평등", "저항"이라는 단어들이 지워졌습니다.<br>
+기사는 실립니다만, <strong>핵심 주장이 빠진 뼈대만 남았습니다.</strong><br><br>
+독자들은 무언가 잘렸다는 것을 눈치채겠지만, 진실은 완전히 전달되지 않습니다.`,
+    meaning: `검열은 단순히 글을 막는 것이 아니었습니다. 사람들이 말하는 방식 자체를 바꾸게 만드는 힘이었습니다. 기자들은 은유와 우회 표현을 써야 했고, 독자들은 행간을 읽어야 했습니다. 이 침묵의 문화가 식민지 시대 내내 이어졌습니다.`,
+  },
+  passed: {
+    icon: '📰',
+    stamp: '게재 허가',
+    title: '오늘 신문은 나갑니다',
+    reason: `검열관은 기사를 읽고 고개를 끄덕였습니다.<br><br>
+"국민의 자발적 연대", "경제 구국의 의지" —<br>
+직접적인 정치 비판이 없고, 정서적 호소 중심이라는 판단이었습니다.<br><br>
+<strong>신문이 거리에 깔립니다.</strong> 그러나 기자는 묻습니다.<br>
+"검열관이 허락한 기사가 진짜 진실을 담고 있는가?"`,
+    meaning: `게재된 기사라고 해서 완전한 진실은 아니었습니다. 검열을 피하기 위해 직접적 비판을 뺀 글은 현실을 반쪽만 보여주는 것이었습니다. 그럼에도 대한매일신보의 기자들은 가능한 범위 안에서 경제 구국 운동의 의미를 기록하려 했습니다.`,
+  },
+};
+
+/* ═══════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════ */
+let S = {
+  phase: 'intro',
+  fieldIdx: 0,
+  angles: [],
+  headline: null,
+  censor: null,
+  submitted: false,
+};
+
+/* ═══════════════════════════════════════
+   UTILS
+   ═══════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('show'); toastTimer = null; }, 2400);
+}
+
+function scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+function progPips(total, done, active) {
+  return Array.from({ length: total }, (_, i) => {
+    let cls = 'prog-pip';
+    if (i < done) cls += ' done';
+    else if (i === active) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════ */
+function R() {
+  scrollTop();
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  const header = renderHeader();
+  const content =
+    S.phase === 'intro'   ? renderIntro()  :
+    S.phase === 'edit'    ? renderEdit()   :
+    S.phase === 'censor'  ? renderCensor() :
+    S.phase === 'final'   ? renderFinal()  :
+    renderField();
+
+  app.innerHTML = header + content;
+}
+
+/* ─── 헤더 ─── */
+function renderHeader() {
+  let doneCnt = 0;
+  let activePip = -1;
+  if (S.phase.startsWith('field')) {
+    const fi = parseInt(S.phase.split('_')[1]);
+    doneCnt = fi; activePip = fi;
+  } else if (S.phase === 'edit') {
+    doneCnt = 4; activePip = -1;
+  } else if (S.phase === 'censor' || S.phase === 'final') {
+    doneCnt = 4; activePip = -1;
+  }
+
+  const pipHtml = S.phase === 'intro' ? '' :
+    `<div class="masthead-progress">
+       <span style="font-size:10px;letter-spacing:0.12em">취재</span>
+       &nbsp;${progPips(4, doneCnt, activePip)}&nbsp;
+       <span style="font-size:10px;letter-spacing:0.12em">1면 편집</span>
+     </div>`;
+
+  return `
+  <div class="masthead">
+    <div class="masthead-title">大韓新聞</div>
+    <div class="masthead-sub">1907년 · 오늘의 1면을 써라</div>
+    ${pipHtml}
+  </div>`;
+}
+
+/* ─── 인트로 ─── */
+function renderIntro() {
+  return `
+  <div class="panel">
+    <div class="intro-dateline">
+      <div class="intro-date">융희 원년(1907) · ${tt('대한매일신보')} 편집국</div>
+      <div class="intro-lead">
+        당신은 오늘 이 신문사에 첫 출근한 신입 기자입니다.<br>
+        편집장이 당신을 불러 말합니다.
+      </div>
+      <div class="brief-box" style="text-align:left;margin-bottom:0">
+        "경제 구국 운동 현장을 취재해 오늘 1면을 채워야 하네.<br>
+        <strong>방곡령</strong>부터 <strong>국채보상운동</strong>까지, 사람들은 어떻게 맞섰는지.<br>
+        단, <strong>${tt('통감부')} 검열관</strong>이 지켜보고 있다는 걸 잊지 말게."
+        <div class="brief-from">— 편집장 일직</div>
+      </div>
+    </div>
+
+    <hr class="rule-double">
+
+    <div class="mission-box">
+      <div class="mission-box-title">오늘의 임무</div>
+      <div class="mission-box-text">
+        4개 현장을 취재하고<br>
+        어떤 각도로 기사를 쓸지 결정하라.<br>
+        그리고 오늘의 1면 헤드라인을 완성하라.
+      </div>
+    </div>
+
+    <div class="flow-list">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        🌾 1889년 — 방곡령과 조약의 함정
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        🏪 1898년 — 황국중앙총상회 철시 투쟁
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        ⛏️ 1900년대 — 이권수호 운동
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        💰 1907년 — 국채보상운동
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="goField(0)">취재 시작 — 1889년 함경도로 →</button>
+  </div>`;
+}
+
+/* ─── 취재 현장 ─── */
+function renderField() {
+  const fi = parseInt(S.phase.split('_')[1]);
+  const field = FIELDS[fi];
+  const sel = S.angles[fi];
+
+  const anglesHtml = field.angles.map(a => `
+  <div class="angle-card${sel === a.id ? ' selected' : ''}" onclick="selectAngle('${a.id}')">
+    <span class="angle-tag">${a.tag}</span>
+    <div class="angle-right">
+      <div class="angle-q">${a.q}</div>
+      <div class="angle-hint">${a.hint}</div>
+    </div>
+  </div>`).join('');
+
+  const nextLabel = fi < 3
+    ? `다음 현장으로 — ${FIELDS[fi+1].year} →`
+    : `4개 현장 취재 완료 — 1면 편집으로 →`;
+
+  return `
+  <div class="panel">
+    <div class="scene-hdr">
+      <div class="scene-eyebrow">${field.badge}</div>
+      <div style="font-family:var(--font-display);font-size:clamp(17px,3.5vw,22px);color:var(--text);line-height:1.35;letter-spacing:0.04em;margin-bottom:6px">${field.headline}</div>
+      <div class="scene-year">📅 ${field.year}</div>
+    </div>
+
+    <hr class="rule-line">
+
+    <div class="field-body">${field.body}</div>
+
+    <div class="hist-footnote">${field.footnote}</div>
+
+    <div class="angle-label">✏️ 이 현장을 어떤 각도로 기사에 담을 것인가?</div>
+    <div class="angle-grid">${anglesHtml}</div>
+
+    <button class="btn btn-primary" ${sel ? '' : 'disabled'} onclick="confirmAngle(${fi})">
+      ${nextLabel}
+    </button>
+  </div>`;
+}
+
+/* ─── 1면 편집 ─── */
+function renderEdit() {
+  const logHtml = FIELDS.map((f, i) => {
+    const a = f.angles[S.angles[i] === 'a' ? 0 : 1];
+    return `<div class="coverage-item">
+      <span class="ci-num">${i+1}</span>
+      <span class="ci-topic">${f.headline.slice(0, 18)}…</span>
+      <span class="ci-angle">${a.tag}</span>
+    </div>`;
+  }).join('');
+
+  const headlinesHtml = HEADLINES.map(h => `
+  <div class="headline-card${S.headline === h.id ? ' selected' : ''}" onclick="selectHeadline('${h.id}')">
+    <div class="hc-title">${h.title}</div>
+    <div class="hc-desc">${h.desc}</div>
+  </div>`).join('');
+
+  return `
+  <div class="panel">
+    <div class="scene-hdr">
+      <div class="scene-eyebrow">편집국 · 1면 구성</div>
+      <div class="scene-title">오늘의 헤드라인을 결정하라</div>
+    </div>
+
+    <div class="brief-box">
+      4개 현장 취재를 마쳤습니다. 이제 오늘 1면의 <strong>관점</strong>을 결정해야 합니다.<br>
+      어떤 헤드라인이 독자에게 가장 중요한 진실을 전달할 수 있을까요?
+    </div>
+
+    <div class="coverage-log">
+      <div class="coverage-log-title">📋 취재 기록</div>
+      ${logHtml}
+    </div>
+
+    <div class="angle-label" style="border-top:none;padding-top:0;margin-bottom:12px">오늘의 1면 헤드라인 방향을 고르시오</div>
+    <div class="headline-grid">${headlinesHtml}</div>
+
+    <button class="btn btn-accent" ${S.headline ? '' : 'disabled'} onclick="submitEdit()">
+      1면 완성 — 통감부 검열로 →
+    </button>
+  </div>`;
+}
+
+/* ─── 검열 ─── */
+function renderCensor() {
+  const cd = CENSOR_DATA[S.censor];
+  const hl = HEADLINES.find(h => h.id === S.headline);
+
+  const bodyText = S.censor === 'partial'
+    ? `4개의 경제 구국 운동을 취재하였다. <span class="np-censored">조약의 함정으로 인해</span> 방곡령은 결국 무력화되었으며, 상인들은 <span class="np-censored">외세의 침탈에 맞서</span> 철시 투쟁을 벌였다. 이권수호 운동과 국채보상운동은 <span class="np-censored">불평등한 구조 속에서도</span> 국민의 의지를 보여주었다.`
+    : S.censor === 'blocked'
+    ? `<span class="np-censored">이 기사는 통감부의 명령으로 전문 삭제되었습니다. 대한신문 편집부는 독자 여러분의 양해를 구합니다.</span>`
+    : `오늘 대한신문은 경제 구국 운동의 현장을 취재하였다. 방곡령 사건, 황국중앙총상회의 결성, 이권수호 운동, 그리고 1,300만 원의 국채를 국민의 힘으로 갚겠다는 국채보상운동까지 — 이 나라의 사람들은 가만히 있지 않았다.`;
+
+  return `
+  <div class="panel">
+    <div class="censor-stamp">
+      <div class="stamp-circle ${S.censor}">${cd.stamp}</div>
+      <div class="censor-result-title ${S.censor}">${cd.title}</div>
+    </div>
+
+    <hr class="rule-line">
+
+    <div class="newspaper-preview">
+      <div class="np-masthead">
+        <div class="np-title">大韓新聞</div>
+        <div class="np-date">융희 원년(1907)년 · 호외</div>
+      </div>
+      <div class="np-headline">${hl.title}</div>
+      <div class="np-byline">본지 특파 기자 — 현장01, 현장02, 현장03, 현장04 취재</div>
+      <div class="np-body">${bodyText}</div>
+    </div>
+
+    <div class="hist-meaning">${cd.meaning}</div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);padding:14px 16px;margin-bottom:20px;font-size:13px;line-height:1.85;font-family:var(--font-serif);color:var(--text-mid)">${cd.reason}</div>
+
+    <button class="btn btn-primary" onclick="goFinal()">결과 정리로 →</button>
+  </div>`;
+}
+
+/* ─── 최종 결과 ─── */
+function renderFinal() {
+  const cd = CENSOR_DATA[S.censor];
+  const hl = HEADLINES.find(h => h.id === S.headline);
+
+  const icons  = { blocked: '🚫', partial: '✂️', passed: '📰' };
+  const titles = { blocked: '검열에 막힌 기자', partial: '잘린 진실을 기록한 기자', passed: '살아남은 신문을 만든 기자' };
+
+  const recordHtml = FIELDS.map((f, i) => {
+    const aObj = f.angles[S.angles[i] === 'a' ? 0 : 1];
+    return `<div class="record-row">
+      <span class="rr-num">${i+1}</span>
+      <span class="rr-topic">${f.year.split(' ')[0]} ${f.headline.slice(0, 14)}…</span>
+      <span class="rr-angle">${aObj.tag}</span>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="panel">
+    <div class="final-banner">
+      <div class="final-icon">${icons[S.censor]}</div>
+      <div class="final-title">${titles[S.censor]}</div>
+      <div class="final-sub">
+        1907년, 당신이 기록하려 한 것은<br>
+        경제 구국 운동의 진실이었습니다.
+      </div>
+    </div>
+
+    <div class="record-box">
+      <div class="record-box-title">📋 나의 취재 기록</div>
+      ${recordHtml}
+      <div style="padding:8px 0 0;font-size:12px;color:var(--text-dim);font-family:var(--font-body)">
+        선택한 헤드라인: <strong style="color:var(--text)">${hl.title}</strong><br>
+        검열 결과: <strong style="color:var(--text)">${cd.stamp}</strong>
+      </div>
+    </div>
+
+    <div class="final-connection">
+      지난 시간 개항장 상인 시뮬레이션에서 당신은 불리해지는 규칙 속에서
+      손해를 감당해야 했습니다.<br>
+      오늘 당신은 그 불평등한 구조 속에서 맞서 싸웠던 사람들을 기록하는 기자였습니다.
+    </div>
+
+    <div class="final-question">
+      최선을 다한 경제 구국 운동은<br>왜 나라의 경제 주권을 지키지 못했을까?
+    </div>
+
+    <div class="comment-area">
+      <label for="comment">한 줄 소감을 남겨보세요. (이름·학번 제외)</label>
+      <textarea id="comment" rows="2" placeholder="오늘 기자로서 기사를 쓰고 느낀 점을 써보세요." maxlength="100"></textarea>
+      <div class="char-note">최대 100자</div>
+    </div>
+
+    <button class="btn btn-accent" onclick="copyResult()">📋 내 결과 복사하기 (패들렛 공유용)</button>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="restart()">다시 취재하기</button>
+
+    <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════ */
+function goField(fi) {
+  S.phase = `field_${fi}`;
+  R();
+}
+
+function selectAngle(id) {
+  const fi = parseInt(S.phase.split('_')[1]);
+  S.angles[fi] = id;
+  R();
+}
+
+function confirmAngle(fi) {
+  if (!S.angles[fi]) return;
+  if (fi < 3) {
+    S.phase = `field_${fi + 1}`;
+  } else {
+    S.phase = 'edit';
+  }
+  R();
+}
+
+function selectHeadline(id) {
+  S.headline = id;
+  R();
+}
+
+function submitEdit() {
+  if (!S.headline) return;
+  S.censor = getCensorResult(S.headline, S.angles);
+  S.phase = 'censor';
+  R();
+}
+
+function goFinal() {
+  S.phase = 'final';
+  R();
+}
+
+function copyResult() {
+  const hl = HEADLINES.find(h => h.id === S.headline);
+  const cd = CENSOR_DATA[S.censor];
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+
+  if (!S.submitted) {
+    sendToSupabase({
+      angles: S.angles,
+      headline: S.headline,
+      censor: S.censor,
+    }, comment);
+    S.submitted = true;
+  }
+
+  const lines = [
+    `📰 대한신문 1907 — 나의 취재 기록`,
+    ``,
+    ...FIELDS.map((f, i) => {
+      const aObj = f.angles[S.angles[i] === 'a' ? 0 : 1];
+      return `${i+1}. ${f.year} | ${f.headline.slice(0,16)}… → [${aObj.tag}]`;
+    }),
+    ``,
+    `헤드라인: "${hl.title}"`,
+    `검열 결과: ${cd.stamp}`,
+    comment ? `소감: "${comment}"` : '',
+    ``,
+    `📌 수업 발문: 최선을 다한 경제 구국 운동은 왜 나라의 경제 주권을 지키지 못했을까?`,
+    `— 대한신문 1907 (찰리쌤의 한국사 게임실)`,
+  ].filter(l => l !== null && l !== undefined).join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(lines).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = lines; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch(e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function restart() {
+  S = {
+    phase: 'intro', fieldIdx: 0, angles: [],
+    headline: null, censor: null, submitted: false,
+  };
+  R();
+}
+
+/* ═══════════════════════════════════════
+   TOOLTIP
+   ═══════════════════════════════════════ */
+document.body.insertAdjacentHTML('beforeend',
+  '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+
+const bubble = document.getElementById('tt-bubble');
+let bubTimer = null;
+
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect();
+    const bw = 260;
+    let left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left  = left + 'px';
+    bubble.style.top   = '-9999px';
+    bubble.classList.add('show');
+    const bh = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bh - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bh - 14) + 'px';
+    if (bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+/* ─── START ─── */
+R();
+</script>
+</body>
+</html>
