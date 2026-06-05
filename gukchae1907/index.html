@@ -626,8 +626,19 @@ body {
    ═══════════════════════════════════════ */
 const GAME_CONFIG = {
   id: 'gukchae1907',
+  game_id: 'gukchae1907',
   title: '대한신문 1907',
+  label: '대한신문 1907',
+  era: '경제 구국 · 1907',
   unit: '열강의 경제 침탈과 경제적 구국 운동',
+  axes: [],
+  scenes: [],
+  sliders: [],
+  endings: [
+    { key: 'blocked', label: '게재 금지' },
+    { key: 'partial', label: '일부 삭제' },
+    { key: 'passed', label: '게재 허가' },
+  ],
 };
 
 /* ═══════════════════════════════════════
@@ -636,6 +647,33 @@ const GAME_CONFIG = {
 const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
 const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+
+function makeResultId() {
+  return (window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+}
+
+function upsertGameMeta() {
+  fetch(`${SUPABASE_URL}/rest/v1/game_meta`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates,return=minimal',
+    },
+    body: JSON.stringify({
+      game_id: GAME_CONFIG.game_id,
+      label: GAME_CONFIG.label,
+      era: GAME_CONFIG.era,
+      axes: GAME_CONFIG.axes,
+      scenes: GAME_CONFIG.scenes,
+      sliders: GAME_CONFIG.sliders,
+      endings: GAME_CONFIG.endings,
+      updated_at: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+upsertGameMeta();
 
 function sendToSupabase(choiceData, comment) {
   fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
@@ -847,7 +885,9 @@ let S = {
   angles: [],
   headline: null,
   censor: null,
-  submitted: false,
+  resultId: makeResultId(),
+  submittedBase: false,
+  submittedComment: false,
 };
 
 /* ═══════════════════════════════════════
@@ -1191,8 +1231,30 @@ function submitEdit() {
 }
 
 function goFinal() {
+  submitBaseResult();
   S.phase = 'final';
   R();
+}
+
+function getChoicePayload() {
+  return {
+    result_id: S.resultId,
+    angles: S.angles,
+    headline: S.headline,
+    censor: S.censor,
+  };
+}
+
+function submitBaseResult() {
+  if (S.submittedBase) return;
+  sendToSupabase(getChoicePayload(), '');
+  S.submittedBase = true;
+}
+
+function submitCommentResult(comment) {
+  if (!comment || S.submittedComment) return;
+  sendToSupabase(getChoicePayload(), comment);
+  S.submittedComment = true;
 }
 
 function copyResult() {
@@ -1200,14 +1262,8 @@ function copyResult() {
   const cd = CENSOR_DATA[S.censor];
   const comment = document.getElementById('comment')?.value?.trim() || '';
 
-  if (!S.submitted) {
-    sendToSupabase({
-      angles: S.angles,
-      headline: S.headline,
-      censor: S.censor,
-    }, comment);
-    S.submitted = true;
-  }
+  submitBaseResult();
+  submitCommentResult(comment);
 
   const lines = [
     `📰 대한신문 1907 — 나의 취재 기록`,
@@ -1240,7 +1296,10 @@ function copyResult() {
 function restart() {
   S = {
     phase: 'intro', fieldIdx: 0, angles: [],
-    headline: null, censor: null, submitted: false,
+    headline: null, censor: null,
+    resultId: makeResultId(),
+    submittedBase: false,
+    submittedComment: false,
   };
   R();
 }
