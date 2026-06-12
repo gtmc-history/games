@@ -1066,7 +1066,7 @@ function renderResult() {
     <button class="btn btn-accent" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
     <button class="btn btn-outline" style="margin-top:8px" onclick="restart()">다시 평가하기</button>
 
-    <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+    <div class="copyright">한국사 학습 게임</div>
   </div>`;
 }
 
@@ -1126,7 +1126,7 @@ function copyResult() {
     `최종 판단: ${S.verdict ? verdictMap[S.verdict] : '선택 안 함'}`,
     ...(comment ? [`소감: ${comment}`] : []),
     ``,
-    `— 대한제국 1897 게임 (찰리쌤의 한국사 게임실)`,
+    `— 대한제국 1897 게임 (한국사 학습 게임)`,
   ].filter(l => l !== '').join('\n');
 
   if (navigator.clipboard && window.isSecureContext) {

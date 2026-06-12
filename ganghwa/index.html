@@ -1134,7 +1134,7 @@ function R() {
 function renderIntro() {
   return `
   <div class="scene intro-wrap">
-    <div class="intro-eyebrow">찰리쌤의 한국사 게임실</div>
+    <div class="intro-eyebrow">한국사 학습 게임</div>
     <h1 class="intro-title">강화도 협상 테이블<br>1876년 2월</h1>
     <p class="intro-date">조일수호조규(병자수호조규) 협상 — 강화도 연무당</p>
 
@@ -1422,7 +1422,7 @@ function renderFinal() {
       <button class="btn-restart" onclick="restart()">처음부터 다시 협상하기</button>
     </div>
 
-    <div class="footer-credit">© 찰리쌤 · hischarlie.tistory.com</div>
+    <div class="footer-credit">한국사 학습 게임</div>
   </div>`;
 }
 
@@ -1573,7 +1573,7 @@ function copyResult() {
     result.headline,
     result.body,
     ``,
-    `— 찰리쌤의 한국사 게임실`,
+    `— 한국사 학습 게임`,
   ];
   const text = lines.join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
   if (navigator.clipboard && window.isSecureContext) {

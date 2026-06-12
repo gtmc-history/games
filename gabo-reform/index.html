@@ -1094,7 +1094,7 @@ function renderResult() {
     </button>
     <button class="btn btn-outline" onclick="restart()">처음부터 다시</button>
 
-    <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+    <div class="copyright">한국사 학습 게임</div>
   </div>`;
 }
 
@@ -1173,7 +1173,7 @@ function copyResult() {
     sendToSupabase(flat, comment);
   }
   lines.push('');
-  lines.push('— 찰리쌤의 한국사 게임실 | gtmc-history.github.io');
+  lines.push('— 한국사 학습 게임 | gtmc-history.github.io');
 
   const text = lines.join('\n');
   if (navigator.clipboard && window.isSecureContext) {

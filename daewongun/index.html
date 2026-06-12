@@ -1066,7 +1066,7 @@ function renderResult() {
         </button>
         <button class="btn btn-outline" onclick="restart()">다시 결단하기</button>
       </div>
-      <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+      <div class="copyright">한국사 학습 게임</div>
     </div>
   </div>
   </div>`;
@@ -1110,7 +1110,7 @@ function copyResult() {
     '',
     S.evalChoice ? `나의 평가: ${S.evalChoice}` : '나의 평가: (미선택)',
     '',
-    '— hischarlie.tistory.com',
+    '— 한국사 학습 게임',
   ];
   const text = lines.join('\n') + (comment ? '\n[ 소감 ] ' + comment : '');
   if (navigator.clipboard && window.isSecureContext) {

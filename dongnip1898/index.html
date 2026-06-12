@@ -1063,7 +1063,7 @@ function renderResult() {
         <button class="btn btn-gold" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
         <button class="btn btn-outline" style="margin-top:8px" onclick="restart()">다시 맞서기</button>
 
-        <div class="copyright">© 찰리쌤 · hischarlie.tistory.com</div>
+        <div class="copyright">한국사 학습 게임</div>
       </div>
     </div>
   </div>`;
@@ -1173,7 +1173,7 @@ function copyResult() {
     '1898년 12월 25일, 독립협회는 강제 해산되었다.',
     comment ? `\n▪ 소감\n${comment}` : '',
     '',
-    '— 찰리쌤의 한국사 게임실 · hischarlie.tistory.com',
+    '— 한국사 학습 게임 · 한국사 학습 게임',
   ].filter(l => l !== undefined).join('\n');
 
   if (navigator.clipboard && window.isSecureContext) {

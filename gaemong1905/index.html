@@ -934,7 +934,7 @@ function renderScene7() {
     <button class="btn btn-accent" onclick="copyResult()">📋 결과 복사하기 (패들렛 공유용)</button>
     <button class="btn btn-outline" onclick="restart()">다시 시작하기</button>
 
-    <p class="copyright">© 찰리쌤 · hischarlie.tistory.com</p>
+    <p class="copyright">한국사 학습 게임</p>
   </div>`;
 }
 
@@ -990,7 +990,7 @@ function copyResult() {
     `${d.icon} ${d.title.replace('\n', ' ')}`,
     ``,
     comment ? `소감: ${comment}` : '',
-    `— 찰리쌤의 한국사 게임실 · hischarlie.tistory.com`,
+    `— 한국사 학습 게임 · 한국사 학습 게임`,
   ].filter(l => l !== null && l !== undefined).join('\n').replace(/\n{3,}/g, '\n\n');
 
   if (navigator.clipboard && window.isSecureContext) {
