@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="1945년 8월 15~16일 경성의 불완전한 정보 속에서 두 판단의 확신도를 갱신하는 한국사 체험 게임">
+<title>그날, 아무도 몰랐다 — 1945</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<script>
+/* [1] 게임 메타 — core보다 먼저 선언 */
+window.GAME_CONFIG = {
+  game_id: 'geunal1945',
+  label: '그날, 아무도 몰랐다 — 1945',
+  era: '일제강점기',
+  version: '1.1.0'
+};
+/* [2] 현재 games 저장소는 shared Charlie core/config를 제공하지 않는다.
+   공개 publishable key는 Supabase 프로젝트에서 확인한 뒤 배포 전에 주입한다. */
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+function publicHeaders(extra) {
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  const headers = { apikey:key, ...(extra || {}) };
+  if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`;
+  return headers;
+}
+window.sendToSupabase = function (choiceData, comment) {
+  const { supabaseUrl:url, supabasePublishableKey:key } = window.CHARLIE_CONFIG;
+  if (!url || !key || key.startsWith('__')) {
+    return Promise.resolve({ ok:false, skipped:true, reason:'public-config-unavailable' });
+  }
+  return fetch(`${url}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: publicHeaders({ 'Content-Type':'application/json', Prefer:'return=minimal' }),
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment,
+      timestamp: new Date().toISOString()
+    })
+  });
+};
+</script>
+<style>
+:root {
+  --bg:#eee9df;
+  --paper:#f7f2e7;
+  --paper2:#e8dfd0;
+  --ink:#1a1916;
+  --muted:#6d665c;
+  --sepia:#8b7355;
+  --line:rgba(94,76,54,.24);
+  --blue:#294c69;
+  --red:#8f3e3a;
+  --shadow:rgba(45,35,25,.12);
+  --font-title:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-doc:'Noto Serif KR',serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100dvh; color:var(--ink); font-family:var(--font-body);
+  background:
+    radial-gradient(circle at 18% 12%, rgba(139,115,85,.08), transparent 34%),
+    radial-gradient(circle at 80% 82%, rgba(41,76,105,.045), transparent 32%),
+    var(--bg);
+  display:flex; justify-content:center; padding:14px 10px 52px;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E")}
+button,input,textarea{font:inherit}
+button{touch-action:manipulation}
+#app{width:min(760px,100%);position:relative;z-index:1}
+.frame{background:rgba(247,242,231,.96);border:1px solid var(--line);box-shadow:0 18px 55px var(--shadow);padding:28px 24px 32px;min-height:520px;position:relative;overflow:hidden}
+.frame::after{content:"";position:absolute;inset:8px;pointer-events:none;border:1px solid rgba(139,115,85,.11)}
+.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--sepia);margin:0 0 12px;text-transform:uppercase}
+h1.title{font-family:var(--font-title);font-size:clamp(34px,8vw,58px);font-weight:400;letter-spacing:-.035em;line-height:1.05;margin:0 0 12px}
+.subtitle{font-family:var(--font-doc);font-size:18px;color:var(--muted);line-height:1.7;margin:0 0 24px}
+.lead{font-family:var(--font-doc);font-size:18px;line-height:1.92;margin:0;color:#29251f;word-break:keep-all}
+.small{font-size:13px;line-height:1.7;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:20px 0}
+.btn{width:100%;border:0;background:var(--ink);color:#f7f2e7;padding:14px 18px;min-height:50px;cursor:pointer;margin-top:16px;font-weight:700;letter-spacing:.01em;transition:.15s transform,.15s opacity}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.34;cursor:not-allowed;transform:none}
+.btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.small-btn{width:auto;min-height:38px;padding:8px 12px;margin:0;font-size:13px}
+.progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 24px}
+.progress span{height:4px;background:rgba(139,115,85,.18)}
+.progress span.done{background:var(--sepia)}
+.progress span.now{background:var(--ink)}
+.scene-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:22px}
+.scene-time{font-family:var(--font-doc);font-weight:700;font-size:16px}
+.scene-count{font-size:12px;color:var(--muted)}
+.notice{border:1px solid rgba(26,25,22,.45);background:#efe6d5;padding:22px 18px;text-align:center;margin:18px 0;font-family:var(--font-doc)}
+.notice .jp{font-size:22px;font-weight:700;letter-spacing:.08em;line-height:1.6}
+.notice .ko{font-size:14px;color:var(--muted);margin-top:8px}
+.radio{background:#201f1c;color:#eee7d9;padding:22px;margin:18px 0;border-left:4px solid var(--sepia);box-shadow:inset 0 0 24px rgba(255,255,255,.03)}
+.radio p{font-family:var(--font-doc);font-size:16px;line-height:1.9;margin:8px 0;color:#e5dccd}
+.radio .noise{color:#918a7e;font-size:12px;letter-spacing:.18em}
+.dialogue{display:grid;gap:8px;margin:18px 0}
+.bubble{padding:12px 14px;border-left:3px solid var(--line);background:rgba(255,255,255,.48);font-family:var(--font-doc);line-height:1.75}
+.bubble.em{border-left-color:var(--ink);font-weight:600}
+.observation{padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--font-doc);font-size:18px;line-height:1.9;margin:18px 0}
+.fact-grid{display:grid;gap:10px;margin:18px 0}
+.fact-card{border:1px solid var(--line);background:rgba(255,255,255,.45);padding:14px}
+.fact-card strong{display:block;font-size:14px;margin-bottom:4px}
+.fact-card p{margin:0;font-family:var(--font-doc);line-height:1.75}
+.rumors{display:grid;gap:10px;margin:18px 0}
+.rumor{border:1px dashed rgba(94,76,54,.35);padding:14px 15px;background:#f4eee2;font-family:var(--font-doc);line-height:1.75}
+.question-title{font-family:var(--font-doc);font-size:20px;line-height:1.6;margin:12px 0 14px;font-weight:700}
+.axis{border:1px solid var(--line);padding:16px;margin:12px 0;background:rgba(255,255,255,.5)}
+.axis-tag{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.axis-statement{font-family:var(--font-doc);font-size:17px;font-weight:700;line-height:1.55;margin-bottom:12px}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.scale button{min-height:76px;border:1px solid var(--line);background:#f8f3e9;color:var(--ink);padding:9px 7px;cursor:pointer;font-size:12.5px;line-height:1.35}
+.scale button .n{display:block;font-family:var(--font-doc);font-size:20px;margin-bottom:4px}
+.scale button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chips{margin-top:18px}
+.chip-group-title{font-size:12px;color:var(--muted);font-weight:700;margin:12px 0 7px}
+.chip-grid{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);background:#f7f1e6;padding:9px 10px;cursor:pointer;text-align:left;font-size:13px;line-height:1.4}
+.chip.on{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);background:#eef1f1}
+.stance-grid{display:grid;gap:9px;margin:18px 0}
+.stance{border:1px solid var(--line);background:#f7f1e6;padding:14px;text-align:left;cursor:pointer;line-height:1.55}
+.stance.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tt{border-bottom:1px dotted var(--sepia);cursor:help}
+#tt-bubble{position:fixed;left:8px;top:-9999px;width:250px;background:#211f1a;color:#f3eadb;padding:12px 13px;z-index:9998;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .15s}
+#tt-bubble.show{opacity:1}.tb-word{font-weight:700;margin-bottom:4px}.tb-desc{font-size:12.5px;line-height:1.6;color:#d6ccbb}
+.result-card{border:1px solid var(--line);padding:16px;background:rgba(255,255,255,.52);margin:13px 0}
+.result-card h3{font-family:var(--font-doc);font-size:18px;margin:0 0 8px}.result-card p{margin:5px 0;line-height:1.65}
+.traj-wrap{position:relative;height:280px;margin:16px 0 8px;border:1px solid var(--line);background:rgba(255,255,255,.5);overflow:hidden}
+.traj-axis{position:absolute;inset:16px 22px 36px 42px}
+.traj-gridline{position:absolute;left:0;right:0;border-top:1px dashed rgba(109,102,92,.23)}
+.traj-y{position:absolute;left:-30px;transform:translateY(-50%);font-size:11px;color:var(--muted)}
+.traj-x{position:absolute;bottom:-24px;transform:translateX(-50%);font-size:11px;color:var(--muted);white-space:nowrap}
+.traj-dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);z-index:3;border:2px solid var(--paper)}
+.traj-dot.a,.traj-seg.a{background:var(--red)}.traj-dot.b,.traj-seg.b{background:var(--blue)}
+.traj-seg{position:absolute;height:3px;transform-origin:0 50%;z-index:2;opacity:.9}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.legend .a{background:var(--red)}.legend .b{background:var(--blue)}
+.wall-compose{border:1px solid var(--line);padding:16px;margin-top:20px;background:#eee3d1}
+.wall-compose textarea{width:100%;min-height:82px;border:1px solid var(--line);background:#fbf7ef;padding:12px;resize:vertical;line-height:1.65}
+.counter{text-align:right;font-size:11px;color:var(--muted);margin-top:4px}
+.wall-stage{min-height:260px;margin-top:18px;padding:18px;background:#b9aa94;position:relative;overflow:hidden;border:1px solid rgba(60,45,30,.18);background-image:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:24px 24px}
+.wall-stage::before{content:"골목 어귀";position:absolute;right:10px;top:8px;color:rgba(48,38,28,.35);font-family:var(--font-doc);font-size:12px}
+.wall-note{position:relative;display:inline-block;vertical-align:top;width:min(46%,280px);min-width:180px;margin:10px 8px;padding:16px 14px 18px;background:#f4eddb;color:#242019;box-shadow:2px 4px 9px rgba(35,27,18,.2);font-family:var(--font-doc);font-size:15px;line-height:1.65;transform:rotate(var(--rot,0deg));animation:stick .35s ease both;word-break:break-word;white-space:pre-wrap}
+.wall-note.self{background:#fbf3d8;box-shadow:0 0 0 2px rgba(143,62,58,.28),2px 4px 9px rgba(35,27,18,.2)}
+.wall-note::after{content:"";position:absolute;width:34px;height:11px;top:-5px;left:50%;transform:translateX(-50%) rotate(-2deg);background:rgba(224,207,167,.7)}
+@keyframes stick{from{opacity:0;transform:translateY(18px) rotate(var(--rot,0deg))}to{opacity:1;transform:translateY(0) rotate(var(--rot,0deg))}}
+.wall-status{font-size:12px;color:var(--muted);margin-top:8px}
+.outside{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}.outside-panel h4{margin:16px 0 6px;font-size:14px;color:var(--sepia);letter-spacing:.02em}.outside-panel h4:first-child{margin-top:2px}.outside-panel p{margin:0 0 10px;font-size:13.5px;line-height:1.85;color:#3a352c;word-break:keep-all}.outside-panel li{font-size:13px}.outside-panel{display:none;margin-top:12px;padding:14px;border:1px solid var(--line);background:#f2ece0}.outside-panel.open{display:block}.outside-panel ul{padding-left:18px;line-height:1.8;color:var(--muted)}
+textarea#comment{width:100%;min-height:76px;border:1px solid var(--line);background:#fbf7ef;padding:12px;resize:vertical;line-height:1.65}
+.footer-credit{text-align:center;font-size:11px;margin-top:28px;color:rgba(94,76,54,.48)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#211f1a;color:#f3eadb;padding:10px 18px;opacity:0;pointer-events:none;z-index:9999;transition:opacity .2s;max-width:88vw;text-align:center}.show-toast{opacity:1!important}
+@media(max-width:580px){.frame{padding:22px 14px 28px}.scale{grid-template-columns:1fr 1fr}.wall-note{width:92%;min-width:0;margin:8px 4%}.lead{font-size:17px}.notice .jp{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="tt-bubble" role="tooltip"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<div id="toast" aria-live="polite"></div>
+<script>
+'use strict';
+
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+const POLL_MS = 4000; // 미잠금 #5 구현값: 3~5초 제안 중 중간값
+
+/* 툴팁 마이크로카피 — 구현용 간단 정의. 역사 해설을 대신하지 않는다. */
+const TIPS = {
+  '공동선언':'일본이 수락한다고 밝힌 4개국의 공동선언. 게임에서는 이 표현이 조선에 무엇을 뜻하는지 자동으로 풀이하지 않는다.',
+  '조서':'일왕 명의로 발표되는 공식 문서.',
+  '전국(戰局)':'전쟁이 벌어지는 전체 형세.',
+  '징용':'사람을 동원해 노동에 종사시키는 제도.',
+  '공출':'정해진 물자를 내도록 요구하는 방식.',
+  '배급':'물자를 일정한 기준에 따라 나누어 주는 제도.',
+  '유고':'어떤 일을 널리 알리기 위해 낸 공식 글.',
+  '치안':'사회의 질서와 안전을 유지하는 일.',
+  '형무소':'당시 감옥을 이르던 말.',
+  '소련군':'소련의 군대.',
+  '경성':'일제강점기 서울을 부르던 명칭.'
+};
+function tt(word){
+  const tip=TIPS[word]; if(!tip) return esc(word);
+  return `<span class="tt" data-word="${escAttr(word)}" data-tip="${encodeURIComponent(tip)}">${esc(word)}</span>`;
+}
+function esc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function escAttr(v){return esc(v).replace(/'/g,'&#39;')}
+
+const SCALE = [
+  {n:1,t:'아직 말할 수 없다'},
+  {n:2,t:'그럴지도 모른다'},
+  {n:3,t:'그렇게 볼 근거가 있다'},
+  {n:4,t:'확신한다'}
+];
+const AXIS_A = '일본은 전쟁에서 졌다.';
+const AXIS_B = '조선에 대한 일본의 지배도 끝난다.';
+
+const CHIP_META = {
+  poster_notice:{label:'정오 중대방송 예고 벽보',round:1},
+  radio_fragments:{label:'방송에서 들은 문장 파편',round:1},
+  adults_reactions:{label:'상회 앞 어른들의 반응',round:1},
+  policeman_frozen:{label:'오래 움직이지 않던 순사',round:1},
+  newspaper_same:{label:'게시판에 붙은 같은 조서',round:2},
+  governor_notice:{label:'경솔히 움직이지 말라는 총독의 글',round:2},
+  rumor_new_gov:{label:'서울에 새 정부가 선다는 소문',round:2},
+  authority_unchanged:{label:'그대로인 관청과 순사',round:2},
+  policeman_same:{label:'같은 자리·같은 칼의 순사',round:3},
+  ration_unchanged:{label:'내일 배급도 그대로라는 말',round:3},
+  prison_rumors:{label:'오늘/내일로 엇갈리는 형무소 소문',round:3},
+  quiet_evening:{label:'아무도 나가지 않는 조용한 저녁',round:3},
+  prison_gates:{label:'열린 형무소 문과 나오는 사람들',round:4},
+  manse_unblocked:{label:'막는 사람 없는 만세',round:4},
+  speech_new_org:{label:'스스로 조직하고 움직여야 한다는 공개 발언',round:4},
+  rumor_soviet:{label:'소련군이 경성역에 온다는 소문',round:4}
+};
+
+const ROUNDS = [
+  {label:'R1',time:'8월 15일 정오',scenes:['r1s1','r1s2','r1s3'],newChips:['poster_notice','radio_fragments','adults_reactions','policeman_frozen']},
+  {label:'R2',time:'8월 15일 오후',scenes:['r2s1','r2s2','r2s3'],newChips:['newspaper_same','governor_notice','rumor_new_gov','authority_unchanged']},
+  {label:'R3',time:'8월 15일 저녁',scenes:['r3s1','r3s2','r3s3','r3stance','r3after'],newChips:['policeman_same','ration_unchanged','prison_rumors','quiet_evening']},
+  {label:'R4',time:'8월 16일',scenes:['r4s1','r4s2','r4s3'],newChips:['prison_gates','manse_unblocked','speech_new_org','rumor_soviet']}
+];
+
+let S = freshState();
+function freshState(){return {phase:'intro',ri:0,si:0,answers:[{},{},{},{}],stance:null,submitted:false,sentComment:'',wallPosted:false,wallPostId:null,knownWallIds:new Set(),pollTimer:null,outsideOpen:false}}
+function progressHTML(){return `<div class="progress">${ROUNDS.map((_,i)=>`<span class="${i<S.ri||S.phase==='final'?'done':i===S.ri?'now':''}"></span>`).join('')}</div>`}
+function headHTML(){const r=ROUNDS[S.ri];return `${progressHTML()}<div class="scene-head"><span class="scene-time">${r.time}</span><span class="scene-count">${r.label}</span></div>`}
+
+function R(){
+  if(S.pollTimer && S.phase!=='final'){clearInterval(S.pollTimer);S.pollTimer=null}
+  const app=document.getElementById('app');
+  if(S.phase==='intro') app.innerHTML=renderIntro();
+  else if(S.phase==='round') app.innerHTML=renderRound();
+  else app.innerHTML=renderFinal();
+  window.scrollTo({top:0,behavior:'auto'});
+  if(S.phase==='final') requestAnimationFrame(()=>{drawTrajectory();restoreWallAfterRender();});
+}
+function renderIntro(){return `<main class="frame"><p class="eyebrow">1945年 8月 15日 · ${tt('경성')}</p><h1 class="title">그날, 아무도 몰랐다</h1><p class="subtitle">그날 벌어진 일이 조선에 무엇을 뜻하는지 아직 알 수 없는 4개의 시간</p><p class="lead">당신은 경성에 사는 한 청년입니다. 집에는 라디오가 없습니다.<br><br>오늘 들어오는 정보만 가지고 두 문장을 계속 판단합니다. 이미 알고 있는 교과서의 결말이 아니라, <strong>그 순간의 당신이 가진 근거</strong>만 사용하세요.</p><div class="rule"></div><div class="fact-grid"><div class="fact-card"><strong>A</strong><p>${AXIS_A}</p></div><div class="fact-card"><strong>B</strong><p>${AXIS_B}</p></div></div><p class="small">판단은 4단계입니다. 점수도 정답 판정도 없습니다. 확신은 올라갈 수도, 내려갈 수도 있습니다.</p><button class="btn" onclick="startGame()">8월 15일 아침으로</button></main>`}
+function startGame(){S.phase='round';S.ri=0;S.si=0;traceScene('r1s1');R()}
+function renderRound(){if(S.si>=ROUNDS[S.ri].scenes.length)return renderJudge();const key=ROUNDS[S.ri].scenes[S.si];return `<main class="frame">${headHTML()}${sceneHTML(key)}</main>`}
+function sceneHTML(k){
+  const next=`<button class="btn" onclick="nextScene()">${k==='r4s3'?'마지막 판단으로':'계속'}</button>`;
+  const map={
+    r1s1:`<p class="eyebrow">아침 · 골목 어귀</p><p class="lead">전날과 다름없는 아침. 벽에 새 벽보가 붙어 있다.</p><div class="notice"><div class="jp">本日 正午 重大放送<br>一億 國民 必聽</div><div class="ko">오늘 정오, 중대 방송. 반드시 들으라.</div></div><p class="lead">중대 방송이 무엇인지는 쓰여 있지 않다. 라디오가 있는 집은 동네에 몇 없다. 길 건너 상회 주인이 정오에 라디오를 틀어 놓겠다고 했다.</p>${next}`,
+    r1s2:`<p class="eyebrow">정오 · 상회 앞</p><p class="lead">사람들이 모인다. 기미가요가 끝난다. 라디오에서 평소 방송과 다른 목소리가 들린다.</p><div class="radio"><div class="noise">… 지직 …</div><p>“짐은 … 제국 정부로 하여금 … 미·영·중·소 4국에 그 ${tt('공동선언')}을 수락한다는 뜻을 통고하게 하였다 …”</p><p>“… ${tt('전국(戰局)')}이 반드시 호전된 것은 아니며 …”</p><p>“… 견디기 어려움을 견디고, 참기 어려움을 참아 …”</p><div class="noise">… 알아듣기 어려운 한문투가 이어진다 …</div></div><p class="observation">‘항복’이라는 말도, ‘패전’이라는 말도 들리지 않았다. 방송은 끝났다.</p><div class="fact-grid"><div class="fact-card"><strong>상회 주인</strong><p>라디오를 끄지 못하고 서 있다.</p></div><div class="fact-card"><strong>길 끝의 순사</strong><p>오래도록 움직이지 않는다.</p></div></div>${next}`,
+    r1s3:`<p class="eyebrow">정오 직후 · 웅성거림</p><div class="dialogue"><div class="bubble">“전쟁을 그만둔다는 얘기 아닌가.”</div><div class="bubble">“공동선언이 뭐요? 그걸 받는다는 게 무슨 뜻이오?”</div><div class="bubble">“천황이 직접 방송을 했다는 것 자체가 보통 일이 아니오.”</div><div class="bubble em">“……그럼, 조선은 어찌 되는 것이오?”</div></div><p class="lead">아무도 대답하지 않는다.</p>${next}`,
+    r2s1:`<p class="eyebrow">오후 · 다시 상회 앞</p><p class="lead">라디오에서는 종전과 관련된 방송이 이어진다.</p><div class="radio"><p>아까 들었던 ${tt('조서')}의 표현들이 다시 언급된다.</p><p>4국의 공동선언을 수락한다는 말. 전쟁의 형세가 좋지 않다는 말.</p></div><p class="lead">같은 표현이 되풀이된다. 상회 앞 사람들의 표정은 좀처럼 풀리지 않는다.</p>${next}`,
+    r2s2:`<p class="eyebrow">오후 · 게시판 앞</p><p class="lead">사람들이 모인 게시판에 신문이 붙어 있다. 어깨너머로 1면의 큰 한자 제목과 일본어 조서, 총독 명의의 ${tt('유고')}가 보인다.</p><div class="dialogue"><div class="bubble">“방송에서 나온 그 글이오. 그리고 총독이… 경솔하게 움직이지 말고 냉정하게 있으라 하오.”</div></div><p class="observation">활자가 된 글도 방송에서 들은 표현을 되풀이한다. 총독 명의의 글에는 경솔하게 움직이지 말고 냉정하게 있으라는 말이 적혀 있다.</p>${next}`,
+    r2s3:`<p class="eyebrow">오후 · 골목의 말들</p><p class="lead">소식보다 말이 더 빨리 퍼지기 시작한다.</p><div class="rumors"><div class="rumor">“전쟁이 끝났다는 게요. 그럼 이제 ${tt('징용')}도 ${tt('공출')}도 끝나는 것 아니오?”</div><div class="rumor">“누가 라디오에서 들었다는데, 서울에 새 정부가 선다더라.”</div><div class="rumor">“무슨 소리요, 관청도 순사도 그대로인데. 섣불리 나섰다가 어찌 되려고.”</div></div><p class="small">게임은 지금 이 말들의 진위를 알려주지 않습니다.</p>${next}`,
+    r3s1:`<p class="eyebrow">저녁 · 골목</p><p class="lead">거리는 조용하다. 어느 집에서 저녁상 차리는 소리가 난다.</p>${next}`,
+    r3s2:`<p class="eyebrow">저녁 · 같은 길목</p><p class="observation">아침의 그 순사가 같은 자리에 서 있다. 같은 제복. 허리에는 여전히 칼이 차 있다.</p><div class="dialogue"><div class="bubble">“내일 ${tt('배급')}은 그대로라오.”</div></div>${next}`,
+    r3s3:`<p class="eyebrow">저녁 · ${tt('형무소')}를 둘러싼 말</p><div class="rumors"><div class="rumor">“형무소에서 사람들이 풀려난다더라. 오늘이라던데.”</div><div class="rumor">“아니오, 내가 듣기론 내일이오.”</div><div class="rumor">“문 앞에 사람이 모이긴 했는데, 큰 움직임은 없습디다.”</div></div><div class="dialogue"><div class="bubble">“일본이 정말 졌다면… 이제 태극기를 내걸어도 되는 것 아니오? 만세를 불러도 되는 것 아니오?”</div><div class="bubble">“순사가 아직 칼을 차고 서 있소.”</div><div class="bubble em">“그럼 언제까지 기다려야 하오?”</div></div><p class="lead">아무도 답하지 않는다.</p>${next}`,
+    r3stance:`<p class="eyebrow">저녁 · 마음의 위치</p><h2 class="question-title">밖으로 나가자는 말이 나온다면, 지금 당신의 생각은 어느 쪽에 가깝습니까?</h2><div class="stance-grid">${[1,2,3].map((n,i)=>{const labels=['이제는 나가도 될 것 같다','나가고 싶지만 아직 위험해 보인다','무엇이 달라졌는지 더 확인해야 한다'];return `<button class="stance ${S.stance===n?'on':''}" onclick="pickStance(${n})">${n}. ${labels[i]}</button>`}).join('')}</div><button class="btn" ${S.stance?'':'disabled'} onclick="commitStance()">이 생각을 남긴다</button>`,
+    r3after:`<p class="eyebrow">저녁 · 그 뒤</p><p class="lead">골목은 그대로 조용하다.<br>순사는 여전히 그 자리에 있다.<br>밤이 깊어진다.</p>${next}`,
+    r4s1:`<p class="eyebrow">8월 16일 · 아침</p><p class="lead">눈을 뜨니 골목이 비어 있다. 조용해서가 아니라, 사람이 없어서다.</p><div class="dialogue"><div class="bubble">“다들 서대문 쪽으로 갔다오.”</div></div><p class="lead">당신도 사람들의 흐름을 따라간다.</p>${next}`,
+    r4s2:`<p class="eyebrow">서대문 · 형무소 앞</p><p class="lead">문이 열려 있다. 안에서 사람들이 걸어 나온다. 야윈 얼굴들.</p><div class="observation">누군가 만세를 부른다. 한 사람이 아니라, 거리 전체가 부른다.<br><strong>이 소리를 막는 사람이 없다.</strong></div>${next}`,
+    r4s3:`<p class="eyebrow">학교 운동장 · 군중 속</p><p class="lead">사람들을 따라 어느 학교 운동장으로 간다. 단상에 한 사람이 올라선다.</p><div class="dialogue"><div class="bubble">어제 총독부 쪽 사람을 만났다는 이야기가 들린다.</div><div class="bubble">붙잡힌 사람들을 풀어줄 것, 식량과 ${tt('치안')} 문제에 간섭하지 말 것을 요구했다는 말이 이어진다.</div></div><p class="small">그 요구가 실제로 어디까지 받아들여졌는지는 지금 이 자리에서 확인할 수 없다.</p><div class="rumors"><div class="rumor">“${tt('소련군')}이 온다! 오후에 경성역으로 온다더라!”</div></div><p class="lead">사람들이 웅성거린다. 일부가 운동장을 빠져나가 역 쪽으로 달리기 시작한다. 연설 소리가 소란에 묻힌다.</p>${next}`
+  };
+  return map[k]||'';
+}
+function nextScene(){
+  const r=ROUNDS[S.ri];
+  if(S.si < r.scenes.length-1){S.si++;traceScene(r.scenes[S.si]);R();return}
+  S.si=r.scenes.length;traceScene(`r${S.ri+1}judge`);R();
+}
+function pickStance(n){S.stance=n;R()}
+function commitStance(){if(!S.stance)return;traceChoice('r3-stance',String(S.stance));S.si++;traceScene('r3after');R()}
+function unlockedChips(ri){return Object.entries(CHIP_META).filter(([,m])=>m.round<=ri+1).map(([id])=>id)}
+function renderJudge(){
+  const ans=S.answers[S.ri]; const all=unlockedChips(S.ri); const currentRound=S.ri+1;
+  const groups=[
+    {title:'이번에 새로 본 정보',ids:all.filter(id=>CHIP_META[id].round===currentRound)},
+    ...(currentRound>1?[{title:'이전에 본 정보',ids:all.filter(id=>CHIP_META[id].round<currentRound)}]:[])
+  ];
+  return `<main class="frame">${headHTML()}<p class="eyebrow">판단 ${S.ri+1}/4</p><h2 class="question-title">지금 가진 정보만으로, 어디까지 말할 수 있습니까?</h2>${axisHTML('A',AXIS_A,ans.a,'a')}${axisHTML('B',AXIS_B,ans.b,'b')}<div class="chips"><p class="question-title" style="font-size:16px">B를 판단하는 데 가장 영향을 준 정보는?</p><p class="small">B를 올리는 정보뿐 아니라, 유보하거나 내리게 만든 정보도 고를 수 있습니다.</p>${groups.map(g=>`<div class="chip-group-title">${g.title}</div><div class="chip-grid">${g.ids.map(id=>`<button class="chip ${ans.chip===id?'on':''}" onclick="setChip('${id}')">${esc(CHIP_META[id].label)}</button>`).join('')}</div>`).join('')}</div><button class="btn" ${ans.a&&ans.b&&ans.chip?'':'disabled'} onclick="commitJudge()">${S.ri===3?'나의 궤적을 본다':'이 판단을 남긴다'}</button></main>`
+}
+function axisHTML(tag,statement,val,key){return `<section class="axis"><div class="axis-tag">${tag}</div><div class="axis-statement">${statement}</div><div class="scale">${SCALE.map(x=>`<button class="${val===x.n?'on':''}" onclick="setAxis('${key}',${x.n})"><span class="n">${x.n}</span>${x.t}</button>`).join('')}</div></section>`}
+function setAxis(k,n){S.answers[S.ri][k]=n;R()}
+function setChip(id){S.answers[S.ri].chip=id;R()}
+function commitJudge(){
+  const a=S.answers[S.ri]; if(!(a.a&&a.b&&a.chip))return;
+  traceChoice(`r${S.ri+1}-a`,String(a.a));traceChoice(`r${S.ri+1}-b`,String(a.b));traceChoice(`r${S.ri+1}-chip`,a.chip);
+  if(S.ri<3){S.ri++;S.si=0;traceScene(ROUNDS[S.ri].scenes[0]);R()}else goFinal();
+}
+function buildChoices(){return {v:1,r1:{a:S.answers[0].a,b:S.answers[0].b,chip:S.answers[0].chip},r2:{a:S.answers[1].a,b:S.answers[1].b,chip:S.answers[1].chip},r3:{a:S.answers[2].a,b:S.answers[2].b,chip:S.answers[2].chip,stance:S.stance},r4:{a:S.answers[3].a,b:S.answers[3].b,chip:S.answers[3].chip}}}
+function goFinal(){S.phase='final';if(!S.submitted){try{window.sendToSupabase(buildChoices(),'').catch(()=>{})}catch(_){ }S.submitted=true}R()}
+
+function earliest3(key){for(let i=0;i<4;i++)if((S.answers[i][key]||0)>=3)return i;return -1}
+function summaryPattern(){const a=earliest3('a'),b=earliest3('b');if(a<0&&b<0)return '당신은 마지막까지 확신을 유보했습니다.';if(a===b)return '두 판단은 비슷한 속도로 움직였습니다.';if(a>=0&&(b<0||a<b))return "당신은 '일본이 전쟁에서 졌다'는 판단을 더 먼저 확신했습니다.";return "당신은 '조선에 대한 일본의 지배도 끝난다'는 판단을 더 먼저 확신했습니다."}
+function biggestMove(){let vals=[];for(let i=1;i<4;i++){const d=Math.abs(S.answers[i].a-S.answers[i-1].a)+Math.abs(S.answers[i].b-S.answers[i-1].b);vals.push(d)}const m=Math.max(...vals);const idx=vals.map((v,i)=>v===m?i+1:null).filter(v=>v!==null);if(idx.length!==1)return '당신의 판단은 여러 라운드에 걸쳐 움직였습니다.';return `당신의 판단이 가장 크게 움직인 것은 R${idx[0]}→R${idx[0]+1} 사이였습니다.`}
+function stanceText(){return ['이제는 나가도 될 것 같다','나가고 싶지만 아직 위험해 보인다','무엇이 달라졌는지 더 확인해야 한다'][S.stance-1]||'기록 없음'}
+function renderFinal(){
+  return `<main class="frame"><p class="eyebrow">8월 16일 저녁</p><h1 class="title" style="font-size:clamp(30px,7vw,48px)">당신의 판단은 어떻게 움직였습니까</h1><div id="traj" class="traj-wrap" aria-label="A와 B의 네 라운드 확신도 궤적"></div><div class="legend"><span><i class="a"></i>A 일본은 전쟁에서 졌다</span><span><i class="b"></i>B 조선에 대한 일본의 지배도 끝난다</span></div><div class="result-card"><h3>당신의 패턴</h3><p>${esc(summaryPattern())}</p><p>${esc(biggestMove())}</p><p>8월 15일 밤, 당신은 ‘${esc(stanceText())}’라고 생각했습니다.</p></div><section class="wall-compose"><h2 class="question-title" style="margin-top:0">벽에 한 줄을 남긴다면</h2><p class="lead" style="font-size:16px">1945년 8월 16일 저녁. 골목 어귀 벽에, 당신은 한 줄을 써 붙이기로 한다.</p><p class="small"><strong>이름·학번은 적지 마세요.</strong> 이 한 줄은 다른 반 친구들도 볼 수 있습니다.</p><textarea id="wall-input" maxlength="60" placeholder="60자 안에서 한 줄을 적어 보세요." oninput="updateWallCount()" ${S.wallPosted?'disabled':''}></textarea><div id="wall-count" class="counter">0 / 60</div><button class="btn" id="wall-btn" onclick="postWall()" ${S.wallPosted?'disabled':''}>${S.wallPosted?'벽에 붙였습니다':'벽에 붙인다'}</button><div id="wall-stage" class="wall-stage" aria-live="polite"></div><div id="wall-status" class="wall-status"></div></section><div class="rule"></div><p class="question-title" style="font-size:16px">플레이를 마친 뒤 생각이 남았다면</p><textarea id="comment" maxlength="100" placeholder="소감 (100자 이내 · 이름·학번 제외)"></textarea><button class="btn secondary" onclick="copyResult()">결과 복사하기</button><div class="outside"><button class="btn secondary small-btn" onclick="toggleOutside()">게임 밖에서 보기 — 실제 기록과 이후 상황</button><div id="outside-panel" class="outside-panel ${S.outsideOpen?'open':''}"><h4>여기서부터는 게임 밖입니다</h4><p>게임은 1945년 8월 16일 저녁에서 멈췄습니다. 그날의 사람들은 다음에 무슨 일이 일어날지 알지 못했습니다. 지금부터 읽는 것은 그들이 알 수 없었던, 이후에 기록으로 정리된 이야기입니다.</p><h4>단상에 섰던 사람</h4><p>8월 16일 학교 운동장의 연사는 여운형입니다. 장소는 서울 계동의 휘문중학교 운동장이었고, 수천 명이 모였습니다. 연설 도중 소련군이 온다는 소문이 군중 사이에 번지면서 연설이 소란에 묻힌 것까지, 게임의 장면은 당시 기록을 따랐습니다.</p><p>게임에서 이름을 바로 보여주지 않은 것은, 게임 속 청년에게 먼저 주어진 정보만으로 판단하게 하기 위해서였습니다. 여러분이 여운형이라는 이름에서 떠올리는 교과서 지식이 그 순간의 판단을 대신하지 않도록 한 것입니다.</p><h4>8월 15일 새벽의 비공개 회담</h4><p>방송이 나가기 전 이른 아침, 여운형은 조선총독부의 엔도 류사쿠 정무총감을 만났습니다. 이 자리에서 여운형이 정치범·경제범 석방, 3개월분 식량 확보, 치안 유지와 건국 활동에 간섭하지 말 것 등을 요구했다고 전해집니다. 이 요구 내용은 8월 16일 여운형의 공개 연설을 전한 당시 신문 기록과 이후 관련 기록에 남아 있습니다.</p><p>다만 이 만남의 성격은 지금도 서술이 갈립니다. 총독부가 치안권과 행정권을 사실상 넘긴 것으로 보는 서술이 있고, 일본인 보호를 위한 치안 협조를 요청한 것에 가깝다고 보는 서술도 있습니다. 이 게임은 어느 한쪽을 정답으로 고르지 않습니다. 분명한 것은 두 가지입니다. 회담은 실제로 있었고, 8월 15일의 보통 사람들은 이 회담을 알 방법이 없었다는 것입니다. 여러분이 게임에서 이 정보를 16일의 공개 연설로만 들을 수 있었던 이유입니다.</p><h4>두 소문은 어떻게 되었나</h4><p>서울에 새 정부가 선다는 소문 — 미군 측 기록(주한미군사)에는 8월 15일 경성방송국 주파수에서 무허가 방송이 나와, 서울에 곧 정부가 수립되고 지도자들이 이튿날 기차로 도착한다고 알렸다는 내용이 있습니다. 다음 날 서울역에는 실제로 그들을 기다리는 군중이 모였습니다. 예고된 지도자 세 사람은 나타나지 않았습니다.</p><p>소련군이 경성역에 온다는 소문 — 소련군은 서울에 오지 않았습니다. 미·소의 분할점령 방침에 따라 소련군은 38도선 이북에 진주했습니다. 미군은 9월 8일 인천에 상륙했고, 9월 9일 서울에 들어왔습니다. 이후 38도선 이남에는 미군정이 설치되었습니다.</p><p>두 소문을 믿고 역으로 달려간 사람들은 어리석었을까요. 그날 그들이 가진 정보만 놓고 보면, 역으로 향한 선택은 충분히 이해할 수 있습니다. 게임이 끝까지 소문의 진위를 알려주지 않은 이유입니다.</p><h4>방송이 어렵게 들린 이유</h4><p>8월 15일 정오의 방송은 일왕이 직접 읽은 종전조서였습니다. 조서는 한문투 문어체였고, 항복이나 패전이라는 말 대신 미·영·중·소 4국의 공동선언을 수락한다는 형식으로 쓰였습니다. 그리고 조서 어디에도 조선은 언급되지 않았습니다.</p><p>공동선언 수락이 조선의 독립을 뜻한다는 것을 알려면, 그 공동선언(포츠담 선언)이 조선의 독립을 언급한 카이로 선언을 잇고 있다는 사실까지 알아야 했습니다. 게임 속 청년이 그 연결 관계까지 알고 있었다고 전제할 근거는 없습니다. 그래서 방송에서 공동선언을 수락한다는 말을 들었다고 해서 곧바로 조선의 앞날까지 확신할 수 있도록 만들지 않았습니다.</p><h4>각 장면의 근거</h4><ul><li>방송의 내용(종전조서)과 총독의 글 — 1945년 8월 15일자 매일신보(제13664호). 대한민국역사박물관 소장, 국사편찬위원회 전사.</li><li>정오의 중대방송 예고 벽보 — 당시 정황을 전하는 회고와 후대 기록에 근거한 장면으로, 원출처 확인을 계속하고 있는 항목입니다.</li><li>그대로인 순사와 배급 — 총독부의 행정·경찰 기구는 이 시기에도 당분간 기능을 유지했습니다.</li><li>형무소 — 정치범들이 본격적으로 풀려나 만세 행렬이 시작된 것은 8월 16일입니다(대한민국역사박물관 영상 기록). 15일 저녁의 엇갈리는 소문은 그 전날의 상태를 표현한 것입니다.</li><li>15일의 조용한 저녁 — 여러 회고와 연구는 15일 당일 소식을 접하지 못했거나, 듣고도 실감하지 못한 사람이 많았다고 전합니다.</li><li>서울에 새 정부가 선다는 소문 — 주한미군사(국사편찬위원회 한국사데이터베이스 수록).</li></ul><h4>그 뒤</h4><p>8월 15일 저녁 조선건국준비위원회가 조직되기 시작해 17일 위원장 여운형, 부위원장 안재홍으로 짜였고, 8월 말까지 전국으로 조직이 퍼졌습니다. 8월 15일이 광복절이라는 이름의 국경일이 된 것은 1949년의 일입니다. 그러나 이것은 기념일을 법으로 정한 시점이지, 광복이 언제 완성되었다고 역사적으로 판단해야 하는지를 정해 주는 답은 아닙니다.</p><p><strong>그렇다면 — 광복은 언제 완성되었다고 말할 수 있을까요. 게임은 이 질문에 답하지 않습니다. 이제 여러분의 차례입니다.</strong></p></div></div><button class="btn secondary" onclick="restart()">다시 시작하기</button><p class="footer-credit">© 찰리쌤 · hischarlie.tistory.com</p></main>`
+}
+function toggleOutside(){S.outsideOpen=!S.outsideOpen;const p=document.getElementById('outside-panel');if(p)p.classList.toggle('open',S.outsideOpen)}
+function drawTrajectory(){
+  const box=document.getElementById('traj');if(!box)return;box.textContent='';
+  const axis=document.createElement('div');axis.className='traj-axis';box.appendChild(axis);
+  const left=0,right=100,top=4,bottom=96; const x=i=>left+(right-left)*(i/3); const y=v=>bottom-(bottom-top)*((v-1)/3);
+  for(let lv=1;lv<=4;lv++){const gl=document.createElement('div');gl.className='traj-gridline';gl.style.top=y(lv)+'%';axis.appendChild(gl);const lab=document.createElement('span');lab.className='traj-y';lab.style.top=y(lv)+'%';lab.textContent=lv;axis.appendChild(lab)}
+  for(let i=0;i<4;i++){const lab=document.createElement('span');lab.className='traj-x';lab.style.left=x(i)+'%';lab.textContent='R'+(i+1);axis.appendChild(lab)}
+  ['a','b'].forEach(key=>{for(let i=0;i<4;i++){const v=S.answers[i][key];const d=document.createElement('i');d.className=`traj-dot ${key}`;d.style.left=x(i)+'%';d.style.top=y(v)+'%';d.title=`${key.toUpperCase()} R${i+1}: ${v}`;axis.appendChild(d);if(i<3){const x1=x(i),y1=y(v),x2=x(i+1),y2=y(S.answers[i+1][key]);const seg=document.createElement('i');seg.className=`traj-seg ${key}`;const dx=x2-x1,dy=y2-y1;const rect=axis.getBoundingClientRect();const px=dx/100*rect.width,py=dy/100*rect.height;seg.style.left=x1+'%';seg.style.top=y1+'%';seg.style.width=Math.hypot(px,py)+'px';seg.style.transform=`rotate(${Math.atan2(py,px)*180/Math.PI}deg)`;axis.appendChild(seg)}}})
+}
+
+function wallCfg(){const c=window.CHARLIE_CONFIG||{};return {url:c.supabaseUrl||'',key:c.supabasePublishableKey||''}}
+function updateWallCount(){const e=document.getElementById('wall-input'),c=document.getElementById('wall-count');if(e&&c)c.textContent=`${e.value.length} / 60`}
+async function postWall(){
+  if(S.wallPosted)return;const input=document.getElementById('wall-input');const content=(input?.value||'').trim();if(!content){showToast('한 줄을 적어 주세요.');return}if(content.length>60)return;
+  S.wallPosted=true;const btn=document.getElementById('wall-btn');if(btn){btn.disabled=true;btn.textContent='벽에 붙였습니다'}if(input)input.disabled=true;
+  const tempId='local-'+Date.now();S.wallPostId=tempId;appendWallNote({id:tempId,content},true);
+  const {url,key}=wallCfg();if(!url||!key){setWallStatus('다른 벽보는 지금 불러오지 못했습니다.');return}
+  try{
+    const res=await fetch(`${url}/rest/v1/wall_posts`,{method:'POST',headers:publicHeaders({'Content-Type':'application/json','Prefer':'return=representation'}),body:JSON.stringify({game:window.GAME_CONFIG.game_id,class:CLASS,content,hidden:false})});
+    if(res.ok){const rows=await res.json();const row=Array.isArray(rows)?rows[0]:null;if(row?.id){S.knownWallIds.delete(tempId);S.knownWallIds.add(row.id);const self=document.querySelector(`[data-wall-id="${tempId}"]`);if(self)self.dataset.wallId=row.id;S.wallPostId=row.id}}
+    startWallPolling();await loadWalls();
+  }catch(_){startWallPolling();await loadWalls()}
+}
+function restoreWallAfterRender(){if(S.wallPosted){const input=document.getElementById('wall-input'),btn=document.getElementById('wall-btn');if(btn){btn.disabled=true;btn.textContent='벽에 붙였습니다'}if(input)input.disabled=true;startWallPolling();loadWalls()}}
+function appendWallNote(row,self=false,delay=0){const stage=document.getElementById('wall-stage');if(!stage||!row?.id||S.knownWallIds.has(row.id))return;S.knownWallIds.add(row.id);const n=document.createElement('article');n.className='wall-note'+(self?' self':'');n.dataset.wallId=row.id;n.style.setProperty('--rot',(((hash(row.id)%7)-3)*.45)+'deg');n.style.animationDelay=delay+'ms';n.textContent=String(row.content||'').slice(0,60);stage.appendChild(n)}
+function hash(s){let h=0;for(const ch of String(s))h=((h<<5)-h)+ch.charCodeAt(0)|0;return Math.abs(h)}
+async function loadWalls(){const {url,key}=wallCfg();if(!url||!key||key.startsWith('__')){setWallStatus('다른 벽보는 지금 불러오지 못했습니다.');return}try{const endpoint=`${url}/rest/v1/wall_posts?select=id,created_at,content&game=eq.${encodeURIComponent(window.GAME_CONFIG.game_id)}&class=eq.${encodeURIComponent(CLASS)}&hidden=eq.false&order=created_at.asc&limit=80`;const res=await fetch(endpoint,{headers:publicHeaders()});if(!res.ok)throw new Error(String(res.status));const rows=await res.json();const visible=new Set(rows.map(r=>r.id));const stage=document.getElementById('wall-stage');if(stage){for(const el of [...stage.querySelectorAll('.wall-note')]){const id=el.dataset.wallId||'';if(!id.startsWith('local-')&&!visible.has(id)){el.remove();S.knownWallIds.delete(id)}}}let delay=0;for(const row of rows){if(!S.knownWallIds.has(row.id)){appendWallNote(row,row.id===S.wallPostId,delay);delay+=110}}setWallStatus(rows.length?'같은 수업의 벽보가 한 장씩 붙습니다.':'아직 다른 벽보가 없습니다.')}catch(_){setWallStatus('다른 벽보는 지금 불러오지 못했습니다.')}}
+function startWallPolling(){if(S.pollTimer)return;S.pollTimer=setInterval(()=>{if(S.phase==='final'&&S.wallPosted)loadWalls()},POLL_MS)}
+function setWallStatus(t){const e=document.getElementById('wall-status');if(e)e.textContent=t}
+
+function copyResult(){
+  const comment=document.getElementById('comment')?.value?.trim()||'';
+  if(comment&&comment!==S.sentComment){try{window.sendToSupabase(buildChoices(),comment).catch(()=>{})}catch(_){ }S.sentComment=comment}
+  const lines=['그날, 아무도 몰랐다 — 1945',`R1 A${S.answers[0].a}/B${S.answers[0].b} → R2 A${S.answers[1].a}/B${S.answers[1].b} → R3 A${S.answers[2].a}/B${S.answers[2].b} → R4 A${S.answers[3].a}/B${S.answers[3].b}`,summaryPattern(),biggestMove(),`8월 15일 밤: ${stanceText()}`,comment?`소감: ${comment}`:'','찰리쌤의 한국사 게임실 · hischarlie.tistory.com'].filter(Boolean).join('\n');
+  if(window.CharlieCore?.copyText){try{window.CharlieCore.copyText(lines,'결과가 복사되었습니다.');return}catch(_){}}
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(lines).then(()=>showToast('결과가 복사되었습니다.')).catch(()=>legacyCopy(lines));
+  else legacyCopy(lines);
+}
+function legacyCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('결과가 복사되었습니다.')}catch(_){showToast('복사하지 못했습니다.')}ta.remove()}
+function restart(){if(S.pollTimer)clearInterval(S.pollTimer);S=freshState();R()}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show-toast');clearTimeout(showToast._t);showToast._t=setTimeout(()=>t.classList.remove('show-toast'),2200)}
+function traceScene(id){try{window.CharlieCore?.enterScene?.(id)}catch(_){}}
+function traceChoice(sceneId,choiceId){try{window.CharlieCore?.recordChoice?.({sceneId,choiceId})}catch(_){}}
+
+/* 툴팁 이벤트 — 본문 템플릿 리터럴 내부에서 span을 직접 중첩 작성하지 않고 tt() 결과만 사용 */
+let ttTimer=null;document.addEventListener('click',e=>{const el=e.target.closest('.tt');const b=document.getElementById('tt-bubble');if(!el){b.classList.remove('show');return}e.preventDefault();e.stopPropagation();b.querySelector('.tb-word').textContent=el.dataset.word;b.querySelector('.tb-desc').textContent=decodeURIComponent(el.dataset.tip||'');const r=el.getBoundingClientRect();const bw=250;b.style.width=bw+'px';b.style.left=Math.max(8,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-8))+'px';b.style.top='-9999px';b.classList.add('show');const h=b.offsetHeight;b.style.top=(r.top-h-12<8?r.bottom+8:r.top-h-12)+'px';clearTimeout(ttTimer);ttTimer=setTimeout(()=>b.classList.remove('show'),4500)});
+R();
+</script>
+</body>
+</html>

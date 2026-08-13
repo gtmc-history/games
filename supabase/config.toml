@@ -1,0 +1,4 @@
+project_id = "xgniwztlrakkrbzcfklb"
+
+[functions.wall-moderate]
+verify_jwt = false
