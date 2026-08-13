@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1945년 8월 15일 경성에서 한 정보원을 골라 소식을 얻고 동생에게 전할 말을 고쳐가는 한국사 계기교육 게임">
+<title>도둑같이 온 해방 — 1945</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ 근현대 팔레트 (gtmc-history-design SKILL 기준) ═══ */
+:root {
+  --bg:      #f0ece4;   /* 낡은 사진 배경 */
+  --surface: #e8e0d4;
+  --blue:    #003087;   /* 태극 청 */
+  --red:     #cd2e3a;   /* 태극 홍 */
+  --ink:     #1a1a1a;
+  --sepia:   #8b7355;
+  --muted:   #6b6154;
+  --line:    rgba(139,115,85,0.35);
+  --font-display: 'Black Han Sans', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-doc: 'Noto Serif KR', serif;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--font-body);
+  background:var(--bg); color:var(--ink);
+  min-height:100dvh;
+  display:flex; justify-content:center;
+  padding:16px 12px 48px;
+}
+/* 낡은 종이 텍스처 */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+#app { position:relative; z-index:1; width:100%; max-width:720px; }
+
+/* ═══ 공통 ═══ */
+.scene { animation:scene-in 0.4s ease forwards; }
+@keyframes scene-in { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+.frame {
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:3px solid var(--blue);
+  border-radius:4px;
+  padding:24px 20px 28px;
+  box-shadow:0 2px 12px rgba(60,45,30,0.08);
+}
+.hdr-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 4px 14px; margin-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.hdr-time {
+  font-family:var(--font-doc); font-weight:700;
+  font-size:17px; color:var(--ink); letter-spacing:0.02em;
+}
+.hdr-pips { display:flex; gap:6px; }
+.pip { width:26px; height:5px; background:rgba(139,115,85,0.25); border-radius:2px; transition:background 0.4s; }
+.pip.done { background:var(--sepia); }
+.pip.now  { background:var(--red); }
+
+h1.title {
+  font-family:var(--font-display);
+  font-size:clamp(26px,6vw,34px); line-height:1.35;
+  color:var(--ink); letter-spacing:0.01em;
+}
+.eyebrow {
+  font-size:13px; letter-spacing:0.25em; color:var(--sepia);
+  font-weight:500; margin-bottom:10px;
+}
+p.lead { font-size:16px; line-height:1.9; color:var(--ink); font-weight:300; }
+p.lead strong { font-weight:700; }
+.small { font-size:13px; color:var(--muted); line-height:1.7; }
+
+.btn {
+  display:block; width:100%;
+  min-height:52px; padding:14px 18px;
+  border:1.5px solid var(--blue); border-radius:4px;
+  background:var(--blue); color:#f4f0e6;
+  font-family:var(--font-body); font-weight:700; font-size:16px;
+  letter-spacing:0.03em; cursor:pointer;
+  transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+}
+.btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,48,135,0.25); }
+.btn:active:not(:disabled) { transform:translateY(0) scale(0.97); }
+.btn:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-ghost {
+  background:transparent; color:var(--sepia); border-color:var(--line);
+}
+.btn-ghost:hover:not(:disabled) { box-shadow:0 4px 12px rgba(60,45,30,0.12); border-color:var(--sepia); }
+.btn + .btn { margin-top:10px; }
+
+/* ═══ 경로 선택 ═══ */
+.ask { font-family:var(--font-doc); font-size:18px; font-weight:600; margin:4px 0 16px; }
+.paths { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.path-card {
+  display:flex; align-items:center; gap:14px;
+  min-height:56px; padding:14px 16px;
+  background:rgba(255,255,255,0.45);
+  border:1px solid var(--line); border-left:3px solid transparent;
+  border-radius:4px; cursor:pointer;
+  transition:border-color 0.2s, background 0.2s, transform 0.15s;
+  font-size:17px;
+}
+.path-card:hover { transform:translateX(4px); background:rgba(255,255,255,0.7); }
+.path-card.radio  { --pc:var(--sepia); }
+.path-card.paper  { --pc:var(--ink); }
+.path-card.street { --pc:var(--blue); }
+.path-card.rumor  { --pc:var(--red); }
+.path-card:hover, .path-card.on { border-left-color:var(--pc); }
+.path-card.on { background:rgba(255,255,255,0.85); box-shadow:inset 0 0 0 1px var(--pc); }
+.path-ico { font-size:24px; flex-shrink:0; }
+.path-name { font-weight:700; }
+.path-act { font-size:13px; color:var(--muted); font-weight:300; margin-top:2px; }
+
+/* ═══ 정보 카드 ═══ */
+.info-card {
+  border:1px solid var(--line); border-left:3px solid var(--pc,var(--sepia));
+  background:rgba(255,255,255,0.6); border-radius:0 4px 4px 0;
+  padding:18px 18px 16px; margin-bottom:14px;
+}
+.info-card.radio  { --pc:var(--sepia); }
+.info-card.paper  { --pc:var(--ink); background:#f6f1e5; }
+.info-card.street { --pc:var(--blue); }
+.info-card.rumor  { --pc:var(--red); }
+.info-src { font-size:12px; letter-spacing:0.18em; color:var(--sepia); font-weight:500; margin-bottom:10px; }
+.info-body { font-size:17px; line-height:1.95; font-weight:400; }
+.info-card.paper .info-body { font-family:var(--font-doc); }
+.info-sub {
+  margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+  font-size:14px; color:var(--muted); line-height:1.8; font-weight:300;
+}
+
+/* ═══ 동생에게 말하기 ═══ */
+.judge-label { font-family:var(--font-doc); font-size:17px; font-weight:600; margin:20px 0 4px; }
+.judge-hint { font-size:12.5px; color:var(--muted); margin-bottom:12px; }
+.judges { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.judge-card {
+  display:block;
+  min-height:52px; padding:12px 14px;
+  background:rgba(255,255,255,0.4);
+  border:1px solid var(--line); border-left:3px solid transparent;
+  border-radius:4px; cursor:pointer; font-family:var(--font-doc); font-size:16px; line-height:1.7;
+  transition:border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.judge-card:hover { transform:translateX(4px); border-left-color:var(--blue); background:rgba(255,255,255,0.65); }
+.judge-card.on {
+  border-left-color:var(--blue); background:rgba(255,255,255,0.9);
+  box-shadow:inset 0 0 0 1px var(--blue);
+}
+.live-notebook {
+  margin:16px 0 18px; padding:14px 10px 4px;
+  border:1px solid var(--line); border-radius:4px; background:rgba(255,255,255,0.35);
+}
+.live-notebook-title { font-family:var(--font-doc); font-size:16px; font-weight:700; margin:0 6px 4px; }
+.previous-spoken {
+  margin:18px 0; padding:14px 16px; border-left:3px solid var(--sepia);
+  background:rgba(255,255,255,0.45);
+}
+.previous-spoken .small { display:block; margin-bottom:5px; }
+.previous-spoken blockquote { font-family:var(--font-doc); font-size:16px; line-height:1.75; font-weight:600; }
+.spoken-question { margin:18px 0 10px; }
+.spoken-question .judge-label { margin:0 0 6px; }
+.spoken-question h2 { font-family:var(--font-doc); font-size:19px; line-height:1.6; }
+
+/* ═══ 툴팁 ═══ */
+.tt {
+  border-bottom:1.5px dashed var(--sepia);
+  cursor:pointer; position:relative; white-space:nowrap;
+  color:inherit; transition:border-color 0.15s;
+}
+.tt:hover { border-bottom-color:var(--red); }
+#tt-bubble {
+  position:fixed; z-index:9000; max-width:240px;
+  background:#241f18; border:1px solid rgba(139,115,85,0.7);
+  border-radius:4px; padding:10px 13px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.4);
+  pointer-events:none; opacity:0; transform:translateY(4px);
+  transition:opacity 0.18s, transform 0.18s;
+}
+#tt-bubble.show { opacity:1; transform:translateY(0); }
+#tt-bubble .tb-word { font-size:12px; font-weight:700; color:#e8c97a; margin-bottom:5px; }
+#tt-bubble .tb-desc { font-size:12px; color:rgba(240,232,214,0.9); line-height:1.7; }
+
+/* ═══ 엔딩 ═══ */
+.traj-wrap {
+  background:rgba(255,255,255,0.55); border:1px solid var(--line);
+  border-radius:4px; padding:18px 12px 10px; margin:16px 0 20px;
+}
+.traj-title { font-size:12px; letter-spacing:0.2em; color:var(--sepia); font-weight:500; margin:0 6px 8px; }
+.spoken-traj { list-style:none; display:grid; gap:8px; margin:10px 4px 8px; }
+.spoken-traj li { padding:11px 12px; border-left:3px solid var(--line); background:rgba(255,255,255,0.45); }
+.spoken-traj time { display:block; font-size:12px; font-weight:700; color:var(--sepia); margin-bottom:4px; }
+.spoken-traj blockquote { font-family:var(--font-doc); font-size:15px; line-height:1.7; }
+.reveal-block {
+  border:1px dashed var(--sepia); border-radius:4px;
+  padding:16px 16px 14px; margin-bottom:12px;
+  background:rgba(255,255,255,0.4);
+  font-size:14.5px; line-height:1.9; font-weight:300;
+}
+.reveal-block strong { font-weight:700; }
+.reveal-tag {
+  display:inline-block; font-size:11px; letter-spacing:0.15em; font-weight:700;
+  color:#f4f0e6; background:var(--sepia); border-radius:2px;
+  padding:3px 9px; margin-bottom:9px;
+}
+.reveal-block.rb-red  .reveal-tag { background:var(--red); }
+.reveal-block.rb-blue .reveal-tag { background:var(--blue); }
+.quote-box {
+  font-family:var(--font-doc); text-align:center;
+  padding:26px 18px; margin:20px 0;
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+.quote-main { font-size:20px; font-weight:700; line-height:1.7; }
+.quote-src { font-size:13px; color:var(--muted); margin-top:10px; }
+.ask-final {
+  font-family:var(--font-doc); font-size:17px; font-weight:600;
+  line-height:1.8; margin:18px 0 14px; color:var(--ink);
+}
+textarea#comment {
+  width:100%; min-height:64px; resize:vertical;
+  border:1px solid var(--line); border-radius:4px;
+  background:rgba(255,255,255,0.7); color:var(--ink);
+  font-family:var(--font-body); font-size:15px; line-height:1.7;
+  padding:12px 14px; margin-bottom:12px;
+}
+textarea#comment:focus { outline:none; border-color:var(--blue); }
+.bonus-reveal { display:none; }
+.bonus-reveal.open { display:block; }
+.footer-credit {
+  text-align:center; font-size:11.5px; margin-top:28px;
+  color:rgba(120,100,80,0.4); letter-spacing:0.05em;
+}
+.footer-credit a { color:rgba(120,100,80,0.4); text-decoration:none; }
+
+/* 토스트 */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:#241f18; color:#e8dcc8;
+  border:1px solid var(--sepia); border-radius:4px;
+  padding:10px 22px; font-size:13px;
+  opacity:0; pointer-events:none; white-space:nowrap;
+  z-index:9999; transition:opacity 0.3s;
+}
+#toast.show { opacity:1; }
+
+@media (max-width:480px) {
+  .frame { padding:20px 14px 24px; }
+  .info-body { font-size:16px; }
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="app"></div>
+
+<script>
+'use strict';
+/* ════════════════════════════════════════════════════════
+   도둑같이 온 해방 — 1945 (haebang1945)
+   카드세트 v2 (2026-08-12, 2차 검수 반영) 기반 구현
+
+   ◆ 배포 체크리스트
+     1. GitHub `games/haebang1945/` 업로드
+     2. `?meta=1` 접속으로 game_meta 등록
+     3. RLS 확인 (anon INSERT only)
+     4. 학교 네트워크에서 supabase.co 차단 여부 확인
+   ◆ 잔여 TODO (v2 카드세트 문서 참조)
+     - R2-라디오 검증 메모: 회고자·출전 명기 필요
+       (경성방송국 한국인 방송원 회고 — 출전 확정 후 아래
+        ROUNDS[1].cards.radio 주석에 기입할 것)
+     - 보너스 사진: NARA 원자료 식별번호·권리표시 확인 전까지
+       텍스트 폴백 유지 (BONUS_IMG = '' )
+   ════════════════════════════════════════════════════════ */
+
+/* ── CONFIG ─────────────────────────────────────────────
+   charlie-config.js 이전 시 이 블록만 교체하면 됨.
+   ⚠️ 아래 키는 레거시 anon 키 — 2026년 말 폐기 예정.
+   publishable 키 발급 후 교체할 것. */
+const GAME_CONFIG = {
+  game_id: 'haebang1945',
+  label:   '도둑같이 온 해방 — 1945',
+  era:     '일제강점기',
+  version: '1.2.2',
+};
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnbml3enRscmFra3JiemNma2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDUxNTQsImV4cCI6MjA5NDE4MTE1NH0.lvYjcvKFVqt_rLQwVgUEQB5pbyQ2saRwaoH8LLuFuqw';
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+/* 학급 통계 조회 — 현재 RLS는 anon SELECT 차단.
+   charlie-core v1.1 통계 엔드포인트(Edge Function) 확정 시
+   URL 기입하면 엔딩에 "우리 반 보기" 버튼이 나타남. */
+const STATS_ENDPOINT = '';
+
+/* ── 데이터 전송 (gobu1894 표준 패턴) ── */
+function sendToSupabase(choiceData, comment) {
+  fetch(`${SUPABASE_URL}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      class: CLASS,
+      game: GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment: comment,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch(() => {});
+}
+
+/* ── game_meta 등록 (?meta=1 접속 시 1회) ── */
+function registerMeta() {
+  fetch(`${SUPABASE_URL}/rest/v1/game_meta`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates,return=minimal',
+    },
+    body: JSON.stringify(GAME_CONFIG),
+  }).then(() => showToast('✅ game_meta 등록 요청 완료'))
+    .catch(() => showToast('❌ game_meta 등록 실패'));
+}
+
+/* ── 툴팁 (왕의 결재함 v3 표준) ── */
+const TIPS = {
+  '공동선언': '포츠담 선언 — 미·영·중이 일본에 항복을 요구한 선언. 소련도 이후 참여',
+  '조서': '조서(詔書) — 일왕이 국민에게 내리는 공식 문서',
+  '여운형': '여운형(1886~1947) — 독립운동가·정치인',
+  '치안': '치안(治安) — 사회의 질서와 안전을 지키는 일',
+  '사상범': '사상범(思想犯) — 체제에 반대하는 사상을 이유로 처벌된 사람',
+  '연합국': '제2차 세계대전에서 일본·독일에 맞서 싸운 나라들',
+  '소련군': '소련(소비에트 연방)의 군대. 1945년 8월 일본에 선전포고',
+};
+function tt(word) {
+  const tip = TIPS[word] || '';
+  if (!tip) return word;
+  return `<span class="tt" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+/* 카드 본문의 {{용어}} 마커를 툴팁 span으로 치환 */
+function ttify(text) {
+  return text.replace(/\{\{(.+?)\}\}/g, (_, w) => tt(w));
+}
+
+/* ── 게임 데이터 (카드세트 v2 그대로 — 임의 수정 금지) ── */
+const PATHS = {
+  radio:  { name:'라디오', ico:'📻', act:'방송을 듣는다' },
+  paper:  { name:'신문',   ico:'📰', act:'지면을 찾아 읽는다' },
+  street: { name:'거리',   ico:'🚶', act:'거리로 나가 살핀다' },
+  rumor:  { name:'입소문', ico:'💬', act:'사람들의 이야기를 듣는다' },
+};
+const JUDGES = [
+  '아직 무슨 일인지 판단하기 어렵다',
+  '전쟁에 중대한 변화가 생긴 것 같다',
+  '일본이 전쟁에서 패배한 것 같다',
+  '조선의 식민 지배도 끝날 가능성이 크다',
+];
+const ROUNDS = [
+  { time:'8월 15일 · 정오', short:'정오',
+    ask:'정오가 되었다. 지금 어디에서 소식을 구하겠는가?',
+    btn:'판단을 적고 오후를 보낸다',
+    prompt:'동생이 소매를 잡아끈다. "아까부터 다들 방송 얘기를 하던데… 무슨 일이 생긴 거야?"',
+    confirm:'동생에게 이렇게 대답한다',
+    echo:{ next:'오후를 보낸다', re:{
+      1:'"어른들도 다 모르겠대…." 동생은 다시 라디오 쪽을 바라본다.',
+      2:'"큰일이야? 좋은 일이야, 나쁜 일이야?" 당신은 거기까지는 대답하지 못한다.',
+      3:'"정말? 그런데 왜 이렇게 조용해?" 창밖 거리는 여전히 평소 같다.',
+      4:'"…정말? 그런데 왜 아무도 만세를 안 불러?" 당신도 그 이유를 모른다.',
+    }},
+    cards:{
+      /* 검증: 옥음방송 경성 중계 청취 가능(국편). 궁정 문어체·음질로 즉각 이해 곤란 */
+      radio:{ t:'정오, 라디오에서 방송이 흘러나온다. 잡음 속 어려운 일본어 문어체. "{{공동선언}}을 수락한다"는 말은 들렸지만 \'항복\'도 \'조선\'도 없었다.',
+              s:'방송은 짧게 끝났다. 주변 어른들도 서로 얼굴만 쳐다본다. 방송 내용을 정확히 옮길 수 있는 사람이 드물다.',
+              n:'"공동선언을 수락한다." 그러나 \'항복\'도 \'조선\'도 들리지 않았다.' },
+      /* 검증: 15일 조간 중대방송 예고 보도는 확인되는 사실 */
+      paper:{ t:'아침 신문에는 "금일 정오 중대방송이 있으니 반드시 들으라"는 예고뿐이다. 무슨 내용인지는 적혀 있지 않다.',
+              s:'신문사 앞을 지나는 사람이 평소보다 많아 보인다. 다음 지면이 언제 나올지는 알 수 없다.',
+              n:'"정오 중대방송" 예고뿐. 내용은 알 수 없음.' },
+      /* 검증: 15일 경성 거리 평온(국편 — 만세 물결은 16일 보도 이후) */
+      street:{ t:'거리는 뜻밖에 평온하다. 전차는 다니고 경찰은 제자리에 있다. 다만 몇몇 일본인의 표정이 어둡고, 말을 아끼는 듯 보인다.',
+               s:'만세 소리도 소란도 없다. 어제와 크게 다르지 않은 오후가 흘러간다.',
+               n:'거리는 평온. 일부 일본인의 표정만 어두움.' },
+      /* 검증: 여운형–엔도 회담 8/15 아침(국편). 세부 시각 기록 상이 → 시각 미표기 */
+      rumor:{ t:'"일본이 항복했다더라." "아니다, 끝까지 싸우자는 방송이었다더라." 말이 엇갈린다. 오늘 아침 {{여운형}}이 총독부 고관을 만났다는 얘기도 돈다.',
+              s:'누구 말이 맞는지 확인할 길이 없다. 여운형이 왜 불려갔는지 아는 사람도 없다.',
+              n:'"항복했다" vs "결사항전이다" — 말이 엇갈림. 여운형이 총독부 고관을 만났다는 얘기.' },
+    } },
+  { time:'8월 15일 · 오후', short:'오후',
+    ask:'오후가 흐른다. 어디에서 소식을 구하겠는가?',
+    btn:'판단을 적고 저녁을 맞는다',
+    cards:{
+      /* 검증: 경성방송국 한국인 방송원 요약 해설·재방송 회고 존재. 시각 미상.
+         ⚠️ TODO: 회고자·출전 확정 후 여기에 명기 (16개 중 근거 추적성 최약) */
+      radio:{ t:'조선어 방송이 나온다. 낮의 방송 내용을 풀어 전한다. "전쟁을 끝내기로 하였다"는 취지다. 그러나 조선이 어떻게 되는지는 말하지 않는다.',
+              s:'같은 내용이 몇 차례 반복된다. 아나운서의 목소리는 담담하다.',
+              n:'조선어 해설 — 전쟁을 끝내기로 했다는 취지. 조선의 앞날은 언급 없음.' },
+      /* 검증: 매일신보 8/15자 종전조서 게재(국편 사료). 배포 시각 미상 → "15일자 지면"만.
+         매체명은 플레이 중 미표기(엔딩 해설에서 공개) */
+      paper:{ t:'15일자 지면에 {{조서}} 전문이 실렸다. "미·영·중·소 4국의 {{공동선언}}을 수락한다." 그러나 조서에는 \'패전\'도 \'항복\'도 \'조선\'도 없다.',
+              s:'문장은 길고 낯선 한자어투성이다. 읽는 사람마다 고개를 갸웃한다.',
+              n:'조서 전문 확인 — "공동선언 수락". \'패전·항복·조선\'은 없음.' },
+      /* 검증: 문서 소각은 확인 사실이나 개시 시점 단정 곤란 → 관찰 가능한 연기만 제시 */
+      street:{ t:'일본인 상점 몇 곳이 문을 닫았다. 관청 앞 분위기가 술렁인다. 관청 뒤편으로 연기가 오른다. 무엇을 태우는지는 여기서는 알 수 없다.',
+               s:'무슨 일이 있는 것은 분명한데, 누구도 큰 소리로 말하지 않는다.',
+               n:'일본인 상점 철시. 관청 뒤편의 연기 — 무엇을 태우는지는 모름.' },
+      /* 검증: 회담 실제 내용(치안 협조)은 미공개 — 해석 여지 유지, 엔딩에서 공개 */
+      rumor:{ t:'여운형 얘기가 다시 돈다. "{{치안}}을 맡아달라 했다더라." "일본에 협력하라는 얘기다." "항복하니 뒷일을 부탁한 거다." 말마다 다르다.',
+              s:'만난 것은 분명해 보이는데, 왜 만났는지는 아무도 정확히 모른다.',
+              n:'여운형 회담의 이유를 둘러싼 엇갈린 추측 — 치안? 협력? 항복?' },
+    } },
+  { time:'8월 15일 · 저녁', short:'저녁',
+    ask:'해가 진다. 어디에서 소식을 구하겠는가?',
+    btn:'판단을 적고 밤을 지낸다',
+    prompt:'동생이 잠들기 전에 묻는다. "일본이 졌다는 얘기가 돌던데… 그럼 이제 우리는 독립하는 거야?"',
+    confirm:'동생에게 이렇게 대답한다',
+    echo:{ next:'밤을 지낸다', re:{
+      1:'"하루가 다 갔는데, 아직도 몰라?" 동생이 이불을 뒤집어쓴다.',
+      2:'"낮에도 그렇게 말했잖아…." 동생의 목소리에 실망이 묻어난다.',
+      3:'"진 거랑… 독립이랑 같은 거야?" 당신은 바로 답하지 못한다.',
+      4:'"그럼 내일은… 만세 불러도 돼?" 당신은 잠시 망설인다.',
+    }},
+    cards:{
+      /* 의도된 무보상 카드 — 경로 기회비용 메카닉 */
+      radio:{ t:'라디오를 다시 틀었다. 낮과 같은 내용이 되풀이될 뿐, 새로운 소식은 없다.',
+              s:'방송은 지나가면 붙잡을 수 없다. 아까 들은 말을 정확히 기억하고 있는지도 자신이 없다.',
+              n:'새 소식 없음. 낮 방송의 반복.' },
+      /* 검증: 국편 게재 매일신보 번역 직접 인용. 원문 대조 완료. '잔학한' 축약 금지 */
+      paper:{ t:'낮에 본 지면을 다시 폈다. 처음엔 지나친 구절이 눈에 들어온다. "전쟁의 국면은 마침내 호전되지 않았다." "적은 새로이 잔학한 폭탄을 사용하여…"',
+              s:'같은 글인데 다시 읽으니 눈에 걸리는 문장이 다르다.',
+              n:'같은 지면 재독 — "전쟁의 국면은 호전되지 않았다", "새로이 잔학한 폭탄".' },
+      /* 검증: 등화관제 해제 회고 존재, 시점 확정 곤란 → '듯하다'로 관찰의 불확실성 표현 */
+      street:{ t:'저녁 거리는 여전히 조용하다. 만세 소리는 들리지 않는다. 해가 지자 평소보다 불빛이 많은 듯하다. 이유는 알 수 없다.',
+               s:'낮은 목소리로 이야기를 나누는 사람들이 골목에 드문드문 보인다.',
+               n:'저녁 거리 조용. 만세 없음. 불빛이 평소보다 많은 듯함.' },
+      /* 검증: 8/16 정치범 석방은 사실. 전날 저녁 소문 유포는 개연적 구성 */
+      rumor:{ t:'"내일 아침 형무소에서 사람들이 나온다더라." {{사상범}}으로 잡혀간 이들을 풀어주기로 했다는 얘기가 은밀히 퍼진다.',
+              s:'믿기 어려운 얘기지만 이번엔 꽤 구체적이다. 누가 처음 말했는지는 모른다.',
+              n:'"내일 아침 형무소에서 사람들이 나온다더라."' },
+    } },
+  { time:'8월 16일 · 오전~낮', short:'16일',
+    ask:'날이 밝았다. 어디에서 소식을 구하겠는가?',
+    btn:'판단을 적고 하루를 돌아본다',
+    cards:{
+      radio:{ t:'방송은 계속된다. 어제의 조서 내용에 더해, 질서를 지키라는 당부가 반복된다.',
+              s:'라디오만 들어서는 지금 거리에서 무슨 일이 벌어지는지 알 수 없다.',
+              n:'조서 반복 + 질서 당부. 거리 상황은 알 수 없음.' },
+      /* 검증: 16일 항복 보도 후 만세 물결(국편) — 게임의 핵심 전거 */
+      paper:{ t:'신문에 크게 실렸다. 일본이 {{연합국}}에 항복하였다. 어제의 활자와 다르다. 이제는 누구도 그 뜻을 묻지 않는다.',
+              s:'신문을 든 사람들 주위로 모여드는 이들이 보인다.',
+              n:'일본이 연합국에 항복 — 명확한 보도.' },
+      /* 검증: 8/16 서대문형무소 석방·만세·태극기(역사박물관 영상).
+         ⚠️ 자료별 날짜 표기 상이(일부 전시데이터 8/15) — 8/16 영상 설명 기준 유지 */
+      street:{ t:'형무소 문이 열리고 사람들이 쏟아져 나온다. 거리는 인파로 가득하다. 어디서 났는지 태극기가 물결치고, 만세 소리가 그치지 않는다.',
+               s:'어제의 그 거리라고 믿기 어렵다.',
+               n:'형무소 석방, 인파, 태극기, 만세.' },
+      /* 검증: 8/16 소련군 입성 오보·경성역 군중 운집 기록 확인("오후 1시" 소문 기록 존재) */
+      rumor:{ t:'"오후 1시, {{소련군}}이 경성역으로 들어온다더라." 사람들이 경성역 쪽으로 몰려간다. 시간까지 정확한 얘기다.',
+              s:'이렇게 구체적인 얘기가 틀릴 리 없다고, 옆 사람이 말한다.',
+              n:'"오후 1시 소련군 경성역 입성" — 시간까지 구체적인 얘기.' },
+    } },
+];
+/* 보너스 사진 — 권리 확인 전까지 텍스트 폴백. 확정 시 URL 기입 */
+const BONUS_IMG = '';
+/* 짝지음: '대한의 가장 빛나는 여권'(빙그레·국가보훈부 2026).
+   ⚠️ 현재 URL은 개인 업로드본 — 공식 캠페인 페이지 확인 후 교체 권장 */
+const NEXT_URL = 'https://joo.is/uploads/files/fa236a0e7307461392e6fcefac606993.html';
+/* 동생에게 하는 대답 (판단 척도의 구어체 버전) */
+const SPOKEN = [
+  '"아직은… 무슨 일인지 잘 모르겠어."',
+  '"전쟁에 큰 변화가 생긴 것 같아."',
+  '"일본이… 진 것 같아."',
+  '"우리도 이제 일본의 지배에서 벗어날 가능성이 큰 것 같아."',
+];
+
+/* ── 상태 ── */
+let S = {
+  phase: 'intro',      // intro | round | final
+  ri: 0,               // 현재 라운드 index
+  step: 'path',        // path | info
+  selPath: null,
+  selJudge: null,
+  h: [],               // [{path, judge}] × 4
+  submitted: false,
+  sentComment: '',
+  bonusOpen: false,
+  bonusRevealed: false,
+};
+
+/* ── 유틸 ── */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('show'); toastTimer = null; }, 2400);
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function pips() {
+  return `<div class="hdr-pips">` + ROUNDS.map((_, i) => {
+    let c = 'pip';
+    if (S.phase === 'final' || i < S.ri) c += ' done';
+    else if (i === S.ri) c += ' now';
+    return `<div class="${c}"></div>`;
+  }).join('') + `</div>`;
+}
+/* ── 렌더 ── */
+function R() {
+  window.scrollTo(0, 0);
+  const app = document.getElementById('app');
+  app.innerHTML =
+    S.phase === 'intro' ? renderIntro() :
+    S.phase === 'round' ? renderRound() :
+    renderFinal();
+  if (S.phase === 'final') drawTraj();
+}
+
+/* ── 인트로 ── */
+function renderIntro() {
+  return `
+  <div class="scene frame">
+    <p class="eyebrow">1945年 8月 15日 午前 11時 50分 · 京城</p>
+    <h1 class="title">도둑같이 온 해방</h1>
+    <div style="height:18px"></div>
+    <p class="lead">
+      정오에 <strong>중대한 방송</strong>이 있을 것이라는 소문이 돌고 있다.<br>
+      곁에서는 어린 동생이 라디오를 만지작거리고 있다.<br><br>
+      당신은 아직, <strong>오늘이 어떤 날이 될지 모른다.</strong><br><br>
+      매 시각 라디오·신문·거리·입소문 중<br>
+      <strong>한 곳에서만</strong> 소식을 구할 수 있다.<br><br>
+      소식을 확인한 뒤, 지금 알 수 있는 만큼만<br>
+      <strong>동생에게 뭐라고 말할지</strong> 정하자.
+    </p>
+    <div style="height:10px"></div>
+    <p class="small">※ 네 명이 함께한다면 — 어디서 소식을 구할지는 각자 자유롭게 정하세요.<br>
+    게임이 끝난 뒤, 서로의 수첩과 하루를 비교하게 됩니다.</p>
+    <div style="height:22px"></div>
+    <button class="btn" onclick="startGame()">정오를 기다린다</button>
+  </div>`;
+}
+
+/* ── 라운드 ── */
+function renderRound() {
+  const round = ROUNDS[S.ri];
+  const head = `
+  <div class="hdr-bar">
+    <span class="hdr-time">${round.time}</span>
+    ${pips()}
+  </div>`;
+
+  if (S.step === 'path') {
+    const cards = Object.keys(PATHS).map(k => {
+      const p = PATHS[k];
+      const on = S.selPath === k ? ' on' : '';
+      return `
+      <div class="path-card ${k}${on}" onclick="pickPath('${k}')">
+        <span class="path-ico">${p.ico}</span>
+        <div>
+          <div class="path-name">${p.name}</div>
+          <div class="path-act">${p.act}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return `
+    <div class="scene frame">
+      ${head}
+      <p class="ask">${round.ask}</p>
+      <div class="paths">${cards}</div>
+      <button class="btn" ${S.selPath ? '' : 'disabled'} onclick="confirmPath()">이곳에서 소식을 구한다</button>
+    </div>`;
+  }
+
+  /* step === 'echo' : 동생의 반응 (R1·R3만) */
+  if (S.step === 'echo') {
+    const last = S.h[S.h.length - 1];
+    return `
+    <div class="scene frame">
+      ${head}
+      <p class="lead">당신은 이렇게 대답했다.<br><strong>${SPOKEN[last.judge - 1]}</strong></p>
+      <div style="height:14px"></div>
+      <div class="reveal-block">
+        <span class="reveal-tag">동생</span>
+        ${round.echo.re[last.judge]}
+      </div>
+      <div style="height:8px"></div>
+      <button class="btn" onclick="advanceRound()">${round.echo.next}</button>
+    </div>`;
+  }
+
+  /* step === 'info' : 정보 + 판단 */
+  const p = PATHS[S.selPath];
+  const card = round.cards[S.selPath];
+  const prevJudge = S.ri > 0 ? S.h[S.ri - 1].judge : null;
+  const judges = SPOKEN.map((txt, i) => {
+    const n = i + 1;
+    const on = S.selJudge === n ? ' on' : '';
+    return `
+    <div class="judge-card${on}" onclick="pickJudge(${n})">
+      <span>${txt}</span>
+    </div>`;
+  }).join('');
+  const promptTxt = round.prompt || '동생이 묻는다. "그래서 지금 무슨 일이 벌어진 거야?"';
+  const previous = prevJudge ? `
+    <div class="previous-spoken">
+      <span class="small">아까 나는 이렇게 말했다</span>
+      <blockquote>${SPOKEN[prevJudge - 1]}</blockquote>
+    </div>` : '';
+
+  return `
+  <div class="scene frame">
+    ${head}
+    <div class="info-card ${S.selPath}">
+      <div class="info-src">${p.ico} ${p.name}에서 얻은 정보</div>
+      <div class="info-body">${ttify(card.t)}</div>
+      <div class="info-sub">${ttify(card.s)}</div>
+    </div>
+    ${renderLiveNotebook()}
+    ${previous}
+    <div class="spoken-question">
+      <p class="judge-label">${promptTxt}</p>
+      <h2>지금 동생에게 뭐라고 말하겠습니까?</h2>
+    </div>
+    <div class="judges">${judges}</div>
+    <button class="btn" ${S.selJudge ? '' : 'disabled'} onclick="confirmJudge()">이렇게 말한다</button>
+  </div>`;
+}
+
+/* ── 엔딩 ── */
+function renderFinal() {
+  const pathsUsed = S.h.map(x => x.path);
+  const reveals = [];
+
+  /* 공통 해설 — 하루의 구조 */
+  reveals.push(`
+  <div class="reveal-block">
+    <span class="reveal-tag">그날의 기록</span>
+    8월 15일 낮, 경성 거리는 뜻밖에 조용했다. 만세의 물결이 거리를 덮은 것은
+    <strong>16일</strong> — 항복이 신문에 실리고, 형무소 문이 열린 뒤였다.
+  </div>`);
+
+  /* 조건부 해설 ①: 소련군 오보 (R4 입소문 선택자) */
+  if (S.h[3] && S.h[3].path === 'rumor') {
+    reveals.push(`
+    <div class="reveal-block rb-red">
+      <span class="reveal-tag">그 소문의 결말</span>
+      "오후 1시 소련군 입성" — 이 정보는 실제로 <strong>실현되지 않았다</strong>.
+      많은 사람들이 경성역으로 몰려갔지만 소련군은 오지 않았다.
+      시간과 장소가 구체적이라는 사실이, 정보의 진실성을 보장하지는 않았다.
+    </div>`);
+  }
+
+  /* 조건부 해설 ②: 매일신보 (신문 경로 이용자) */
+  if (pathsUsed.includes('paper')) {
+    reveals.push(`
+    <div class="reveal-block rb-blue">
+      <span class="reveal-tag">그 신문의 이름</span>
+      당신이 읽은 신문에는 이름이 있다 — <strong>매일신보</strong>.
+      조선총독부의 기관지였다. 기록은 남는다.
+      그러나 <strong>기록을 남긴 주체가 누구인지</strong>도 함께 물어야 한다.
+    </div>`);
+  }
+
+  /* 조건부 해설 ③: 여운형 회담 (R1·R2 입소문 선택자) */
+  if ((S.h[0] && S.h[0].path === 'rumor') || (S.h[1] && S.h[1].path === 'rumor')) {
+    reveals.push(`
+    <div class="reveal-block">
+      <span class="reveal-tag">그 만남의 내막</span>
+      그날 아침 여운형은 엔도 류사쿠 정무총감을 만났다. 총독부는 패전 뒤의
+      치안 협조를 요청했고, 여운형은 <strong>정치범·경제범 석방</strong> 등을
+      조건으로 내걸었다. 다음 날 형무소 문이 열린 것은 이 합의의 결과였다.
+    </div>`);
+  }
+
+  /* 아무 조건부 해설도 없을 때 */
+  if (reveals.length === 1) {
+    reveals.push(`
+    <div class="reveal-block">
+      <span class="reveal-tag">당신이 걷지 않은 길</span>
+      당신이 고르지 않은 경로에도 다른 이야기가 있었다.
+      옆 사람의 하루와 비교해보라 — 같은 서울에서, 같은 이틀을 살고도
+      서로 다른 것을 보고 서로 다른 판단을 했을 것이다.
+    </div>`);
+  }
+
+  const statsBtn = STATS_ENDPOINT
+    ? `<button class="btn btn-ghost" onclick="loadStats()">우리 반 지금까지 선택 보기</button>
+       <div id="stats-box"></div>`
+    : '';
+
+  const bonusInner = S.bonusOpen ? `
+    <div class="reveal-block" style="margin-top:12px">
+      <span class="reveal-tag">사료 한 장 더</span>
+      ${BONUS_IMG ? `<img src="${BONUS_IMG}" alt="서울 시가지 인파 사진" style="width:100%;border-radius:4px;margin-bottom:10px">` : ''}
+      한 장의 사진이 있다. 서울 시가지, 태극기와 성조기를 든 인파가 거리를 메우고 있다.<br>
+      <strong>이 사진은 1945년 8월 15일의 서울일까?</strong>
+      ${S.bonusRevealed ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)">
+        이 사진의 기록 날짜는 <strong>1945년 9월 9일</strong> — 미군이 서울에 들어온 날이다.
+        '광복 당일'의 이미지로 흔히 쓰이는 사진 가운데 상당수는 다른 날의 기록이다.
+        방금의 게임에서처럼, 사진 앞에서도 물어야 한다.
+        이것은 <strong>언제, 누가, 왜</strong> 남긴 기록인가?
+        </div>`
+      : `<div style="margin-top:14px"><button class="btn btn-ghost" onclick="revealBonus()">기록된 날짜를 확인한다</button></div>`}
+    </div>` : '';
+
+  return `
+  <div class="scene frame">
+    <div class="hdr-bar">
+      <span class="hdr-time">8월 16일, 그 후</span>
+      ${pips()}
+    </div>
+
+    <p class="ask-final" style="text-align:center;font-size:19px;margin:8px 0 4px">8월 15일은,<br>모두에게 같은 날이 아니었다.</p>
+
+    <div class="traj-wrap">
+      <div class="traj-title">내가 확보한 정보</div>
+      ${notebook()}
+    </div>
+
+    <div class="traj-wrap">
+      <div class="traj-title">내가 동생에게 했던 말</div>
+      <div id="traj-spoken"></div>
+      <p class="small" style="margin:6px 8px 8px;text-align:center">${trajComment()}</p>
+    </div>
+
+    ${reveals.join('')}
+
+    <div class="quote-box">
+      <div class="quote-main">"해방은 도둑같이 뜻밖에 왔다"</div>
+      <div class="quote-src">— 함석헌의 회고에서</div>
+    </div>
+
+    <p class="ask-final">방금 당신이 보낸 이틀을 돌아보면,<br>이 말은 무슨 뜻이라고 생각하는가?</p>
+
+    <textarea id="comment" rows="2" maxlength="100"
+      placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)"></textarea>
+
+    <button class="btn" onclick="copyResult()">📋 내 궤적과 소감 복사하기</button>
+    ${statsBtn}
+    <button class="btn btn-ghost" onclick="toggleBonus()">${S.bonusOpen ? '사료 접기' : '사료 한 장 더 보기'}</button>
+    ${bonusInner}
+    <div class="reveal-block rb-blue" style="margin-top:12px">
+      <span class="reveal-tag">다음 경험</span>
+      당신은 1945년 8월 15일을 살아보았다.<br>
+      하지만 <strong>그날에 끝내 도착하지 못한 사람들</strong>도 있었다.
+      <div style="margin-top:14px">
+        <a class="btn btn-ghost" style="text-decoration:none;text-align:center" href="${NEXT_URL}" target="_blank" rel="noopener">아직 돌아오지 못한 서른 분을 만난다 →</a>
+      </div>
+    </div>
+    <button class="btn btn-ghost" onclick="restart()">처음부터 다시 살아본다</button>
+
+    <div class="footer-credit">© 찰리쌤 · <a href="https://hischarlie.tistory.com" target="_blank" rel="noopener">hischarlie.tistory.com</a></div>
+  </div>`;
+}
+
+/* ── 정보 수첩: 확보한 정보 한 줄 + 미확인 경로는 이름만 (내용 비공개 유지) ── */
+function notebook(entries = S.h, live = false) {
+  return entries.map((x, i) => {
+    const round = ROUNDS[i];
+    const got = PATHS[x.path];
+    const missed = Object.keys(PATHS).filter(k => k !== x.path)
+      .map(k => PATHS[k].name).join(' · ');
+    const current = live && i === entries.length - 1;
+    return `
+    <div style="padding:9px 8px;border-bottom:1px dashed var(--line);${current ? 'background:rgba(255,255,255,0.5)' : ''}">
+      <div style="font-size:13.5px;line-height:1.7">
+        <strong>${current ? '이번 소식 · ' : ''}${round.short} · ${got.ico} ${got.name}</strong> — ${round.cards[x.path].n}
+      </div>
+      <div class="small" style="margin-top:3px;opacity:0.75">○ ${missed} — 확인하지 못함</div>
+    </div>`;
+  }).join('');
+}
+
+function renderLiveNotebook() {
+  const entries = [...S.h, { path:S.selPath, judge:S.selJudge }];
+  return `<section class="live-notebook" aria-label="지금까지 내가 아는 것">
+    <h2 class="live-notebook-title">지금까지 내가 아는 것</h2>
+    ${notebook(entries, true)}
+  </section>`;
+}
+
+/* ── 증거→판단 연결 한 줄 (분기 없음 — ④는 목표가 아니라 더 강한 주장일 뿐) ── */
+function trajComment() {
+  return '이 말들은 당신이 확보한 정보 위에서 만들어졌다.<br>다른 경로를 택했다면, 같은 말을 했을까?';
+}
+
+/* ── 판단 궤적: 숫자 축 대신 실제 발화문 ── */
+function drawTraj() {
+  const box = document.getElementById('traj-spoken');
+  if (!box) return;
+  box.innerHTML = `<ol class="spoken-traj">${S.h.map((x, i) => `
+    <li>
+      <time>${ROUNDS[i].short} · ${PATHS[x.path].ico} ${PATHS[x.path].name}</time>
+      <blockquote>${SPOKEN[x.judge - 1]}</blockquote>
+    </li>`).join('')}</ol>`;
+}
+
+/* ── 이벤트 ── */
+function startGame() {
+  S.phase = 'round'; S.ri = 0; S.step = 'path';
+  S.selPath = null; S.selJudge = null; S.h = [];
+  R();
+}
+function pickPath(k) { S.selPath = k; R(); }
+function confirmPath() {
+  if (!S.selPath) return;
+  S.step = 'info';
+  /* 이전 라운드 판단을 기본 선택으로 두지 않음 — 매 라운드 능동 선택 유도 */
+  S.selJudge = null;
+  R();
+}
+function pickJudge(n) { S.selJudge = n; R(); }
+function confirmJudge() {
+  if (!S.selJudge) return;
+  S.h.push({ path: S.selPath, judge: S.selJudge });
+  S.selPath = null; S.selJudge = null;
+  const round = ROUNDS[S.ri];
+  if (round.echo) {
+    S.step = 'echo'; R();
+  } else {
+    advanceRound();
+  }
+}
+function advanceRound() {
+  if (S.ri < ROUNDS.length - 1) {
+    S.ri++; S.step = 'path'; R();
+  } else {
+    goFinal();
+  }
+}
+function buildChoices() {
+  /* 공통 데이터 계약: 결과행은 record_type:'result' + r1~r4.
+     대시보드는 record_type==='result' 행만 분포 집계 */
+  const c = { record_type: 'result' };
+  S.h.forEach((x, i) => { c['r' + (i + 1)] = { path: x.path, judge: x.judge }; });
+  return c;
+}
+function goFinal() {
+  S.phase = 'final';
+  if (!S.submitted) {
+    sendToSupabase(buildChoices(), '');
+    S.submitted = true;
+  }
+  R();
+}
+function copyResult() {
+  const comment = document.getElementById('comment')?.value?.trim() || '';
+  /* 소감 행에는 판단 데이터를 넣지 않는다 — choices에 r1~r4 키가 없으므로
+     대시보드 분포 집계(r1 키 존재 행만 카운트)에서 자동 제외되어
+     이중 집계가 구조적으로 불가능. 같은 소감 재전송도 방지 */
+  if (comment && comment !== S.sentComment) {
+    sendToSupabase({ record_type: 'comment' }, comment);
+    S.sentComment = comment;
+  }
+
+  const notes = S.h.map((x, i) =>
+    `· ${ROUNDS[i].short} ${PATHS[x.path].name}: ${ROUNDS[i].cards[x.path].n}`);
+  const spoken = S.h.map((x, i) =>
+    `· ${ROUNDS[i].short}: ${SPOKEN[x.judge - 1]}`);
+  const lines = [
+    '🕛 도둑같이 온 해방 — 1945',
+    '내가 확보한 정보:',
+    ...notes,
+    '',
+    '내가 동생에게 했던 말:',
+    ...spoken,
+  ];
+  if (comment) lines.push('', `소감: ${comment}`);
+  const text = lines.join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast('📋 결과가 복사되었습니다!'); }
+    catch (e) { showToast('❌ 복사 실패'); }
+    document.body.removeChild(ta);
+  }
+}
+function toggleBonus() { S.bonusOpen = !S.bonusOpen; R(); window.scrollTo(0, document.body.scrollHeight); }
+function revealBonus() { S.bonusRevealed = true; R(); window.scrollTo(0, document.body.scrollHeight); }
+
+/* 학급 통계 — STATS_ENDPOINT 확정 전까지 미노출 (charlie-core v1.1 예정)
+   기대 응답: { rounds:[{judges:[n1,n2,n3,n4]},×4], reach4:{radio,paper,street,rumor} } */
+function loadStats() {
+  const box = document.getElementById('stats-box');
+  if (!box) return;
+  box.innerHTML = '<p class="small" style="margin-top:10px">불러오는 중…</p>';
+  fetch(`${STATS_ENDPOINT}?game=${GAME_CONFIG.game_id}&class=${encodeURIComponent(CLASS)}`)
+    .then(r => r.json())
+    .then(d => {
+      const rows = (d.rounds || []).map((r0, i) => {
+        const total = (r0.judges || []).reduce((a, b) => a + b, 0) || 1;
+        const bars = (r0.judges || []).map((n, j) =>
+          `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
+            <span class="small" style="width:140px">${JUDGES[j]}</span>
+            <div style="flex:1;height:10px;background:rgba(139,115,85,0.15);border-radius:2px;overflow:hidden">
+              <div style="width:${Math.round(n/total*100)}%;height:100%;background:var(--blue)"></div>
+            </div>
+            <span class="small" style="width:36px;text-align:right">${Math.round(n/total*100)}%</span>
+          </div>`).join('');
+        return `<div style="margin-top:12px"><strong class="small">${ROUNDS[i].short}</strong>${bars}</div>`;
+      }).join('');
+      box.innerHTML = rows || '<p class="small" style="margin-top:10px">아직 데이터가 없습니다.</p>';
+    })
+    .catch(() => {
+      box.innerHTML = '<p class="small" style="margin-top:10px">학급 분포를 불러오지 못했습니다. 개별 결과 전송은 정상 작동합니다.</p>';
+    });
+}
+
+function restart() {
+  S = { phase:'intro', ri:0, step:'path', selPath:null, selJudge:null,
+        h:[], submitted:false, sentComment:'', bonusOpen:false, bonusRevealed:false };
+  R();
+}
+
+/* ── 툴팁 버블 (1회 삽입) ── */
+document.body.insertAdjacentHTML('beforeend',
+  '<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>');
+const bubble = document.getElementById('tt-bubble');
+let bubbleTimer = null;
+document.addEventListener('click', function (e) {
+  const el = e.target.closest('.tt');
+  if (el) {
+    e.stopPropagation();
+    bubble.querySelector('.tb-word').textContent = el.dataset.word;
+    bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+    const rect = el.getBoundingClientRect();
+    const bw = 240;
+    const left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+    bubble.style.width = bw + 'px';
+    bubble.style.left = left + 'px';
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bubH = bubble.offsetHeight;
+    bubble.style.top = (rect.top - bubH - 14 < 8)
+      ? (rect.bottom + 10) + 'px'
+      : (rect.top - bubH - 14) + 'px';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+  } else {
+    bubble.classList.remove('show');
+  }
+});
+
+/* ── 초기화 ── */
+if (new URLSearchParams(location.search).get('meta') === '1') registerMeta();
+R();
+</script>
+</body>
+</html>
