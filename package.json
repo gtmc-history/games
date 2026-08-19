@@ -1,0 +1,13 @@
+{
+  "name": "gtmc-history-games-operations",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Operational manifest and deterministic integration audit for the Korean history games repository.",
+  "type": "module",
+  "scripts": {
+    "audit:games": "node scripts/audit-games.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
