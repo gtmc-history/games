@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "games": [
+    { "slug": "balhae", "title": "발해에서 고구려의 DNA를 찾아라", "era": "전근대·남북국", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "wang-geon", "title": "왕건의 외교전 — 918년 고려", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "B", "renderer": "generic", "aliases": [] },
+    { "slug": "goryeo-debate", "title": "고려 말 대논쟁 — 정몽주 vs 정도전", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "skycastle", "title": "고려에서 환생했다 — 문벌의 사다리", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "B", "renderer": "generic", "aliases": [] },
+    { "slug": "mongol-survival", "title": "1232 — 당신은 살아남을 수 있는가", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "goryeo-detective", "title": "고려 지배세력 탐정단", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "B", "renderer": "generic", "aliases": [] },
+    { "slug": "wangs-approval", "title": "왕의 결재함 — 조선의 통치를 경험하다", "era": "전근대·조선", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "samsa-hearing", "title": "3사 청문회 — 이 임명을 막아라", "era": "전근대·조선", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "sahwa-factcheck", "title": "조보청 특별 조사관 — 사화의 진실", "era": "전근대·조선", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "bungdang", "title": "이조 전랑 자리를 차지하라 — 붕당의 탄생 1575", "era": "전근대·조선", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "daewongun", "title": "대원군의 결단 — 무너지는 조선을 세워라", "era": "근대·개항 전후", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "ganghwa", "title": "강화도 협상 테이블 — 1876년 2월", "era": "근대·개항기", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "gaehang", "title": "개항의 갈림길 — 1876년 전야", "era": "근대·개항기", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "ujeongtonguk", "title": "우정총국의 밤 — 갑신정변 1884", "era": "근대·개항기", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "gobu1894", "title": "고부, 1894", "era": "근대·동학농민운동", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "gabo-reform", "title": "갑오개혁 — 내가 설계한 개혁이 사라지는 날", "era": "근대·갑오개혁", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": ["gabo1894"] },
+    { "slug": "dongnip1898", "title": "황제와 맞서다 — 1898 독립협회", "era": "근대·대한제국", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "daehan1897", "title": "대한제국 1897 — 당신의 기준으로 평가하라", "era": "근대·대한제국", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "euljsa1905", "title": "1905 — 남겨진 선택", "era": "근대·국권침탈", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "euibyeong1907", "title": "의병을 일으켜라 — 1895·1905·1907", "era": "근대·항일 의병", "status": "published", "save": "required", "dashboard": "A", "renderer": "euibyeong1907", "aliases": [] },
+    { "slug": "gaemong1905", "title": "1905년의 선택 — 애국계몽운동", "era": "근대·애국계몽", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "gaehangmarket1883", "title": "내 돈이 사라진다 — 개항장 상인 1883", "era": "근대·개항기 경제", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "gukchae1907", "title": "대한신문 1907 — 오늘의 1면을 써라", "era": "근대·경제 구국", "status": "published", "save": "required", "dashboard": "A", "renderer": "gukchae1907", "aliases": [] },
+    { "slug": "gendarme1910", "title": "어느 기관의 일입니까?", "era": "일제강점기·1910년대", "status": "published", "save": "required", "dashboard": "A", "renderer": "gendarme1910", "aliases": [] },
+    { "slug": "haebang1945", "title": "도둑같이 온 해방 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "haebang1945", "aliases": [] },
+    { "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "geunal1945", "aliases": [] }
+  ]
+}
