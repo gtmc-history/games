@@ -12,6 +12,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>개항의 갈림길 — 1876년 전야</title>
+<script>
+window.GAME_CONFIG = {
+  game_id: 'gaehang',
+  label: '개항의 갈림길 — 1876년 전야',
+  era: '근대',
+  version: '1.1.0'
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+function sendToSupabase(choiceData, comment) {
+  const { supabaseUrl, supabasePublishableKey } = window.CHARLIE_CONFIG;
+  if (!supabaseUrl || !supabasePublishableKey) return Promise.resolve({ skipped: true });
+  return fetch(`${supabaseUrl}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      apikey: supabasePublishableKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => ({ ok: false }));
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
@@ -755,6 +786,8 @@ const S = {
   stance: '',
   reason: '',
 };
+let resultId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+let resultSubmitted = false;
 
 /* ══════════════════════════════════════
    GA4
@@ -964,6 +997,14 @@ function goResult() {
   document.getElementById('copy-area').textContent = buildCopyText();
 
   gaEvent('gaehang_result', { stance: S.stance, reason_len: S.reason.length });
+  if (!resultSubmitted) {
+    resultSubmitted = true;
+    sendToSupabase({
+      result_id: resultId,
+      questions: [S.questions[1], S.questions[2], S.questions[3]],
+      stance: S.stance
+    }, S.reason).catch(() => {});
+  }
   goTo(5);
 }
 
@@ -1007,6 +1048,8 @@ function copyResult() {
 function restartGame() {
   S.questions = { 1: '', 2: '', 3: '' };
   S.stance = ''; S.reason = '';
+  resultId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  resultSubmitted = false;
   // 입력 초기화
   [1,2,3].forEach(n => {
     const ta = document.getElementById('q' + n);

@@ -11,7 +11,38 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>동북아 역사 수사대 | 발해에서 고구려의 DNA 찾기</title>
+<title>발해에서 고구려의 DNA를 찾아라 | 동북아 역사 수사대</title>
+<script>
+window.GAME_CONFIG = {
+  game_id: 'balhae',
+  label: '발해에서 고구려의 DNA를 찾아라',
+  era: '삼국·남북국',
+  version: '1.1.0'
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+function sendToSupabase(choiceData, comment) {
+  const { supabaseUrl, supabasePublishableKey } = window.CHARLIE_CONFIG;
+  if (!supabaseUrl || !supabasePublishableKey) return Promise.resolve({ skipped: true });
+  return fetch(`${supabaseUrl}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      apikey: supabasePublishableKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => ({ ok: false }));
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -844,7 +875,28 @@ window.addEventListener('beforeunload', function(e) {
 });
 
 // ── SUBMIT ──
+const resultId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+let resultSubmitted = false;
 function submitReport() {
+  const report = document.getElementById('report-text').value.trim();
+  if (!resultSubmitted) {
+    const answers = {};
+    Object.keys(keywords).forEach(cardId => {
+      answers[cardId] = document.getElementById(`ans-${cardId}`)?.value?.trim() || '';
+    });
+    const memos = {};
+    for (let role = 1; role <= 4; role++) {
+      memos[`role_${role}`] = document.getElementById(`memo-r${role}`)?.value?.trim() || '';
+    }
+    resultSubmitted = true;
+    sendToSupabase({
+      result_id: resultId,
+      role: selectedRole,
+      completed_cards: [...doneCards],
+      answers,
+      memos
+    }, report).catch(() => {});
+  }
   document.getElementById('hint-content').innerHTML = hints[selectedRole].map(h=>`<div style="margin-bottom:4px">${h}</div>`).join('');
   document.getElementById('result-box').classList.add('show');
   document.getElementById('submit-btn').disabled = true;

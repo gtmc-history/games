@@ -4,6 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>고려 말 대논쟁 — 정몽주 vs 정도전</title>
+<script>
+window.GAME_CONFIG = {
+  game_id: 'goryeo-debate',
+  label: '고려 말 대논쟁 — 정몽주 vs 정도전',
+  era: '고려 말',
+  version: '1.1.0'
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+function sendToSupabase(choiceData, comment) {
+  const { supabaseUrl, supabasePublishableKey } = window.CHARLIE_CONFIG;
+  if (!supabaseUrl || !supabasePublishableKey) return Promise.resolve({ skipped: true });
+  return fetch(`${supabaseUrl}/rest/v1/game_results`, {
+    method: 'POST',
+    headers: {
+      apikey: supabasePublishableKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => ({ ok: false }));
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -823,6 +854,9 @@
 // 🔧 설정: 선생님이 GAS 배포 URL로 교체하세요
 // =====================================================
 const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycbz9rS_C6MD1EqI6XEmHXb6mBL-PG4Csr5c6uzWom5jJJ6_yWeXoJKvCoRvwPM6GljW3/exec";
+if (GAS_PROXY_URL !== "여기에_GAS_배포_URL_입력") {
+  document.getElementById('setupNotice').style.display = 'none';
+}
 // =====================================================
 
 const TURNS_MAX = 5;
@@ -948,6 +982,8 @@ let history = [];
 let playerNameVal = "";
 let debateEnded = false;
 let lastFeedbackText = "";
+const resultId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+let resultSubmitted = false;
 
 const SYSTEM_PROMPT = `당신은 고려 말 온건 개혁파 신진 사대부 **정몽주**입니다.
 때는 1388년, 위화도 회군 직후입니다.
@@ -1101,6 +1137,18 @@ async function showFinalFeedback() {
       </div>`;
     chatArea.appendChild(el);
     chatArea.scrollTop = chatArea.scrollHeight;
+
+    if (!resultSubmitted) {
+      const argumentsOnly = history
+        .filter(message => message.role === 'user')
+        .map(message => message.content);
+      resultSubmitted = true;
+      sendToSupabase({
+        result_id: resultId,
+        arguments: argumentsOnly,
+        feedback: lastFeedbackText
+      }, argumentsOnly.at(-1) || '').catch(() => {});
+    }
 
   } catch (err) {
     removeLoading(loadingId);

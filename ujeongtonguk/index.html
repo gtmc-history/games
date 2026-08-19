@@ -1482,7 +1482,10 @@ function makeFinalChoice(choice) {
   S.phase = 'ending';
   gtag('event', 'final_choice', { game: 'ujeongtonguk', choice });
   gtag('event', 'finish_game', { game: 'ujeongtonguk', ending: getEnding().id });
-  sendToSupabase(''); // 엔딩 진입 시 자동 전송 (소감 없이)
+  if (!S._submitted) {
+    S._submitted = true;
+    sendToSupabase(''); // 엔딩 진입 시 자동 전송 (소감 없이)
+  }
   R();
 }
 

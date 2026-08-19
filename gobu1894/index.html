@@ -1217,7 +1217,10 @@ function nextScene() {
     S.ending = getEnding(S.axis);
     S.phase = 'final';
     gtag('event', 'finish_game', { game: 'gobu1894', ending: S.ending.title });
-    sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+    if (!S._submitted) {
+      S._submitted = true;
+      sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+    }
     R();
   } else {
     S.phase = 'between';
@@ -1234,7 +1237,10 @@ function goFinal() {
   S.ending = getEnding(S.axis);
   S.phase = 'final';
   gtag('event', 'finish_game', { game: 'gobu1894', ending: S.ending.title });
-  sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+  if (!S._submitted) {
+    S._submitted = true;
+    sendToSupabase({ choices: S.choices, axis: S.axis, ending: S.ending.title }, '');
+  }
   R();
 }
 

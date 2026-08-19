@@ -579,7 +579,10 @@ function nextCase(){
   S.ci++;
   if(S.ci>=CASES.length){
     S.phase='final';
-    sendToSupabase({results:S.results,score:S.score},'');
+    if(!S._submitted){
+      S._submitted=true;
+      sendToSupabase({results:S.results,score:S.score},'');
+    }
     R();
   } else{S.answered=false;S.selectedId=null;R();}
 }
