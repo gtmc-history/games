@@ -24,7 +24,7 @@
     { "slug": "gaemong1905", "title": "1905년의 선택 — 애국계몽운동", "era": "근대·애국계몽", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "gaehangmarket1883", "title": "내 돈이 사라진다 — 개항장 상인 1883", "era": "근대·개항기 경제", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "gukchae1907", "title": "대한신문 1907 — 오늘의 1면을 써라", "era": "근대·경제 구국", "status": "published", "save": "required", "dashboard": "A", "renderer": "gukchae1907", "aliases": [] },
-    { "slug": "saito1919", "title": "1919, 무엇이 달라졌나", "era": "일제강점기·1919", "status": "tested", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
+    { "slug": "saito1919", "title": "1919, 무엇이 달라졌나", "era": "일제강점기·1919", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "gendarme1910", "title": "어느 기관의 일입니까?", "era": "일제강점기·1910년대", "status": "published", "save": "required", "dashboard": "A", "renderer": "gendarme1910", "aliases": [] },
     { "slug": "haebang1945", "title": "도둑같이 온 해방 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "haebang1945", "aliases": [] },
     { "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "geunal1945", "aliases": [] }
