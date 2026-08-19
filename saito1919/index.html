@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1919, 무엇이 달라졌나</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-bg:#f0ece4; --color-surface:#e8e0d4;
+  --color-primary:#003087; --color-accent:#cd2e3a;
+  --color-text:#1a1a1a; --color-sepia:#8b7355;
+  --paper-line:rgba(139,115,85,.28);
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-doc:'Gowun Batang',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:var(--font-body);background:var(--color-bg);
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(139,115,85,.025) 3px 4px),
+    radial-gradient(ellipse at 20% 10%,rgba(139,115,85,.07),transparent 55%),
+    radial-gradient(ellipse at 85% 90%,rgba(0,48,135,.04),transparent 50%);
+  color:var(--color-text);min-height:100dvh;font-size:16px;line-height:1.65;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 48px}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 2px 12px;border-bottom:1.5px solid var(--paper-line);
+  margin-bottom:20px;gap:8px;
+}
+.h-title{font-family:var(--font-display);font-size:18px;letter-spacing:.5px;color:var(--color-primary)}
+.h-stage{font-size:13px;color:var(--color-sepia);white-space:nowrap}
+.h-tokens{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-sepia);white-space:nowrap}
+.token{width:20px;height:20px;border-radius:50%;border:2px solid var(--color-accent);
+  background:var(--color-accent);display:inline-block;transition:background .3s,transform .3s}
+.token.used{background:transparent;transform:scale(.85)}
+.scene{display:none;animation:scene-in .4s ease forwards}
+.scene.on{display:block}
+@keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h1{font-family:var(--font-display);font-size:30px;line-height:1.3;margin-bottom:6px}
+h2{font-family:var(--font-display);font-size:22px;color:var(--color-primary);margin-bottom:14px}
+.sub{font-size:15px;color:var(--color-sepia);margin-bottom:24px}
+.era-tag{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:1px;
+  color:var(--color-bg);background:var(--color-sepia);padding:3px 10px;border-radius:3px;margin-bottom:14px}
+.doc{font-family:var(--font-doc);background:linear-gradient(175deg,#faf6ec,#f2ecdd);
+  border:1px solid var(--paper-line);border-top:3px double var(--color-sepia);
+  border-bottom:3px double var(--color-sepia);padding:22px 20px 18px;margin:18px 0;
+  font-size:16.5px;line-height:1.9}
+.doc .doc-head{font-size:13px;letter-spacing:2px;color:var(--color-sepia);text-align:center;
+  margin-bottom:12px;font-family:var(--font-body);font-weight:700}
+.doc .doc-src{font-size:13px;color:var(--color-sepia);text-align:right;margin-top:12px;font-family:var(--font-body)}
+.doc li{margin:0 0 10px 20px}
+.fact{background:#fff9;border:1px solid var(--paper-line);border-left:4px solid var(--color-primary);
+  padding:16px 18px;margin:14px 0;border-radius:0 4px 4px 0;animation:scene-in .45s ease both}
+.fact.acc{border-left-color:var(--color-accent)}
+.fact-label{font-size:13px;font-weight:700;color:var(--color-sepia);letter-spacing:.5px;margin-bottom:10px}
+.stat-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:6px 0}
+.stat-name{font-size:14.5px;font-weight:500;min-width:8.5em;color:var(--color-sepia)}
+.stat-num{font-family:var(--font-doc);font-size:25px;font-weight:700}
+.stat-arrow{color:var(--color-sepia);font-size:18px}
+.stat-delta{font-size:14px;font-weight:700;color:var(--color-accent)}
+.bar-lab{font-size:12.5px;color:var(--color-sepia);margin-bottom:3px}
+.bar-wrap{margin:6px 0 2px;background:rgba(139,115,85,.12);border-radius:2px}
+.bar{height:20px;background:var(--color-primary);border-radius:2px;width:0;
+  transition:width 1s cubic-bezier(.22,.9,.36,1);min-width:2px}
+.bar.b2{background:var(--color-accent)}
+.src{font-size:12.5px;color:var(--color-sepia);margin-top:10px}
+.q{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:600;line-height:1.6;margin:22px 0 16px}
+.dir-row{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.dir-btn{flex:1 1 30%;min-height:52px;font-size:16.5px;font-weight:500;font-family:var(--font-body);
+  background:var(--color-surface);border:1.5px solid var(--paper-line);border-radius:4px;
+  cursor:pointer;color:var(--color-text);padding:8px 6px;line-height:1.35;
+  transition:transform .15s,border-color .2s,background .2s,box-shadow .15s}
+.dir-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.dir-btn:active{transform:translateY(0) scale(.97)}
+.dir-btn.sel{border-color:var(--color-primary);background:var(--color-primary);color:#f0ece4;font-weight:700}
+.dir-row.stack .dir-btn{flex:1 1 100%}
+.dir-btn.cb{flex:0 1 auto;min-height:46px;font-size:15px;padding:8px 14px}
+#changed-by{margin-bottom:4px}
+.mag-lab{display:flex;justify-content:space-between;font-size:13px;color:var(--color-sepia);margin-bottom:2px}
+input[type=range]{width:100%;height:36px;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:var(--paper-line);border-radius:3px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;
+  background:var(--color-primary);border:3px solid var(--color-bg);box-shadow:0 1px 4px rgba(0,0,0,.35);margin-top:-12px}
+input[type=range]::-moz-range-track{height:6px;background:var(--paper-line);border-radius:3px}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--color-primary);border:3px solid var(--color-bg)}
+.mag-val{text-align:center;font-family:var(--font-doc);font-size:23px;font-weight:700;color:var(--color-primary);margin-top:2px}
+.pred-locked{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-doc);
+  font-size:17px;font-weight:700;border:1.5px dashed var(--color-sepia);padding:10px 16px;
+  border-radius:4px;background:#fff6;margin:8px 0 4px;flex-wrap:wrap}
+.seal{font-family:var(--font-doc);font-weight:700;font-size:14px;color:var(--color-accent);
+  border:2px solid var(--color-accent);border-radius:3px;padding:2px 7px;transform:rotate(-4deg);
+  animation:stamp-in .35s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes stamp-in{0%{transform:scale(2) rotate(-9deg);opacity:0}60%{transform:scale(.95) rotate(-3deg);opacity:1}100%{transform:scale(1) rotate(-4deg);opacity:1}}
+.verify{background:var(--color-surface);border:1.5px solid var(--paper-line);border-radius:4px;
+  padding:18px;margin:18px 0;animation:scene-in .45s ease both}
+.verify .vq{font-size:17px;font-weight:700;margin-bottom:4px}
+.verify .vnote{font-size:13.5px;color:var(--color-sepia);margin-bottom:14px}
+.v-row{display:flex;gap:10px;flex-wrap:wrap}
+.scale-q{font-family:'Noto Serif KR',serif;font-size:17.5px;font-weight:600;line-height:1.6;margin-bottom:14px}
+.scale-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:660px){.scale-row{grid-template-columns:repeat(4,1fr)}}
+.scale-btn{min-height:62px;padding:8px 6px;font-size:14.5px;font-weight:500;line-height:1.4;
+  font-family:var(--font-body);background:var(--color-surface);border:1.5px solid var(--paper-line);
+  border-radius:4px;cursor:pointer;color:var(--color-text);transition:transform .15s,border-color .2s,background .2s}
+.scale-btn:hover{transform:translateY(-2px)}
+.scale-btn:active{transform:scale(.97)}
+.scale-btn.s1.sel,.scale-btn.s2.sel{background:var(--color-primary);border-color:var(--color-primary);color:#f0ece4;font-weight:700}
+.scale-btn.s3.sel,.scale-btn.s4.sel{background:var(--color-accent);border-color:var(--color-accent);color:#f0ece4;font-weight:700}
+.btn{display:inline-block;min-height:50px;padding:12px 26px;font-family:var(--font-body);
+  font-size:17px;font-weight:700;background:var(--color-primary);color:#f0ece4;border:none;
+  border-radius:4px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,opacity .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.ghost{background:transparent;color:var(--color-primary);border:1.5px solid var(--color-primary)}
+.btn.warm{background:var(--color-accent)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.choice-card{display:block;width:100%;text-align:left;background:var(--color-surface);
+  border:1.5px solid var(--paper-line);border-left:3px solid transparent;border-radius:4px;
+  padding:15px 18px;margin-bottom:10px;font-size:16.5px;font-family:var(--font-body);
+  color:var(--color-text);cursor:pointer;line-height:1.55;
+  transition:border-color .2s,background .2s,transform .15s}
+.choice-card:hover{border-left-color:var(--color-primary);transform:translateX(4px)}
+.choice-card.sel{border-left-color:var(--color-accent);border-color:var(--color-accent);background:#fff9;font-weight:700}
+.notice{font-family:'Noto Serif KR',serif;font-size:16.5px;font-weight:600;text-align:center;
+  border-top:1px solid var(--paper-line);border-bottom:1px solid var(--paper-line);
+  padding:14px 8px;margin:22px 0;color:var(--color-primary);letter-spacing:.3px}
+.token-brief{background:#fff7;border:1px dashed var(--color-accent);border-radius:4px;
+  padding:12px 15px;margin:16px 0;font-size:14.5px;line-height:1.7}
+.traj-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed var(--paper-line);flex-wrap:wrap}
+.traj-step{font-size:13px;font-weight:700;color:var(--color-sepia);min-width:7em}
+.traj-val{font-size:15.5px;font-weight:700;flex:1}
+.traj-val.warm{color:var(--color-accent)}
+.traj-val.cool{color:var(--color-primary)}
+.traj-move{font-size:12.5px;color:var(--color-sepia);font-weight:400}
+.final-box{border:2px solid var(--color-primary);border-radius:4px;padding:18px;margin:18px 0;background:#fff7}
+textarea{width:100%;font-family:var(--font-body);font-size:16px;padding:12px;
+  border:1.5px solid var(--paper-line);border-radius:4px;background:#fffa;
+  color:var(--color-text);resize:vertical;line-height:1.6}
+textarea:focus{outline:none;border-color:var(--color-primary)}
+.field-lab{font-size:14.5px;font-weight:700;margin:16px 0 6px}
+.field-note{font-size:12.5px;color:var(--color-sepia);margin-bottom:6px}
+.ending-copy{font-family:var(--font-display);font-size:27px;color:var(--color-accent);
+  text-align:center;margin:26px 0 8px;letter-spacing:1px}
+.epi-head{font-family:var(--font-display);font-size:21px;color:var(--color-primary);margin:26px 0 10px}
+.tt{border-bottom:1.5px dashed var(--color-sepia);cursor:pointer;position:relative;
+  white-space:nowrap;color:inherit;transition:border-color .15s}
+.tt:hover{border-bottom-color:var(--color-accent)}
+#tt-bubble{position:fixed;z-index:9000;max-width:250px;background:#2b2117;
+  border:1px solid rgba(139,115,85,.7);border-radius:4px;padding:10px 13px;
+  box-shadow:0 6px 24px rgba(0,0,0,.45);pointer-events:none;opacity:0;
+  transform:translateY(4px);transition:opacity .18s,transform .18s}
+#tt-bubble.show{opacity:1;transform:translateY(0)}
+#tt-bubble .tb-word{font-size:12px;font-weight:700;color:#d8b56a;margin-bottom:5px}
+#tt-bubble .tb-desc{font-size:12.5px;color:rgba(240,236,228,.9);line-height:1.7}
+footer{text-align:center;font-size:12px;color:rgba(120,100,80,.4);padding:26px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="h-title">1919, 무엇이 달라졌나</div>
+    <div class="h-stage" id="stage-lab">도입</div>
+    <div class="h-tokens" title="추가 확인권">확인권
+      <span class="token" id="tk1"></span><span class="token" id="tk2"></span>
+    </div>
+  </header>
+
+  <!-- 도입 -->
+  <section class="scene on" id="sc-intro">
+    <span class="era-tag">일제강점기 · 사료 검토</span>
+    <h1>1919, 무엇이 달라졌나</h1>
+    <p class="sub">1919년 9월, 총독부는 새로운 통치 방침을 발표했다.</p>
+    <p>당신은 지금부터 한 편의 발표문과 여러 자료를 검토하는 <b>탐구자</b>입니다.
+    3·1 운동 직후 부임한 신임 총독 사이토 마코토는 <span class="tt" data-tt="관제">관제</span> 개정의 취지를 다음과 같이 밝혔습니다.</p>
+    <div class="doc">
+      <div class="doc-head">朝鮮總督府官報 · 관제 개정의 취지</div>
+      <p>(관제 개정의 취지는) 한일 병합의 본뜻에 기초해 <span class="tt" data-tt="일시동인">일시동인</span>하여 …… 시정의 편리함을 도모하는 데 있다. 즉,</p>
+      <ul>
+        <li>총독은 <span class="tt" data-tt="문관">문무관</span> 누구라도 임용할 수 있는 길을 열고,</li>
+        <li><span class="tt" data-tt="헌병경찰">헌병에 의한 경찰 제도</span> 대신 <span class="tt" data-tt="보통경찰">보통 경찰</span>에 의한 경찰 제도로 바꾸었다.</li>
+        <li>또 복제를 개정해 일반 관리와 교원 등의 제복 <span class="tt" data-tt="대검">대검(帶劍)</span>을 폐지하고,</li>
+        <li>조선인의 임용과 대우 등을 고려했다.</li>
+        <li>…… 시기를 보아 지방 자치 제도를 시행할 목적으로 신속히 그 조사 연구에 착수하고자 한다.</li>
+      </ul>
+      <div class="doc-src">— 《조선 총독부 관보》, 1919. 9. 4.</div>
+    </div>
+    <div class="notice">당신 앞에 있는 것은 이 발표문뿐입니다.</div>
+    <p class="q">이 발표 이후, 통치는 실제로 어떻게 되었을까요?<br>지금의 판단을 남겨 두세요. 자료를 확인하며 언제든 수정하게 됩니다.</p>
+    <button class="choice-card" data-init="완화">발표대로 통치가 실제로 완화되었을 것이다</button>
+    <button class="choice-card" data-init="형식">형식은 바뀌어도 통치의 방향은 크게 달라지지 않았을 것이다</button>
+    <button class="choice-card" data-init="유보">아직 판단할 수 없다 — 자료를 보고 정하겠다</button>
+    <div class="token-brief">
+      <b>추가 확인권 안내</b><br>
+      경찰 · 정치 참여 · 치안 유지법 자료에서 <b>추가 확인 기회가 한 번씩</b> 주어집니다.
+      그러나 확인권은 <b>2개</b>뿐입니다. 세 번의 기회 중 어디에 쓸지 스스로 정해야 합니다.<br>
+      <span style="color:var(--color-sepia)">쓰지 않은 자료는 마지막에 모두 공개됩니다.</span>
+    </div>
+    <div class="btn-row"><button class="btn" id="btn-intro-next" disabled>첫 번째 자료를 검토한다</button></div>
+  </section>
+
+  <!-- 라운드 (동적 렌더) -->
+  <section class="scene" id="sc-round"></section>
+
+  <!-- 최종 판단 -->
+  <section class="scene" id="sc-final">
+    <span class="era-tag">최종 판단</span>
+    <h2>발표와 결과 사이, 무엇이 보였습니까?</h2>
+    <p>네 가지 자료를 모두 검토했습니다. 지금 확보한 증거를 근거로, 당신의 판단에 가장 가까운 문장을 고르세요.
+    정답은 없습니다. <b>같은 자료에서 무엇을 가장 중요하게 읽었는가</b>가 다를 뿐입니다.</p>
+    <div id="final-choices" style="margin-top:18px"></div>
+    <div id="final-reason-box" style="display:none">
+      <div class="field-lab" id="reason-lab">그렇게 판단한 이유를 써 주세요.</div>
+      <div class="field-note">이름·학번은 쓰지 마세요.</div>
+      <textarea id="ta-reason" rows="4" maxlength="300" placeholder="어떤 자료가 그 판단의 근거가 되었는지 함께 쓰면 좋습니다."></textarea>
+      <div class="btn-row"><button class="btn" id="btn-final-submit" disabled>판단을 제출한다</button></div>
+    </div>
+  </section>
+
+  <!-- 결과 -->
+  <section class="scene" id="sc-result">
+    <span class="era-tag">검토 종료</span>
+    <div class="ending-copy">숫자는 다르게 말했다</div>
+    <h2 style="margin-top:22px">당신의 판단 궤적</h2>
+    <div id="traj"></div>
+    <p style="font-size:14.5px;color:var(--color-sepia);margin-top:12px" id="traj-note"></p>
+    <div class="final-box">
+      <div style="font-size:13px;font-weight:700;color:var(--color-sepia);margin-bottom:6px">나의 최종 판단</div>
+      <div id="final-echo" style="font-size:16.5px;line-height:1.6"></div>
+    </div>
+    <div class="field-lab">처음 판단을 가장 크게 바꾼 자료는 무엇이었나요?</div>
+    <div class="dir-row" id="changed-by" style="flex-wrap:wrap"></div>
+    <div class="field-note" id="cb-gate">고른 뒤 아래 버튼을 누르면 기록됩니다. 그 전까지는 얼마든지 바꿀 수 있습니다.</div>
+    <button class="btn ghost" id="btn-cb-lock" style="margin-top:6px" disabled>이 선택을 기록한다</button>
+
+    <div class="field-lab">한 줄 소감 (선택)</div>
+    <div class="field-note">이름·학번은 쓰지 마세요.</div>
+    <textarea id="ta-comment" rows="2" maxlength="100" placeholder="게임을 하고 든 생각을 한 줄로"></textarea>
+    <div class="btn-row">
+      <button class="btn" id="btn-copy" disabled>결과 복사하기</button>
+      <button class="btn ghost" id="btn-epi" disabled>그 뒤의 자료를 마저 본다</button>
+    </div>
+  </section>
+
+  <!-- 에필로그 -->
+  <section class="scene" id="sc-epi">
+    <span class="era-tag">에필로그</span>
+    <h2>그리고 10년이 더 지났습니다</h2>
+    <p>당신이 검토한 정치 참여 자료는 1920년의 것이었습니다. 그 한계는 시간이 지나며 사라졌을까요?</p>
+    <div class="fact">
+      <div class="fact-label">전체 인구 중 유권자 비율 — 1920 → 1931</div>
+      <div class="bar-lab">1920 한국인 — 약 1%</div><div class="bar-wrap"><div class="bar epi" data-w="7"></div></div>
+      <div class="bar-lab" style="margin-top:6px">1931 한국인 — 약 4%</div><div class="bar-wrap"><div class="bar epi" data-w="28"></div></div>
+      <div class="bar-lab" style="margin-top:10px">1920 일본인 — 약 3%</div><div class="bar-wrap"><div class="bar b2 epi" data-w="21"></div></div>
+      <div class="bar-lab" style="margin-top:6px">1931 일본인 — 약 14%</div><div class="bar-wrap"><div class="bar b2 epi" data-w="100"></div></div>
+      <div class="src">김동명, 《지배와 협력》(2018) — 전국 14곳 부 협의회·부회 선거. 그래프 판독값</div>
+    </div>
+    <p>1930년대에는 지방 제도가 개편되어 도회·부회·읍회에 <b>의결 권한이 일부 주어졌습니다.</b>
+    그러나 한국인의 참여는 여전히 제한적이었습니다. 격차는 좁혀지지 않았습니다.</p>
+    <div id="epi-missed"></div>
+    <div class="epi-head">수업에서 이어서 생각할 질문</div>
+    <div class="doc" style="font-family:var(--font-body);font-size:16px;line-height:1.8">
+      <p>1. 어떤 자료가 여러분의 처음 판단을 가장 크게 바꾸었나요? 왜 그랬나요?</p>
+      <p style="margin-top:10px">2. 당대 조선인들은 발표와 실제의 차이를 어떻게 알아낼 수 있었을까요?</p>
+    </div>
+    <div class="btn-row"><button class="btn ghost" onclick="location.reload()">처음부터 다시</button></div>
+  </section>
+
+  <footer>© 찰리쌤 · hischarlie.tistory.com</footer>
+</div>
+<div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+
+<script>
+/* ═══════ GAME_CONFIG ═══════ */
+const GAME_CONFIG = { game_id:'saito1919', label:'1919, 무엇이 달라졌나', era:'근현대', version:'1.0' };
+const SUPABASE_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'; /* 배포 전 교체 */
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+const SEND_ENABLED = true; /* 키 교체 후 true */
+let submitted = false;
+
+/* ═══════ 툴팁 ═══════ */
+const TIPS = {
+  '관제':'관제(官制) — 정부 기관의 조직과 권한을 정한 제도. 관제 개정은 통치 기구를 바꾼다는 뜻.',
+  '일시동인':'일시동인(一視同仁) — 멀고 가까운 사람을 친함에 관계없이 똑같이 대해 준다는 뜻.',
+  '문관':'문관(文官)·무관(武官) — 문관은 행정 관료, 무관은 군인 출신 관료. 이전까지 조선 총독은 현역 군인만 임명될 수 있었다.',
+  '헌병경찰':'헌병 경찰제 — 군대 경찰인 헌병이 일반 치안까지 담당한 1910년대 통치 방식.',
+  '보통경찰':'보통 경찰제 — 군인이 아닌 일반 경찰이 치안을 담당하는 제도.',
+  '대검':'대검(帶劍) — 칼을 참. 1910년대에는 관리와 교사도 제복을 입고 칼을 찼다.',
+  '부협의회':'부 협의회 — 부(府, 도시 행정 구역)에 둔 지방 자문 기구. 도 평의회·면 협의회도 같은 성격이었다.',
+  '자문':'자문(諮問)과 의결(議決) — 자문은 의견을 물어보는 것, 의결은 결정하는 권한. 자문 기구는 결정권이 없다.',
+  '국체':'국체(國體) — 나라의 기본 체제. 치안 유지법에서는 천황제를 뜻했다.',
+  '금고':'금고(禁錮) — 교도소에 가두되 강제 노동은 시키지 않는 형벌.',
+  '구속':'구속(拘束) — 수사·재판을 위해 사람을 잡아 가두는 것.'
+};
+const bubble = document.getElementById('tt-bubble');
+function showTip(word, target){
+  const desc = TIPS[word]; if(!desc) return;
+  bubble.querySelector('.tb-word').textContent = target.textContent;
+  bubble.querySelector('.tb-desc').textContent = desc;
+  bubble.style.top='-9999px'; bubble.style.left='0'; bubble.classList.add('show');
+  requestAnimationFrame(function(){
+    const r=target.getBoundingClientRect(), bh=bubble.offsetHeight, bw=bubble.offsetWidth;
+    let top=r.top-bh-8; if(top<8) top=r.bottom+8;
+    let left=r.left+r.width/2-bw/2;
+    left=Math.max(8, Math.min(left, window.innerWidth-bw-8));
+    bubble.style.top=top+'px'; bubble.style.left=left+'px';
+  });
+}
+document.addEventListener('click', function(e){
+  const t=e.target.closest('.tt');
+  if(t){ showTip(t.dataset.tt,t); e.stopPropagation(); } else bubble.classList.remove('show');
+});
+
+/* ═══════ 상태 ═══════ */
+const S = { initial:null, rounds:{}, tokens:[], tokensLeft:2, final:null, reason:'', changedBy:null };
+let idx = 0;
+
+const SCALE_TXT = {
+  1:'대체로 완화로 이어졌다',
+  2:'일부 완화로 이어졌다',
+  3:'완화로 이어졌다고 보기 어렵다',
+  4:'오히려 통제가 강화된 모습이다'
+};
+const SCALE_SHORT = {1:'대체로<br>완화', 2:'일부<br>완화', 3:'완화라고<br>보기 어렵다', 4:'오히려<br>통제 강화'};
+const SCALE_Q = '지금 확인한 자료를 볼 때, 통치 방식의 변화가 실제 식민 지배의 완화로 이어졌다고 볼 수 있습니까?';
+
+/* ═══════ 라운드 데이터 ═══════ */
+/* ⚠ R2·R3 수치는 교과서 그래프 판독값 — 배포 전 원본 대조 예정 */
+const ROUNDS = [
+{
+  id:'r1', tag:'자료 검토 1 / 4 · 경찰', title:'헌병 경찰제 폐지, 그 후',
+  intro:'발표대로 헌병 경찰제는 폐지되고 <span class="tt" data-tt="보통경찰">보통 경찰제</span>가 시행되었습니다. 제도는 분명히 바뀌었습니다. 그렇다면 —',
+  q:'1920년 경찰 조직의 규모는 1918년에 비해 어떻게 되었을 것이라 예상합니까?',
+  input:{ type:'opt', stack:false, options:['줄었다','비슷했다','늘었다'] },
+  evidence:
+    '<div class="fact"><div class="fact-label">기본 자료 — 경찰 관서 수</div>'+
+    '<div class="bar-lab">1918 (경찰+헌병) 1,861개</div><div class="bar-wrap"><div class="bar" data-w="67"></div></div>'+
+    '<div class="bar-lab" style="margin-top:8px">1920 (경찰) 2,761개</div><div class="bar-wrap"><div class="bar b2" data-w="100"></div></div>'+
+    '<div class="stat-row" style="margin-top:12px"><span class="stat-num">1,861</span><span class="stat-arrow">→</span>'+
+    '<span class="stat-num" style="color:var(--color-accent)">2,761</span><span class="stat-delta">+48%</span></div>'+
+    '<div class="src">송규진 외, 《통계로 본 한국 근현대사》(2004)</div></div>',
+  compare:function(v){ return '당신은 경찰 조직이 <b>'+v+'</b>고 예상했습니다. 실제 경찰 관서는 1,861개에서 2,761개로 <b>48% 늘었습니다.</b>'; },
+  extra:
+    '<div class="fact acc"><div class="fact-label">추가 자료 — 경찰 인원</div>'+
+    '<div class="stat-row"><span class="stat-name">1918 (경찰+헌병)</span><span class="stat-num">13,380<span style="font-size:15px">명</span></span></div>'+
+    '<div class="stat-row"><span class="stat-name">1920 (경찰)</span><span class="stat-num" style="color:var(--color-accent)">18,376<span style="font-size:15px">명</span></span><span class="stat-delta">+37%</span></div>'+
+    '<div class="src">송규진 외, 《통계로 본 한국 근현대사》(2004)</div></div>'
+},
+{
+  id:'r2', tag:'자료 검토 2 / 4 · 정치 참여', title:'지방 행정에 참여할 길을 연다',
+  intro:'총독부는 한국인이 지방 행정에 참여할 길을 연다며 <span class="tt" data-tt="부협의회">부 협의회</span>·도 평의회의 의원 일부를 선거로 뽑았습니다. 실제로 선거가 치러진 것입니다.',
+  q:'1920년, 전체 한국인 가운데 이 선거에 참여할 수 있었던 사람은 어느 정도였을까요?',
+  input:{ type:'pct', min:0, max:30, step:1, val:10, unit:'%' },
+  evidence:
+    '<div class="fact"><div class="fact-label">기본 자료 ① — 전체 인구 중 유권자 비율 (1920)</div>'+
+    '<div class="bar-lab">한국인 — 약 1%</div><div class="bar-wrap"><div class="bar" data-w="7"></div></div>'+
+    '<div class="bar-lab" style="margin-top:8px">일본인 — 약 3%</div><div class="bar-wrap"><div class="bar b2" data-w="21"></div></div>'+
+    '<div class="src">김동명, 《지배와 협력》(2018) — 전국 14곳 부 협의회 선거. 그래프 판독값</div></div>'+
+    '<div class="fact"><div class="fact-label">기본 자료 ② — 이 기구는 무엇이었나</div>'+
+    '<p style="font-size:16px;line-height:1.75">부 협의회·도 평의회는 지방 행정에 의견을 제시하는 <span class="tt" data-tt="자문">자문 기구</span>였으며, <b>의결 권한은 없었습니다.</b> 선거권은 <b>일정액 이상 세금을 내는 사람에게만</b> 주어져, 대부분의 한국인은 선거에 참여할 수 없었습니다.</p></div>',
+  compare:function(v){ return '당신은 약 <b>'+v+'</b>로 예상했습니다. 실제 한국인 유권자는 전체 한국인의 <b>1% 안팎에 지나지 않았습니다.</b> 같은 해 일본인의 유권자 비율은 한국인보다 두 배 이상 높았습니다.'; },
+  extra:
+    '<div class="fact acc"><div class="fact-label">추가 자료 — 당선자 수 (1920)</div>'+
+    '<div class="bar-lab">한국인 — 약 55명</div><div class="bar-wrap"><div class="bar" data-w="42"></div></div>'+
+    '<div class="bar-lab" style="margin-top:8px">일본인 — 약 130명</div><div class="bar-wrap"><div class="bar b2" data-w="100"></div></div>'+
+    '<div style="font-size:15px;margin-top:10px">한국인이 인구의 대다수였음에도, 뽑힌 의원은 일본인이 두 배 이상이었습니다.</div>'+
+    '<div class="src">김동명, 《지배와 협력》(2018). 그래프 판독값</div></div>'
+},
+{
+  id:'r3', tag:'자료 검토 3 / 4 · 치안 유지법', title:'1925년, 새로운 법이 만들어집니다',
+  intro:'문화 정치 아래에서 언론·출판·집회·결사의 자유가 일부 허용되었습니다. 그리고 1925년, 새로운 법이 제정됩니다.'+
+    '<div class="doc" style="margin-top:16px"><div class="doc-head">치안 유지법 (1925)</div>'+
+    '<p>제1조 ① <span class="tt" data-tt="국체">국체</span>(천황제)를 변혁하거나 사유 재산 제도를 부인하는 것을 목적으로 결사를 조직하거나 이에 가입한 자는 10년 이하의 징역 또는 <span class="tt" data-tt="금고">금고</span>에 처한다.</p>'+
+    '<p style="margin-top:8px">제7조 이 법은 시행 구역 외에서 죄를 범한 자에게도 적용한다.</p>'+
+    '<div class="doc-src">— 《조선 총독부 관보》, 1925. 4. 27.</div></div>',
+  q:'이 법이 시행된 뒤 10년 동안, 위반으로 <span class="tt" data-tt="구속">구속</span>된 사람의 수는 어떻게 변했을까요?',
+  input:{ type:'opt', stack:true, options:['크게 늘었다가 다시 줄어든다','꾸준히 늘어난다','비슷한 수준을 유지한다','점차 줄어든다'] },
+  evidence:
+    '<div class="fact"><div class="fact-label">기본 자료 — 치안 유지법 위반 구속자 (1926~1935)</div>'+
+    '<svg viewBox="0 0 620 230" style="width:100%;height:auto;margin:6px 0">'+
+    '<line x1="52" y1="10" x2="52" y2="180" stroke="#8b7355" stroke-width="1.5"/>'+
+    '<line x1="52" y1="180" x2="600" y2="180" stroke="#8b7355" stroke-width="1.5"/>'+
+    '<text x="46" y="16" font-size="11" fill="#8b7355" text-anchor="end">5,000</text>'+
+    '<text x="46" y="100" font-size="11" fill="#8b7355" text-anchor="end">2,500</text>'+
+    '<text x="46" y="184" font-size="11" fill="#8b7355" text-anchor="end">0</text>'+
+    '<polyline id="r3-line" fill="none" stroke="#003087" stroke-width="2.5" stroke-linejoin="round" '+
+    'points="70,174 128,160 187,133 245,137 304,103 362,119 421,22 479,93 538,103 596,130"/>'+
+    '<circle cx="421" cy="22" r="5" fill="#cd2e3a"/>'+
+    '<text x="421" y="40" font-size="12" font-weight="700" fill="#cd2e3a" text-anchor="middle">1932</text>'+
+    '<text x="70" y="198" font-size="11" fill="#8b7355" text-anchor="middle">1926</text>'+
+    '<text x="245" y="198" font-size="11" fill="#8b7355" text-anchor="middle">1929</text>'+
+    '<text x="421" y="212" font-size="11" fill="#8b7355" text-anchor="middle">1932</text>'+
+    '<text x="596" y="198" font-size="11" fill="#8b7355" text-anchor="middle">1935</text>'+
+    '</svg>'+
+    '<div style="font-size:15px">1926년에는 수백 명 수준이었으나 1932년에는 <b>4천 명을 넘어섰습니다.</b></div>'+
+    '<div class="src">《한국사론》 44 (2000). 그래프 판독값</div></div>',
+  compare:function(v){ return '당신은 <b>'+v+'</b>고 예상했습니다. 실제로는 1932년에 정점을 찍으며 크게 늘어난 뒤 다소 줄어듭니다.'; },
+  extra:
+    '<div class="fact acc"><div class="fact-label">추가 자료 — 이 법은 누구에게 적용되었나</div>'+
+    '<p style="font-size:16px;line-height:1.75">치안 유지법은 본래 일본에서 사회주의를 탄압하기 위해 만들어진 법입니다. 그러나 조선에서는 민족주의 운동에도 적용되었습니다. 1930년 7월 조선 총독부 고등 법원은 독립운동 관련 사건에서, 조선의 독립을 이루려는 것은 제국 영토의 일부를 빼앗아 통치권을 축소·침해하는 것이므로 <b>치안 유지법이 말하는 국체 변혁에 해당한다</b>고 판결했습니다.</p>'+
+    '<p style="font-size:16px;line-height:1.75;margin-top:10px">또한 이 법은 범죄에 해당하는 <b>행위를 하지 않아도, 품고 있는 사상만으로</b> 처벌할 수 있었습니다.</p>'+
+    '<div class="src">교과서 〈치안 유지법과 독립운동〉</div></div>'
+},
+{
+  id:'r4', tag:'자료 검토 4 / 4 · 총독', title:'문관도 총독이 될 수 있다',
+  intro:'발표문의 첫 항목으로 돌아갑니다. 총독부는 <span class="tt" data-tt="문관">문관</span>도 총독에 임명될 수 있도록 규정을 바꾸었습니다. 규정은 실제로 개정되었습니다.',
+  q:'그렇다면 식민 통치가 끝나는 1945년까지, 실제로 임명된 문관 총독은 몇 명이었을까요?',
+  input:{ type:'pct', min:0, max:6, step:1, val:2, unit:'명', plusAt:6 },
+  evidence:
+    '<div class="fact acc"><div class="fact-label">기본 자료 — 문관 총독 임명 인원 (1919~1945)</div>'+
+    '<div style="text-align:center;padding:16px 0">'+
+    '<div style="font-family:var(--font-doc);font-size:64px;font-weight:700;color:var(--color-accent);line-height:1">0</div>'+
+    '<div style="font-size:17px;font-weight:700;margin-top:4px">단 한 명도 임명되지 않았습니다</div></div>'+
+    '<div style="font-size:15px">규정은 바뀌었지만, 식민 통치가 끝날 때까지 문관 총독은 단 한 명도 임명되지 않았습니다.</div></div>',
+  compare:function(v){ return '당신은 <b>'+v+'</b>으로 예상했습니다.'; },
+  extra:null
+}
+];
+
+/* ═══════ 최종 선택지 ═══════ */
+const FINALS = [
+ {axis:'지속성', text:'제도는 일부 바뀌었지만, 식민 지배의 목적과 핵심 권력 관계는 그대로 유지되었다.'},
+ {axis:'통제재편', text:'겉으로는 통치 방식이 달라졌지만, 경찰력 확대와 치안 유지법처럼 통제 수단은 오히려 확대·강화된 부분도 있었다.'},
+ {axis:'변화인정', text:'문화 정치에는 실제 제도 변화도 있었으므로, 이를 모두 겉치레로만 보기는 어렵다. 변화와 한계를 함께 평가해야 한다.'},
+ {axis:'증거한계', text:'지금 확인한 자료만으로 문화 정치 전체의 성격을 확정하기는 어렵다. 다른 영역의 자료를 더 확인해야 한다.'}
+];
+
+/* ═══════ 유틸 ═══════ */
+function show(id){
+  document.querySelectorAll('.scene').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function setStage(t){ document.getElementById('stage-lab').textContent = t; }
+function renderTokens(){
+  document.getElementById('tk1').classList.toggle('used', S.tokensLeft<1);
+  document.getElementById('tk2').classList.toggle('used', S.tokensLeft<2);
+}
+function growBars(scope){
+  requestAnimationFrame(function(){
+    scope.querySelectorAll('.bar').forEach(function(b){ b.style.width = b.dataset.w + '%'; });
+  });
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+/* ═══════ 도입 ═══════ */
+document.querySelectorAll('#sc-intro .choice-card').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('#sc-intro .choice-card').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel'); S.initial=b.dataset.init;
+    document.getElementById('btn-intro-next').disabled=false;
+  });
+});
+document.getElementById('btn-intro-next').addEventListener('click', function(){ renderRound(0); });
+
+/* ═══════ 라운드 렌더 ═══════ */
+function renderRound(i){
+  idx = i;
+  const R = ROUNDS[i];
+  S.rounds[R.id] = { pred:null, raw:null, scale:null };
+  setStage('자료 ' + (i+1) + ' / 4');
+
+  let inputHTML = '';
+  if(R.input.type === 'opt'){
+    inputHTML = '<div class="dir-row' + (R.input.stack ? ' stack' : '') + '" id="opt-row">' +
+      R.input.options.map(function(o){ return '<button class="dir-btn" data-v="'+esc(o)+'">'+esc(o)+'</button>'; }).join('') +
+      '</div>';
+  } else {
+    inputHTML = '<div class="mag-lab"><span>'+R.input.min+R.input.unit+'</span><span>'+
+      R.input.max+(R.input.plusAt?'명 이상':R.input.unit)+'</span></div>'+
+      '<input type="range" id="rng" min="'+R.input.min+'" max="'+R.input.max+'" step="'+R.input.step+'" value="'+R.input.val+'">'+
+      '<div class="mag-val" id="rng-val"></div>'+
+      '<div class="field-note" id="rng-hint" style="text-align:center">슬라이더를 움직여 예측을 정하세요</div>';
+  }
+
+  document.getElementById('sc-round').innerHTML =
+    '<span class="era-tag">'+R.tag+'</span>'+
+    '<h2>'+R.title+'</h2>'+
+    '<p>'+R.intro+'</p>'+
+    '<p class="q">'+R.q+'</p>'+
+    '<div id="pred-box">'+inputHTML+
+      '<div class="btn-row"><button class="btn" id="btn-lock" disabled>이 예측을 확정한다</button></div></div>'+
+    '<div id="locked-box"></div><div id="ev-box"></div><div id="verify-box"></div>'+
+    '<div id="extra-box"></div><div id="scale-box"></div>';
+
+  show('sc-round');
+
+  if(R.input.type === 'opt'){
+    document.querySelectorAll('#opt-row .dir-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.querySelectorAll('#opt-row .dir-btn').forEach(function(x){x.classList.remove('sel');});
+        b.classList.add('sel');
+        S.rounds[R.id].pred = b.dataset.v;
+        S.rounds[R.id].raw  = b.dataset.v;
+        document.getElementById('btn-lock').disabled = false;
+      });
+    });
+  } else {
+    const rng = document.getElementById('rng'), lab = document.getElementById('rng-val');
+    /* 초깃값은 보여주되 저장하지 않는다. 실제로 움직여야 예측이 성립한다 (v1.3) */
+    function upd(touched){
+      const v = parseInt(rng.value);
+      lab.textContent = (R.input.plusAt && v >= R.input.plusAt) ? (v + '명 이상') : (v + R.input.unit);
+      if(!touched) return;
+      S.rounds[R.id].pred = lab.textContent;
+      S.rounds[R.id].raw  = v;
+      document.getElementById('rng-hint').style.display = 'none';
+      document.getElementById('btn-lock').disabled = false;
+    }
+    rng.addEventListener('input', function(){ upd(true); });
+    rng.addEventListener('change', function(){ upd(true); });
+    upd(false);
+  }
+
+  document.getElementById('btn-lock').addEventListener('click', function(){ lockPred(R); });
+}
+
+function lockPred(R){
+  document.getElementById('pred-box').style.display='none';
+  document.getElementById('locked-box').innerHTML =
+    '<div class="pred-locked"><span>나의 예측 — '+esc(S.rounds[R.id].pred)+'</span><span class="seal">확정</span></div>';
+  setTimeout(function(){ revealEvidence(R); }, 620);
+}
+
+function revealEvidence(R){
+  const ev = document.getElementById('ev-box');
+  ev.innerHTML = R.evidence + '<p style="font-size:15.5px;color:var(--color-sepia)">' + R.compare(S.rounds[R.id].pred) + '</p>';
+  growBars(ev);
+  setTimeout(function(){
+    if(R.extra && S.tokensLeft > 0){
+      document.getElementById('verify-box').innerHTML =
+        '<div class="verify"><div class="vq">이 자료만으로 판단하시겠습니까?</div>'+
+        '<div class="vnote">남은 확인권 <b>'+S.tokensLeft+'개</b>. 추가 확인 기회는 이번을 포함해 '+remainingChances()+'번 남았습니다.</div>'+
+        '<div class="v-row"><button class="btn ghost" id="btn-judge">이 자료로 판단한다</button>'+
+        '<button class="btn warm" id="btn-more">확인권을 쓴다 — 추가 자료 확인</button></div></div>';
+      document.getElementById('btn-judge').addEventListener('click', function(){
+        document.getElementById('verify-box').innerHTML=''; renderScale(R);
+      });
+      document.getElementById('btn-more').addEventListener('click', function(){
+        S.tokensLeft--; S.tokens.push(R.id); renderTokens();
+        document.getElementById('verify-box').innerHTML='';
+        const eb = document.getElementById('extra-box');
+        eb.innerHTML = R.extra; growBars(eb);
+        setTimeout(function(){ renderScale(R); }, 800);
+      });
+    } else {
+      if(R.extra && S.tokensLeft === 0){
+        document.getElementById('verify-box').innerHTML =
+          '<p style="font-size:14px;color:var(--color-sepia);margin-top:10px">확인권을 모두 사용했습니다. 이 자료의 추가 내용은 마지막에 공개됩니다.</p>';
+      }
+      renderScale(R);
+    }
+  }, 1300);
+}
+
+function remainingChances(){
+  let c = 0;
+  for(let i = idx; i < ROUNDS.length; i++){ if(ROUNDS[i].extra) c++; }
+  return c;
+}
+
+function renderScale(R){
+  const box = document.getElementById('scale-box');
+  box.innerHTML = '<div class="scale-block"><div class="scale-q">'+SCALE_Q+'</div><div class="scale-row">'+
+    [1,2,3,4].map(function(n){ return '<button class="scale-btn s'+n+'" data-s="'+n+'">'+SCALE_SHORT[n]+'</button>'; }).join('')+
+    '</div><div class="btn-row"><button class="btn" id="btn-next" disabled>'+
+    (idx < ROUNDS.length-1 ? '다음 자료로' : '최종 판단으로') + '</button></div></div>';
+  box.querySelectorAll('.scale-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      box.querySelectorAll('.scale-btn').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      S.rounds[R.id].scale = parseInt(b.dataset.s);
+      document.getElementById('btn-next').disabled = false;
+    });
+  });
+  document.getElementById('btn-next').addEventListener('click', function(){
+    if(idx < ROUNDS.length-1) renderRound(idx+1); else renderFinal();
+  });
+}
+
+/* ═══════ 최종 판단 ═══════ */
+function renderFinal(){
+  setStage('최종 판단');
+  const box = document.getElementById('final-choices');
+  box.innerHTML = FINALS.map(function(f,i){
+    return '<button class="choice-card" data-i="'+i+'">'+f.text+'</button>'; }).join('');
+  box.querySelectorAll('.choice-card').forEach(function(b){
+    b.addEventListener('click', function(){
+      box.querySelectorAll('.choice-card').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      S.final = parseInt(b.dataset.i);
+      document.getElementById('final-reason-box').style.display='block';
+      document.getElementById('reason-lab').textContent = (S.final === 3)
+        ? '어떤 자료가 더 필요하며, 그 자료를 확인하면 무엇을 판단할 수 있을까요?'
+        : '그렇게 판단한 이유를 써 주세요.';
+      checkReason();
+    });
+  });
+  show('sc-final');
+}
+const ta = document.getElementById('ta-reason');
+function checkReason(){
+  document.getElementById('btn-final-submit').disabled = (ta.value.trim().length < 5 || S.final === null);
+}
+ta.addEventListener('input', checkReason);
+document.getElementById('btn-final-submit').addEventListener('click', function(){
+  S.reason = ta.value.trim();
+  renderResult(); show('sc-result'); setStage('검토 종료');
+  /* sendResult()는 changed_by 선택 시점에 실행한다 (v1.3 버그 수정) */
+});
+
+/* ═══════ 결과 ═══════ */
+const INIT_TXT = {'완화':'통치가 실제로 완화되었을 것','형식':'형식만 바뀌었을 것','유보':'판단 유보'};
+const R_LABEL = {r1:'자료1 · 경찰', r2:'자료2 · 정치 참여', r3:'자료3 · 치안 유지법', r4:'자료4 · 총독'};
+function renderResult(){
+  let html = '<div class="traj-row"><span class="traj-step">최초 판단</span>'+
+    '<span class="traj-val">'+INIT_TXT[S.initial]+'</span></div>';
+  let prev = null;
+  ROUNDS.forEach(function(R){
+    const sc = S.rounds[R.id].scale;
+    const cls = sc >= 3 ? 'warm' : 'cool';
+    let move = '';
+    if(prev !== null){
+      const gap = Math.abs(sc - prev);
+      move = (gap === 0) ? '유지' : ((sc > prev ? '↑ ' : '↓ ') + gap + '단계 이동');
+    }
+    html += '<div class="traj-row"><span class="traj-step">'+R_LABEL[R.id]+'</span>'+
+      '<span class="traj-val '+cls+'">'+SCALE_TXT[sc]+'</span>'+
+      '<span class="traj-move">'+move+'</span></div>';
+    prev = sc;
+  });
+  document.getElementById('traj').innerHTML = html;
+
+  document.getElementById('traj-note').textContent =
+    '확인권은 ' + (S.tokens.length
+      ? S.tokens.map(function(t){return R_LABEL[t];}).join(', ') + '에서 사용했습니다.'
+      : '사용하지 않았습니다.');
+  document.getElementById('final-echo').textContent = FINALS[S.final].text;
+
+  /* 처음 판단을 바꾼 자료는 학생이 직접 고른다 (척도 자동 계산으로 대체하지 않음:
+     최초 판단은 3택, 이후는 4점 척도라 숫자 매핑이 성립하지 않는다) */
+  const cb = document.getElementById('changed-by');
+  cb.innerHTML = ROUNDS.map(function(R){
+      return '<button class="dir-btn cb" data-v="'+R.id+'">'+R_LABEL[R.id]+'</button>'; }).join('') +
+    '<button class="dir-btn cb" data-v="none">크게 바뀌지 않았다</button>';
+  cb.querySelectorAll('.cb').forEach(function(b){
+    b.addEventListener('click', function(){
+      cb.querySelectorAll('.cb').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel'); S.changedBy = b.dataset.v;
+      document.getElementById('btn-cb-lock').disabled = false;
+    });
+  });
+  /* 기록 버튼을 누르기 전까지는 자유롭게 바꿀 수 있고, 누른 뒤에는 잠긴다.
+     전송값과 화면·복사·comment 값이 어긋나지 않도록 하기 위함 (v1.5) */
+  const lockBtn = document.getElementById('btn-cb-lock');
+  lockBtn.addEventListener('click', function(){
+    sendResult();
+    cb.querySelectorAll('.cb').forEach(function(x){ x.disabled = true; x.style.opacity = x.classList.contains('sel') ? '1' : '.4'; });
+    lockBtn.disabled = true;
+    document.getElementById('cb-gate').textContent = '선택이 기록되었습니다.';
+    document.getElementById('btn-copy').disabled = false;
+    document.getElementById('btn-epi').disabled = false;
+  });
+}
+
+/* ═══════ 복사 ═══════ */
+document.getElementById('btn-copy').addEventListener('click', function(){
+  const c = document.getElementById('ta-comment').value.trim();
+  let t = '[1919, 무엇이 달라졌나]\n';
+  t += '최초 판단: ' + INIT_TXT[S.initial] + '\n';
+  ROUNDS.forEach(function(R){ t += R_LABEL[R.id] + ': ' + SCALE_TXT[S.rounds[R.id].scale] + '\n'; });
+  t += '확인권 사용: ' + (S.tokens.length ? S.tokens.map(function(x){return R_LABEL[x];}).join(', ') : '없음') + '\n';
+  t += '최종 판단: ' + FINALS[S.final].text + '\n';
+  t += '이유: ' + S.reason + '\n';
+  if(S.changedBy) t += '판단을 바꾼 자료: ' + (S.changedBy==='none' ? '크게 바뀌지 않음' : R_LABEL[S.changedBy]) + '\n';
+  if(c) t += '소감: ' + c + '\n';
+  navigator.clipboard.writeText(t).then(function(){
+    const b = document.getElementById('btn-copy');
+    b.textContent = '복사되었습니다'; setTimeout(function(){ b.textContent='결과 복사하기'; }, 1800);
+  });
+  sendComment(c);
+});
+
+/* ═══════ 에필로그 ═══════ */
+document.getElementById('btn-epi').addEventListener('click', function(){
+  const missed = ROUNDS.filter(function(R){ return R.extra && S.tokens.indexOf(R.id) === -1; });
+  document.getElementById('epi-missed').innerHTML = missed.length
+    ? '<div class="epi-head">확인하지 못한 자료</div>' +
+      missed.map(function(R){ return '<div style="font-size:13px;font-weight:700;color:var(--color-sepia);margin-top:14px">'+R_LABEL[R.id]+'</div>'+R.extra; }).join('')
+    : '<div class="epi-head">확인하지 못한 자료</div><p>확인권으로 열 수 있는 자료를 모두 확인했습니다.</p>';
+  const epi = document.getElementById('sc-epi');
+  show('sc-epi'); setStage('에필로그'); growBars(epi);
+});
+
+/* ═══════ Supabase ═══════ */
+/* DESIGN_LOCK 데이터 계약에 맞춘 어댑터.
+   내부 상태(S.rounds[*].raw)는 엔진용, 전송 payload는 문서 계약 형태로 변환한다. */
+const PRED_KEY = { r1:'dir', r2:'pct', r3:'shape', r4:'count' };
+function payloadBase(){
+  const out = { initial:S.initial, tokens:S.tokens,
+                final:S.final + 1, final_axis:FINALS[S.final].axis,
+                changed_by:S.changedBy, reason:S.reason };
+  ROUNDS.forEach(function(R){
+    const o = {};
+    o[PRED_KEY[R.id]] = S.rounds[R.id].raw;
+    o.scale = S.rounds[R.id].scale;
+    out[R.id] = o;
+  });
+  return out;
+}
+async function post(body){
+  if(!SEND_ENABLED){ console.log('[전송 생략]', body); return; }
+  try{
+    const res = await fetch(SUPABASE_URL + '/rest/v1/game_results', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,
+               'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=minimal'},
+      body: JSON.stringify(body)
+    });
+    /* fetch는 4xx/5xx에서 예외를 던지지 않는다 — 상태를 직접 확인해야 실패를 알 수 있다 */
+    if(!res.ok){
+      console.error('[Supabase] 전송 실패 HTTP ' + res.status + ' ' + res.statusText,
+                    await res.text().catch(function(){ return ''; }));
+    } else {
+      console.log('[Supabase] 전송 성공 HTTP ' + res.status, body.choices.record_type);
+    }
+  }catch(e){ console.warn('전송 실패(네트워크). 게임 진행에는 영향 없음:', e); }
+}
+function sendResult(){
+  if(submitted) return; submitted = true;
+  const c = Object.assign({record_type:'result', version:GAME_CONFIG.version}, payloadBase());
+  post({class:CLASS, game:GAME_CONFIG.game_id, choices:c, comment:'', timestamp:new Date().toISOString()});
+}
+function sendComment(c){
+  if(!c) return;
+  const ch = Object.assign({record_type:'comment', version:GAME_CONFIG.version}, payloadBase());
+  post({class:CLASS, game:GAME_CONFIG.game_id, choices:ch, comment:c, timestamp:new Date().toISOString()});
+}
+
+renderTokens();
+</script>
+</body>
+</html>
+
+
