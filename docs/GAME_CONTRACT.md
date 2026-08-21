@@ -10,6 +10,8 @@
 - 기존 데이터와 연결된 ID를 변경하지 않는다.
 - legacy ID는 `games.manifest.json`의 `aliases`에만 명시하고 canonical slug로 다시 사용하지 않는다.
 - 현재 예외는 `gabo1894 → gabo-reform`이다. 기존 행을 자동 migration하지 않는다.
+- 허브 projection의 `title`은 manifest의 canonical title과 같아야 한다. 축약·표시용 제목은 optional `displayTitle`에만 둔다.
+- 허브 projection의 published slug/path 집합은 manifest의 published inventory와 정확히 같아야 한다.
 
 ## Lifecycle
 

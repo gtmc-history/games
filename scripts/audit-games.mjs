@@ -311,25 +311,6 @@ function parseAttributes(tag) {
   return attributes;
 }
 
-function extractHubSlugs(source) {
-  const slugs = [];
-  for (const match of source.matchAll(/<a\b[^>]*>/gi)) {
-    const attrs = parseAttributes(match[0]);
-    const classes = (attrs.get('class') || '').split(/\s+/);
-    if (!classes.includes('game-card')) continue;
-    const href = attrs.get('href') || '';
-    try {
-      const url = new URL(href, `${PUBLIC_ORIGIN}/`);
-      const parts = url.pathname.split('/').filter(Boolean);
-      const gamesIndex = parts.indexOf('games');
-      slugs.push(gamesIndex >= 0 ? decodeURIComponent(parts[gamesIndex + 1] || '') : '');
-    } catch {
-      slugs.push('');
-    }
-  }
-  return slugs;
-}
-
 function extractConstObject(source, constName) {
   const declaration = new RegExp(`\\bconst\\s+${constName}(?:\\s*:[^=]+)?\\s*=\\s*\\{`).exec(source);
   if (!declaration) return '';
@@ -389,38 +370,71 @@ async function auditHubRepo(games, hubRepoArg, report) {
   }
   const hubRepo = path.resolve(process.cwd(), hubRepoArg);
   const hubIndex = path.join(hubRepo, 'index.html');
+  const hubDataPath = path.join(hubRepo, 'data', 'games.json');
   const dashboardIndex = path.join(hubRepo, 'dashboard', 'index.html');
   const edgeIndex = path.join(hubRepo, 'supabase', 'functions', 'dashboard-data', 'index.ts');
   const missingFiles = [];
-  for (const file of [hubIndex, dashboardIndex, edgeIndex]) if (!(await exists(file))) missingFiles.push(file);
+  for (const file of [hubIndex, hubDataPath, dashboardIndex, edgeIndex]) if (!(await exists(file))) missingFiles.push(file);
   if (missingFiles.length) {
     report.error('cross-repo files', `expected=hub/dashboard sources actual=missing:${missingFiles.join(',')}`);
     return;
   }
 
   const beforeHub = report.errorCount();
-  const [hubSource, dashboardSource, edgeSource] = await Promise.all([
-    fs.readFile(hubIndex, 'utf8'),
+  const [hubDataSource, dashboardSource, edgeSource] = await Promise.all([
+    fs.readFile(hubDataPath, 'utf8'),
     fs.readFile(dashboardIndex, 'utf8'),
     fs.readFile(edgeIndex, 'utf8'),
   ]);
+  let hubData;
+  try {
+    hubData = JSON.parse(hubDataSource.replace(/^\uFEFF/, ''));
+  } catch (error) {
+    report.error('hub data JSON', `${hubDataPath}: ${error.message}`);
+    return;
+  }
+  if (!Array.isArray(hubData.games)) {
+    report.error('hub data schema', 'expected=games array actual=missing-or-invalid');
+    return;
+  }
+
   const published = games.filter(game => game.status === 'published');
   const manifestBySlug = new Map(games.map(game => [game.slug, game]));
-  const hubSlugs = extractHubSlugs(hubSource);
-  const hubSet = new Set(hubSlugs);
-  if (hubSet.size !== hubSlugs.length) {
-    const duplicates = [...new Set(hubSlugs.filter((slug, index) => hubSlugs.indexOf(slug) !== index))];
-    report.error('hub duplicate cards', `expected=unique actual=${duplicates.join(',')}`);
+  const hubPublished = hubData.games.filter(game => game?.status === 'published');
+  const hubSlugs = hubPublished.map(game => game.slug);
+  const hubPaths = hubPublished.map(game => game.path);
+  const duplicateSlugs = [...new Set(hubSlugs.filter((slug, index) => hubSlugs.indexOf(slug) !== index))];
+  const duplicatePaths = [...new Set(hubPaths.filter((gamePath, index) => hubPaths.indexOf(gamePath) !== index))];
+  if (duplicateSlugs.length) {
+    report.error('hub data duplicate slugs', `expected=unique actual=${duplicateSlugs.join(',')}`);
   }
-  for (const game of published) {
-    if (!hubSet.has(game.slug)) report.exactError('hub mapping', game.slug, 'published card', 'missing');
+  if (duplicatePaths.length) {
+    report.error('hub data duplicate paths', `expected=unique actual=${duplicatePaths.join(',')}`);
   }
-  for (const slug of hubSet) {
-    const game = manifestBySlug.get(slug);
-    if (!game) report.exactError('hub ghost card', slug || '(unparsed)', 'manifest game', 'missing');
-    else if (game.status !== 'published') report.exactError('hub lifecycle', slug, 'published', game.status);
+
+  const canonicalIdentities = new Set(published.map(game => `${game.slug}\t/games/${game.slug}/`));
+  const hubIdentities = new Set(hubPublished.map(game => `${game.slug}\t${game.path}`));
+  const missingIdentities = [...canonicalIdentities].filter(identity => !hubIdentities.has(identity));
+  const extraIdentities = [...hubIdentities].filter(identity => !canonicalIdentities.has(identity));
+  const formatIdentity = identity => identity.replace('\t', ' path=');
+  if (missingIdentities.length || extraIdentities.length) {
+    report.error(
+      'published hub data set',
+      `missing=${missingIdentities.map(formatIdentity).join(',') || 'none'} extra=${extraIdentities.map(formatIdentity).join(',') || 'none'}`,
+    );
+  } else {
+    report.pass('published hub data set', `canonical=${published.length} hub=${hubPublished.length} missing=0 extra=0`);
   }
-  if (report.errorCount() === beforeHub) report.pass('published hub mapping', `${hubSet.size} cards`);
+
+  const hubPublishedBySlug = new Map(hubPublished.map(game => [game.slug, game]));
+  const titleMismatches = published.filter(game => (
+    hubPublishedBySlug.has(game.slug) && hubPublishedBySlug.get(game.slug).title !== game.title
+  ));
+  for (const game of titleMismatches) {
+    report.exactError('hub data title', game.slug, game.title, hubPublishedBySlug.get(game.slug).title);
+  }
+  if (!titleMismatches.length) report.pass('canonical hub titles', `${published.length} matched`);
+  if (report.errorCount() === beforeHub) report.pass('published hub data contract', `${hubPublished.length} games`);
 
   const beforeDashboard = report.errorCount();
   const canonicalLabels = stringMap(extractConstObject(dashboardSource, 'CANONICAL_GAME_LABELS'));
