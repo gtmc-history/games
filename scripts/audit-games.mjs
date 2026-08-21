@@ -72,7 +72,7 @@ class AuditReport {
 }
 
 function usage() {
-  console.log(`Usage: npm run audit:games -- [options]\n\nOptions:\n  --hub-repo <path>  Check the sibling hub/dashboard repository\n  --production       Read-only HTTP checks for published Pages and same-origin resources\n  --help             Show this help`);
+  console.log(`Usage: npm run audit:games -- [options]\n\nOptions:\n  --hub-repo <path>  Check the sibling hub/dashboard repository\n  --production       Read-only checks for Pages, resources, and production game_meta coverage\n  --help             Show this help`);
 }
 
 function parseArgs(argv) {
@@ -546,6 +546,35 @@ async function fetchText(url) {
   }
 }
 
+function extractSupabasePublicConfig(source) {
+  const url = source.match(/https:\/\/[a-z0-9]+\.supabase\.co/i)?.[0] || '';
+  const key = source.match(/\bsb_publishable_[A-Za-z0-9_-]+\b/)?.[0]
+    || source.match(/\beyJ[A-Za-z0-9._-]+\b/)?.[0]
+    || '';
+  return { url, key };
+}
+
+async function fetchJson(url, headers = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(url, {
+      redirect: 'follow',
+      cache: 'no-store',
+      headers: { 'User-Agent': 'gtmc-history-game-audit/1.0', Accept: 'application/json', ...headers },
+      signal: controller.signal,
+    });
+    const text = await response.text();
+    let data = null;
+    try { data = JSON.parse(text); } catch { /* Report the HTTP/body shape below. */ }
+    return { ok: response.ok, status: response.status, data };
+  } catch (error) {
+    return { ok: false, status: 0, data: null, error: error.message };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function mapLimit(values, limit, worker) {
   const results = new Array(values.length);
   let next = 0;
@@ -583,6 +612,53 @@ async function auditProduction(games, report) {
     if (!result.ok) report.error('production resource', `expected=HTTP 2xx actual=${result.error || `HTTP ${result.status}`} url=${url}`);
   }
   if (report.errorCount() === beforeResources) report.pass('production same-origin resources', `${resources.size} checked`);
+
+  const beforeMetadata = report.errorCount();
+  const configs = pageResults
+    .filter(({ result }) => result.ok)
+    .map(({ result }) => extractSupabasePublicConfig(result.text))
+    .filter(config => config.url && config.key);
+  const config = configs[0];
+  if (!config) {
+    report.error('production game_meta coverage', 'expected=public Supabase config actual=not detected');
+    return;
+  }
+
+  const metaResult = await fetchJson(
+    `${config.url}/rest/v1/game_meta?select=game_id,label,era&order=game_id.asc`,
+    { apikey: config.key },
+  );
+  if (!metaResult.ok || !Array.isArray(metaResult.data)) {
+    report.error(
+      'production game_meta coverage',
+      `expected=HTTP 200 JSON array actual=${metaResult.error || `HTTP ${metaResult.status}`}`,
+    );
+    return;
+  }
+
+  const targetGames = published.filter(game => game.dashboard === 'A' || game.dashboard === 'B');
+  const targetById = new Map(targetGames.map(game => [game.slug, game]));
+  const aliasIds = new Set(games.flatMap(game => game.aliases || []));
+  const metaIds = metaResult.data.map(row => row?.game_id).filter(Boolean);
+  const metaIdSet = new Set(metaIds);
+  const duplicates = [...new Set(metaIds.filter((id, index) => metaIds.indexOf(id) !== index))];
+  const missing = [...targetById.keys()].filter(id => !metaIdSet.has(id));
+  const orphan = [...metaIdSet].filter(id => !targetById.has(id) && !aliasIds.has(id));
+  const legacyAliases = [...metaIdSet].filter(id => aliasIds.has(id));
+
+  if (duplicates.length) report.error('production game_meta duplicate IDs', `expected=unique actual=${duplicates.join(',')}`);
+  if (missing.length || orphan.length) {
+    report.error(
+      'production game_meta set',
+      `missing=${missing.join(',') || 'none'} orphan=${orphan.join(',') || 'none'}`,
+    );
+  }
+  if (report.errorCount() === beforeMetadata) {
+    report.pass(
+      'production game_meta coverage',
+      `dashboard=${targetGames.length} canonical=${targetGames.length - missing.length} rows=${metaIds.length} missing=0 orphan=0 legacy-aliases=${legacyAliases.length}`,
+    );
+  }
 }
 
 async function main() {
