@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>열 집을 묶다</title>
+<script>
+const GAME_CONFIG = {
+  game_id: "aegukban1938",
+  label: "열 집을 묶다",
+  era: "근현대",
+  version: "1.1"
+};
+const CHARLIE_CONFIG = {
+  supabaseUrl: "https://xgniwztlrakkrbzcfklb.supabase.co",
+  supabasePublishableKey: "sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9"
+};
+function publicHeaders(extra) {
+  const key = CHARLIE_CONFIG.supabasePublishableKey || "";
+  const headers = Object.assign({ apikey: key }, extra || {});
+  if (key.startsWith("eyJ")) headers.Authorization = "Bearer " + key;
+  return headers;
+}
+function sendToSupabase(choices, comment) {
+  const url = CHARLIE_CONFIG.supabaseUrl;
+  const key = CHARLIE_CONFIG.supabasePublishableKey;
+  if (!url || !key || key.startsWith("__")) return Promise.resolve({ ok:false, skipped:true });
+  const payload = {
+    class: runtimeClass,
+    game: GAME_CONFIG.game_id,
+    choices: choices,
+    comment: comment,
+    timestamp: new Date().toISOString()
+  };
+  if (new URLSearchParams(location.search).get("__test") === "1") {
+    window.__TEST_PAYLOADS__ = window.__TEST_PAYLOADS__ || [];
+    window.__TEST_PAYLOADS__.push(payload);
+    document.documentElement.dataset.testPayloads = JSON.stringify(window.__TEST_PAYLOADS__);
+    return Promise.resolve({ ok:true, intercepted:true });
+  }
+  return fetch(url + "/rest/v1/game_results", {
+    method: "POST",
+    headers: publicHeaders({ "Content-Type":"application/json", Prefer:"return=minimal" }),
+    body: JSON.stringify(payload)
+  }).catch(function(){ return { ok:false, failed:true }; });
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  --color-bg:#f0ece4;
+  --color-surface:#e8e0d4;
+  --color-primary:#003087;
+  --color-accent:#cd2e3a;
+  --color-text:#1a1a1a;
+  --color-sepia:#8b7355;
+  --line:#b9ab98;
+  --paper:#f7f2e9;
+  --muted:#655d53;
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--color-bg)}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--color-text);
+  font-family:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  font-size:16px;
+  line-height:1.75;
+  background-color:var(--color-bg);
+  background-image:
+    repeating-linear-gradient(0deg,rgba(90,70,45,.018) 0,rgba(90,70,45,.018) 1px,transparent 1px,transparent 4px),
+    repeating-linear-gradient(90deg,rgba(90,70,45,.012) 0,rgba(90,70,45,.012) 1px,transparent 1px,transparent 7px);
+}
+button,input,textarea{font:inherit}
+button{touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,.tt:focus-visible{outline:3px solid rgba(0,48,135,.35);outline-offset:3px}
+.app{max-width:900px;margin:0 auto;padding:16px 16px 48px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;border-bottom:1px solid rgba(139,115,85,.45);margin-bottom:16px}
+.brand{font-weight:900;font-size:14px;letter-spacing:.08em;color:var(--color-sepia)}
+.scene-mark{font-size:13px;color:var(--muted);font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.panel{background:rgba(247,242,233,.94);border:1px solid var(--line);border-radius:4px}
+.scene{padding:clamp(20px,4vw,40px);min-height:420px}
+.scene-in{animation:scene-in .32s ease both}
+@keyframes scene-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.notice{font-size:13px;color:var(--color-sepia);letter-spacing:.04em;margin:0 0 20px}
+.year{display:inline-block;min-width:70px;padding:5px 10px;border:1px solid var(--color-sepia);font-size:13px;font-weight:900;color:var(--color-sepia);margin-bottom:16px;text-align:center}
+h1,h2,h3{font-family:"Black Han Sans","Noto Sans KR",sans-serif;font-weight:400;line-height:1.25;letter-spacing:-.02em}
+h1{font-size:clamp(38px,8vw,68px);margin:0 0 24px}
+h2{font-size:clamp(28px,5vw,42px);margin:0 0 24px}
+h3{font-size:23px;margin:0 0 12px}
+p{margin:0 0 16px}
+.lead{font-size:18px;line-height:1.85}
+.small{font-size:13px;color:var(--muted);line-height:1.7}
+.instruction{margin:24px 0 12px;padding-top:16px;border-top:1px solid rgba(139,115,85,.38);font-weight:700}
+.class-row{display:grid;grid-template-columns:110px minmax(0,220px);align-items:center;gap:12px;margin:24px 0}
+.class-row label{font-weight:900}
+.class-row input{height:48px;border:1px solid var(--line);border-radius:2px;background:#fffdf8;padding:0 12px;min-width:0}
+.tt{display:inline;padding:0;border:0;border-bottom:1px dotted currentColor;background:transparent;color:var(--color-primary);font:inherit;font-weight:700;cursor:help;min-height:0}
+#tt-bubble{position:fixed;z-index:9999;top:-9999px;left:8px;width:250px;max-width:calc(100vw - 16px);padding:11px 13px;border:1px solid rgba(232,224,212,.25);border-radius:3px;background:#25211c;color:#f6efe3;box-shadow:0 8px 24px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .15s}
+#tt-bubble.show{opacity:1}
+#tt-bubble .tb-word{font-weight:900;font-size:13px;margin-bottom:4px}
+#tt-bubble .tb-desc{font-size:12px;line-height:1.6;color:#e5dac8}
+.facts{display:grid;gap:12px;margin:16px 0 24px}
+.fact{padding:16px;border-left:4px solid var(--color-sepia);background:#eee7da}
+.fact strong{display:block;margin-bottom:6px}
+.model-boundary{padding:16px;border:1px solid var(--line);background:#faf6ef;margin:20px 0}
+.choice-list{display:grid;gap:12px;margin:16px 0 20px}
+.choice-card{
+  min-height:72px;
+  width:100%;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:#f9f5ed;
+  color:var(--color-text);
+  text-align:left;
+  cursor:pointer;
+}
+.choice-card:hover{border-color:var(--color-sepia)}
+.choice-card.selected{border:2px solid var(--color-primary);padding:13px 15px;background:#edf1f8}
+.choice-card strong{display:block;font-size:18px;margin-bottom:3px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{min-height:48px;padding:11px 20px;border:1px solid #1a1a1a;border-radius:3px;background:#28231d;color:#fff;font-weight:900;cursor:pointer}
+.btn:hover{background:#3b342c}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.secondary{background:transparent;color:var(--color-text);border-color:var(--line)}
+.btn.secondary:hover{background:#ede5d9}
+.result-note{display:none;margin-top:20px;padding:18px;border-left:4px solid var(--color-primary);background:#eef1f5}
+.result-note.show{display:block}
+.result-note p:last-child{margin-bottom:0}
+.r3-grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:start}
+.side-panel{padding:16px;border:1px solid var(--line);background:#e9e0d4}
+.side-panel h3{font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:16px}
+.side-panel p{font-size:13px;margin-bottom:10px}
+.resource{display:inline-flex;align-items:center;min-height:48px;padding:8px 13px;border:1px solid var(--color-primary);color:var(--color-primary);font-weight:900;margin:0 0 16px}
+.board-wrap{padding:12px}
+.board-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 4px 10px}
+.board-head h2{font-family:"Noto Sans KR",sans-serif;font-size:16px;font-weight:900;margin:0}
+.board-head span{font-size:12px;color:var(--muted)}
+.table-scroll{overflow-x:auto;border:1px solid rgba(139,115,85,.35)}
+table{width:100%;min-width:800px;border-collapse:collapse;table-layout:fixed;background:rgba(255,252,246,.72);font-size:12px;line-height:1.35}
+th,td{border-right:1px solid rgba(139,115,85,.24);border-bottom:1px solid rgba(139,115,85,.24);padding:8px 5px;text-align:center;vertical-align:middle;height:48px}
+th{background:#ded3c4;font-weight:900}
+th:first-child,td:first-child{width:44px}
+th:nth-child(2),td:nth-child(2){width:145px;text-align:left}
+tr:last-child td{border-bottom:0}
+th:last-child,td:last-child{border-right:0}
+.cell-value{font-weight:700}
+.cell-year{display:block;font-size:10px;color:var(--color-sepia);margin-top:2px}
+.cell-need{font-weight:900;color:#9b5b00}
+.cell-absent{color:var(--muted)}
+.cell-target{font-weight:900;color:var(--color-primary)}
+tr.query-none{opacity:.35}
+tr.query-none td:nth-child(2)::after{content:"이번 조회 목록에 없음";display:block;font-size:9px;color:#3f3830;margin-top:3px}
+td.query-glow{animation:query-glow .55s ease both}
+@keyframes query-glow{0%{background:rgba(139,115,85,.24)}45%{background:rgba(0,48,135,.3);box-shadow:inset 0 0 0 2px #003087}100%{background:rgba(0,48,135,.13);box-shadow:inset 0 0 0 1px rgba(0,48,135,.45)}}
+.query-list{display:grid;gap:10px;margin:20px 0}
+.query-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:12px;border:1px solid var(--line);background:#eee7db;color:var(--color-sepia)}
+.query-item.revealed{color:var(--color-text)}
+.query-num{font-family:"Black Han Sans",sans-serif;font-size:20px;color:inherit}
+.query-status{display:block;margin-top:5px;font-weight:900}
+.query-item.secured .query-status{color:var(--color-primary)}
+.query-item.recheck .query-status{color:#a53b45}
+.stamp{display:inline-block;border:2px solid #b34d55;padding:2px 8px;color:#a53b45;transform:rotate(-1deg);animation:stamp-in .3s ease both}
+@keyframes stamp-in{from{opacity:0;transform:scale(1.18) rotate(-1deg)}to{opacity:1;transform:scale(1) rotate(-1deg)}}
+.not-listed{padding:14px;border:1px dashed var(--line);background:#eee8dd;color:var(--muted);font-size:14px}
+.count-box{display:none;margin:24px 0;padding:18px;border-top:2px solid var(--color-primary);border-bottom:2px solid var(--color-primary);text-align:center;font-size:18px;font-weight:900}
+.count-box.show{display:block}
+.reveal-title{display:none;margin-top:28px;padding-top:24px;border-top:1px solid var(--line);text-align:center}
+.reveal-title.show{display:block}
+.reveal-title h2{margin-bottom:14px}
+.reveal-title h2 span{display:block;color:var(--color-primary);font-size:.74em;margin-top:8px}
+.discovery{font-family:"Black Han Sans","Noto Sans KR",sans-serif;font-size:clamp(24px,5vw,38px);font-weight:400;line-height:1.45;margin:24px 0}
+.summary{padding:18px;border:1px solid var(--line);background:#f4eee4;margin-bottom:24px}
+.summary p:last-child{margin-bottom:0}
+.question{font-size:18px;font-weight:900;padding-left:14px;border-left:4px solid var(--color-primary)}
+textarea{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:2px;background:#fffdf8;padding:12px}
+.field-label{display:block;font-weight:900;margin:20px 0 8px}
+.copy-status{min-height:24px;margin-top:10px;font-size:13px;color:var(--muted)}
+.lesson-link{margin-top:28px;padding:18px;background:#e5ded2;border-left:4px solid var(--color-sepia)}
+.footer{margin-top:30px;color:rgba(120,100,80,0.4);font-size:12px;text-align:center}
+@media (max-width:700px){
+  .app{padding:8px 8px 32px}
+  .scene{padding:20px 16px}
+  .r3-grid{grid-template-columns:1fr}
+  .side-panel{order:2}
+  .class-row{grid-template-columns:1fr}
+  .class-row input{width:100%;max-width:none}
+  .board-wrap{padding:8px 6px}
+  .board-head{flex-wrap:wrap}
+  .board-head span{width:100%}
+  .topline{margin:0 4px 8px}
+  .scene-mark{flex:0 0 auto;white-space:nowrap}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="topline">
+    <div class="brand">10가구 현황판</div>
+    <div class="scene-mark" id="scene-mark">1938년 봄</div>
+  </header>
+  <div class="layout">
+    <section class="panel scene" id="scene" aria-live="polite"></section>
+    <section class="panel board-wrap" aria-label="10가구 현황판">
+      <div class="board-head"><h2>10가구 현황판</h2><span>게임 화면 · 실제 행정 문서 아님</span></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>#</th><th>가구원</th><th>나이</th><th>재학</th><th>호적</th><th>생계</th><th>확인 사항</th><th>등록</th></tr></thead>
+          <tbody id="board-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+<div id="tt-bubble" role="tooltip"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<script>
+const FIELDS = ["members","age","school","register","livelihood","ssi","job"];
+const FIELD_LABELS = {
+  members:"가구원", age:"나이", school:"재학", register:"호적",
+  livelihood:"생계", ssi:"확인 사항", job:"등록"
+};
+const PROFILES = {
+  1:{members:"부부+아들1+딸1"}, 2:{members:"부부+아들1(타지 재학)"},
+  3:{members:"부부+자녀3"}, 4:{members:"노부부 2인"},
+  5:{members:"부부+자녀5"}, 6:{members:"처+자녀2"},
+  7:{members:"부부+아들2"}, 8:{members:"부부+자녀1"},
+  9:{members:"모+아들1"}, 10:{members:"부부+딸2"}
+};
+const TIPS = {
+  "국민정신총동원조선연맹":"1938년 조직된 전시 동원 조직. 말단에 애국반을 둠",
+  "애국반":"주민을 감시하고 물자를 배급한 10호 단위 조직",
+  "확인 필요":"기재와 실제가 달라 추가 확인이 필요한 상태",
+  "징용":"국가가 명령으로 노동에 동원하는 제도",
+  "창씨개명":"1940년 성과 이름을 일본식으로 바꾸도록 강요한 정책",
+  "학도 지원병제":"1943년 전문학교·대학 재학생을 동원한 제도",
+  "징병제":"1944년 실시된 병력 동원 제도"
+};
+function tt(word, description) {
+  const tip = description || TIPS[word] || "";
+  if (!tip) return word;
+  return '<span class="tt" tabindex="0" role="button" data-word="' + word + '" data-tip="' + encodeURIComponent(tip) + '">' + word + '</span>';
+}
+let H = {};
+let picks = { r1:null, r2:null, r3:null };
+const R3_RESOURCE = 6;
+let sceneName = "intro";
+let selectedChoice = null;
+let roundConfirmed = false;
+let runtimeClass = new URLSearchParams(location.search).get("class") || "미입력";
+let resultSubmitted = false;
+let commentSubmitted = false;
+let r4Result = null;
+let queryTimer = null;
+
+function freshCell(){ return {s:"unknown",y:null}; }
+function initializeH(){
+  H = {};
+  for(let house=1;house<=10;house++){
+    H[house] = {};
+    FIELDS.forEach(function(field){ H[house][field]=freshCell(); });
+    H[house].members = {s:"ok",y:"38"};
+  }
+}
+initializeH();
+
+const stateRank = {unknown:0,absent:1,none:1,ok:2,target:2,need:3};
+function setCell(house, field, state, year){
+  const current=H[house][field];
+  if(stateRank[state] < stateRank[current.s]) return;
+  if(current.s==="need" && state!=="need") return;
+  H[house][field]={s:state,y:year||null};
+}
+function setMany(houses,field,state,year){
+  houses.forEach(function(house){setCell(house,field,state,year);});
+}
+function applyR1(choice){
+  if(choice==="a"){
+    setMany([1,2,3,4,5,6,7,8,9,10],"age","ok","38");
+    setMany([2,5,9,10],"school","ok","38");
+  }else if(choice==="b"){
+    setMany([1,2,3,4,5,6,7,8,9,10],"livelihood","ok","38");
+    setMany([4,5,9],"age","ok","38");
+  }else if(choice==="c"){
+    setMany([1,2,3,4,5,6,7,8,9,10],"register","ok","38");
+    setMany([3,8,9],"register","need",null);
+    setMany([3,9],"age","ok","38");
+  }
+}
+function applyR2(choice){
+  if(choice==="a"){
+    setCell(7,"job","target","39");
+    setMany([1,3,4,5,9,10],"job","none","39");
+    setMany([2,6],"job","absent",null);
+    for(let house=1;house<=10;house++) if(H[house].age.s==="unknown") setCell(house,"age","ok","39");
+    if(H[8].register.s==="unknown") setCell(8,"register","need",null);
+  }else if(choice==="b"){
+    setCell(7,"job","target","39");
+  }else if(choice==="c"){
+    for(let house=1;house<=10;house++) if(H[house].age.s==="unknown") setCell(house,"age","ok","39");
+    [3,8].forEach(function(house){if(H[house].register.s==="unknown") setCell(house,"register","need",null);});
+  }
+}
+function r3Order(){
+  return H[5].livelihood.s==="ok" ? [5,3,9,6,8,1,2,4,7,10] : [1,2,3,4,5,6,7,8,9,10];
+}
+function applyR3(choice){
+  const order=r3Order();
+  if(choice==="a"){
+    setMany(order.slice(0,R3_RESOURCE),"ssi","ok","40");
+  }else if(choice==="b"){
+    setMany(order.slice(0,3),"ssi","ok","40");
+  }else if(choice==="c"){
+    setMany([6,8],"ssi","ok","40");
+    let remaining=4;
+    const priority=[
+      [2,"school","ok"],[1,"age","ok"],[2,"age","ok"],[6,"age","ok"],[7,"age","ok"],
+      [8,"age","ok"],[10,"age","ok"],[3,"register","need"],[8,"register","need"],[9,"register","need"]
+    ];
+    for(let i=0;i<priority.length && remaining>0;i++){
+      const item=priority[i],house=item[0],field=item[1],state=item[2];
+      if(H[house][field].s!=="unknown") continue;
+      setCell(house,field,state,state==="ok"?"40":null);
+      remaining--;
+    }
+  }
+}
+function calculateR4(){
+  const checks=[
+    {id:1,label:"반 단위 가구 파악 현황",always:true},
+    {id:2,label:"1번 가구 아들의 나이",house:1,field:"age"},
+    {id:3,label:"9번 가구 아들의 나이",house:9,field:"age"},
+    {id:4,label:"2번 가구 아들의 재학 여부",house:2,field:"school"},
+    {id:5,label:"3번 가구의 호적",house:3,field:"register"},
+    {id:6,label:"8번 가구의 호적",house:8,field:"register"},
+    {id:7,label:"9번 가구의 호적",house:9,field:"register"}
+  ];
+  let secured=0;
+  checks.forEach(function(check){
+    if(check.always){
+      check.result="secured";check.detail="반이 만들어질 때부터 갖춰져 있었습니다.";secured++;return;
+    }
+    const cell=H[check.house][check.field];
+    check.state=cell.s;check.year=cell.y;
+    if(cell.s==="ok"){
+      check.result="secured";check.detail="'" + cell.y + "년 기록 기준";secured++;
+    }else if(cell.s==="need"){
+      check.result="recheck-known";check.detail="확인 필요 사항이 이미 파악되어 있음";
+    }else{
+      check.result="recheck-empty";check.detail="정보 없음";
+    }
+  });
+  return {checks:checks,secured:secured,recheck:7-secured};
+}
+function simulatePath(r1,r2,r3){
+  initializeH();applyR1(r1);applyR2(r2);applyR3(r3);
+  const result=calculateR4();
+  return {secured:result.secured,recheck:result.recheck,resource:R3_RESOURCE,order:r3Order(),state:JSON.parse(JSON.stringify(H))};
+}
+
+function cellHTML(house,field){
+  const cell=H[house][field];
+  if(field==="members") return '<span class="cell-value">' + PROFILES[house].members + '</span><span class="cell-year">\'38</span>';
+  if(cell.s==="unknown") return "";
+  if(cell.s==="need") return '<span class="cell-need" aria-label="확인 필요">⚠</span>';
+  if(cell.s==="absent") return '<span class="cell-absent">부재</span>';
+  if(cell.s==="none") return "—";
+  if(cell.s==="target") return '<span class="cell-target">등록 대상</span><span class="cell-year">\'' + cell.y + '</span>';
+  return '<span class="cell-value">채움</span><span class="cell-year">\'' + cell.y + '</span>';
+}
+function renderBoard(){
+  const body=document.getElementById("board-body");
+  let html="";
+  for(let house=1;house<=10;house++){
+    const dim=sceneName==="r4" && [4,5,7,10].includes(house) ? ' class="query-none"' : "";
+    html+="<tr data-house=\"" + house + "\"" + dim + "><td>" + house + "</td>";
+    FIELDS.forEach(function(field){
+      html+='<td data-house="' + house + '" data-field="' + field + '">' + cellHTML(house,field) + "</td>";
+    });
+    html+="</tr>";
+  }
+  body.innerHTML=html;
+}
+function clearQueryGlow(){
+  document.querySelectorAll(".query-glow").forEach(function(el){el.classList.remove("query-glow");});
+}
+function glowCheck(check){
+  clearQueryGlow();
+  if(check.always){
+    document.querySelectorAll('td[data-field="members"]').forEach(function(el){el.classList.add("query-glow");});
+  }else{
+    const cell=document.querySelector('td[data-house="' + check.house + '"][data-field="' + check.field + '"]');
+    if(cell) cell.classList.add("query-glow");
+  }
+}
+function setScene(name){
+  if(queryTimer){clearTimeout(queryTimer);queryTimer=null;}
+  sceneName=name;selectedChoice=null;roundConfirmed=false;
+  document.getElementById("scene-mark").textContent={
+    intro:"1938년 봄",r1:"1938",r2:"1939",r3:"1940",r4:"1943~44",result:"결과"
+  }[name];
+  renderBoard();
+  renderScene();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderScene(){
+  const scene=document.getElementById("scene");
+  scene.className="panel scene scene-in";
+  if(sceneName==="intro") renderIntro(scene);
+  if(sceneName==="r1") renderR1(scene);
+  if(sceneName==="r2") renderR2(scene);
+  if(sceneName==="r3") renderR3(scene);
+  if(sceneName==="r4") renderR4(scene);
+  if(sceneName==="result") renderResult(scene);
+}
+function startButton(handler,label,kind){
+  const button=document.createElement("button");
+  button.type="button";button.className="btn" + (kind ? " " + kind : "");
+  button.textContent=label;button.addEventListener("click",handler);return button;
+}
+function renderIntro(scene){
+  scene.innerHTML=
+    '<p class="notice">이 게임은 일제 전시 동원 체제를 다룹니다.</p>' +
+    '<h1>열 집을 묶다</h1>' +
+    '<div class="lead"><p>1938년 봄. ' + tt("국민정신총동원조선연맹") + '이 만들어지고, 가정을 10호씩 묶은 ' + tt("애국반") + '이 곳곳에 조직됩니다.</p>' +
+    '<p>당신은 어느 지방 도시의 애국반 반장을 맡고 있습니다. 담당은 10가구입니다.</p>' +
+    '<p>반장의 일은 주민을 파악하고 물자를 배급하는 것. 화면의 <strong>10가구 현황판</strong>으로 담당 가구를 관리하게 됩니다.</p></div>' +
+    '<p class="small">현황판은 게임을 위한 화면입니다. 실제 행정 문서의 재현이 아닙니다.</p>' +
+    '<p class="instruction">라운드마다 확인할 수 있는 횟수가 정해져 있습니다. 무엇을 확인할지 당신이 정합니다.</p>' +
+    '<div class="class-row"><label for="class-input">학급명</label><input id="class-input" type="text" maxlength="20" autocomplete="off" aria-describedby="class-help"><span class="small" id="class-help">예: 2-3 · 이름은 입력하지 않습니다.</span></div>' +
+    '<div class="actions" id="intro-actions"></div>';
+  const input=document.getElementById("class-input");
+  input.value=runtimeClass==="미입력"?"":runtimeClass;
+  document.getElementById("intro-actions").appendChild(startButton(function(){
+    runtimeClass=input.value.trim() || "미입력";setScene("r1");
+  },"반장 업무를 시작한다"));
+}
+const ROUND_OPTIONS={
+  r1:[
+    {id:"a",title:"인적 사항부터",desc:"가구원의 나이와 자녀의 재학 여부를 확인한다."},
+    {id:"b",title:"배급 형편부터",desc:"부양 상황과 생계 형편을 확인한다."},
+    {id:"c",title:"호적부터",desc:"가구별 호적 기재와 실제가 맞는지 대조한다."}
+  ],
+  r2:[
+    {id:"a",title:"직접 확인 중심",desc:"열 집을 직접 방문해 확인한다."},
+    {id:"b",title:"가구의 자진 확인에 의존",desc:"해당되는 가구가 알려오기를 기다린다."},
+    {id:"c",title:"기존 기록 대조",desc:"작년 기록을 먼저 살피고 빈 곳만 확인한다."}
+  ],
+  r3:[
+    {id:"a",title:"넓게 확인",desc:"되도록 많은 가구의 확인 사항을 처리한다."},
+    {id:"b",title:"깊게 확인",desc:"형편이 급한 세 가구부터 배급 처리를 끝까지 마친다."},
+    {id:"c",title:"기록 보완",desc:"확인된 적 없는 가구부터 찾고, 남는 여력으로 빈 기록을 채운다."}
+  ]
+};
+function renderChoices(container,round){
+  const list=document.createElement("div");list.className="choice-list";
+  ROUND_OPTIONS[round].forEach(function(option){
+    const card=document.createElement("button");card.type="button";card.className="choice-card";
+    card.dataset.choice=option.id;
+    card.innerHTML="<strong>(" + option.id + ") " + option.title + "</strong><span>" + option.desc + "</span>";
+    card.addEventListener("click",function(){
+      if(roundConfirmed)return;
+      selectedChoice=option.id;
+      list.querySelectorAll(".choice-card").forEach(function(el){el.classList.toggle("selected",el===card);});
+      document.getElementById(round + "-confirm").disabled=false;
+    });
+    list.appendChild(card);
+  });
+  container.appendChild(list);
+}
+function roundActions(container,round,next){
+  const actions=document.createElement("div");actions.className="actions";
+  const confirm=startButton(function(){
+    if(!selectedChoice || roundConfirmed)return;
+    roundConfirmed=true;picks[round]=selectedChoice;
+    if(round==="r1")applyR1(selectedChoice);
+    if(round==="r2")applyR2(selectedChoice);
+    if(round==="r3")applyR3(selectedChoice);
+    renderBoard();
+    container.querySelectorAll(".choice-card").forEach(function(el){el.disabled=true;});
+    confirm.disabled=true;
+    const note=document.getElementById(round + "-result");
+    note.innerHTML=roundResultHTML(round,selectedChoice);note.classList.add("show");
+    nextButton.hidden=false;nextButton.focus();
+  },"확정");
+  confirm.id=round + "-confirm";confirm.disabled=true;
+  const nextButton=startButton(function(){setScene(next);},"계속","secondary");nextButton.hidden=true;
+  actions.append(confirm,nextButton);container.appendChild(actions);
+}
+function roundResultHTML(round,choice){
+  const text={
+    r1:{
+      a:["열 집의 나이가 파악되었습니다. 자녀가 학교에 다니는 집도 확인했습니다.","다만 생계 형편과 호적 상태는 아직 비어 있습니다."],
+      b:["배급에 필요한 형편이 파악되었습니다. 부양가족이 많은 집이 눈에 들어옵니다.","다만 정확한 나이와 호적 상태는 대부분 비어 있습니다."],
+      c:["호적을 대조했습니다. 세 집에서 확인이 필요한 사항이 발견되었습니다. " + tt("확인 필요"),"다만 재학 여부와 생계 형편은 비어 있습니다."]
+    },
+    r2:{
+      a:["한 집에서 지정 직업 종사자가 확인되어, 그 사람이 등록 대상이 되었습니다.","방문하며 나이 정보도 갱신되었습니다. 다만 집을 비운 두 가구는 확인하지 못했습니다."],
+      b:["등록 대상 정보가 반장의 직접 방문 없이 확인되었습니다. 나머지 집의 사정은 확인하지 못했습니다.","이 게임에서는 직업능력 등록 절차와 반장의 주민 파악을 서로 구분해 모델링합니다."],
+      c:["작년 기록을 대조해 빈 나이 정보를 채웠습니다.","그러나 새 제도에 대한 것은 작년 기록 어디에도 없었습니다. 기록만으로는 처리할 수 없는 일이었습니다."]
+    },
+    r3:{
+      a:["확인을 마친 가구부터 배급이 처리되었습니다.","확인하지 못한 가구의 배급은 <strong>보류</strong> 상태로 남았습니다."],
+      b:["세 가구의 배급이 완결되었습니다.","나머지 가구의 배급은 <strong>보류</strong> 상태로 남았습니다."],
+      c:["확인된 적 없던 두 가구를 먼저 살피고, 남은 여력으로 빈 기록을 채웠습니다.","다만 확인 사항을 처리하지 못한 가구의 배급은 <strong>보류</strong> 상태로 남았습니다."]
+    }
+  }[round][choice].slice();
+  if(round==="r3" && picks.r1==="a")text.push("생계 형편 기록이 없어, 어느 집이 급한지 판단이 어려웠습니다.");
+  return text.map(function(line){return "<p>" + line + "</p>";}).join("");
+}
+function renderR1(scene){
+  scene.innerHTML='<span class="year">1938</span><h2>열 집을 파악하다</h2>' +
+    '<p>반이 편성되었습니다. 10가구의 구성은 기본 정보로 파악되어 있지만, 그 외 정보는 비어 있습니다.<br>주민 파악과 배급 업무를 시작하려면 무엇부터 확인해야 할까요?</p>' +
+    '<p class="instruction">올해 우선 확인할 정보 1종을 고릅니다</p><div id="r1-slot"></div><div class="result-note" id="r1-result"></div>';
+  const slot=document.getElementById("r1-slot");renderChoices(slot,"r1");roundActions(slot,"r1","r2");
+}
+function renderR2(scene){
+  scene.innerHTML='<span class="year">1939</span><h2>노동력을 등록하다</h2>' +
+    '<div class="facts"><div class="fact"><strong>1939년 6월 — 국민직업능력신고령, 조선에 적용</strong>국가가 지정한 직업·기능과 관련된 사람들의 정보가 등록됩니다.</div>' +
+    '<div class="fact"><strong>1939년 7월 — 국민징용령 제정</strong>' + tt("징용") + ' 대상은 원칙적으로 위 신고 대상자로 한정되었습니다.</div></div>' +
+    '<div class="model-boundary"><p>이런 제도가 시행되면, 반장의 주민 파악에도 영향이 미칩니다.</p><p>게임에서는 이 상황을 이렇게 다룹니다 — <strong>당신의 반에서 등록과 관련된 정보를 어떻게 확인할까요?</strong></p></div>' +
+    '<p class="instruction">확인 방식 1개를 고릅니다</p><div id="r2-slot"></div><div class="result-note" id="r2-result"></div>';
+  const slot=document.getElementById("r2-slot");renderChoices(slot,"r2");roundActions(slot,"r2","r3");
+}
+function renderR3(scene){
+  scene.innerHTML='<span class="year">1940</span><h2>배급 처리에 새로운 조건이 개입한다</h2>' +
+    '<div class="r3-grid"><div><p>1940년, ' + tt("창씨개명") + '을 따르지 않은 사람에게는 식량 배급을 하지 않는 등의 불이익이 있었습니다.<br>게임에서는 이 연결을 배급 처리의 확인 조건으로 모델링합니다. 확인을 마쳐야 배급 처리가 진행됩니다.</p>' +
+    '<div class="resource">확인 방문 6회</div><div id="r3-slot"></div><div class="result-note" id="r3-result"></div></div>' +
+    '<aside class="side-panel"><h3>전시기에 함께 강화된 변화</h3><p><strong>1937~ 황국 신민화</strong> — 황국 신민 서사 암송, 신사 참배 의무화, 궁성 요배, 일본어 상용</p><p><strong>1940</strong> — 창씨개명 · 《동아일보》《조선일보》 폐간</p></aside></div>';
+  const slot=document.getElementById("r3-slot");renderChoices(slot,"r3");roundActions(slot,"r3","r4");
+}
+function r4ItemHTML(check){
+  return '<div class="query-item" id="query-' + check.id + '"><div class="query-num">' + check.id + '</div><div><strong>' + check.label + '</strong><span class="query-status"></span></div></div>';
+}
+function renderR4(scene){
+  r4Result=calculateR4();
+  scene.innerHTML='<span class="year">1943~44</span><h2>조회가 내려오다</h2>' +
+    '<p>' + tt("학도 지원병제") + '(1943), ' + tt("징병제") + '(1944)가 시행됩니다.<br>상부에서 조회 목록이 내려옵니다. <strong>이번 라운드에 당신이 결정할 것은 없습니다.</strong></p>' +
+    '<div class="query-list">' + r4Result.checks.map(r4ItemHTML).join("") + '</div>' +
+    '<div class="not-listed"><p><strong>조회 목록에 없는 가구</strong></p><p>4 · 5 · 10번 가구 — 이번 조회 목록에 없음</p><p>7번 가구 — 이번 조회 목록에 없음 <span class="small">(노무 등록 정보는 이번 군인 동원 조회 목록에 포함되지 않습니다)</span></p></div>' +
+    '<div class="count-box" id="count-box">이번 조회 7건 중 — 확보 <strong>' + r4Result.secured + '건</strong> · 재조사 지시 <strong>' + r4Result.recheck + '건</strong><p class="small">\'재조사 지시\'는 정보 공백을 메우려는 체제의 압력을 나타낸 게임 표현입니다.</p></div>' +
+    '<div class="reveal-title" id="reveal-title"><h2>열 집을 묶다<span>— 애국반과 전시 동원 체제</span></h2><p class="discovery">동원은 사람을 데려가는 순간에만 시작되지 않았다.<br>사람을 파악하고 연결하는 체제가 먼저 만들어졌다.</p><div class="actions" id="r4-actions"></div></div>';
+  let index=0;
+  function revealNext(){
+    if(index>=r4Result.checks.length){
+      document.getElementById("count-box").classList.add("show");
+      document.getElementById("reveal-title").classList.add("show");
+      document.getElementById("r4-actions").appendChild(startButton(function(){setScene("result");},"결과 보기"));
+      return;
+    }
+    const check=r4Result.checks[index++];
+    const item=document.getElementById("query-" + check.id);
+    item.classList.add("revealed",check.result==="secured"?"secured":"recheck");
+    const status=item.querySelector(".query-status");
+    if(check.result==="secured"){
+      status.textContent="확보 — " + check.detail;
+    }else{
+      status.innerHTML=check.detail + ' — <span class="stamp">재조사 지시</span>';
+    }
+    glowCheck(check);
+    queryTimer=setTimeout(revealNext,600);
+  }
+  queryTimer=setTimeout(revealNext,300);
+}
+function choiceTitle(round,id){
+  const option=ROUND_OPTIONS[round].find(function(item){return item.id===id;});
+  return option ? option.title : "";
+}
+function r1SummaryTitle(id){
+  return choiceTitle("r1",id).replace(/부터$/,"");
+}
+function submitResult(){
+  if(resultSubmitted || !r4Result)return;
+  resultSubmitted=true;
+  const choices={
+    record_type:"result",v:"1.1",r1:picks.r1,r2:picks.r2,r3:picks.r3,
+    r4_secured:r4Result.secured,r4_recheck:r4Result.recheck
+  };
+  try{sendToSupabase(choices,null);}catch(_){}
+}
+function renderResult(scene){
+  submitResult();
+  scene.innerHTML='<h2>열 집을 묶다 — 애국반과 전시 동원 체제</h2>' +
+    '<div class="summary"><p><strong>당신의 반장 업무 6년:</strong><br>1938년 — ' + r1SummaryTitle(picks.r1) + '부터 파악 / 1939년 — ' + choiceTitle("r2",picks.r2) + ' / 1940년 — ' + choiceTitle("r3",picks.r3) + '<br>1943~44년 조회에서 확보 ' + r4Result.secured + '건, 재조사 지시 ' + r4Result.recheck + '건.</p>' +
+    '<p>확보가 많았다면 — 당신의 현황판이 그만큼 촘촘했다는 뜻입니다.<br>재조사 지시가 많았다면 — 체제가 그 공백을 메우러 왔다는 뜻입니다.<br>어느 쪽도 잘한 것도, 잘못한 것도 아닙니다.</p></div>' +
+    '<p class="question">배급과 주민 파악처럼 일상생활을 관리하는 행정이 전시 동원에 필요한 정보와 연결될 때, 우리는 그 행정을 어디까지 \'생활 관리\'라고 볼 수 있을까?</p>' +
+    '<label class="field-label" for="f-response">내 생각 (선택)</label><textarea id="f-response"></textarea>' +
+    '<label class="field-label" for="comment">게임을 마친 소감이 있다면 남겨 주세요. (선택)</label><textarea id="comment"></textarea>' +
+    '<div class="actions" id="result-actions"></div><div class="copy-status" id="copy-status" aria-live="polite"></div>' +
+    '<div class="lesson-link"><p>이 게임에서 본 것은 체제의 구조입니다.<br>그 구조가 실제 사람들에게 어떤 결과를 남겼는지 — 교과서 19쪽의 구술 자료에서 확인합니다.</p></div>' +
+    '<p class="small">이 게임은 실제 행정 절차의 재현이 아니라, 교과서와 사료로 확인되는 요소들로 구조를 모델링한 것입니다.</p>' +
+    '<div class="footer">© 찰리쌤 · hischarlie.tistory.com</div>';
+  const actions=document.getElementById("result-actions");
+  actions.appendChild(startButton(copyThoughts,"내 생각 복사하기"));
+  actions.appendChild(startButton(restartGame,"다시 하기","secondary"));
+}
+async function copyThoughts(){
+  const f=document.getElementById("f-response").value.trim();
+  const comment=document.getElementById("comment").value.trim();
+  const parts=[];
+  if(f)parts.push("내 생각\n" + f);
+  if(comment)parts.push("소감\n" + comment);
+  const status=document.getElementById("copy-status");
+  if(parts.length){
+    try{await navigator.clipboard.writeText(parts.join("\n\n"));status.textContent="내 생각을 복사했습니다.";}
+    catch(_){status.textContent="복사하지 못했습니다. 입력 내용을 직접 선택해 주세요.";}
+    if(!commentSubmitted){
+      commentSubmitted=true;
+      try{sendToSupabase({record_type:"comment",v:"1.1",r1:picks.r1,r2:picks.r2,r3:picks.r3,f_response:f},comment);}catch(_){}
+    }
+  }else{
+    status.textContent="입력한 내용이 없어 복사하거나 전송하지 않았습니다.";
+  }
+}
+function restartGame(){
+  initializeH();picks={r1:null,r2:null,r3:null};resultSubmitted=false;commentSubmitted=false;r4Result=null;setScene("intro");
+}
+
+let bubbleTimer=null;
+function showTooltip(el){
+  const bubble=document.getElementById("tt-bubble");
+  bubble.querySelector(".tb-word").textContent=el.dataset.word || "";
+  bubble.querySelector(".tb-desc").textContent=decodeURIComponent(el.dataset.tip || "");
+  const rect=el.getBoundingClientRect(),width=Math.min(250,window.innerWidth-16);
+  bubble.style.width=width+"px";
+  bubble.style.left=Math.max(8,Math.min(rect.left+rect.width/2-width/2,window.innerWidth-width-8))+"px";
+  bubble.style.top="-9999px";
+  bubble.classList.add("show");
+  const height=bubble.offsetHeight;
+  bubble.style.top=(rect.top-height-12<8?rect.bottom+8:rect.top-height-12)+"px";
+  clearTimeout(bubbleTimer);bubbleTimer=setTimeout(function(){bubble.classList.remove("show");},4000);
+}
+document.addEventListener("click",function(event){
+  const el=event.target.closest(".tt"),bubble=document.getElementById("tt-bubble");
+  if(!el){bubble.classList.remove("show");return;}
+  event.preventDefault();event.stopPropagation();showTooltip(el);
+});
+document.addEventListener("keydown",function(event){
+  if((event.key==="Enter"||event.key===" ") && event.target.classList.contains("tt")){
+    event.preventDefault();showTooltip(event.target);
+  }
+});
+renderBoard();
+renderScene();
+</script>
+</body>
+</html>
