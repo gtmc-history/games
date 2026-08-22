@@ -125,11 +125,16 @@ const ASSETS = {
 - [x] 허브 projection 및 dashboard canonical label 등록
 - [x] 360px·768px·1280px 실제 Chromium 검사
 
-### 배포 전 남은 항목
-- [ ] 현장 사진의 정확한 자료명·자료번호와 항공·위성 자료 권리 상태 운영 확인
-- [ ] migration production 적용 (`game_meta` production audit에서 현재 missing)
-- [ ] 안전한 test 환경에서 result/comment 행 및 dashboard 병합 표시 확인
-- [ ] 두 저장소 push 및 GitHub Pages 배포 (`/games/altteure1937/` production HTTP 현재 404)
+### 배포 상태
+- [x] `game_meta` migration production 적용
+- [x] games/hub 두 저장소 push
+- [x] GitHub Pages production HTTP 200
+- [x] production hub 카드와 dashboard canonical label 확인
+- [x] production audit 전체 PASS
+
+운영 후속 확인:
+- 현장 사진의 정확한 자료명·자료번호와 항공·위성 자료 권리 상태는 현재 `CREDITS` 범위를 유지한다.
+- production 학생 데이터를 만들지 않기 위해 실제 result/comment 전송은 추가 실행하지 않았고 mock으로만 검증했다.
 
 ---
 
@@ -154,4 +159,8 @@ K4는 코드로 보장할 수 없다. 첫 수업의 `initialHyp` ↔ `finalText`
 - mock 저장: result 1행, comment 1행, 선택 데이터 미중복, 공유 `result_id`, 중복 클릭 추가 전송 없음
 - 360px·768px·1280px: 가로 overflow 없음, S5 이미지·SVG 오버레이 박스 일치, console warning/error 0
 - deterministic audit 및 sibling hub audit PASS
-- production audit: Pages 404와 `game_meta` missing으로 예상된 2 ERROR
+- production audit: Pages 30/30, 동일 출처 리소스 7개, dashboard metadata 30개 전체 PASS
+
+배포 커밋:
+- games: `0d31641e1ec535ec2476bb90cf1ee1e60f232517`
+- hub/dashboard: `456b254dd76d9d32905ceaa6c8d7915da17d82a8`
