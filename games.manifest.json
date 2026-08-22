@@ -26,6 +26,7 @@
     { "slug": "gukchae1907", "title": "대한신문 1907 — 오늘의 1면을 써라", "era": "근대·경제 구국", "status": "published", "save": "required", "dashboard": "A", "renderer": "gukchae1907", "aliases": [] },
     { "slug": "saito1919", "title": "1919, 무엇이 달라졌나", "era": "일제강점기·1919", "status": "published", "save": "required", "dashboard": "A", "renderer": "saito1919", "aliases": [] },
     { "slug": "gendarme1910", "title": "어느 기관의 일입니까?", "era": "일제강점기·1910년대", "status": "published", "save": "required", "dashboard": "A", "renderer": "gendarme1910", "aliases": [] },
+    { "slug": "hoesaryeong1912", "title": "허가받으시오 — 1912년, 회사를 세우다", "era": "일제강점기·1910년대", "status": "published", "save": "required", "dashboard": "A", "renderer": "hoesaryeong1912", "aliases": [] },
     { "slug": "aegukban1938", "title": "열 집을 묶다", "era": "일제강점기·전시 동원", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "haebang1945", "title": "도둑같이 온 해방 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "haebang1945", "aliases": [] },
     { "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "geunal1945", "aliases": [] }

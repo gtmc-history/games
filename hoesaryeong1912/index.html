@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>허가받으시오 — 1912년, 회사를 세우다</title>
+<!-- 문구 SSOT: SCENE_TEXT_hoesaryeong1912_v1.4.md · 설계: DESIGN_LOCK (1~6장 잠금) -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-bg:#f0ece4;        /* 낡은 사진 배경 */
+  --color-surface:#e8e0d4;
+  --color-primary:#003087;   /* 태극 청색 */
+  --color-accent:#cd2e3a;    /* 태극 적색 */
+  --color-text:#1a1a1a;
+  --color-sepia:#8b7355;     /* 세피아 강조 */
+  --paper:#f7f2e6;
+  --ink:#2b2420;
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-doc:'Gowun Batang',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100dvh}
+body{
+  background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:16px;line-height:1.65;
+  background-image:radial-gradient(rgba(139,115,85,.06) 1px, transparent 1px);
+  background-size:5px 5px;
+}
+#app{max-width:900px;margin:0 auto;padding:16px 16px 48px;min-height:100dvh;display:flex;flex-direction:column}
+header{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  border-bottom:2px solid var(--color-sepia);padding:8px 0 10px;margin-bottom:16px;
+}
+header h1{font-family:var(--font-display);font-weight:400;font-size:22px;color:var(--color-primary);letter-spacing:.5px}
+#progress{font-size:14px;color:var(--color-sepia);white-space:nowrap}
+main{flex:1}
+.scene{display:none}
+.scene.on{display:block;animation:scene-in .4s ease forwards}
+@keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.notice{font-size:14px;color:var(--color-sepia);border-left:3px solid var(--color-sepia);padding:4px 10px;margin-bottom:16px}
+.card{
+  background:var(--color-surface);border:1px solid rgba(139,115,85,.45);border-radius:4px;
+  padding:18px 20px;margin-bottom:14px;
+}
+.reveal{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.reveal.shown{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.card h3{font-family:var(--font-display);font-weight:400;font-size:17px;color:var(--color-accent);margin-bottom:6px;letter-spacing:.4px}
+.narr{font-size:17px}
+/* 문서(계획서·허가장·법령) */
+.paper{
+  background:var(--paper);border:1px solid rgba(139,115,85,.6);border-radius:2px;
+  font-family:var(--font-doc);color:var(--ink);padding:20px 22px;margin:0 0 16px;
+  box-shadow:2px 3px 0 rgba(139,115,85,.18);position:relative;
+}
+.paper .ptitle{font-weight:700;font-size:17px;border-bottom:1px solid rgba(139,115,85,.5);padding-bottom:6px;margin-bottom:10px;letter-spacing:2px}
+.paper .pline{font-size:16px;min-height:1.6em}
+.paper .pline.write{animation:ink-in .8s ease forwards}
+@keyframes ink-in{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.permit{border-color:var(--color-primary)}
+.permit .ptitle{color:var(--color-primary);border-bottom-color:var(--color-primary)}
+.law .ptitle{font-size:15px;letter-spacing:1px}
+/* 선택지 */
+.choice-card{
+  display:block;width:100%;text-align:left;background:var(--paper);color:var(--ink);
+  border:1px solid rgba(139,115,85,.6);border-left:3px solid transparent;border-radius:4px;
+  padding:16px 18px;margin-bottom:12px;cursor:pointer;font-family:var(--font-body);font-size:17px;
+  transition:border-color .2s,background .2s,transform .15s;min-height:48px;
+}
+.choice-card:hover{border-left-color:var(--color-primary);background:#fbf7ec;transform:translateX(4px)}
+.choice-card.picked{border-left-color:var(--color-accent);background:#fbf3ee}
+.choice-card .sub{display:block;font-size:14px;color:var(--color-sepia);margin-top:4px}
+.btn{
+  display:inline-block;background:var(--color-primary);color:#f5f2ea;border:none;border-radius:4px;
+  font-family:var(--font-body);font-size:16px;font-weight:500;padding:12px 22px;min-height:48px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.ghost{background:transparent;color:var(--color-primary);border:1px solid var(--color-primary)}
+.btnrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.q{font-family:var(--font-display);font-weight:400;font-size:19px;color:var(--color-text);margin:18px 0 12px;letter-spacing:.3px}
+.connect{font-family:var(--font-doc);font-size:17px;color:var(--color-accent);margin:6px 0 18px}
+details{margin:10px 0 16px}
+details summary{cursor:pointer;color:var(--color-primary);font-size:15px;min-height:48px;display:flex;align-items:center}
+.warn{font-size:15px;color:var(--color-accent);border-left:3px solid var(--color-accent);padding:4px 10px;margin:10px 0 16px}
+.stat{font-family:var(--font-doc);font-size:17px;margin-bottom:8px}
+/* 결과 */
+.result-title{font-family:var(--font-display);font-weight:400;font-size:24px;color:var(--color-primary);margin-bottom:14px}
+.traj{font-size:18px;font-weight:700;margin-bottom:8px}
+.reason-echo{font-size:16px;color:var(--color-sepia);margin-bottom:16px}
+textarea{
+  width:100%;border:1px solid rgba(139,115,85,.6);border-radius:4px;background:var(--paper);
+  font-family:var(--font-body);font-size:16px;padding:10px 12px;resize:vertical;
+}
+footer.copyright{margin-top:28px;text-align:center;font-size:13px;color:rgba(120,100,80,0.4)}
+/* 툴팁 */
+.tt{border-bottom:1px dotted var(--color-sepia);cursor:help}
+#tt-bubble{
+  position:absolute;top:-9999px;left:0;max-width:260px;z-index:50;
+  background:#2b2420;color:#f0e6d0;font-size:14px;line-height:1.5;
+  padding:8px 12px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .15s;
+}
+#tt-bubble.show{opacity:1}
+.era-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.era-cell{background:var(--paper);border:1px solid rgba(139,115,85,.5);border-radius:4px;padding:12px 14px}
+.era-cell:last-child{border-color:var(--color-primary)}
+.era-head{font-family:var(--font-display);font-size:17px;color:var(--color-primary);margin-bottom:4px}
+@media (max-width:480px){.era-grid{grid-template-columns:1fr}}
+.hidden{display:none !important}
+@media (prefers-reduced-motion:reduce){
+  .scene.on{animation:none}
+  .paper .pline.write{animation:none;clip-path:none;opacity:1}
+  .reveal{transition:none;transform:none}
+  /* 주의: .reveal에 opacity:1 강제 금지 — 순차 공개 게이트(허가장→법령→계획서→결정)는 모션 축소 환경에서도 유지 */
+}
+@media (max-width:480px){
+  header h1{font-size:18px}
+  .narr{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <h1>허가받으시오 — 1912년, 회사를 세우다</h1>
+  <div id="progress">장면 1/6</div>
+</header>
+<main>
+
+<!-- S1 ─────────────────────────────────────────── -->
+<section class="scene on" id="s1">
+  <p class="notice">이 게임은 일제강점기 경제 통제 제도를 다룹니다.</p>
+  <div class="card">
+    <p class="narr">광희문 밖에서 몇 해째 <span class="tt" data-tt="jiknyu">직뉴</span>를 짜 팔고 있다. 이웃 업자들과 회사를 세우자는 이야기가 오간다. 계획서를 펼친다.</p>
+  </div>
+  <div class="paper" aria-label="계획서">
+    <div class="ptitle">회사 설립 계획서</div>
+    <div class="pline" id="plan-line1">&nbsp;</div>
+    <div class="pline" id="plan-line2">&nbsp;</div>
+  </div>
+  <div class="btnrow"><button class="btn" data-go="s2">계획서를 쓴다</button></div>
+</section>
+
+<!-- S2 ─────────────────────────────────────────── -->
+<section class="scene" id="s2">
+  <div class="card"><p class="narr">회사를 세우려면, 먼저 어떤 형태로 만들지 정해야 한다.</p></div>
+  <div class="card"><p>회사는 여러 사람이 자본을 모아, 개인이나 소규모 업자가 혼자서는 하기 어려운 규모의 사업을 조직할 수 있는 한 가지 방식이었다.</p></div>
+
+  <button class="choice-card" id="pick-hap">
+    몇 사람의 동업자가 함께 책임지는 <span class="tt" data-tt="hapmyeong">합명회사</span> 형태로 세운다.
+    <span class="sub">합명회사 — 몇 사람의 동업자를 중심으로 회사를 꾸린다.</span>
+  </button>
+  <button class="choice-card" id="pick-jusik">
+    주식을 나누어 <span class="tt" data-tt="chulja">출자자</span>를 모으는 <span class="tt" data-tt="jusik">주식회사</span> 형태로 세운다.
+    <span class="sub">주식회사 — 자본을 주식으로 나누어 여러 출자자가 참여할 수 있게 한다.</span>
+  </button>
+
+  <div class="paper" aria-label="계획서">
+    <div class="ptitle">회사 설립 계획서</div>
+    <div class="pline" id="s2-line1">&nbsp;</div>
+    <div class="pline" id="s2-line2">&nbsp;</div>
+  </div>
+  <div class="btnrow"><button class="btn hidden" id="s2-next" data-go="s3">허가를 신청한다</button></div>
+</section>
+
+<!-- S3 ─────────────────────────────────────────── -->
+<section class="scene" id="s3">
+  <div class="card reveal"><p class="narr">계획서를 내면 곧 회사가 되는 것은 아니었다. 회사령 아래에서는 총독의 <b>허가</b>가 필요했다.</p></div>
+  <div class="paper law reveal">
+    <div class="pline">회사령 제1조(요약) — 회사를 세우려면 조선 총독의 <b>허가</b>를 받아야 한다.</div>
+  </div>
+  <div class="card reveal">
+    <h3>주식회사 설립 서류의 예</h3>
+    <p><span class="tt" data-tt="balgiin">발기인</span>의 이름·주소·보유 주식 수·보수까지 적도록 했다.</p>
+  </div>
+  <div class="card reveal">
+    <p>허가 심사에서는 재력·신용·수익 전망뿐 아니라 이력과 정치적 성향까지 조사되었다.</p>
+  </div>
+  <div class="card reveal">
+    <h3>같은 시기, 일본 본국</h3>
+    <p>"허가가 날 때까지 기다린다"는 단계가 없었다.</p>
+    <p><span class="tt" data-tt="jeonggwan">회사 규칙</span>을 정하고 <span class="tt" data-tt="deunggi">등록 절차</span>를 밟으면 회사를 세울 수 있었다.</p>
+  </div>
+  <div class="card reveal">
+    <h3>총독부가 내세운 논리</h3>
+    <p>총독부는 조선인이 회사 제도를 잘 몰라 투기적 사업에 휘말릴 수 있다는 논리로 이런 심사를 정당화했다.</p>
+  </div>
+  <div class="card reveal">
+    <p class="narr">심사 결과를 기다린다. 허가될 수도, 불허될 수도 있다.</p>
+  </div>
+  <div class="btnrow"><button class="btn hidden" id="s3-next" data-go="s4">결과를 확인한다</button></div>
+</section>
+
+<!-- S4 ─────────────────────────────────────────── -->
+<section class="scene" id="s4">
+  <!-- 비트 1: 허가장 (조건 표시 없음) -->
+  <div class="paper permit reveal" aria-label="허가장">
+    <div class="ptitle">허가장</div>
+    <div class="pline">허가 결과: 회사 설립 허가</div>
+  </div>
+  <div class="card reveal"><p class="narr">허가가 나왔다.</p></div>
+
+  <!-- 비트 2: 별도 법령 카드 (자동 노출) -->
+  <div class="paper law reveal">
+    <div class="pline">회사령 제4조(요약) — <b>허가</b> 뒤 1년 안에 회사가 <span class="tt" data-tt="seongrip">성립</span>되지 않으면 허가의 효력을 잃는다.</div>
+  </div>
+  <div class="paper law reveal">
+    <div class="pline">회사령 제5조(요약) — 허가 조건이나 명령을 어기거나 공공질서를 해치면 사업 정지·금지, 지점 폐쇄, 회사 <span class="tt" data-tt="haesan">해산</span>을 명할 수 있다.</div>
+  </div>
+  <p class="connect reveal">허가를 받아도, 총독부의 권한은 여기서 끝나지 않는다.</p>
+
+  <!-- 비트 3: 계획서 회귀 — 학생 화면 내레이션 없음 (확정) -->
+  <!-- 처음 썼던 계획서가 허가장 옆에 다시 놓인다 -->
+  <div class="paper reveal" aria-label="계획서" id="s4-plan">
+    <div class="ptitle">회사 설립 계획서</div>
+    <div class="pline" id="s4-line1">&nbsp;</div>
+    <div class="pline" id="s4-line2">&nbsp;</div>
+  </div>
+
+  <!-- 비트 4: 결정 -->
+  <div id="s4-decide" class="reveal card" style="background:transparent;border:none;padding:0">
+    <p class="q">허가를 받았다. 1년 안에 회사를 실제로 성립시킬 것인가?</p>
+    <button class="choice-card" id="dec-inc">
+      회사를 성립시킨다
+      <span class="sub">여러 사람의 자본을 모아 계획한 회사를 세운다. 성립한 뒤에는 회사령의 감독·정지·해산 권한 아래 놓인다.</span>
+    </button>
+    <button class="choice-card" id="dec-stay">
+      지금 방식으로 사업을 계속한다
+      <span class="sub">회사는 성립시키지 않는다. 지금 방식으로 사업을 계속하고, 회사라는 명칭과 법적 지위는 취하지 않는다.</span>
+    </button>
+  </div>
+
+  <!-- 이유 선택 -->
+  <div id="s4-reason" class="hidden">
+    <p class="q">가장 큰 이유 하나를 고르시오.</p>
+    <div id="reason-box"></div>
+  </div>
+
+  <!-- 선택 직후 결과 설명 -->
+  <div id="s4-after" class="hidden">
+    <div class="card" id="after-card"></div>
+    <div class="btnrow"><button class="btn" data-go="s5">회사령은 실제로 어떻게 운용되었을까?</button></div>
+  </div>
+</section>
+
+<!-- S5 ─────────────────────────────────────────── -->
+<section class="scene" id="s5">
+  <h2 class="result-title">허가율만 보면 될까?</h2>
+  <div class="card reveal">
+    <p class="stat">회사령 시행 기간, 회사 설치 신청 676건 가운데 556건이 허가되었다(82.2%).</p>
+    <p class="stat">이 집계에는 조선인과 일본인의 신청이 모두 합쳐져 있다.</p>
+  </div>
+  <div class="card reveal">
+    <h3>모든 신청이 허가된 것은 아니었다</h3>
+    <p class="stat">1912년까지 확인되는 조선인 회사 관련 43건에는 불허 6건과 허가 뒤 강제 해산 8건도 포함되어 있다.</p>
+    <p class="warn">다만 이 자료는 서로 다른 시점과 사후 결과가 섞여 있어 하나의 '조선인 허가율'로 계산할 수 없다.</p>
+    <p class="stat">시행 이후 허가 22 · 불허 6 · 허가 후 강제 해산 8 · 회사령 직전 허가 뒤 상태 미상 7</p>
+    <details>
+      <summary>확인된 불허·강제 해산 사유의 예</summary>
+      <p class="stat">사업 목적이 불명확함 · 토지 겸병 우려 · 무모한 경쟁 우려 등</p>
+      <p class="warn">이 사유들이 게임 속 당신에게 적용되었다고 볼 수는 없습니다.</p>
+    </details>
+  </div>
+  <div class="card reveal">
+    <p class="narr"><b>회사령의 통제를 허가율 하나로 판단할 수는 없다.</b></p>
+    <p class="stat">허가제에서는 회사를 세우기 전에 총독의 판단을 받아야 했고, 허가 뒤에도 정지·해산 권한이 이어졌다.</p>
+  </div>
+  <div class="card reveal">
+    <div class="era-grid">
+      <div class="era-cell">
+        <p class="era-head">1912 — <b>허가</b>제</p>
+        <p class="stat">회사를 세우려면 총독의 허가가 필요했다.</p>
+      </div>
+      <div class="era-cell">
+        <p class="era-head">1920 — <b>신고</b>제</p>
+        <p class="stat">회사령 폐지 뒤 회사 설립 제도는 신고제로 바뀌었다.</p>
+      </div>
+    </div>
+    <details>
+      <summary>교과서 자료 2 연계 — 경제 구조의 변화 자료 더 보기</summary>
+      <p class="stat">이 수치는 회사 수가 아니라, 공업 회사에 납입된 자본의 구성 비율을 보여준다.</p>
+      <p class="stat">1911년 — 한국인 17.0% · 일본인 32.0% · 합자 51.0%</p>
+      <p class="stat">1917년 — 한국인 12.7% · 일본인 83.2% · 합자 4.1%</p>
+      <p class="stat">보조 자료 · 조선 내 본점 회사 수(1911→1919): 조선인 27→63 · 일본인 109→280 · 한일·외국 합동 16→23</p>
+    </details>
+  </div>
+  <div class="card reveal">
+    <p class="narr">게임에서 당신은 허가를 받았다.</p>
+    <p class="narr">그 사실이 회사령이 느슨했다는 뜻도, 특정 선택이 허가를 보장했다는 뜻도 아니다.</p>
+  </div>
+  <div class="btnrow"><button class="btn hidden" id="s5-next" data-go="s6">나의 궤적을 확인한다</button></div>
+</section>
+
+<!-- S6 ─────────────────────────────────────────── -->
+<section class="scene" id="s6">
+  <h2 class="result-title">당신의 궤적</h2>
+  <p class="traj" id="traj-line"></p>
+  <p class="reason-echo" id="reason-line"></p>
+  <div class="card"><p id="meaning-line"></p></div>
+  <div class="card"><p class="narr">허가를 받으면 끝인 줄 알았는데, 왜 회사가 된 뒤에도 총독부의 권한이 계속될까?</p></div>
+  <div class="card">
+    <p>회사령의 통제는 회사를 세울 때의 '허가'에 그쳤을까? 게임에서 확인한 법령과 자료를 근거로 회사령이 기업 활동을 어디까지 통제할 수 있었는지 판단하시오.</p>
+    <div class="btnrow"><button class="btn ghost" id="show-views">학계의 두 해석 보기 →</button></div>
+    <div id="views" class="hidden">
+      <div class="card" style="margin-top:12px"><p>해석 1 — 회사령은 조선인 자본뿐 아니라 일본 자본의 진출도 함께 통제한 일반적 산업 통제 제도였다는 견해.</p></div>
+      <div class="card"><p>해석 2 — 회사령의 주된 목적은 조선인의 경제 활동을 구속하는 데 있었고, 일본 자본의 진출은 억제하지 않았다는 견해.</p></div>
+      <div class="card"><p>그렇다면 회사령이 조선인의 기업 활동을 제한한 제도로 평가되는 이유를, 단순한 '불허율'이 아니라 게임에서 확인한 제도의 권한과 운용을 근거로 설명해 보자.</p></div>
+    </div>
+  </div>
+
+  <div class="card" id="stats-card">
+    <div class="btnrow" style="margin-top:0">
+      <button class="btn ghost" id="show-stats">우리 반 지금까지 선택 보기 →</button>
+    </div>
+    <div id="stats-box" class="hidden" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <textarea id="comment" rows="2" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)" maxlength="100"></textarea>
+    <div class="btnrow">
+      <button class="btn" id="copy-btn">결과 복사</button>
+      <button class="btn ghost" id="restart-btn">다시 하기</button>
+    </div>
+  </div>
+
+  <footer class="copyright">© 찰리쌤 · hischarlie.tistory.com</footer>
+</section>
+
+</main>
+</div>
+<div id="tt-bubble" role="tooltip"></div>
+
+<script>
+/* ═══════════════ 식별·환경 계약 ═══════════════ */
+window.GAME_CONFIG = {
+  game_id: 'hoesaryeong1912',   // games.manifest.json slug와 일치 (배포 게이트 1·2)
+  label: '허가받으시오 — 1912년, 회사를 세우다',
+  era: '일제강점기',
+  version: '1.0'
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9',  // ⚠️ 배포 직전 Supabase 대시보드의 최신 publishable 키 주입
+  statsEndpoint: ''                            // ⚠️ 반 통계 조회 프록시 URL — 배포 시 주입 (미설정이면 안내 표시)
+};
+function publicHeaders(extra){
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  const headers = { apikey: key, ...(extra || {}) };
+  if (key.startsWith('eyJ')) headers.Authorization = 'Bearer ' + key; // 레거시 JWT일 때만
+  return headers;
+}
+function sendToSupabase(choiceData, comment){
+  const { supabaseUrl: url, supabasePublishableKey: key } = window.CHARLIE_CONFIG;
+  if (!url || !key || key.startsWith('__')) return Promise.resolve({ ok:false, skipped:true });
+  return fetch(url + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: publicHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+    body: JSON.stringify({
+      class: S.classId,
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment: comment || '',
+      timestamp: new Date().toISOString()
+    })
+  }).then(res => {
+    if (!res.ok) console.warn('[Supabase] 전송 실패 HTTP ' + res.status);
+    return res;
+  }).catch(err => {
+    console.warn('[Supabase] 네트워크 전송 실패', err);
+    return { ok:false, failed:true };
+  });
+}
+
+/* ═══════════════ 상태 ═══════════════
+   ⚠️ 설계 계약: company_form은 허가 결과·심사 강도에 어떤 영향도 주지 않는다.
+   허가는 전원에게 나온다 (DESIGN_LOCK R3 — 전원 허가 원칙). */
+const S = {
+  classId: new URLSearchParams(location.search).get('class') || '미입력',
+  company_form: null,      // 'hapmyeong' | 'jusik'
+  final_decision: null,    // 'incorporate' | 'stay_noncompany'
+  decision_reason: null,   // validation: 아래 REASONS_BY_DECISION
+  submitted: false,
+  commentSubmitted: false
+};
+const MIN_N = 5; // 소수 응답 보호 (원칙 ⑧)
+
+/* decision_reason — 문구는 SCENE_TEXT v1.4 잠금 (수정 금지) */
+const REASONS_BY_DECISION = {
+  incorporate: [
+    { id:'partners',  text:'함께 회사를 준비한 사람들과의 약속을 지키고 싶어서' },
+    { id:'expansion', text:'여러 사람의 자본을 모아 사업을 넓히고 싶어서' }
+  ],
+  stay_noncompany: [
+    { id:'oversight', text:'회사가 된 뒤에도 이어지는 감독·정지·해산 권한이 부담되어서' },
+    { id:'keep_way',  text:'지금 방식으로 사업을 계속하는 편이 낫다고 생각해서' }
+  ]
+};
+const PLAN_LINES = {
+  hapmyeong: ['회사 형태: 합명회사 · 동업자: ○○, ○○ …', ''],
+  jusik: ['회사 형태: 주식회사 · 발기인: ○○, ○○ …', '주식을 나누어 출자자를 모은다.']
+};
+const AFTER_TEXT = {
+  incorporate: ['회사를 성립시켰다. 계획한 회사 형태를 얻었지만, 성립 뒤에도 회사령에 따른 감독·정지·해산 권한은 남아 있다.'],
+  stay_noncompany: ['회사를 성립시키지 않았다. 게임 속 당신은 지금 방식으로 사업을 이어간다.',
+                    '1년 안에 성립하지 않으면 허가는 효력을 잃고, 회사 명칭·지위는 취하지 않는다.']
+};
+const TRAJ_TEXT = {
+  'H-I':'당신은 합명회사를 구상했고, 허가장을 받은 뒤 회사를 성립시키기로 결정했다.',
+  'H-N':'당신은 합명회사를 구상했고, 허가장을 받은 뒤 지금 방식으로 사업을 이어가기로 결정했다.',
+  'J-I':'당신은 주식회사를 구상했고, 허가장을 받은 뒤 회사를 성립시키기로 결정했다.',
+  'J-N':'당신은 주식회사를 구상했고, 허가장을 받은 뒤 지금 방식으로 사업을 이어가기로 결정했다.'
+};
+const MEANING_TEXT = {
+  incorporate:'허가는 회사 설립의 종착점이 아니었다. 성립한 회사에도 총독부의 정지·해산 권한은 계속 적용될 수 있었다.',
+  stay_noncompany:'회사를 성립시키지 않으면 허가는 효력을 잃는다. 게임 속 당신은 지금 방식으로 사업을 이어가며 회사 명칭·지위는 취하지 않았다.'
+};
+const TT_DICT = {
+  jiknyu:  '직뉴(織紐) — 허리띠·대님·주머니끈 등 옷에 쓰는 끈을 짜는 일',
+  hapmyeong:'합명회사(合名會社) — 몇 사람의 동업자가 함께 경영하고 책임지는 회사 형태',
+  jusik:   '주식회사(株式會社) — 자본을 주식으로 나누어 여러 출자자가 참여하는 회사 형태',
+  balgiin: '발기인(發起人) — 회사 설립을 처음 계획하고 준비하는 사람',
+  jeryeong:'제령(制令) — 조선 총독이 법률을 대신해 내리던 명령',
+  chulja:  '출자(出資) — 사업 밑천이 되는 돈이나 재산을 내는 것',
+  seongrip:'성립(成立) — 회사가 법적으로 만들어진 상태가 되는 것',
+  haesan:  '해산(解散) — 회사를 법적으로 없애는 것',
+  gongso:  '공소(工所) — 제품을 만들거나 가공하는 작업장·사업체',
+  jeonggwan:'정관(定款) — 회사 운영의 기본 규칙',
+  deunggi: '등기(登記) — 회사 설립 사실을 공식 등록하는 절차'
+};
+
+/* ═══════════════ 유틸 ═══════════════ */
+function $(id){ return document.getElementById(id); }
+function patternOf(){
+  return (S.company_form === 'hapmyeong' ? 'H' : 'J') + '-' + (S.final_decision === 'incorporate' ? 'I' : 'N');
+}
+const SCENE_ORDER = ['s1','s2','s3','s4','s5','s6'];
+function go(id){
+  document.querySelectorAll('.scene').forEach(el => el.classList.remove('on'));
+  const scene = $(id);
+  scene.classList.add('on');
+  $('progress').textContent = '장면 ' + (SCENE_ORDER.indexOf(id) + 1) + '/6';
+  window.scrollTo({ top: 0 });
+  if (id === 's3') revealSeq('s3', () => $('s3-next').classList.remove('hidden'));
+  if (id === 's4') revealSeq('s4', null, '#s4 > .reveal');
+  if (id === 's5') revealSeq('s5', () => $('s5-next').classList.remove('hidden'));
+  if (id === 's6') enterResult();
+}
+/* 카드 순차 자동 공개 — S4 잠금("선택지 등장 전 법령 자동 노출") 구현 */
+function revealSeq(sceneId, done, selector){
+  const cards = document.querySelectorAll(selector || ('#' + sceneId + ' .reveal'));
+  // P2: 모션 축소 환경에서는 간격만 단축 — 공개 순서·게이트는 동일하게 유지
+  const gap = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 150 : 900;
+  let i = 0;
+  (function next(){
+    if (i >= cards.length){ if (done) done(); return; }
+    const el = cards[i++];
+    el.classList.add('shown');
+    setTimeout(next, gap);
+  })();
+}
+document.querySelectorAll('[data-go]').forEach(btn => {
+  btn.addEventListener('click', () => go(btn.getAttribute('data-go')));
+});
+
+/* ═══════════════ S2 — 계획서 기입 ═══════════════ */
+function pickForm(form, btnEl){
+  S.company_form = form;
+  document.querySelectorAll('#s2 .choice-card').forEach(el => el.classList.remove('picked'));
+  btnEl.classList.add('picked');
+  const lines = PLAN_LINES[form];
+  writeLine($('s2-line1'), lines[0]);
+  writeLine($('s2-line2'), lines[1]);
+  $('s2-next').classList.remove('hidden');
+}
+function writeLine(el, text){
+  el.classList.remove('write');
+  void el.offsetWidth; // 애니메이션 재시작
+  el.textContent = text || '\u00A0';
+  if (text) el.classList.add('write');
+}
+$('pick-hap').addEventListener('click', function(){ pickForm('hapmyeong', this); });
+$('pick-jusik').addEventListener('click', function(){ pickForm('jusik', this); });
+
+/* ═══════════════ S4 — 결정·이유 ═══════════════ */
+/* S4 진입 시 계획서 회귀: S2 기입 내용을 그대로 복원 (내레이션 없음 — SCENE_TEXT 확정) */
+const s4Observer = new MutationObserver(() => {
+  if ($('s4').classList.contains('on')){
+    const lines = PLAN_LINES[S.company_form] || ['', ''];
+    $('s4-line1').textContent = lines[0] || '\u00A0';
+    $('s4-line2').textContent = lines[1] || '\u00A0';
+  }
+});
+s4Observer.observe($('s4'), { attributes:true, attributeFilter:['class'] });
+
+function decide(decision, btnEl){
+  S.final_decision = decision;
+  document.querySelectorAll('#s4-decide .choice-card').forEach(el => el.classList.remove('picked'));
+  btnEl.classList.add('picked');
+  // 이유 패널 구성 — validation: 해당 결정의 이유만 렌더
+  const box = $('reason-box');
+  box.textContent = '';
+  REASONS_BY_DECISION[decision].forEach(r => {
+    const b = document.createElement('button');
+    b.className = 'choice-card';
+    b.textContent = r.text;
+    b.addEventListener('click', () => chooseReason(r.id, b));
+    box.appendChild(b);
+  });
+  $('s4-reason').classList.remove('hidden');
+  $('s4-after').classList.add('hidden');
+  S.decision_reason = null;
+  $('s4-reason').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function chooseReason(id, btnEl){
+  S.decision_reason = id;
+  document.querySelectorAll('#reason-box .choice-card').forEach(el => el.classList.remove('picked'));
+  btnEl.classList.add('picked');
+  const card = $('after-card');
+  card.textContent = '';
+  AFTER_TEXT[S.final_decision].forEach(t => {
+    const p = document.createElement('p');
+    p.textContent = t;
+    card.appendChild(p);
+  });
+  $('s4-after').classList.remove('hidden');
+  $('s4-after').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+$('dec-inc').addEventListener('click', function(){ decide('incorporate', this); });
+$('dec-stay').addEventListener('click', function(){ decide('stay_noncompany', this); });
+
+/* ═══════════════ S6 — 결과·전송 ═══════════════ */
+function validReason(){
+  const allowed = (REASONS_BY_DECISION[S.final_decision] || []).map(r => r.id);
+  return allowed.includes(S.decision_reason);
+}
+function enterResult(){
+  // statsEndpoint 미설정 시 반 통계 버튼 자체를 숨긴다 (기능명과 동작 불일치 방지 — 2026.8.22 방침)
+  if (!window.CHARLIE_CONFIG.statsEndpoint) $('stats-card').classList.add('hidden');
+  const p = patternOf();
+  $('traj-line').textContent = TRAJ_TEXT[p] || '';
+  const reasonObj = (REASONS_BY_DECISION[S.final_decision] || []).find(r => r.id === S.decision_reason);
+  $('reason-line').textContent = '가장 큰 이유 — ' + (reasonObj ? reasonObj.text : '');
+  $('meaning-line').textContent = MEANING_TEXT[S.final_decision] || '';
+  // ① 결과 행 — 결과 화면 진입 즉시 1회 전송 (v3 계약)
+  if (!S.submitted && S.company_form && S.final_decision && validReason()){
+    sendToSupabase({
+      record_type: 'result',
+      version: window.GAME_CONFIG.version,
+      company_form: S.company_form,
+      final_decision: S.final_decision,
+      decision_reason: S.decision_reason,
+      pattern: p
+    }, '');
+    S.submitted = true;
+  }
+}
+/* 해석 1단계 공개 (SCENE_TEXT 확정: F형과 동시 표시 금지) */
+$('show-views').addEventListener('click', function(){
+  $('views').classList.remove('hidden');
+  this.classList.add('hidden');
+});
+/* 반 통계 — 아이디어 1.5: 버튼을 누를 때만 조회. 프록시 미설정 시 안내 */
+$('show-stats').addEventListener('click', async function(){
+  const box = $('stats-box');
+  box.classList.remove('hidden');
+  const ep = window.CHARLIE_CONFIG.statsEndpoint;
+  if (!ep){ box.textContent = ''; return; } // 도달 불가 (미설정 시 카드 숨김) — 방어용
+  box.textContent = '불러오는 중…';
+  try {
+    const res = await fetch(ep + '?game=' + window.GAME_CONFIG.game_id + '&class=' + encodeURIComponent(S.classId));
+    const data = await res.json();
+    box.textContent = '';
+    renderStats(box, data);
+  } catch (e){
+    box.textContent = '통계를 불러올 수 없습니다.';
+  }
+});
+function renderStats(box, data){
+  // data: { total, patterns:{'H-I':n,...}, reasons:{ incorporate:{partners:n,expansion:n}, stay_noncompany:{...} } }
+  const total = data.total || 0;
+  addLine(box, '지금까지 ' + total + '명이 참여했습니다.');
+  const P_LABEL = { 'H-I':'합명 구상 → 회사 성립', 'H-N':'합명 구상 → 지금 방식 유지',
+                    'J-I':'주식 구상 → 회사 성립', 'J-N':'주식 구상 → 지금 방식 유지' };
+  Object.keys(P_LABEL).forEach(k => {
+    const n = (data.patterns || {})[k] || 0;
+    addLine(box, P_LABEL[k] + ' — ' + (n < MIN_N && n > 0 ? '소수 응답 (비율 미표시)' : n + '명'));
+  });
+  // 결정별 조건부 이유 분포 (4장 잠금: 네 값을 한 차트에 합산 금지)
+  ['incorporate','stay_noncompany'].forEach(dec => {
+    const group = (data.reasons || {})[dec] || {};
+    const denom = Object.values(group).reduce((a,b) => a + b, 0);
+    if (denom === 0) return;
+    addLine(box, dec === 'incorporate' ? '― 회사 성립을 고른 사람들의 이유 ―' : '― 지금 방식 유지를 고른 사람들의 이유 ―');
+    REASONS_BY_DECISION[dec].forEach(r => {
+      const n = group[r.id] || 0;
+      addLine(box, '· ' + r.text + ' — ' + ((denom < MIN_N || (n > 0 && n < MIN_N)) ? '소수 응답 (비율 미표시)' : Math.round(n / denom * 100) + '%'));
+    });
+  });
+}
+function addLine(box, text){
+  const p = document.createElement('p');
+  p.className = 'stat';
+  p.textContent = text;
+  box.appendChild(p);
+}
+/* 복사 + 소감 행 전송 */
+$('copy-btn').addEventListener('click', function(){
+  const p = patternOf();
+  const comment = $('comment').value.trim();
+  const text = ['[허가받으시오 — 1912년, 회사를 세우다]', TRAJ_TEXT[p] || '', $('reason-line').textContent,
+                comment ? '소감: ' + comment : ''].filter(Boolean).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    this.textContent = '복사됨!';
+    setTimeout(() => { this.textContent = '결과 복사'; }, 1500);
+  }).catch(() => {});
+  // ② 소감 행 — 비어 있지 않을 때만, 선택 데이터 재전송 금지 (v3 계약)
+  if (comment && !S.commentSubmitted){
+    sendToSupabase({ record_type:'comment', version: window.GAME_CONFIG.version }, comment);
+    S.commentSubmitted = true;
+  }
+});
+/* 다시 하기 — submitted·commentSubmitted 모두 초기화 (v3 계약) */
+$('restart-btn').addEventListener('click', function(){
+  S.company_form = null; S.final_decision = null; S.decision_reason = null;
+  S.submitted = false; S.commentSubmitted = false;
+  $('comment').value = '';
+  $('s2-line1').textContent = '\u00A0'; $('s2-line2').textContent = '\u00A0';
+  $('s2-next').classList.add('hidden');
+  document.querySelectorAll('.choice-card').forEach(el => el.classList.remove('picked'));
+  document.querySelectorAll('.reveal').forEach(el => el.classList.remove('shown'));
+  $('s4-reason').classList.add('hidden'); $('s4-after').classList.add('hidden');
+  $('views').classList.add('hidden'); $('show-views').classList.remove('hidden');
+  $('stats-box').classList.add('hidden'); $('stats-box').textContent = '';
+  go('s1');
+});
+
+/* ═══════════════ 툴팁 (왕의 결재함 v3 패턴) ═══════════════ */
+const bubble = $('tt-bubble');
+function tt(el){
+  const key = el.getAttribute('data-tt');
+  const def = TT_DICT[key];
+  if (!def) return;
+  bubble.textContent = def;
+  bubble.style.top = '-9999px'; bubble.style.left = '0';
+  bubble.classList.add('show');
+  const h = bubble.offsetHeight;
+  const r = el.getBoundingClientRect();
+  let left = r.left + window.scrollX + r.width / 2 - bubble.offsetWidth / 2;
+  left = Math.max(8, Math.min(left, window.scrollX + document.documentElement.clientWidth - bubble.offsetWidth - 8));
+  let top = r.top + window.scrollY - h - 8;
+  if (top < window.scrollY + 4) top = r.bottom + window.scrollY + 8;
+  bubble.style.left = left + 'px';
+  bubble.style.top = top + 'px';
+}
+function ttHide(){ bubble.classList.remove('show'); bubble.style.top = '-9999px'; }
+document.querySelectorAll('.tt').forEach(el => {
+  el.addEventListener('click', ev => { ev.stopPropagation(); tt(el); });
+  el.addEventListener('mouseenter', () => tt(el));
+  el.addEventListener('mouseleave', ttHide);
+});
+document.addEventListener('click', ttHide);
+
+/* 초기 씬 */
+go('s1');
+</script>
+</body>
+</html>
