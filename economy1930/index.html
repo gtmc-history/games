@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>숫자는 성장하고 있습니다 — economy1930</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<style>
+:root{
+  /* 현대 편집부 레이어 */
+  --desk:#f2f1ed;
+  --panel:#faf9f6;
+  --ink:#22201d;
+  --ink-soft:#6c675e;
+  --hair:#d9d5cc;
+  --pen:#a63d2f;         /* 지금 가하는 편집 행위 전용 */
+  --pen-soft:#f4e7e3;
+  --sepia-meta:#745c40;
+  /* 역사 자료 레이어 */
+  --paper:#ece2cf;
+  --paper-deep:#e2d5bc;
+  --paper-edge:#c9b58f;
+  --paper-ink:#453a2b;
+  --sepia:#8b7355;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{
+  min-height:100dvh;background:var(--desk);color:var(--ink);
+  font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;
+}
+button,textarea{font:inherit}
+button{color:inherit}
+.stage{max-width:900px;margin:0 auto;padding:0 24px 72px}
+.hidden{display:none!important}
+
+/* 게임 헤더: 단계 진행 + 획득 렌즈. 점수·타이머·판단 수 미노출 */
+header.game{padding:14px 0 12px;border-bottom:1px solid var(--hair)}
+.hd-row1{display:flex;align-items:baseline;gap:16px}
+.hd-row2{display:flex;align-items:center;gap:8px;margin-top:10px;min-height:31px}
+.logo{font-family:'Black Han Sans',sans-serif;font-size:19px;letter-spacing:.02em;line-height:1.1}
+.logo small{display:block;font-family:'Noto Sans KR',sans-serif;font-weight:500;font-size:11px;color:var(--ink-soft);letter-spacing:.14em;margin-top:2px}
+.stages{margin-left:auto;display:flex;align-items:baseline}
+.stg{font-size:12px;color:var(--ink-soft);letter-spacing:.04em;padding:0 9px;border-right:1px solid var(--hair)}
+.stg:last-child{border-right:none;padding-right:0}
+.stg.done{color:var(--ink)}
+.stg.now{color:var(--pen);font-weight:700}
+.lenses{display:flex;gap:8px;flex-wrap:wrap}
+.lens{font-size:12px;font-weight:500;border:1px solid var(--ink);border-radius:3px;padding:5px 9px;background:var(--panel);white-space:nowrap}
+.lens.empty{border-style:dashed;border-color:var(--hair);color:var(--hair)}
+.lenses-compact{display:none;font-size:12px;font-weight:700;border:1px solid var(--ink);border-radius:3px;padding:5px 9px;background:var(--panel)}
+
+main{padding-top:24px}
+.scene{display:none}
+.scene.on{display:block}
+.scene-kicker{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:8px}
+h1,h2{font-family:'Noto Serif KR',serif}
+h1{font-size:30px;line-height:1.35;margin-bottom:12px}
+h2{font-size:25px;line-height:1.4;margin-bottom:10px}
+.lead{font-size:17px;line-height:1.8;color:var(--ink);max-width:760px}
+.micro{font-size:13px;line-height:1.65;color:var(--ink-soft)}
+.rule{height:1px;background:var(--hair);margin:24px 0}
+
+/* 현대 편집부 패널 */
+.editor-panel,.judge,.result-panel{
+  background:var(--panel);border:1px solid var(--hair);border-radius:4px;padding:22px 26px;margin-top:22px;
+}
+.editor-panel.compact{padding:18px 22px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:10px}
+.headline{font-family:'Noto Serif KR',serif;font-weight:900;font-size:25px;line-height:1.5}
+.headline .struck{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--ink-soft);text-decoration-thickness:2px}
+.headline .rewrite{color:var(--pen);border-bottom:2px solid var(--pen);padding-bottom:1px}
+.rev-note{display:inline-block;margin-top:9px;font-size:12px;color:var(--pen);font-weight:500}
+
+/* 역사 자료 */
+.sources{margin-top:26px}
+.sec-label{display:flex;align-items:baseline;gap:10px;font-size:13px;font-weight:700;letter-spacing:.1em;margin-bottom:13px}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--hair)}
+.card-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card-row.two{grid-template-columns:repeat(2,1fr)}
+.src-card,.cmp-panel{
+  background:
+    linear-gradient(160deg,rgba(255,255,255,.35),rgba(0,0,0,0) 38%),
+    repeating-linear-gradient(0deg,rgba(139,115,85,.05) 0 1px,transparent 1px 5px),
+    var(--paper);
+  border:1px solid var(--paper-edge);border-bottom-width:3px;border-radius:2px;
+  padding:16px;box-shadow:0 2px 5px rgba(69,58,43,.14);color:var(--paper-ink);
+}
+.src-card.tilt-a{transform:rotate(-.3deg)}
+.src-card.tilt-b{transform:rotate(.25deg)}
+.src-card.tilt-c{transform:rotate(-.18deg)}
+.src-card.lit{background:linear-gradient(160deg,rgba(255,255,255,.3),rgba(0,0,0,0) 40%),var(--paper-deep)}
+.src-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.tag{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--sepia-meta);border:1px solid var(--sepia-meta);border-radius:2px;padding:2px 6px;background:rgba(255,255,255,.4)}
+.src-body{font-family:'Gowun Batang',serif;font-size:15.5px;line-height:1.65}
+.src-body strong{font-weight:700}
+.src-year{margin-top:10px;font-size:11px;color:var(--sepia-meta);letter-spacing:.07em;text-align:right}
+
+/* 자체 재시각화 그래프 */
+.graph{margin-top:12px}
+.bar-line{display:grid;grid-template-columns:76px 1fr 70px;gap:9px;align-items:center;margin:10px 0}
+.bar-label,.bar-num{font-size:12px;color:var(--sepia-meta)}
+.bar-num{text-align:right;font-weight:700}
+.bar-track{height:14px;background:rgba(116,92,64,.13);border:1px solid rgba(116,92,64,.24)}
+.bar-fill{height:100%;background:var(--sepia);width:0;transition:width .55s ease}
+.bar-fill.pen{background:var(--pen)}
+.graph-note{font-family:'Gowun Batang',serif;font-size:13px;line-height:1.6;color:var(--paper-ink);margin-top:8px}
+
+/* 선택 */
+.q{font-size:19px;font-weight:700;line-height:1.55;margin-bottom:15px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{
+  min-height:50px;display:flex;align-items:center;gap:13px;text-align:left;width:100%;
+  background:var(--panel);border:1px solid var(--hair);border-left:3px solid transparent;border-radius:3px;
+  padding:13px 16px;font-size:16.5px;line-height:1.5;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.choice:hover{border-left-color:var(--ink);transform:translateX(3px)}
+.choice.selected{border-color:var(--ink);border-left-color:var(--ink);background:#efede7}
+.choice.locked{cursor:default;transform:none}
+.choice .key{font-weight:700;font-size:13px;color:var(--ink-soft);border:1px solid var(--hair);border-radius:2px;width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center}
+.choice.selected .key{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.btn-row{display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:18px;flex-wrap:wrap}
+.btn{
+  min-height:48px;border:1px solid var(--ink);border-radius:3px;padding:0 20px;background:var(--panel);
+  font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s,opacity .15s;
+}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 3px 10px rgba(34,32,29,.13)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.pen{background:var(--pen);border-color:var(--pen);color:var(--panel)}
+.btn.ghost{border-color:var(--hair);color:var(--ink-soft)}
+.btn.small{min-height:42px;padding:0 15px;font-size:14px}
+
+.feedback{margin-top:16px;padding:13px 15px;border-left:3px solid var(--ink);background:#efede7;font-size:15px;line-height:1.7}
+.feedback.pen{border-left-color:var(--pen);background:var(--pen-soft)}
+.feedback b{font-weight:700}
+.lens-earned{margin-top:16px;font-size:14px;font-weight:700;padding:10px 12px;border:1px solid var(--ink);background:var(--panel);display:inline-block;border-radius:3px}
+
+/* 자료 요구 / 폴더 */
+.request-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.request-grid.four{grid-template-columns:repeat(4,1fr)}
+.request-btn{min-height:88px;text-align:left;padding:14px;background:var(--panel);border:1px solid var(--hair);border-top:3px solid var(--ink-soft);border-radius:3px;cursor:pointer;font-weight:700;line-height:1.45}
+.request-btn:hover:not(:disabled){border-top-color:var(--pen)}
+.request-btn:disabled{cursor:default;color:var(--ink-soft);background:#eceae4}
+.order-badge{display:block;font-size:11px;font-weight:500;color:var(--pen);margin-top:7px}
+.revealed{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.reveal-row{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start}
+.order-num{width:30px;height:30px;border:1px solid var(--pen);color:var(--pen);display:grid;place-items:center;font-weight:700;border-radius:50%;background:var(--panel)}
+.reveal-row .src-card{transform:none}
+
+/* 비교 */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.cmp-title{font-family:'Gowun Batang',serif;font-weight:700;font-size:17px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--paper-edge)}
+.flow{font-family:'Gowun Batang',serif;font-size:15px;line-height:1.8}
+.arr{color:var(--sepia);padding:0 3px}
+
+/* 결과 */
+.result-compare{display:grid;grid-template-columns:1fr 34px 1fr;gap:12px;align-items:stretch;margin-top:16px}
+.result-title{padding:16px;border:1px solid var(--hair);background:var(--panel)}
+.result-title strong{display:block;font-family:'Noto Serif KR',serif;font-size:19px;line-height:1.5;margin-top:6px;word-break:keep-all;overflow-wrap:break-word}
+.result-arrow{display:grid;place-items:center;color:var(--pen);font-weight:700}
+.result-lenses{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.result-lens{border:1px solid var(--hair);background:var(--panel);padding:10px 12px;font-size:13px;line-height:1.5}
+.discovery{margin-top:20px;padding:18px;border-top:2px solid var(--ink);border-bottom:1px solid var(--hair);font-family:'Noto Serif KR',serif;font-weight:900;font-size:21px;line-height:1.6}
+.comment-box{margin-top:22px}
+.comment-box label{display:block;font-weight:700;margin-bottom:7px}
+.comment-box textarea{width:100%;min-height:76px;resize:vertical;border:1px solid var(--hair);border-radius:3px;background:var(--panel);padding:11px 12px;font-size:15px;line-height:1.5;color:var(--ink)}
+.comment-help{font-size:12px;color:var(--ink-soft);margin-top:5px}
+footer.result-footer{margin-top:42px;text-align:center;font-size:11px;color:rgba(120,100,80,.4)}
+
+@media(max-width:720px){
+  .stage{padding:0 16px 56px}
+  .hd-row1{flex-wrap:wrap}
+  .stages{margin-left:0;width:100%;margin-top:7px;overflow:auto;padding-bottom:3px}
+  .stg{white-space:nowrap;padding:0 7px}
+  .hd-row2 .lens{display:none}
+  .lenses-compact{display:inline-block}
+  .card-row,.card-row.two,.cmp-grid,.request-grid,.request-grid.four{grid-template-columns:1fr}
+  .src-card.tilt-a,.src-card.tilt-b,.src-card.tilt-c{transform:rotate(0)}
+  .editor-panel,.judge,.result-panel{padding:18px 16px}
+  .headline{font-size:21px}
+  .result-compare{grid-template-columns:1fr}
+  .result-arrow{transform:rotate(90deg);min-height:28px}
+  .result-lenses{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <header class="game">
+    <div class="hd-row1">
+      <div class="logo">숫자는 성장하고 있습니다<small>ECONOMY 1930 · 특집 편집실</small></div>
+      <nav class="stages" aria-label="진행 단계" id="stageNav"></nav>
+    </div>
+    <div class="hd-row2">
+      <div class="lenses" id="lensRow"></div>
+      <span class="lenses-compact" id="lensCompact">🔎 0 / 4</span>
+    </div>
+  </header>
+  <main id="app" aria-live="polite"></main>
+</div>
+<script>
+'use strict';
+
+/* ═══════════ 식별·전송 계약 ═══════════ */
+window.GAME_CONFIG = {
+  game_id: 'economy1930',
+  label: '숫자는 성장하고 있습니다',
+  era: '일제강점기',
+  version: '1.0'
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+
+function publicHeaders(extra) {
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  const headers = { apikey: key, ...(extra || {}) };
+  /* publishable/secret 키를 Bearer에 넣지 않는다. 레거시 JWT일 때만 Authorization. */
+  if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`;
+  return headers;
+}
+
+const PARAMS = new URLSearchParams(location.search);
+const CLASS = PARAMS.get('class') || '미입력';
+
+/* ═══════════ 잠금 데이터 ═══════════ */
+const JUDGMENT_IDS = ['S0_INITIAL','R1_FIRST','R1_REVISION','R2_REQUEST','R2_REVISION','R3_ORDER','R3_JUDGMENT','R4_COMPARE','FINAL_TITLE'];
+const STAGES = [
+  {id:'receive', label:'자료 받기'},
+  {id:'request', label:'자료 요구'},
+  {id:'organize', label:'자료 정리'},
+  {id:'compare', label:'비교'},
+  {id:'final', label:'마감'}
+];
+const LENSES = [
+  '생산물은 어디로 갔는가?',
+  '누가 가지고 있는가?',
+  '누가 이익을 얻고 누가 비용을 부담하는가?',
+  '누구의 권리와 요구가 반영될 수 있었는가?'
+];
+const INITIAL_TITLES = {
+  growth:'조선 경제, 성장의 길에 들어서다',
+  development:'농업과 공업 개발이 본격화되다',
+  distribution:'성장은 보인다. 혜택이 누구에게 갔는지는 더 봐야 한다',
+  reserve:'이 자료만으로는 평가하기 어렵다'
+};
+const R1_FIRST = {
+  A:'산미 증식 계획 아래 쌀 생산량이 증가했다',
+  B:'생산이 늘었으니 조선인의 식생활도 나아졌을 것이다',
+  C:'생산량만으로는 농민 생활을 판단할 수 없다',
+  D:'얼마나 생산됐는지와 함께 어디로 갔는지도 봐야 한다'
+};
+const R1_REVISIONS = {
+  A:{text:'생산이 늘었으므로 농민 생활도 나아졌다', feedback:'소비 감소와 부담 증가 자료는 이 문장으로 설명되지 않습니다.'},
+  B:{text:'생산은 늘었지만 반출과 부담까지 봐야 생활을 판단할 수 있다', feedback:'생산·반출·소비·부담 네 자료가 모두 문장에 연결됩니다.'},
+  C:{text:'농민 생활이 어려워졌으니 산미 증식 계획은 실패한 정책이다', feedback:'무엇을 기준으로 한 실패입니까? 생산 확대와 생활 개선은 같은 기준일까요?'}
+};
+const R2_REQUESTS = {
+  capital:{label:'한국인·일본인 회사의 자본금', tag:'교과서 수록 통계', body:'일본인 회사의 <strong>자본 규모</strong>가 한국인 회사보다 훨씬 컸다', meta:'자본금 비교 · 자체 재시각화', graph:true},
+  tariff:{label:'1923년 관세 제도의 변화', tag:'교과서 서술', body:'<strong>1923년</strong> 일본 상품 관세 폐지 — 값싼 일본 상품이 들어와 한국인 기업의 경영이 어려워졌다', meta:'관세 제도의 변화'},
+  kr_scale:{label:'한국인 회사의 규모', tag:'교과서 서술', body:'한국인의 회사 설립도 늘었지만 <strong>대부분 규모가 작은 회사</strong>였다', meta:'한국인 회사의 규모'}
+};
+const R2_REVISION = {
+  A:{text:'충분하다. 기업 활동이 활발해졌고 한국인 기업도 함께 성장했다', feedback:"자본금 격차와 관세 폐지 자료가 '함께 성장'과 충돌합니다."},
+  B:{text:'사실이지만 부족하다. 소유와 자본 규모를 함께 써야 한다', feedback:'회사 수·자본금·관세 자료가 한 문장으로 이어집니다.'},
+  C:{text:'일본 자본의 확대를 중심으로 설명해야 한다', feedback:'일본 자본의 확대는 중요한 사실입니다. 그러나 한국인의 회사 설립도 늘었습니다. 한쪽을 강조해도 다른 사실을 지우지 않아야 합니다.'},
+  D:{text:'회사 수는 경제 기사에 쓸 수 없는 숫자다', feedback:'자료의 한계와 자료의 무용은 다릅니다. 회사 수는 출발점으로는 유효했습니다.'}
+};
+const R3_FOLDERS = {
+  company:{label:'회사', tag:'교과서 서술', body:'공업화의 이익은 주로 일본 자본에 집중되었다', meta:'이익의 귀속'},
+  labor:{label:'노동자', tag:'교과서 서술', body:'한국인 노동자는 임금과 노동 환경에서 차별을 받았고, 공장법도 적용되지 않았다', meta:'노동 조건', literature:true},
+  resident:{label:'주민', tag:'교과서 서술', body:'공장 건설 과정에서 농민과 어민이 저항했지만 경찰이 이를 막았다', meta:'개발 과정'},
+  env:{label:'환경', tag:'교과서 서술', body:'공장 폐수로 물고기가 떼죽음을 당했다. 일본에는 정화 시설이 있었지만 조선에서는 방류가 관행이었다', meta:'환경 피해'}
+};
+const R3_JUDGMENTS = {
+  '1':{text:"주민 피해가 컸으므로 이를 '개발'이라고 부르기 어렵다", feedback:'그렇다면 어떤 기준으로 개발을 판단하고 있습니까? 공장과 도시의 성장은 확인된 사실입니다.'},
+  '2':{text:'그렇다. 도시가 성장했으니 다른 문제는 별개다', feedback:"이익과 비용이 서로 다른 사람에게 갔다면, '별개'로 둘 수 있을까요?"},
+  '3':{text:'개발은 있었다. 누구를 위한 개발이었는지 함께 물어야 한다', feedback:'네 자료철이 모두 이 질문에 연결됩니다.'},
+  '4':{text:"'개발' 대신 성장·이익·비용으로 나누어 설명해야 한다", feedback:'말을 쪼개면 자료가 더 정확히 붙습니다. 좋은 분해입니다.'}
+};
+const R4_CHOICES = {
+  '1':{text:'두 곳의 기술 수준이 달랐기 때문', feedback:'비교 자료가 보여주는 차이는 기술이나 자원이 아니라 주민의 요구가 처리되는 방식입니다.'},
+  '2':{text:'개발한 자원의 종류가 달랐기 때문', feedback:'비교 자료가 보여주는 차이는 기술이나 자원이 아니라 주민의 요구가 처리되는 방식입니다.'},
+  '3':{text:'얻을 수 있는 이윤의 크기가 달랐기 때문', feedback:'이윤은 결과에 가깝습니다. 일본에서는 주민 요구가 비용으로 반영됐고, 조선에서는 경찰이 그 요구를 막았습니다.'},
+  '4':{text:'주민의 권리와 요구가 반영될 조건이 달랐기 때문', feedback:'일본에서는 주민의 요구가 비용이 되었고, 조선에서는 경찰이 그 요구를 막았습니다.'}
+};
+const FINAL_TITLES = {
+  A:{text:'1920~30년대 조선 경제, 빠르게 성장하다', feedback:'성장은 사실입니다. 렌즈 네 개는 이 제목에 어떻게 연결됩니까?'},
+  B:{text:'생산과 공장은 늘었지만, 결국 수탈의 경제였다', feedback:"수탈 구조는 확인했습니다. 그러나 '결국'이라는 결론은 성장·투자·공업화의 사실을 충분히 설명합니까?"},
+  C:{text:'생산과 공장은 늘었다. 그 이익은 누구에게 갔는가', feedback:'생산·분배를 함께 드러내는 제목입니다.'},
+  D:{text:'개발된 조선 경제, 누구를 위한 개발이었는가', feedback:'개발의 존재와 식민지적 성격을 함께 묻는 제목입니다.'}
+};
+
+/* ═══════════ 상태 머신 ═══════════ */
+function initialState(){
+  return {
+    scene:'S0', stage:'receive', lenses:0,
+    choices:{
+      record_type:'result', version:window.GAME_CONFIG.version,
+      s0_initial:null,
+      r1_first:null,
+      r1_kept:null,
+      r1_revision:null,
+      r2_request_order:[],
+      r2_revision:null,
+      r3_folder_order:[],
+      r3_judgment:null,
+      r4_compare:null,
+      final_title:null
+    },
+    ui:{selected:null, r1Phase:'first', finalMode:null, finalFeedback:''},
+    submitted:false, commentSubmitted:false
+  };
+}
+let S = initialState();
+const app = document.getElementById('app');
+
+function esc(v){
+  return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function setScene(scene, stage){
+  S.scene = scene; if(stage) S.stage = stage;
+  renderHeader(); render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function addLens(n){ S.lenses = Math.max(S.lenses,n); renderHeader(); }
+function renderHeader(){
+  const current = STAGES.findIndex(s=>s.id===S.stage);
+  document.getElementById('stageNav').innerHTML = STAGES.map((s,i)=>`<span class="stg ${i<current?'done':''} ${i===current?'now':''}">${s.label}</span>`).join('');
+  document.getElementById('lensRow').innerHTML = LENSES.map((l,i)=> i<S.lenses ? `<span class="lens">🔎 ${esc(l)}</span>` : `<span class="lens empty">🔎 ─────</span>`).join('');
+  document.getElementById('lensCompact').textContent = `🔎 ${S.lenses} / 4`;
+}
+function choose(selector, value, cb){
+  document.querySelectorAll(selector).forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll(selector).forEach(x=>x.classList.remove('selected'));
+    btn.classList.add('selected'); cb(value ?? btn.dataset.value, btn);
+  }));
+}
+function optionButtons(items, numeric=false){
+  return Object.entries(items).map(([k,v])=>`<button class="choice" data-value="${esc(k)}"><span class="key">${numeric?esc(k):esc(k)}</span>${esc(typeof v==='string'?v:v.text)}</button>`).join('');
+}
+function sourceCard(tag, body, meta, cls='', grade='B'){
+  return `<article class="src-card ${cls}" data-grade="${grade}"><div class="src-tags"><span class="tag">${esc(tag)}</span></div><p class="src-body">${body}</p>${meta?`<div class="src-year">${esc(meta)}</div>`:''}</article>`;
+}
+function animateBars(){
+  requestAnimationFrame(()=>document.querySelectorAll('.bar-fill[data-w]').forEach(b=>b.style.width=b.dataset.w+'%'));
+}
+
+function render(){
+  switch(S.scene){
+    case 'S0': return renderS0();
+    case 'R1': return renderR1();
+    case 'R2': return renderR2();
+    case 'R3': return renderR3();
+    case 'R4': return renderR4();
+    case 'FINAL': return renderFinal();
+    case 'RESULT': return renderResult();
+  }
+}
+
+/* ═══════════ S0 — 최초 제목 ═══════════ */
+function renderS0(){
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">특집 편집실 · 시작</div>
+      <h1>1920~1930년대 조선 경제는 어떻게 변했는가</h1>
+      <p class="lead">1920년 이후 조선 경제는 크게 변했습니다. 자료를 검토하고 특집의 제목과 설명을 완성해 주세요.</p>
+      <section class="sources">
+        <div class="sec-label">지금 도착한 요약 자료</div>
+        <div class="card-row">
+          ${sourceCard('요약','농업 — <strong>쌀 생산 증가</strong>','1920~1930년대','tilt-a')}
+          ${sourceCard('요약','기업 — <strong>회사·자본 증가</strong>','1920년대','tilt-b')}
+          ${sourceCard('요약','공업 — <strong>공장·도시 성장</strong>','1930년대','tilt-c')}
+        </div>
+      </section>
+      <section class="judge">
+        <p class="q">지금 보이는 자료만으로 제목을 정한다면?</p>
+        <div class="choices" id="s0Choices">
+          <button class="choice" data-value="growth"><span class="key">1</span>${INITIAL_TITLES.growth}</button>
+          <button class="choice" data-value="development"><span class="key">2</span>${INITIAL_TITLES.development}</button>
+          <button class="choice" data-value="distribution"><span class="key">3</span>${INITIAL_TITLES.distribution}</button>
+          <button class="choice" data-value="reserve"><span class="key">4</span>${INITIAL_TITLES.reserve}</button>
+        </div>
+        <div class="btn-row"><button class="btn pen" id="s0Next" disabled>초안 제목을 잠근다 ✎</button></div>
+      </section>
+    </section>`;
+  let sel = null;
+  choose('#s0Choices .choice',null,(v)=>{sel=v;document.getElementById('s0Next').disabled=false;});
+  document.getElementById('s0Next').addEventListener('click',()=>{
+    if(!sel) return; S.choices.s0_initial=sel; S.ui.selected=null; setScene('R1','receive');
+  });
+}
+
+/* ═══════════ R1 — 자료를 받는다 ═══════════ */
+function renderR1(){
+  if(S.ui.r1Phase==='first') return renderR1First();
+  return renderR1Revision();
+}
+function renderR1First(){
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">R1 · 자료 받기</div><h2>쌀은 늘었습니다</h2>
+      <section class="sources">
+        <div class="sec-label">교과서 수록 통계 · 자체 재시각화</div>
+        <div class="card-row" style="grid-template-columns:1fr">
+          <article class="src-card" data-grade="B">
+            <div class="src-tags"><span class="tag">교과서 수록 통계</span></div>
+            <p class="src-body"><strong>쌀 생산량</strong> — 1920년 약 1,488만 석 → 1930년 약 1,918만 석</p>
+            <div class="graph">
+              <div class="bar-line"><span class="bar-label">1920</span><div class="bar-track"><div class="bar-fill" data-w="78"></div></div><span class="bar-num">1,488만 석</span></div>
+              <div class="bar-line"><span class="bar-label">1930</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bar-num">1,918만 석</span></div>
+            </div>
+            <div class="src-year">쌀 생산량 · 자체 재시각화</div>
+          </article>
+        </div>
+      </section>
+      <section class="judge">
+        <p class="q">기사의 첫 문장을 골라 주세요.</p>
+        <div class="choices" id="r1First">${optionButtons(R1_FIRST)}</div>
+        <div class="btn-row"><button class="btn pen" id="r1FirstNext" disabled>이 문장으로 초안을 쓴다 ✎</button></div>
+      </section>
+    </section>`;
+  animateBars();
+  let sel=null;
+  choose('#r1First .choice',null,(v)=>{sel=v;document.getElementById('r1FirstNext').disabled=false;});
+  document.getElementById('r1FirstNext').addEventListener('click',()=>{
+    S.choices.r1_first=sel; S.ui.r1Phase='revision'; renderR1();
+  });
+}
+function renderR1Revision(){
+  const first = R1_FIRST[S.choices.r1_first];
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">R1 · 추가 자료 도착</div><h2>잠깐만요. 생산량만 보면 될까요?</h2>
+      <section class="editor-panel compact"><div class="eyebrow">내 기사 문장 · 1고</div><div class="headline">${esc(first)}</div></section>
+      <section class="sources">
+        <div class="sec-label">새로 도착한 자료</div>
+        <div class="card-row">
+          ${sourceCard('교과서 서술','<strong>일본 반출</strong> — 생산이 계획에 못 미쳤는데도 반출은 예정대로 진행','생산물의 흐름','tilt-a')}
+          ${sourceCard('교과서 서술','한국인 <strong>1인당 쌀 소비량 감소</strong>','생활 변화','tilt-b')}
+          ${sourceCard('교과서 서술','수리조합비·비료 대금·소작료 등 <strong>농민 부담 증가</strong>','비용 부담','tilt-c')}
+        </div>
+      </section>
+      <section class="judge" id="r1RevisionJudge">
+        <p class="q">처음 고른 문장을 어떻게 하시겠습니까?</p>
+        <div class="choices" id="keepRevise">
+          <button class="choice" data-value="keep"><span class="key">유지</span>그대로 둔다</button>
+          <button class="choice" data-value="revise"><span class="key">수정</span>고쳐 쓴다</button>
+        </div>
+        <div id="revisionOptions" class="hidden" style="margin-top:12px">
+          <div class="choices" id="r1Revision">${optionButtons(R1_REVISIONS)}</div>
+        </div>
+        <div id="r1Feedback"></div>
+        <div class="btn-row"><button class="btn pen" id="r1Done" disabled>R1 편집을 마친다 ✎</button></div>
+      </section>
+    </section>`;
+  let mode=null, revision=null;
+  choose('#keepRevise .choice',null,(v)=>{
+    mode=v; revision=null; document.getElementById('r1Feedback').innerHTML='';
+    if(v==='keep'){
+      document.getElementById('revisionOptions').classList.add('hidden');
+      document.getElementById('r1Feedback').innerHTML='<div class="feedback">이 문장은 새 자료와 어떻게 연결됩니까? 결과 화면에서 다시 확인합니다.</div>';
+      document.getElementById('r1Done').disabled=false;
+    }else{
+      document.getElementById('revisionOptions').classList.remove('hidden');
+      document.getElementById('r1Done').disabled=true;
+    }
+  });
+  choose('#r1Revision .choice',null,(v)=>{
+    revision=v;
+    document.getElementById('r1Feedback').innerHTML=`<div class="feedback pen">${esc(R1_REVISIONS[v].feedback)}</div>`;
+    document.getElementById('r1Done').disabled=false;
+  });
+  document.getElementById('r1Done').addEventListener('click',()=>{
+    if(mode==='keep'){
+      S.choices.r1_kept=true; S.choices.r1_revision=null;
+    }else if(mode==='revise' && revision){
+      S.choices.r1_kept=false; S.choices.r1_revision=revision;
+    }else return;
+    addLens(1); setScene('R2','request');
+  });
+}
+
+/* ═══════════ R2 — 자료를 요구한다 ═══════════ */
+function renderR2(){
+  const order = S.choices.r2_request_order;
+  const allSeen = order.length===3;
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">R2 · 자료 요구</div><h2>회사는 늘었습니다</h2>
+      <section class="sources">
+        <div class="sec-label">기본 자료</div>
+        <div class="card-row two">
+          ${sourceCard('교과서 서술','<strong>1920년 회사령 폐지</strong> — 회사 설립 허가제에서 신고제로','제도 변화','tilt-a')}
+          ${sourceCard('교과서 서술','일본 자본의 투자 증가, <strong>한국인의 회사 설립도 증가</strong>','회사 설립 변화','tilt-b')}
+        </div>
+      </section>
+      <section class="judge">
+        <p class="q">「회사가 늘었다」를 기사로 쓰기 전에, 무엇을 먼저 확인하시겠습니까?</p>
+        <p class="micro">보고 싶은 순서대로 모두 확인합니다. 첫 선택도 기록됩니다.</p>
+        <div class="request-grid" id="r2Requests">
+          ${Object.entries(R2_REQUESTS).map(([k,v])=>`<button class="request-btn" data-key="${k}" ${order.includes(k)?'disabled':''}>${esc(v.label)}${order.includes(k)?`<span class="order-badge">${order.indexOf(k)+1}번째 확인</span>`:''}</button>`).join('')}
+        </div>
+        <div class="revealed" id="r2Revealed">
+          ${order.map((k,i)=>`<div class="reveal-row"><span class="order-num">${i+1}</span>${renderR2Source(k)}</div>`).join('')}
+        </div>
+        <div class="btn-row"><button class="btn pen" id="r2ToJudge" ${allSeen?'':'disabled'}>세 자료로 문장을 다시 본다 ✎</button></div>
+      </section>
+    </section>`;
+  animateBars();
+  document.querySelectorAll('#r2Requests .request-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const k=btn.dataset.key;
+    if(S.choices.r2_request_order.includes(k)) return;
+    S.choices.r2_request_order.push(k); renderR2();
+  }));
+  document.getElementById('r2ToJudge').addEventListener('click',()=>renderR2Judgment());
+}
+function renderR2Source(k){
+  const v=R2_REQUESTS[k];
+  let extra='';
+  if(v.graph){
+    extra=`<div class="graph"><div class="bar-line"><span class="bar-label">한국인 회사</span><div class="bar-track"><div class="bar-fill" data-w="4"></div></div><span class="bar-num">1,920만 원</span></div><div class="bar-line"><span class="bar-label">일본인 회사</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bar-num">53,014만 원</span></div><p class="graph-note">1920년 자본금. 교과서 수록 통계 수치를 자체 재시각화했습니다.</p></div>`;
+  }
+  return `<article class="src-card" data-grade="B"><div class="src-tags"><span class="tag">${esc(v.tag)}</span></div><p class="src-body">${v.body}</p>${extra}<div class="src-year">${esc(v.meta)}</div></article>`;
+}
+function renderR2Judgment(){
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">R2 · 설명의 충분성</div><h2>회사 수 하나로 충분합니까?</h2>
+      <section class="editor-panel compact"><div class="eyebrow">기사 문장 · 검토 대상</div><div class="headline">회사가 증가했다</div></section>
+      <section class="judge">
+        <p class="q">「회사가 증가했다」 — 이 문장으로 충분합니까?</p>
+        <div class="choices" id="r2Revision">${optionButtons(R2_REVISION)}</div>
+        <div id="r2Feedback"></div>
+        <div class="feedback hidden" id="r2Common">사실 하나가 틀리지 않았더라도, 그 사실만으로 만든 결론은 충분하지 않을 수 있습니다.</div>
+        <div class="btn-row"><button class="btn pen" id="r2Done" disabled>R2 편집을 마친다 ✎</button></div>
+      </section>
+    </section>`;
+  let sel=null;
+  choose('#r2Revision .choice',null,(v)=>{
+    sel=v; S.choices.r2_revision=v;
+    document.getElementById('r2Feedback').innerHTML=`<div class="feedback pen">${esc(R2_REVISION[v].feedback)}</div>`;
+    document.getElementById('r2Common').classList.remove('hidden');
+    document.getElementById('r2Done').disabled=false;
+  });
+  document.getElementById('r2Done').addEventListener('click',()=>{ if(!sel)return; addLens(2); setScene('R3','organize'); });
+}
+
+/* ═══════════ R3 — 자료를 우선순위화한다 ═══════════ */
+function renderR3(){
+  const order=S.choices.r3_folder_order;
+  const allSeen=order.length===4;
+  app.innerHTML = `
+    <section class="scene on">
+      <div class="scene-kicker">R3 · 자료 정리</div><h2>흥남은 발전했습니다</h2>
+      <section class="sources"><div class="sec-label">기본 자료</div><div class="card-row" style="grid-template-columns:1fr">${sourceCard('교과서 서술','<strong>흥남</strong> — 1927년 수력 발전과 대규모 비료 공장 건설. 작은 어촌이 공업 도시가 되었다','기업 도시 흥남')}</div></section>
+      <section class="judge">
+        <p class="q">흥남을 조사합니다. 어느 자료철부터 열겠습니까?</p>
+        <p class="micro">네 자료철을 모두 확인하되, 먼저 보고 싶은 순서를 기록합니다.</p>
+        <div class="request-grid four" id="r3Folders">
+          ${Object.entries(R3_FOLDERS).map(([k,v])=>`<button class="request-btn" data-key="${k}" ${order.includes(k)?'disabled':''}>${esc(v.label)}${order.includes(k)?`<span class="order-badge">${order.indexOf(k)+1}번째 확인</span>`:''}</button>`).join('')}
+        </div>
+        <div class="revealed">${order.map((k,i)=>`<div class="reveal-row"><span class="order-num">${i+1}</span>${renderR3Source(k)}</div>`).join('')}</div>
+        <div class="btn-row"><button class="btn pen" id="r3ToJudge" ${allSeen?'':'disabled'}>네 자료로 '개발'을 판단한다 ✎</button></div>
+      </section>
+    </section>`;
+  document.querySelectorAll('#r3Folders .request-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const k=btn.dataset.key;if(order.includes(k))return;order.push(k);renderR3();
+  }));
+  document.getElementById('r3ToJudge').addEventListener('click',renderR3Judgment);
+}
+function renderR3Source(k){
+  const v=R3_FOLDERS[k];
+  const lit=v.literature?`<article class="src-card lit" data-grade="C" style="margin-top:10px"><div class="src-tags"><span class="tag">문학 자료</span></div><p class="src-body">소설 『질소 비료 공장』 — 일본인 한 명의 비용이면 조선인 여러 명을 쓸 수 있다는 회사의 계산</p><div class="src-year">통계 아님 · 당시 노동 현실을 보여주는 문학 자료</div></article>`:'';
+  return `<div>${sourceCard(v.tag,v.body,v.meta,'','B')}${lit}</div>`;
+}
+function renderR3Judgment(){
+  app.innerHTML=`
+    <section class="scene on"><div class="scene-kicker">R3 · 개발 판단</div><h2>성장·이익·비용을 함께 놓고 봅니다</h2>
+      <section class="judge"><p class="q">흥남은 개발되었다고 말할 수 있습니까?</p>
+        <div class="choices" id="r3Judgment">${optionButtons(R3_JUDGMENTS,true)}</div><div id="r3Feedback"></div>
+        <div class="btn-row"><button class="btn pen" id="r3Done" disabled>R3 판단을 기록한다 ✎</button></div>
+      </section></section>`;
+  let sel=null;
+  choose('#r3Judgment .choice',null,(v)=>{
+    sel=v;S.choices.r3_judgment=v;
+    document.getElementById('r3Feedback').innerHTML=`<div class="feedback pen">${esc(R3_JUDGMENTS[v].feedback)}</div>`;
+    document.getElementById('r3Done').disabled=false;
+  });
+  document.getElementById('r3Done').addEventListener('click',()=>{if(!sel)return;addLens(3);setScene('R4','compare');});
+}
+
+/* ═══════════ R4 — 비교한다 ═══════════ */
+function renderR4(){
+  app.innerHTML=`
+    <section class="scene on"><div class="scene-kicker">R4 · 비교</div><h2>같은 회사, 다른 장소</h2>
+      <section class="sources"><div class="sec-label">비교 자료 · 출처 성격 분리 표기</div>
+        <div class="cmp-grid">
+          <article class="cmp-panel"><div class="src-tags"><span class="tag">만평 내용 재구성</span></div><div class="cmp-title">일본</div><p class="flow">주민 “우리 물을 가져갔으니 배상하라” <span class="arr">→</span> 회사: 협상과 배상 비용 부담</p></article>
+          <article class="cmp-panel"><div class="src-tags"><span class="tag">교과서 서술</span><span class="tag">만평 내용 재구성</span></div><div class="cmp-title">조선</div><p class="flow">주민 반대 <span class="arr">→</span> 경찰 개입 <span class="arr">→</span> 개발 진행 <span class="arr">→</span> 회사 이익</p></article>
+        </div>
+      </section>
+      <section class="judge"><p class="q">같은 회사가 왜 두 곳에서 주민에게 다르게 대응할 수 있었을까요?</p>
+        <div class="choices" id="r4Choices">${optionButtons(R4_CHOICES,true)}</div><div id="r4Feedback"></div>
+        <div class="btn-row"><button class="btn pen" id="r4Lock" disabled>이 판단을 한 번 기록한다 ✎</button></div>
+      </section></section>`;
+  let sel=null, locked=false;
+  choose('#r4Choices .choice',null,(v)=>{ if(locked)return;sel=v;document.getElementById('r4Lock').disabled=false; });
+  document.getElementById('r4Lock').addEventListener('click',()=>{
+    if(!sel||locked)return; locked=true; S.choices.r4_compare=sel;
+    document.querySelectorAll('#r4Choices .choice').forEach(b=>{b.disabled=true;b.classList.add('locked')});
+    document.getElementById('r4Lock').classList.add('hidden');
+    document.getElementById('r4Feedback').innerHTML=`<div class="feedback pen">${esc(R4_CHOICES[sel].feedback)}</div><div class="lens-earned">🔎 ${esc(LENSES[3])}</div><div class="btn-row"><button class="btn pen" id="toFinal">특집을 마감한다 ✎</button></div>`;
+    addLens(4);
+    document.getElementById('toFinal').addEventListener('click',()=>setScene('FINAL','final'));
+  });
+}
+
+/* ═══════════ FINAL — 제목 유지/수정 ═══════════ */
+function renderFinal(){
+  const initial=INITIAL_TITLES[S.choices.s0_initial];
+  app.innerHTML=`
+    <section class="scene on"><div class="scene-kicker">마감 · 최종 제목</div><h2>처음 제목으로 돌아갑니다</h2>
+      <section class="editor-panel"><div class="eyebrow">내 특집 기사 · 최초 제목</div><div class="headline">${esc(initial)}</div></section>
+      <div class="result-lenses">${LENSES.map(l=>`<div class="result-lens">🔎 ${esc(l)}</div>`).join('')}</div>
+      <section class="judge"><p class="q">처음 제목을 그대로 사용하시겠습니까?</p>
+        <div class="choices" id="finalMode">
+          <button class="choice" data-value="keep"><span class="key">유지</span>처음 제목을 유지한다</button>
+          <button class="choice" data-value="revise"><span class="key">수정</span>최종 제목을 고쳐 쓴다</button>
+        </div>
+        <div id="finalOptions" class="hidden" style="margin-top:12px"><div class="choices" id="finalTitles">${optionButtons(FINAL_TITLES)}</div></div>
+        <div id="finalFeedback"></div>
+        <div class="btn-row"><button class="btn pen" id="finalSubmit" disabled>마감하고 결과를 본다 ✎</button></div>
+      </section></section>`;
+  let mode=null, final=null;
+  choose('#finalMode .choice',null,(v)=>{
+    mode=v;final=null;document.getElementById('finalFeedback').innerHTML='';
+    if(v==='keep'){
+      document.getElementById('finalOptions').classList.add('hidden');
+      document.getElementById('finalFeedback').innerHTML='<div class="feedback">처음 판단을 유지했습니다. 이제 같은 판단을 더 많은 자료로 설명할 수 있습니다.</div>';
+      document.getElementById('finalSubmit').disabled=false;
+    }else{
+      document.getElementById('finalOptions').classList.remove('hidden');document.getElementById('finalSubmit').disabled=true;
+    }
+  });
+  choose('#finalTitles .choice',null,(v)=>{
+    final=v;document.getElementById('finalFeedback').innerHTML=`<div class="feedback pen">${esc(FINAL_TITLES[v].feedback)}</div>`;
+    document.getElementById('finalSubmit').disabled=false;
+  });
+  document.getElementById('finalSubmit').addEventListener('click',()=>{
+    if(mode==='keep') S.choices.final_title='kept';
+    else if(mode==='revise'&&final) S.choices.final_title=final;
+    else return;
+    if(!validateChoices(S.choices).ok){ console.warn('[economy1930] 결과 계약 불완전', validateChoices(S.choices)); return; }
+    setScene('RESULT','final');
+  });
+}
+
+/* ═══════════ 결과 ═══════════ */
+function resultFinalTitle(){ return S.choices.final_title==='kept' ? INITIAL_TITLES[S.choices.s0_initial] : FINAL_TITLES[S.choices.final_title].text; }
+function renderResult(){
+  const initial=INITIAL_TITLES[S.choices.s0_initial];
+  const final=resultFinalTitle();
+  const changed=S.choices.final_title!=='kept';
+  app.innerHTML=`
+    <section class="scene on"><div class="scene-kicker">특집 마감 완료</div>
+      <section class="result-panel">
+        <div class="result-compare">
+          <div class="result-title"><span class="micro">처음 제목</span><strong>${esc(initial)}</strong></div>
+          <div class="result-arrow">→</div>
+          <div class="result-title"><span class="micro">최종 제목 ${changed?'· 수정':'· 유지'}</span><strong>${esc(final)}</strong></div>
+        </div>
+        <div class="result-lenses">${LENSES.map(l=>`<div class="result-lens">🔎 ${esc(l)}</div>`).join('')}</div>
+        <div class="discovery">숫자가 늘었다는 것만으로는 누구의 삶이 나아졌는지 알 수 없다.</div>
+      </section>
+      <section class="judge">
+        <p class="q" style="margin-bottom:8px">게임 후 생각해 보기</p>
+        <p class="lead" style="font-size:16px">새로운 자료를 보고 판단을 바꾼 것과, 더 많은 근거를 확인한 뒤 기존 판단을 유지한 것 — 어느 쪽이 더 좋은 역사 탐구일까?</p>
+        <div class="comment-box">
+          <label for="comment">한 줄 소감 <span class="micro">(선택)</span></label>
+          <textarea id="comment" rows="2" maxlength="100" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)"></textarea>
+          <div class="comment-help">최대 100자 · 이름·학번을 쓰지 않습니다. 소감과 별개로 결과 저장이 먼저 처리됩니다.</div>
+        </div>
+        <div class="btn-row"><button class="btn ghost" id="restartBtn">처음부터 다시</button><button class="btn pen" id="copyBtn">결과 복사하기</button></div>
+      </section>
+      <footer class="result-footer">© 찰리쌤 · hischarlie.tistory.com</footer>
+    </section>`;
+  sendResult();
+  document.getElementById('restartBtn').addEventListener('click',restart);
+  document.getElementById('copyBtn').addEventListener('click',copyResultAndComment);
+}
+
+function buildCopyText(comment){
+  const c=S.choices;
+  const lines=[
+    '[숫자는 성장하고 있습니다]',
+    `처음 제목: ${INITIAL_TITLES[c.s0_initial]}`,
+    `R1 첫 문장: ${R1_FIRST[c.r1_first]}`,
+    `R1 수정: ${c.r1_kept?'유지':R1_REVISIONS[c.r1_revision].text}`,
+    `R2 첫 확인 자료: ${R2_REQUESTS[c.r2_request_order[0]].label}`,
+    `R2 판단: ${R2_REVISION[c.r2_revision].text}`,
+    `R3 첫 확인 자료: ${R3_FOLDERS[c.r3_folder_order[0]].label}`,
+    `R3 판단: ${R3_JUDGMENTS[c.r3_judgment].text}`,
+    `R4 비교 판단: ${R4_CHOICES[c.r4_compare].text}`,
+    `최종 제목: ${resultFinalTitle()}`,
+    '발견: 숫자가 늘었다는 것만으로는 누구의 삶이 나아졌는지 알 수 없다.'
+  ];
+  if(comment) lines.push(`소감: ${comment}`);
+  return lines.join('\n');
+}
+async function copyResultAndComment(){
+  const comment=document.getElementById('comment').value.trim();
+  const text=buildCopyText(comment);
+  try{
+    await navigator.clipboard.writeText(text);
+    const b=document.getElementById('copyBtn');b.textContent='복사되었습니다';setTimeout(()=>b.textContent='결과 복사하기',1600);
+  }catch(err){ console.warn('[clipboard] 복사 실패',err); }
+  if(comment) sendComment(comment);
+}
+
+/* ═══════════ 데이터 계약 검증 ═══════════ */
+function buildResultChoices(){
+  const c=S.choices;
+  return {
+    record_type:'result', version:window.GAME_CONFIG.version,
+    s0_initial:c.s0_initial,
+    r1_first:c.r1_first,
+    r1_kept:c.r1_kept,
+    r1_revision:c.r1_revision,
+    r2_request_order:[...c.r2_request_order],
+    r2_revision:c.r2_revision,
+    r3_folder_order:[...c.r3_folder_order],
+    r3_judgment:c.r3_judgment,
+    r4_compare:c.r4_compare,
+    final_title:c.final_title
+  };
+}
+function validateChoices(c){
+  const errors=[];
+  if(!['growth','development','distribution','reserve'].includes(c.s0_initial)) errors.push('s0_initial');
+  if(!['A','B','C','D'].includes(c.r1_first)) errors.push('r1_first');
+  if(typeof c.r1_kept!=='boolean') errors.push('r1_kept');
+  if(c.r1_kept===true && c.r1_revision!==null) errors.push('r1_revision must be null when kept');
+  if(c.r1_kept===false && !['A','B','C'].includes(c.r1_revision)) errors.push('r1_revision');
+  if(JSON.stringify([...c.r2_request_order].sort())!==JSON.stringify(['capital','kr_scale','tariff'].sort())) errors.push('r2_request_order');
+  if(!['A','B','C','D'].includes(c.r2_revision)) errors.push('r2_revision');
+  if(JSON.stringify([...c.r3_folder_order].sort())!==JSON.stringify(['company','env','labor','resident'].sort())) errors.push('r3_folder_order');
+  if(!['1','2','3','4'].includes(c.r3_judgment)) errors.push('r3_judgment');
+  if(!['1','2','3','4'].includes(c.r4_compare)) errors.push('r4_compare');
+  if(!['kept','A','B','C','D'].includes(c.final_title)) errors.push('final_title');
+  return {ok:errors.length===0, errors};
+}
+
+/* ═══════════ Supabase 신규 표준: result/comment 별도 행 ═══════════ */
+async function sendToSupabase(choiceData, comment){
+  const {supabaseUrl:url,supabasePublishableKey:key}=window.CHARLIE_CONFIG;
+  const body={class:CLASS,game:window.GAME_CONFIG.game_id,choices:choiceData,comment:comment||'',timestamp:new Date().toISOString()};
+  if(!url||!key||key.startsWith('__')){
+    console.info('[Supabase] 전송 생략 — 배포 전 publishable 키 주입 필요',body);
+    return {ok:false,skipped:true,status:0};
+  }
+  try{
+    const res=await fetch(`${url}/rest/v1/game_results`,{
+      method:'POST',
+      headers:publicHeaders({'Content-Type':'application/json',Prefer:'return=minimal'}),
+      body:JSON.stringify(body)
+    });
+    if(!res.ok) console.warn(`[Supabase] 전송 실패 HTTP ${res.status}`,body);
+    else console.info(`[Supabase] 전송 성공 HTTP ${res.status}`,choiceData.record_type);
+    return res;
+  }catch(err){
+    console.warn('[Supabase] 네트워크 전송 실패',err);
+    return {ok:false,failed:true,status:0};
+  }
+}
+function sendResult(){
+  if(S.submitted) return Promise.resolve({ok:true,duplicateBlocked:true});
+  S.submitted=true;
+  return sendToSupabase(buildResultChoices(),'');
+}
+function sendComment(comment){
+  if(!comment||S.commentSubmitted) return Promise.resolve({ok:true,duplicateBlocked:true});
+  S.commentSubmitted=true;
+  return sendToSupabase({record_type:'comment',version:window.GAME_CONFIG.version},comment);
+}
+
+function restart(){
+  S=initialState();renderHeader();render();window.scrollTo(0,0);
+}
+
+renderHeader();
+render();
+</script>
+</body>
+</html>
