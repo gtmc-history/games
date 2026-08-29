@@ -1,0 +1,21 @@
+name: jangnal1919 production audit
+
+on:
+  push:
+    branches:
+      - feat/jangnal1919
+    paths:
+      - '.github/workflows/jangnal1919-production-audit.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/jangnal1919
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run read-only production audit
+        run: npm run audit:games -- --production
