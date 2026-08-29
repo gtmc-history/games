@@ -1,0 +1,42 @@
+name: Assemble jangnal1919 candidate
+
+on:
+  push:
+    branches:
+      - feat/jangnal1919
+    paths:
+      - '.tmp/jangnal1919/**'
+      - '.github/workflows/assemble-jangnal1919.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/jangnal1919
+      - name: Assemble exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p jangnal1919
+          cat .tmp/jangnal1919/part-00 .tmp/jangnal1919/part-01 .tmp/jangnal1919/part-02 .tmp/jangnal1919/part-03 > jangnal1919/index.html
+          echo '9415466dfca3dca0989b9c11d3902c1b9d798a8d7034f8466fbd6ae3d4d8e6b6  jangnal1919/index.html' | sha256sum -c -
+          grep -q "game_id: 'jangnal1919'" jangnal1919/index.html
+          grep -q "schema_version: '1.2'" jangnal1919/index.html
+          grep -q "result_id: S.session" jangnal1919/index.html
+          grep -q "const STATS_ENDPOINT = '';" jangnal1919/index.html
+      - name: Commit assembled source and remove staging files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .tmp/jangnal1919
+          rm .github/workflows/assemble-jangnal1919.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'games: add jangnal1919 deploy candidate'
+          git push origin HEAD:feat/jangnal1919
