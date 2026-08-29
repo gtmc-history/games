@@ -1,0 +1,106 @@
+  v.appendChild(el('h2',null,'당신의 궤적, 그리고 기록'));
+  const ul = el('ul','track');
+  trackText().forEach(t => { const li = document.createElement('li'); li.appendChild(el('span','d',t.date)); li.appendChild(el('span',null,t.text)); ul.appendChild(li); });
+  v.appendChild(ul);
+  const pt = el('div','pattern'); pt.appendChild(el('div','lbl','당신의 선택 패턴')); pt.appendChild(el('p',null,patternText())); v.appendChild(pt);
+
+  v.appendChild(el('h2',null,'실제 세 개의 면에서는'));
+  v.appendChild(el('p','prompt','당신의 선택이 만든 결과가 아니라, 같은 조건에서 실제 사람들이 남긴 기록이다.'));
+  const M = [
+    { n:'돌마면', p:['3월 26일 비밀리에 국기를 만들고 만세고개에서 [[봉화]]를 올렸다. 27일 분당리 [[장날]], 장터에 1,000여 명이 모였다.','주도자 한백봉: 주민 50여 명을 모아 옛 국기를 앞세웠고, 다른 지역 수백 명과 합류했다. 징역 1년.','면장 이준구는 사직서를 내고 집에 태극기를 걸었다.'], s:'디지털성남문화대전 [B] · 국가기록원 판결문 [A] · 조성운(2020) [B]' },
+    { n:'낙생면', p:['[[면장]] 남태희는 사직서를 내고 집에 태극기를 걸었다.','장터의 시위대가 낙생 [[면사무소]]로 와 면민과 합동 시위를 벌였다.'], s:'디지털성남문화대전 [B] · 조성운(2020) [B]' },
+    { n:'대왕면', p:['3월 26일 송파 시위에서 돌아온 이시종이 밤 7시경 수서리 주민 약 100명과 면사무소로 행진했다.','『[[조선독립신문]]』을 읽었다. "밤에는 면장이 없을 테니 면장 집으로 가자"는 제안이 있었지만 군중은 따르지 않았다.','면사무소 안에서 "이제 조선이 독립하니 [[부역]]과 세금은 필요 없다"고 말했다. 이시종 징역 1년, 이재순 징역 8월.'], s:'국가기록원 독립운동 판결문 [A]' }
+  ];
+  M.forEach(m => { const d = el('div','myeon'); d.appendChild(el('h3',null,m.n)); m.p.forEach(t => d.appendChild(el('p',null,t))); d.appendChild(el('div','src','출처: ' + m.s)); v.appendChild(d); });
+
+  const num = el('div','numbers');
+  num.appendChild(el('div','big','1,000여 명 / 3,000여 명'));
+  num.appendChild(el('p',null,'자료에 따라 1,000여 명 또는 3,000여 명으로 기록되어 있다. 날짜와 집계 범위의 표기도 일치하지 않는다.'));
+  num.appendChild(el('p','q','왜 같은 시위를 두고 숫자가 다를까?'));
+  v.appendChild(num);
+
+  if (STATS_ENDPOINT) {
+    const st = el('div','stats');
+    const sb = el('button','btn ghost','우리 반 지금까지 선택 보기 →');
+    const sbox = document.createElement('div');
+    sb.onclick = () => loadClassStats(sbox, sb);
+    st.appendChild(sb); st.appendChild(sbox); v.appendChild(st);
+  }
+
+  v.appendChild(el('h2',null,'한 줄 소감'));
+  const ta = document.createElement('textarea'); ta.id='comment'; ta.rows=2; ta.maxLength=100; ta.placeholder='한 줄 소감을 남겨보세요. (이름·학번 제외)';
+  v.appendChild(ta);
+  const row = el('div','btnrow');
+  const cp = el('button','btn','결과 복사'); const toast = el('span','toast','');
+  cp.onclick = () => {
+    const comment = ta.value.trim();
+    if (comment && !S.commentSubmitted) { sendToSupabase({ record_type:'comment', version: window.GAME_CONFIG.schema_version, result_id: S.session, _trace: trace('comment') }, comment); S.commentSubmitted = true; }
+    const txt = ['「장날, 1919년 3월」 나의 선택'].concat(trackText().map(t => '· ' + t.date + ' ' + t.title + ': ' + t.text)).concat(['패턴: ' + patternText()]).concat(comment ? ['소감: ' + comment] : []).join('\n');
+    navigator.clipboard.writeText(txt).then(() => { toast.textContent = '복사됐습니다'; }, () => { toast.textContent = '복사에 실패했습니다. 길게 눌러 직접 복사하세요.'; });
+  };
+  const nx = el('button','btn ghost','이 이야기가 있었던 곳 →'); nx.onclick = renderEpilogue;
+  row.appendChild(cp); row.appendChild(toast); v.appendChild(row);
+  const row2 = el('div','btnrow'); row2.appendChild(nx); v.appendChild(row2);
+  v.appendChild(el('div','copyright','© 찰리쌤 · hischarlie.tistory.com'));
+  stage.appendChild(v);
+}
+
+function loadClassStats(box, btn){
+  /* 집계 엔드포인트 계약(가정): GET STATS_ENDPOINT?game=&class= → { total, s1_inform:{village,market,myeonjang,wait} }
+     n<3 억제는 서버에서 적용. raw choices SELECT 금지. */
+  box.innerHTML = ''; btn.disabled = true;
+  const q = STATS_ENDPOINT + '?game=' + encodeURIComponent(window.GAME_CONFIG.game_id) + '&class=' + encodeURIComponent(CLASS);
+  fetch(q).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(agg => {
+    const total = agg.total || 0; const MIN = 3;
+    box.appendChild(el('p',null,CLASS + '반 · 지금까지 ' + total + '명'));
+    if (total < MIN || !agg.s1_inform) { box.appendChild(el('p','muted','응답이 ' + MIN + '명 미만이라 비율을 표시하지 않습니다.')); return; }
+    box.appendChild(el('p','muted','장면 1 · 누구에게 먼저 알렸는가'));
+    SCENES[0].choices.forEach(ch => {
+      const n = agg.s1_inform[ch.id]; const row = el('div','bar');
+      const left = document.createElement('div'); left.appendChild(rich(ch.text));
+      const bar = document.createElement('i'); bar.style.width = (n == null ? 0 : n/total*100).toFixed(0) + '%';
+      left.appendChild(bar); row.appendChild(left);
+      row.appendChild(el('span',null, n == null ? '소수' : Math.round(n/total*100) + '%'));
+      box.appendChild(row);
+    });
+  }).catch(e => { console.warn('[stats] 조회 실패', e); box.appendChild(el('p','muted','지금은 반 통계를 불러올 수 없습니다.')); });
+}
+
+function renderEpilogue(){
+  clear(); prog.textContent = '지금';
+  const v = el('section','scene');
+  v.appendChild(el('div','eyebrow','1919 → 지금'));
+  v.appendChild(el('h2',null,'이 이야기가 있었던 곳'));
+  v.appendChild(el('p','prompt','세 개의 면은 경기도 광주군에 있었다. 이 땅은 지금 어디일까?'));
+  const map = el('div','map'); map.id = 'map';
+  map.innerHTML = MAP_SVG;
+  v.appendChild(map);
+  v.appendChild(el('p','mapnote','위치 관계를 단순화한 도식입니다. 실제 경계·거리를 나타내지 않습니다.'));
+  const row = el('div','btnrow');
+  const b = el('button','btn','지금은 어디일까?');
+  const after = el('p','prompt','당신이 방금 살펴본 것과 비슷한 판단과 행동이 지금의 성남시 일대에서 실제로 이루어졌다.'); after.style.display='none';
+  b.onclick = () => { map.classList.add('now'); b.disabled = true; after.style.display='block'; };
+  row.appendChild(b); v.appendChild(row); v.appendChild(after);
+  const row2 = el('div','btnrow'); const rs = el('button','btn ghost','처음부터 다시'); rs.onclick = restart; row2.appendChild(rs); v.appendChild(row2);
+  stage.appendChild(v);
+}
+
+const MAP_SVG = '<svg viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="1919년 광주군 세 개 면과 현재 성남시 대응 도식">'
+ + '<path class="region" d="M110 40 L250 30 L285 95 L200 130 L120 110 Z"/>'
+ + '<path class="region" d="M205 135 L300 100 L360 160 L330 250 L235 270 L210 200 Z"/>'
+ + '<path class="region" d="M60 150 L200 140 L205 200 L225 275 L110 300 L50 230 Z"/>'
+ + '<path class="river" d="M215 20 C 205 90, 220 170, 210 210 S 230 300, 225 330"/>'
+ + '<text class="sub" x="222" y="325">탄천</text>'
+ + '<g class="lbl-old"><text x="160" y="85">대왕면</text><text x="245" y="190">돌마면</text><text x="95" y="230">낙생면</text>'
+ + '<circle cx="270" cy="215" r="5" fill="#cd2e3a"/><text class="sub" x="280" y="220">분당리 장터</text>'
+ + '<circle cx="150" cy="105" r="3" fill="#8b7355"/><text class="sub" x="158" y="108">수서리</text></g>'
+ + '<g class="lbl-now"><text x="125" y="85">수서·고등·신촌 일대</text><text x="255" y="190">분당</text><text x="100" y="230">판교</text>'
+ + '<circle cx="270" cy="215" r="5" fill="#cd2e3a"/><text class="sub" x="280" y="220">분당 일대</text></g>'
+ + '<text class="sub" x="12" y="330">↑ 북쪽 · 서울 방향</text>'
+ + '</svg>';
+
+function restart(){ S.step = 0; S.picks = {}; S.submitted = false; S.commentSubmitted = false; S.session = newSession(); renderIntro(); }
+renderIntro();
+</script>
+</body>
+</html>
