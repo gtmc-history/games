@@ -23,17 +23,18 @@ jobs:
         with:
           repository: gtmc-history/gtmc-history.github.io
           ref: feat/jangnal1919
-          path: _hub
+          path: docs/_hub
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Run canonical cross-repo audit
-        run: npm run audit:games -- --hub-repo _hub
+        run: npm run audit:games -- --hub-repo docs/_hub
       - name: Remove one-time audit workflow
         if: success()
         shell: bash
         run: |
           set -euo pipefail
+          rm -rf docs/_hub
           rm .github/workflows/jangnal1919-cross-audit.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
