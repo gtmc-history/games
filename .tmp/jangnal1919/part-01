@@ -1,0 +1,125 @@
+window.GAME_CONFIG = {
+  game_id: 'jangnal1919',
+  label: '장날, 1919년 3월',
+  era: '일제강점기',
+  version: '1.2.1',        // 게임 릴리스 (연출 패치 포함)
+  schema_version: '1.2',   // choices 구조 = DESIGN_LOCK v1.2
+  scenes: ['s1_inform','s2_prep','s3_when','s4_where','s5_next'],
+  axes: ['net_axis','space_axis']
+};
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+/* 반 통계: game_results는 anon INSERT only. 집계 엔드포인트(Edge Function/RPC) 확정 전까지 빈 값 유지 → 버튼 미표시 */
+const STATS_ENDPOINT = '';
+function publicHeaders(extra){
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  const headers = { apikey: key, ...(extra || {}) };
+  if (key.startsWith('eyJ')) headers.Authorization = 'Bearer ' + key;
+  return headers;
+}
+const CLASS = new URLSearchParams(location.search).get('class') || '미입력';
+function sendToSupabase(choiceData, comment){
+  const { supabaseUrl: url, supabasePublishableKey: key } = window.CHARLIE_CONFIG;
+  if (!url || !key || key.startsWith('__')) return Promise.resolve({ ok:false, skipped:true });
+  return fetch(url + '/rest/v1/game_results', {
+    method: 'POST',
+    headers: publicHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+    body: JSON.stringify({
+      class: CLASS, game: window.GAME_CONFIG.game_id,
+      choices: choiceData, comment: comment || '', timestamp: new Date().toISOString()
+    })
+  }).then(res => { if (!res.ok) console.warn('[Supabase] 전송 실패 HTTP ' + res.status); return res; })
+    .catch(err => { console.warn('[Supabase] 네트워크 전송 실패', err); return { ok:false, failed:true }; });
+}
+
+/* ===== 툴팁 ===== */
+const TERMS = {
+  '면장': '면장(面長) — 총독부 지방 행정 말단인 면의 책임자',
+  '면사무소': '면사무소(面事務所) — 부역·세금 등을 처리한 면의 관청',
+  '주재소': '헌병주재소(憲兵駐在所) — 헌병경찰이 상주한 지방 치안 기관',
+  '헌병': '헌병(憲兵) — 1910년대 경찰 업무까지 맡은 일본 군 경찰',
+  '보안법': '보안법(保安法) — 집회·언동을 처벌한 1907년 법',
+  '인산': '인산(因山) — 왕·황제의 장례',
+  '봉화': '봉화(烽火) — 산 위에 불을 올려 멀리 알리는 신호',
+  '장날': '장날 — 5일마다 서는 정기 시장이 열리는 날',
+  '조선독립신문': '조선독립신문 — 3·1 직후 비밀리에 발행된 지하 신문',
+  '부역': '부역(賦役) — 관청이 주민에게 시킨 무보수 노동'
+};
+/* [[용어]] 마커를 DOM으로 변환 — 템플릿 리터럴 안 <span> 삽입 금지 원칙 준수 */
+function rich(str){
+  const frag = document.createDocumentFragment();
+  const parts = str.split(/\[\[(.+?)\]\]/);
+  parts.forEach((p, i) => {
+    if (i % 2 === 0) { if (p) frag.appendChild(document.createTextNode(p)); }
+    else {
+      const s = document.createElement('span');
+      s.className = 'tt'; s.textContent = p; s.setAttribute('data-term', p); s.setAttribute('tabindex','0');
+      frag.appendChild(s);
+    }
+  });
+  return frag;
+}
+const bubble = document.getElementById('tt-bubble');
+function tt(el){
+  const term = el.getAttribute('data-term');
+  bubble.textContent = TERMS[term] || term;
+  bubble.classList.remove('show');
+  bubble.style.top = '-9999px'; bubble.style.left = '0';
+  const h = bubble.offsetHeight, w = bubble.offsetWidth;
+  const r = el.getBoundingClientRect();
+  let left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
+  let top = r.top - h - 8;
+  if (top < 8) top = r.bottom + 8;
+  bubble.style.left = left + 'px'; bubble.style.top = top + 'px';
+  bubble.classList.add('show');
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('.tt');
+  if (t) { e.stopPropagation(); tt(t); } else bubble.classList.remove('show');
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('tt')) tt(e.target); });
+
+/* ===== 데이터 ===== */
+const SCENES = [
+  { key:'s1_inform', date:'3월 26일, 낮', title:'소식이 넘어왔다', next:'저녁이 된다',
+    prompt:'[[인산]]에 다녀온 마을 사람이 서울의 만세 소식을 가져왔다. 누구에게 먼저 알릴 것인가?',
+    choices:[
+      { id:'village', text:'동리 어른들에게 — 마을 사람끼리 먼저', cond:'마을 단위 결집이 실제 시위의 기본 단위였다.', grade:'B', think:'빠르지만 규모가 작다.' },
+      { id:'market', text:'장터에서 아는 상인·장꾼에게', cond:'[[장날]]은 여러 마을 사람이 정기적으로 만나는 공간이었다.', grade:'B', think:'멀리 퍼지지만 누가 듣는지 통제할 수 없다.' },
+      { id:'myeonjang', text:'[[면장]]에게', cond:'면장은 총독부 행정의 말단이자 지역의 유력자였다.', grade:'B', think:'면장이 어느 편일지 알 수 없다.' },
+      { id:'wait', text:'아직 아무에게도 — 며칠 지켜본다', cond:'이 선택은 재판 기록에 남지 않는다. 기록되지 않은 사람들의 자리다.', grade:'', think:'정보와 시점을 남에게 맡기게 된다.' }
+    ]},
+  { key:'s2_prep', date:'3월 26일, 저녁', title:'무엇을 준비해 둘까', next:'밤이 깊는다',
+    lead:'해가 기울었다. 서울에서 시작된 만세 이야기는 이제 이 마을에서도 남의 이야기가 아니다.',
+    prompt:'마을에 만세 이야기가 퍼지고 있다. 당신은 무엇을 준비해 둘 것인가?',
+    choices:[
+      { id:'flag', text:'태극기를 만든다', cond:'이 지역에서는 비밀리에 국기를 만들었고, 옛 국기를 앞세운 시위가 있었다.', grade:'A·B', think:'발각되면 물증이 된다.' },
+      { id:'beacon', text:'[[봉화]]를 올릴 불씨와 장소를 준비한다', cond:'이 지역의 한 고개에서 봉화를 올려 만세를 시작한 기록이 있다.', grade:'B', think:'멀리서도 보일 수 있다. 누가 보게 될지는 통제할 수 없다.' },
+      { id:'paper', text:'서울 인쇄물을 구해 읽을 수 있는 사람에게 부탁한다', cond:'이웃 면에서는 『[[조선독립신문]]』을 군중 앞에서 읽어 주었다.', grade:'A', think:'글 아는 사람과 인쇄물이 둘 다 필요하다.' },
+      { id:'none', text:'아무것도 준비하지 않는다', cond:'', grade:'', think:'물증도 없지만 알릴 수단도 없다.' }
+    ]},
+  { key:'s3_when', date:'3월 26~27일', title:'언제, 어디서', next:'사람들이 모인다',
+    lead:'밤이 깊는다. 준비할 수 있는 것은 많지 않았다. 더 어려운 문제가 남았다.',
+    prompt:'사람들이 움직이려 한다. 언제, 어디서 모일 것인가?',
+    choices:[
+      { id:'tonight', text:'오늘 밤, 마을 사람끼리', cond:'이웃 면에서는 3월 26일 밤 약 100명이 모여 [[면사무소]]로 향했다.', grade:'A', think:'규모는 작지만 빠르다.' },
+      { id:'marketday', text:'내일 [[장날]], 장터에서', cond:'3월 27일은 이 지역 장터의 장날이었다.', grade:'B', think:'여러 면 사람이 모이지만 하루를 기다려야 한다.' },
+      { id:'joint', text:'이웃 면 사람들에게 함께 나오자고 알린다', cond:'실제 시위에서 여러 면 주민이 합류했다. 사전에 약속했는지는 기록에 없다.', grade:'B', think:'다른 지역까지 연락하려면 사람과 시간이 필요하다.' },
+      { id:'avoid', text:'장날은 피한다', cond:'', grade:'', think:'헌병은 나올 수 있다. 그러나 모일 사람도 줄어든다.' }
+    ]},
+  { key:'s4_where', date:'시위 당일', title:'면사무소 앞', next:'하루가 지난다',
+    intro:['서로 다른 마을에서 나온 사람들이 한 무리가 되었다. 길 앞에 [[면사무소]]가 있다.','[[면장]]은 식민 통치의 말단이다. 그러나 그 면장이 지금 어떤 선택을 할지, 당신은 모른다.'],
+    prompt:'한 무리의 시위대가 [[면사무소]] 근처에 모였다. 당신도 그 자리에 섰다. 어디로 갈 것인가?',
+    choices:[
+      { id:'office', text:'면사무소 앞에서 만세를 부른다', cond:'이웃 면 시위대는 면사무소에 모였고, 일부는 안으로 들어갔다.', grade:'A', think:'행정기구를 직접 향하는 행동이다.' },
+      { id:'myeonjang_home', text:'[[면장]]의 집으로 간다', cond:'이웃 면에서 실제로 제안되었으나 군중이 따르지 않았다.', grade:'A', think:'시간대에 따라 면사무소에 면장이 없을 수 있다.' },
+      { id:'market', text:'면사무소를 지나 장터로 돌아간다', cond:'', grade:'', think:'행정기구와의 충돌을 피한다.' },
+      { id:'disperse', text:'여기서 해산한다', cond:'', grade:'', think:'이웃 면과 합류할 기회가 사라진다.' }
+    ]},
+  { key:'s5_next', date:'3월 28~29일', title:'그 다음 날', next:'기록을 펼친다',
+    lead:'하루가 지나도 사건은 끝나지 않았다. 어제의 만세 뒤에도 각자는 다시 선택해야 한다.',
+    prompt:'시위가 있었고 하루가 지났다. 오늘 당신은 어떻게 할 것인가?',
+    choices:[
+      { id:'march', text:'이웃 면으로 행진해 합류한다', cond:'시위는 이웃 면의 큰 마을까지 번졌다.', grade:'B', think:'' },
