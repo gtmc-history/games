@@ -46,11 +46,15 @@ body::before{
 button,textarea,input{font:inherit;color:inherit}
 button:focus-visible,textarea:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:16px 16px 48px}
+
+/* 헤더 */
 .hdr{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:8px 0 12px;border-bottom:1px solid var(--line);margin-bottom:16px}
 .hdr .gname{font-family:var(--font-display);font-weight:900;font-size:18px;letter-spacing:.02em}
 .hdr .gname small{font-family:var(--font-body);font-weight:500;color:var(--muted);font-size:14px;margin-left:8px}
 .hdr .prog{font-size:14px;color:var(--muted);font-weight:700;white-space:nowrap}
 .hdr .prog b{color:var(--text)}
+
+/* 장면 공통 */
 .scene{animation:scene-in .4s ease forwards}
 @keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .kicker{font-size:14px;color:var(--sepia);font-weight:700;letter-spacing:.06em}
@@ -64,7 +68,13 @@ h3{font-family:var(--font-display);font-weight:700;font-size:18px;margin:16px 0 
 .mission b{display:block;margin-top:2px;font-size:17px}
 .mission .how{color:var(--muted);margin-top:4px;font-size:16px}
 .notice{font-size:14px;color:var(--muted);border:1px dashed var(--line);padding:8px 12px;border-radius:4px;margin:12px 0}
-.btn{min-height:48px;border:1px solid var(--sepia);border-radius:4px;padding:10px 16px;background:var(--surface-2);font-weight:700;font-size:17px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,background .2s}
+
+/* 버튼 */
+.btn{
+  min-height:48px;border:1px solid var(--sepia);border-radius:4px;padding:10px 16px;
+  background:var(--surface-2);font-weight:700;font-size:17px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease,background .2s;
+}
 .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.18)}
 .btn:active{transform:translateY(0) scale(.97)}
 .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -74,91 +84,1121 @@ h3{font-family:var(--font-display);font-weight:700;font-size:18px;margin:16px 0 
 .btn.small{min-height:48px;font-size:16px;padding:8px 12px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:10px}
 .nav{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
-.nav[hidden]{display:none}
+.nav[hidden]{display:none} /* [hidden] 전역 규칙의 보조. display:flex가 hidden을 덮지 않도록 */
+
+/* 카드 */
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:14px 14px 12px;min-height:150px;display:flex;flex-direction:column;transition:border-color .2s,background .2s,transform .15s}
+.card{
+  position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;
+  padding:14px 14px 12px;min-height:150px;display:flex;flex-direction:column;
+  transition:border-color .2s,background .2s,transform .15s;
+}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .2s}
-.card.sel{background:var(--surface)}.card.sel::before{background:var(--primary)}.card.done{opacity:.6}.card.hold{border-style:dashed;border-color:#9a9a9a}
+.card.sel{background:var(--surface)}
+.card.sel::before{background:var(--primary)}
+.card.done{opacity:.6}
+.card.hold{border-style:dashed;border-color:#9a9a9a}
 .card .meta{font-size:14px;color:var(--sepia);font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px}
 .card .cname{font-family:var(--font-display);font-weight:700;font-size:18px;margin-bottom:4px;line-height:1.35}
 .card .ctext{font-family:var(--font-doc);font-size:16px;line-height:1.65}
 .card .recon{font-size:14px;color:var(--sepia);margin-top:8px}
 .card .fb{font-size:16px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);animation:fb-in .35s ease}
 @keyframes fb-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.live{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--surface);font-size:16px;min-height:52px}.live strong{color:var(--primary)}
-.board{overflow-x:auto;margin:8px 0 12px}.board table{border-collapse:separate;border-spacing:6px;min-width:640px;width:100%}.board th{font-size:14px;color:var(--muted);font-weight:700;padding:4px 6px;text-align:center;white-space:nowrap}.board th.rowh{text-align:left;white-space:normal;width:120px}.board td{padding:0}
-.cell{width:100%;min-height:64px;border:1px dashed var(--line);border-radius:4px;background:transparent;cursor:pointer;text-align:left;padding:8px 10px;font-size:16px;line-height:1.35;color:var(--muted);transition:background .2s,border-color .2s}.cell:hover{background:rgba(0,0,0,.03)}.cell.filled{border-style:solid;border-color:var(--line);background:var(--surface-2);color:var(--text);cursor:default;font-family:var(--font-doc)}.cell.filled::before{content:"";display:inline-block;width:3px;height:1em;background:var(--primary);margin-right:8px;vertical-align:-2px}.cell.target{border-color:var(--primary);background:var(--primary-soft);color:var(--text)}
-.cardrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}.pick{flex:1 1 200px;min-height:48px;text-align:left;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:10px 12px;font-size:16px;line-height:1.45;cursor:pointer;font-family:var(--font-doc);position:relative}.pick::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}.pick.sel{background:var(--surface)}.pick.sel::before{background:var(--primary)}.pick.placed{opacity:.45;cursor:default}.pick.retry{border-style:dashed;border-color:#9a9a9a}.pick .d{font-family:var(--font-body);font-size:14px;color:var(--sepia);font-weight:700;display:block}
-.lines{display:flex;flex-direction:column;gap:10px}.lrow{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:12px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:relative}.lrow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}.lrow.fixed::before{background:var(--primary)}.lrow.fixed.dash::before{background:var(--sepia)}.lrow.hold{border-style:dashed;border-color:#9a9a9a}.lrow .lname{flex:1 1 220px;font-weight:700;font-size:17px}.lrow .lname .arrow{color:var(--sepia);margin:0 6px}.lrow .lbtns{display:flex;gap:6px;flex-wrap:wrap}.lrow .lfb{flex-basis:100%;font-size:16px;color:var(--text);padding-top:8px;border-top:1px dashed var(--line);animation:fb-in .35s ease}.lrow .lstate{font-size:14px;color:var(--sepia);font-weight:700}
-.opts{display:flex;flex-direction:column;gap:8px;margin:8px 0}.opt{min-height:48px;text-align:left;border:1px solid var(--line);border-left:3px solid transparent;border-radius:4px;background:var(--surface-2);padding:10px 14px;font-size:17px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}.opt:hover{border-left-color:var(--primary);background:var(--surface);transform:translateX(4px)}.opt.sel{border-left-color:var(--primary);background:var(--surface)}.opt.hold{border-style:dashed;border-color:#9a9a9a}.opt[disabled]{cursor:default;transform:none}
-.claim{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:14px;margin-bottom:12px}.claim .ctitle{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}.claim .ctitle .lab{font-size:14px;color:var(--sepia);font-weight:700;white-space:nowrap;padding-top:3px}.claim .ctitle .txt{font-family:var(--font-doc);font-size:17px;flex:1 1 260px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{min-height:48px;border:1px solid var(--line);border-left:3px solid transparent;border-radius:4px;background:var(--color-bg);padding:8px 12px;font-size:16px;cursor:pointer;text-align:left}.chip.sel{border-left-color:var(--primary);background:var(--surface)}.chip.cant{border-style:dashed}.chip.cant.sel{border-style:solid}.chip[disabled]{opacity:.5;cursor:not-allowed}.review{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}.review summary{cursor:pointer;font-weight:700;font-size:16px;min-height:48px;display:flex;align-items:center;gap:8px}.review .vd{font-size:14px;font-weight:700;color:var(--sepia);border:1px solid var(--line);border-radius:4px;padding:2px 8px}.review ul{margin:6px 0 0;padding-left:18px}.review li{margin:4px 0;font-size:16px}.review .sum{margin-top:8px;font-size:16px;font-weight:700}
-.mappanel{margin-top:20px;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:10px 12px 6px}.mappanel .mt{font-size:14px;color:var(--sepia);font-weight:700;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.mapwrap{overflow-x:auto}.mapwrap svg{display:block;width:100%;height:auto}@media (max-width:640px){.mapwrap svg{min-width:640px}}.node rect{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}.node text{fill:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;text-anchor:middle}.node.admin rect{fill:#e6e9f1}.node.new rect{stroke:var(--primary)}.edge{fill:none;stroke:var(--primary);stroke-width:3;stroke-linejoin:round}.edge.pending{stroke:var(--sepia);stroke-width:2;stroke-dasharray:6 5}.edge.free{stroke:var(--sepia);stroke-width:3}.faded{opacity:.35;transition:opacity .6s ease}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:6px}.legend i{display:inline-block;width:26px;height:0;border-top:3px solid var(--primary);vertical-align:middle;margin-right:4px}.legend i.p{border-top:2px dashed var(--sepia)}.legend i.f{border-top:3px solid var(--sepia)}
-.final .slider{display:flex;align-items:center;gap:12px;margin:12px 0;flex-wrap:wrap}.final .slider label{font-size:14px;color:var(--muted);font-weight:700;white-space:nowrap}.final input[type=range]{flex:1 1 200px;min-height:48px;accent-color:var(--primary)}.law{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:14px;margin:10px 0}.law .lyear{font-size:14px;color:var(--sepia);font-weight:700}.law .lname{font-family:var(--font-display);font-weight:700;font-size:18px;margin:2px 0 4px}.law .ltext{font-family:var(--font-doc);font-size:16px}.sig{margin:18px 0;padding:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sig .s1,.sig .s2{font-family:var(--font-display);font-weight:900;font-size:24px;line-height:1.35;animation:fb-in .5s ease}.sig .s2{margin-top:10px}.sig .tag{display:inline-block;font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--sepia);border:1px solid var(--sepia);border-radius:4px;padding:1px 8px;margin-left:8px;vertical-align:middle}.sig .anno{font-size:16px;color:var(--muted);margin-top:10px}.sig .anno b{color:var(--text)}.sig .basis{font-size:14px;color:var(--muted);margin-top:6px}.final .evid{font-size:16px}.final .evid li{margin:4px 0}textarea{width:100%;border:1px solid var(--line);border-radius:4px;padding:10px;resize:vertical;background:var(--surface-2);font-size:16px}.final .finaltext{min-height:110px;font-family:var(--font-doc)}.footer{margin-top:28px;font-size:14px;color:rgba(120,100,80,0.4);text-align:right}
-.tt{border-bottom:1.5px dashed var(--sepia);cursor:pointer;position:relative;white-space:nowrap;color:inherit;transition:border-color .15s}.tt::before{content:"";position:absolute;left:50%;top:50%;width:100%;min-width:48px;height:48px;transform:translate(-50%,-50%)}.tt:hover,.tt:focus-visible{border-bottom-color:var(--primary)}#tt-bubble{position:fixed;z-index:9000;max-width:240px;background:#2b2520;border:1px solid rgba(139,115,85,.7);border-radius:4px;padding:10px 13px;box-shadow:0 6px 24px rgba(0,0,0,.45);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s}#tt-bubble.show{opacity:1;transform:translateY(0)}#tt-bubble .tb-word{font-size:14px;font-weight:700;color:#d9c39a;font-family:var(--font-display);margin-bottom:5px}#tt-bubble .tb-desc{font-size:14px;color:rgba(240,236,228,.9);font-family:var(--font-body);line-height:1.6}#tt-bubble::after{content:"";position:absolute;bottom:-6px;left:var(--arrow-left,50%);transform:translateX(-50%);border:6px solid transparent;border-bottom:none;border-top-color:rgba(139,115,85,.7)}#tt-bubble.below::after{bottom:auto;top:-6px;border-top:none;border-bottom:6px solid rgba(139,115,85,.7)}@media (prefers-reduced-motion:reduce){#tt-bubble{transition:none}}
-.sr-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}@media (max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:28px}.hdr{flex-direction:column;gap:2px}}@media (prefers-reduced-motion:reduce){.scene,.card .fb,.lrow .lfb,.sig .s1,.sig .s2{animation:none}.btn,.opt,.card,.faded{transition:none}}
+
+.live{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--surface);font-size:16px;min-height:52px}
+.live strong{color:var(--primary)}
+#live{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden} /* 낭독기 전용. 시각 피드백은 카드 안에 표시 */
+
+/* S2 작업판 */
+.board{overflow-x:auto;margin:8px 0 12px}
+.board table{border-collapse:separate;border-spacing:6px;min-width:640px;width:100%}
+.board th{font-size:14px;color:var(--muted);font-weight:700;padding:4px 6px;text-align:center;white-space:nowrap}
+.board th.rowh{text-align:left;white-space:normal;width:120px}
+.board td{padding:0}
+.cell{
+  width:100%;min-height:64px;border:1px dashed var(--line);border-radius:4px;background:transparent;
+  cursor:pointer;text-align:left;padding:8px 10px;font-size:16px;line-height:1.35;color:var(--muted);
+  transition:background .2s,border-color .2s;
+}
+.cell:hover{background:rgba(0,0,0,.03)}
+.cell.filled{border-style:solid;border-color:var(--line);background:var(--surface-2);color:var(--text);cursor:default;font-family:var(--font-doc)}
+.cell.filled::before{content:"";display:inline-block;width:3px;height:1em;background:var(--primary);margin-right:8px;vertical-align:-2px}
+.cell.target{border-color:var(--primary);background:var(--primary-soft);color:var(--text)}
+.cell.empty{border-color:transparent;background:transparent;cursor:default}
+.board.hint{text-align:center;color:var(--muted);font-size:14px}
+.cardrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.rowpick{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px;align-items:center}
+.rowpick .lab{font-size:14px;color:var(--sepia);font-weight:700;flex-basis:100%}
+.pick{
+  flex:1 1 200px;min-height:48px;text-align:left;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);
+  padding:10px 12px;font-size:16px;line-height:1.45;cursor:pointer;font-family:var(--font-doc);position:relative;
+}
+.pick::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}
+.pick.sel{background:var(--surface)}
+.pick.sel::before{background:var(--primary)}
+.pick.placed{opacity:.45;cursor:default}
+.pick.retry{border-style:dashed;border-color:#9a9a9a}
+.pick .d{font-family:var(--font-body);font-size:14px;color:var(--sepia);font-weight:700;display:block}
+
+/* S4 선 판별 */
+.lines{display:flex;flex-direction:column;gap:10px}
+.lrow{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:12px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:relative}
+.lrow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}
+.lrow.fixed::before{background:var(--primary)}
+.lrow.fixed.dash::before{background:var(--sepia)}
+.lrow.hold{border-style:dashed;border-color:#9a9a9a}
+.lrow .lname{flex:1 1 220px;font-weight:700;font-size:17px}
+.lrow .lname .arrow{color:var(--sepia);margin:0 6px}
+.lrow .lbtns{display:flex;gap:6px;flex-wrap:wrap}
+.lrow .lfb{flex-basis:100%;font-size:16px;color:var(--text);padding-top:8px;border-top:1px dashed var(--line);animation:fb-in .35s ease}
+.lrow .lstate{font-size:14px;color:var(--sepia);font-weight:700}
+
+/* 선택 후보 (S5·S6) */
+.opts{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.opt{
+  min-height:48px;text-align:left;border:1px solid var(--line);border-left:3px solid transparent;border-radius:4px;
+  background:var(--surface-2);padding:10px 14px;font-size:17px;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s;
+}
+.opt:hover{border-left-color:var(--primary);background:var(--surface);transform:translateX(4px)}
+.opt.sel{border-left-color:var(--primary);background:var(--surface)}
+.opt.hold{border-style:dashed;border-color:#9a9a9a}
+.opt[disabled]{cursor:default;transform:none}
+
+/* S7 검수 */
+.stepbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0 6px;font-size:14px;color:var(--sepia);font-weight:700}
+.stepbar .dots{display:flex;gap:6px}
+.stepbar .dots i{display:inline-block;width:12px;height:12px;border:1px solid var(--sepia);border-radius:2px}
+.stepbar .dots i.on{background:var(--sepia)}
+.stepbar .dots i.cur{border-color:var(--primary);border-width:2px}
+.claim{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:14px;margin-bottom:12px}
+.claim .ctitle{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.claim .ctitle .lab{font-size:14px;color:var(--sepia);font-weight:700;white-space:nowrap;padding-top:3px}
+.claim .ctitle .txt{font-family:var(--font-doc);font-size:17px;flex:1 1 260px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{
+  min-height:48px;border:1px solid var(--line);border-left:3px solid transparent;border-radius:4px;
+  background:var(--color-bg);padding:8px 12px;font-size:16px;cursor:pointer;text-align:left;
+}
+.chip.sel{border-left-color:var(--primary);background:var(--surface)}
+.chip.cant{border-style:dashed}
+.chip.cant.sel{border-style:solid}
+.chip[disabled]{opacity:.5;cursor:not-allowed}
+.review{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.review summary{cursor:pointer;font-weight:700;font-size:16px;min-height:48px;display:flex;align-items:center;gap:8px}
+.review .vd{font-size:14px;font-weight:700;color:var(--sepia);border:1px solid var(--line);border-radius:4px;padding:2px 8px}
+.review ul{margin:6px 0 0;padding-left:18px}
+.review li{margin:4px 0;font-size:16px}
+.review .sum{margin-top:8px;font-size:16px;font-weight:700}
+
+/* 생활지도 */
+.mappanel{margin:4px 0 18px;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:10px 12px 6px}
+.mappanel .mt{font-size:14px;color:var(--sepia);font-weight:700;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mapwrap{overflow-x:auto}
+.mapwrap svg{display:block;width:100%;height:auto}
+.mapwrap.big svg{min-width:720px}
+.mapzoom{display:none}
+@media (max-width:640px){.mapzoom{display:inline-block;min-height:40px;font-size:14px;padding:6px 10px;margin-top:6px}}
+.node rect{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.node text{fill:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;text-anchor:middle}
+.node.admin rect{fill:#e6e9f1}
+.node.new rect{stroke:var(--primary)}
+.edge{fill:none;stroke:var(--primary);stroke-width:3;stroke-linejoin:round}
+.edge.pending{stroke:var(--sepia);stroke-width:2;stroke-dasharray:6 5}
+.edge.free{stroke:var(--sepia);stroke-width:3}
+.edge.candidate{stroke:#b9b0a3;stroke-width:2;stroke-dasharray:2 5}
+.node.candidate rect{stroke:#c9c1b5;stroke-dasharray:3 3}
+.faded{opacity:.35;transition:opacity .6s ease}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:26px;height:0;border-top:3px solid var(--primary);vertical-align:middle;margin-right:4px}
+.legend i.p{border-top:2px dashed var(--sepia)}
+.legend i.f{border-top:3px solid var(--sepia)}
+.legend i.c{border-top:2px dotted #b9b0a3}
+
+/* 최종 화면 */
+.final .slider{display:flex;align-items:center;gap:12px;margin:12px 0 4px;flex-wrap:wrap}
+.final .slhint{font-size:14px;color:var(--muted);margin:0 0 12px}
+.final .slider label{font-size:14px;color:var(--muted);font-weight:700;white-space:nowrap}
+.final input[type=range]{flex:1 1 200px;min-height:48px;accent-color:var(--primary)}
+.law{border:1px solid var(--line);border-radius:4px;background:var(--surface-2);padding:14px;margin:10px 0}
+.law .lyear{font-size:14px;color:var(--sepia);font-weight:700}
+.law .lname{font-family:var(--font-display);font-weight:700;font-size:18px;margin:2px 0 4px}
+.law .ltext{font-family:var(--font-doc);font-size:16px}
+.sig{margin:18px 0;padding:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sig .s1,.sig .s2{font-family:var(--font-display);font-weight:900;font-size:24px;line-height:1.35;animation:fb-in .5s ease}
+.sig .s2{margin-top:10px}
+.sig .tag{display:inline-block;font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--sepia);border:1px solid var(--sepia);border-radius:4px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+.sig .anno{font-size:16px;color:var(--muted);margin-top:10px}
+.sig .anno b{color:var(--text)}
+.sig .basis{font-size:14px;color:var(--muted);margin-top:6px}
+.final .evid{font-size:16px}
+.final .evid li{margin:4px 0}
+textarea{width:100%;border:1px solid var(--line);border-radius:4px;padding:10px;resize:vertical;background:var(--surface-2);font-size:16px}
+.final .finaltext{min-height:110px;font-family:var(--font-doc)}
+.footer{margin-top:28px;font-size:14px;color:rgba(120,100,80,0.4);text-align:right}
+
+/* 툴팁 — 왕의 결재함 v3 레퍼런스 패턴 (근현대 팔레트 적용) */
+.tt{border-bottom:1.5px dashed var(--sepia);cursor:pointer;position:relative;white-space:nowrap;color:inherit;transition:border-color .15s}
+/* 48px 터치 타깃: 글자 크기는 두고 투명한 히트 영역만 넓힌다 */
+.tt::before{content:"";position:absolute;left:50%;top:50%;width:100%;min-width:48px;height:48px;transform:translate(-50%,-50%)}
+.tt:hover,.tt:focus-visible{border-bottom-color:var(--primary)}
+#tt-bubble{
+  position:fixed;z-index:9000;max-width:240px;background:#2b2520;border:1px solid rgba(139,115,85,.7);
+  border-radius:4px;padding:10px 13px;box-shadow:0 6px 24px rgba(0,0,0,.45);pointer-events:none;
+  opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s;
+}
+#tt-bubble.show{opacity:1;transform:translateY(0)}
+#tt-bubble .tb-word{font-size:14px;font-weight:700;color:#d9c39a;font-family:var(--font-display);margin-bottom:5px}
+#tt-bubble .tb-desc{font-size:14px;color:rgba(240,236,228,.9);font-family:var(--font-body);line-height:1.6}
+#tt-bubble::after{content:"";position:absolute;bottom:-6px;left:var(--arrow-left,50%);transform:translateX(-50%);border:6px solid transparent;border-bottom:none;border-top-color:rgba(139,115,85,.7)}
+#tt-bubble.below::after{bottom:auto;top:-6px;border-top:none;border-bottom:6px solid rgba(139,115,85,.7)}
+@media (prefers-reduced-motion:reduce){#tt-bubble{transition:none}}
+
+.sr-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+@media (max-width:640px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:28px}
+  .hdr{flex-direction:column;gap:2px}
+}
+@media (prefers-reduced-motion:reduce){
+  .scene,.card .fb,.lrow .lfb,.sig .s1,.sig .s2{animation:none}
+  .btn,.opt,.card,.faded{transition:none}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hdr" id="hdr"><div class="gname">배급망 1943 <small>기록을 잇는 사람</small></div><div class="prog" id="prog"></div></div>
-  <main id="app" aria-live="polite"></main><div id="live" class="live" role="status" aria-live="polite" hidden></div>
+  <div class="hdr" id="hdr">
+    <div class="gname">배급망 1943 <small>기록을 잇는 사람</small></div>
+    <div class="prog" id="prog"></div>
+  </div>
+  <main id="app" aria-live="polite"></main>
+  <div id="live" class="live" role="status" aria-live="polite" hidden></div>
 </div>
 <div id="tt-bubble" role="tooltip"><div class="tb-word"></div><div class="tb-desc"></div></div>
 <script>
-window.GAME_CONFIG={game_id:'rationnet1943',label:'배급망 1943',era:'일제강점기',version:'1.0'};
-window.CHARLIE_CONFIG={supabaseUrl:'https://xgniwztlrakkrbzcfklb.supabase.co',supabasePublishableKey:'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'};
-const RECON='당시 기록을 바탕으로 재구성';
-window.DATA={
- tooltips:{'매출표':'매출표(賣出票) — 쌀을 살 때 사용하도록 한 판매표','전표':'전표(傳票) — 물품을 배급받을 때 내는 표','공정가격':'공정가격(公定價格) — 관청이 정해 고시한 판매 가격','절미':'절미(節米) — 쌀 소비를 줄이는 것','혼식':'혼식(混食) — 쌀에 잡곡을 섞어 먹는 것','대용식':'대용식(代用食) — 쌀 대신 먹도록 한 음식','부영':'부영(府營) — 부(府)가 직접 운영함','이관':'이관(移管) — 사무를 다른 기관으로 넘김','애국반':'애국반(愛國班) — 전시기에 배급·동원 등에 쓰인 말단 주민 조직','연맹':'연맹(聯盟) — 배급 과정에 등장하는 관련 연합 조직','구제':'구제(區制) — 부 아래에 구를 두는 행정 구역 제도','암거래':'암거래(暗去來) — 공식 통제 밖에서 몰래 이루어진 거래','물자통제령':'물자통제령 — 1941년, 물자의 생산·판매·양도 등을 통제한 법령','국가총동원법':'국가총동원법 — 1938년, 전쟁 수행 위해 인적·물적 자원을 통제한 법'},
- nav:{0:'문서철을 연다',1:'쌀 기록을 시간 위에 놓는다',2:'다른 품목의 기록을 살핀다',3:'고무제품 배급 경로를 더 추적한다',4:'1943년의 새 기록을 연다',5:'지금까지의 지도를 읽는다',6:'이 기록으로 무엇을 말할 수 있는지 검수한다',7:'복원한 지도를 처음과 겹쳐 본다'},
- intro:{kicker:'1940 ~ 1943 · 경성',title:'배급망 1943',role:'현대의 생활사 기록 복원자',setting:'경성의 한 집에 남았을 법한 생활필수품 기록을 당시 자료를 바탕으로 재구성한 문서철입니다. 실제 유물이 아니라 복원 작업을 위한 자료 묶음입니다.',question:'전시 동원은 전쟁터로 끌려간 사람에게만 일어난 일이었을까?',mission:'문서철의 기록을 잇고, 기록이 허용하는 만큼만 선을 긋고, 그 선으로 무엇을 말할 수 있는지 검수한다.',notice:'주제 고지 — 이 게임은 전시 물자 통제와 생활 기록을 다룹니다. 정답 점수는 없으며, 사료의 범위를 판별하는 과정 자체가 결과로 남습니다.'},
- s1:{title:'문서철을 연다',sub:'네 장의 기록이 있다. 물건이 오는 길을 정한 기록인가, 값을 정한 기록인가.',mission:'각 기록을 「구매·배급 경로」 또는 「가격 통제」로 분류한다.',cats:{purchase:'구매·배급 경로',price:'가격 통제'},cards:[{id:'rice',name:'쌀 매출표',text:'1940년 5월. 쌀을 살 때 매출표를 쓰도록 했다는 기록.',cat:'purchase',ok:'쌀을 사는 길에 표가 들어왔다.'},{id:'rubber',name:'고무제품 배급 기록',text:'1942년 8월 초. 경성부 내 고무제품을 관련 연맹을 거쳐 배급한다는 기록.',cat:'purchase',ok:'고무제품이 조직을 거쳐 오게 됐다.'},{id:'food',name:'부영 식료배급소 기록',text:'1943년 4월. 경성부가 직접 운영하는 식료배급소가 문을 열었다는 기록.',cat:'purchase',ok:'부가 운영하는 배급소가 생겼다.'},{id:'price',name:'공정가격 기록',text:'정해진 공정가격에 맞추어 팔도록 했다는 기록.',cat:'price',ok:'값을 고시한 기록. 길이 아니라 값의 통제다.'}],miss:{purchase:'표·배급소처럼 물건이 오는 길을 정한 기록이다.',price:'이 기록은 물건이 오는 길이 아니라 값을 다룬다.'},done:{title:'첫 기록 복원 완료',text:'물건을 사는 데 돈 외에도 표·조직·배급소 같은 조건이 끼어들기 시작했다. 값을 정하는 통제는 그것과 다른 선에 있다.'}},
- s2:{title:'쌀, 1940',sub:'네 기록을 시간과 성격이 만나는 칸에 놓는다. 시간은 카드가 알려 주고, 성격은 당신이 판단한다.',mission:'카드를 고른 뒤 칸을 누른다. 날짜가 없는 카드는 「시기 미확인」에 둔다.',cols:[{id:'y1939',label:'1939'},{id:'y1940_5',label:'1940년 5월'},{id:'y1940_10',label:'1940년 10월 이후'},{id:'unknown',label:'시기 미확인'}],rows:[{id:'situation',label:'상황·배경'},{id:'distribution',label:'배급·소비 통제'},{id:'price',label:'가격 통제'}],cards:[{id:'c1',date:'1939년',text:'흉작으로 식량 사정이 나빠졌다는 기록.',col:'y1939',row:'situation',ok:'1939년 기록. 통제가 아니라 통제 앞에 놓인 상황이다.',colMiss:'카드에 1939년이 적혀 있다.',rowMiss:{distribution:'이 기록은 통제 조치가 아니다. 식량 사정을 적은 기록이다.',price:'이 기록은 통제 조치가 아니다. 식량 사정을 적은 기록이다.'}},{id:'c2',date:'1940년 5월',text:'서울지역 쌀 배급에 매출표제가 실시되었다는 기록.',col:'y1940_5',row:'distribution',ok:'1940년 5월, 쌀 배급에 매출표가 들어왔다.',colMiss:'카드에 1940년 5월이 적혀 있다.',rowMiss:{situation:'상황 기록이 아니라 실시된 통제 조치다.',price:'매출표는 값이 아니라 사는 방식을 바꾼 장치다.'}},{id:'c3',date:'1940년 10월 이후',text:'절미를 위해 대용식·혼식 등 소비 규정을 철저히 하도록 한 기록.',col:'y1940_10',row:'distribution',ok:'1940년 10월 이후, 혼식 등 소비 규정을 강화했다.',colMiss:'카드에 1940년 10월 이후라고 적혀 있다.',rowMiss:{situation:'상황 기록이 아니라 소비 규정을 정한 기록이다.',price:'값을 정한 통제가 아니라 소비 규정에 관한 기록이다.'}},{id:'c4',date:null,text:'공정가격을 어긴 판매를 단속했다는 기록. 시기는 이 문서철에서 확인되지 않는다.',col:'unknown',row:'price',ok:'값을 어긴 판매를 단속한 기록. 배급과는 다른 통제다.',colMiss:'이 기록에는 날짜가 없다. 날짜 없는 칸에 둔다.',rowMiss:{situation:'상황 기록이 아니라 단속이라는 조치 기록이다.',distribution:'배급 방식이 아니라 값을 다룬다. 가격 통제 선이다.'}}],done:{title:'쌀 기록 정리 완료',text:'1940년 5월, 경성에서 쌀을 사는 길에 매출표가 들어왔다. 가격을 제한하는 통제와는 다른 방식이었다. 모든 기록의 시기를 지금 알 수 있는 것은 아니다.'}},
- s3:{title:'표는 쌀에서 끝나지 않았다',sub:'다른 품목의 기록이 섞여 있다. 배급 경로를 정한 기록인가, 통제망 밖 거래와 값을 단속한 기록인가.',mission:'각 기록을 「배급 통제」 또는 「가격·단속」으로 분류한다. 이 기록들의 시기는 문서철에 적혀 있지 않다.',cats:{distribution:'배급 통제',price:'가격·단속'},cards:[{id:'sugar',name:'설탕·면포',text:'전표를 통한 배급 통제 대상이 되었다는 기록.',cat:'distribution',ok:'설탕과 면포에도 전표가 붙었다.'},{id:'item26',name:'세탁비누',text:'배급 통제 대상 품목이 되었다는 기록.',cat:'distribution',ok:'세탁비누도 배급 통제 대상에 들어갔다.'},{id:'towel',name:'타올',text:'전표 배급 대상이 되었다는 기록.',cat:'distribution',ok:'타올도 전표 배급 대상이다.'},{id:'black',name:'암거래·가격 단속',text:'통제망 밖 거래와 가격 위반을 단속했다는 기록.',cat:'price',ok:'통제 밖으로 새는 거래와 값을 단속한 기록이다.'}],miss:{distribution:'이 기록은 값이 아니라 배급 대상을 정한 기록이다.',price:'이 기록은 배급 경로가 아니라 통제망 밖 거래와 값을 다룬다.'},done:{title:'통제 품목 확대 확인',text:'표는 쌀에서 끝나지 않았다. 설탕·면포·세탁비누·타올 등 여러 생활필수품으로 배급 통제가 넓어졌다. 시기는 이 문서철만으로는 알 수 없다.'}},
- s4:{title:'1942, 고무제품은 어디를 거쳤나',sub:'기록이 직접 말하는 선만 실선으로 남긴다. 말하지 않는 선은 없었다는 뜻이 아니라, 이 기록으로는 그을 수 없다는 뜻이다.',record:{name:'고무제품 배급 기록',date:'1942년 7월 말',text:'8월 초 경성부 내 고무제품 배급 예정. 관련 연맹에서 「각 애국반을 거치거나」 「학교로 배급」한다고 적혀 있다.'},mission:'후보선 여섯 개마다 「기록이 진술한다」 또는 「기록이 말하지 않는다」를 판별한다.',yes:'기록이 진술한다',no:'기록이 말하지 않는다',lines:[{id:'line1',from:'경성부 내 할당',to:'관련 연맹',state:'stated',fb:{stated:{yes:'1942년 8월 초 경성부 내 배급이 연맹을 통해 예정됐다.',no:'기록은 경성부 내 할당이 연맹으로 넘어감을 적고 있다.'}}},{id:'line2',from:'관련 연맹',to:'애국반',state:'stated',fb:{stated:{yes:'기록이 ‘각 애국반을 거쳐’ 배급한다고 적었다.',no:'‘각 애국반을 거치거나’라는 구절이 있다. 다시 보자.'}}},{id:'line3',from:'관련 연맹',to:'학교',state:'stated',fb:{stated:{yes:'기록이 ‘학교로 배급’한다고 적었다.',no:'‘학교로 배급’이라는 구절이 있다. 다시 보자.'}}},{id:'line4',from:'애국반',to:'가구',state:'pending',fb:{pending:{yes:'애국반을 ‘거친다’고만 적혔다. 가구 수령까지는 말하지 않는다.',no:'기록은 애국반까지만 말한다. 그 뒤는 현재 확정하지 않는다.'},stated:{yes:'기록이 애국반을 거쳐 가구에 배급한다고 적었다.',no:'애국반에서 가구로 이어지는 구절이 있다. 다시 보자.'}}},{id:'line5',from:'학교',to:'학생',state:'pending',fb:{pending:{yes:'‘학교로 배급’까지 적혔다. 학생 수령 방식은 말하지 않는다.',no:'기록은 학교까지만 말한다. 그 뒤는 현재 확정하지 않는다.'},stated:{yes:'기록이 학교를 거쳐 학생에게 배급한다고 적었다.',no:'학교에서 학생으로 이어지는 구절이 있다. 다시 보자.'}}},{id:'line6',from:'관련 연맹',to:'지정 소매상',state:'unstated',fb:{unstated:{yes:'이 기록에 지정 소매상 경로는 없다. 없었다는 뜻은 아니다.',no:'이 기록은 소매상 경로를 적지 않았다. 이 기록으로는 그을 수 없다.'}}}],stateLabel:{stated:'실선 — 기록이 진술',pending:'점선 — 기록이 여기까지만',unstated:'미표시 — 이 기록에는 없음'},done:{title:'기록이 직접 말한 선만 남겼다',text:'경성의 고무제품은 관련 연맹에서 애국반 또는 학교로 이어졌다. 그러나 그 뒤의 최종 수령 경로까지는 현재 기록만으로 확정하지 않는다.'}},
- s5:{title:'1943년 4월, 새 배급소',sub:'지도에 새 자리가 하나 생긴다. 이 배급소는 지도의 어디에서 이어지는가.',record:{name:'부영 식료배급소 기록',date:'1943년 4월',text:'경성부가 직접 운영하는 부영(府營) 식료배급소가 문을 열었다는 기록.'},question:'‘부영 식료배급소’는 지도의 어디에서 이어져야 할까?',expect:'gov',opts:[{id:'gov',label:'경성부',fb:'‘부영’은 부가 운영한다는 뜻. 경성부에서 이어진다.'},{id:'aeguk',label:'애국반',fb:'애국반은 주민 조직이다. 카드의 ‘부영’을 다시 보자.'},{id:'league',label:'관련 연맹',fb:'연맹은 고무제품 배급 조직. 이 배급소는 ‘부영’이다.'},{id:'market',label:'여러 상점',fb:'상점이 아니라 부가 운영하는 배급소다.'}],homeLine:'pending',done:{title:'경성부가 직접 운영하는 배급소',text:'경성부에서 식료배급소로 선이 하나 더 그어졌다. 배급소에서 집까지의 선은 이 기록이 말하지 않는다.'}},
- s6:{title:'지도를 읽는다',sub:'새 기록 없이, 지금까지 그린 지도를 먼저 읽는다.',read:{question:'지금까지 복원한 쌀·고무제품·식료배급소는 같은 하나의 담당선을 거쳤을까?',expect:'none',opts:[{id:'all',label:'모두 같은 선',fb:'지도를 다시 보자. 세 사례의 선이 한 조직을 지나는가.'},{id:'two',label:'두 사례만 같은 선',fb:'겹치는 조직을 짚어 보자. 같은 이름이 두 선에 있는가.'},{id:'none',label:'하나로 묶이지 않는다',fb:'사례마다 서로 다른 조직과 경로가 보인다.'}]},district:{record:{name:'구 설치와 배급 사무',date:'1943년 6월 이후',text:'경성부에 구가 설치되고 생활필수품 배급 사무가 구로 이관되었다는 기록.'},question:'배급 사무를 넘겨받은 ‘구’는 지도 어디에 추가해야 할까?',expect:'under_gov',opts:[{id:'under_gov',label:'경성부 아래',fb:'부의 배급 사무가 구로 내려왔다. 그 아래 경로는 이 기록이 말하지 않는다.'},{id:'replace_aeguk',label:'애국반을 대신하는 자리',fb:'구는 행정 단위다. 애국반이 없어졌다는 기록은 없다.'},{id:'beside_aeguk',label:'애국반과 나란히',fb:'애국반은 주민 조직, 구는 부 아래 행정 단위다.'},{id:'beside_market',label:'여러 상점 옆',fb:'구는 판매처가 아니라 사무를 넘겨받은 행정 단위다.'}],aegukLine:'pending'},done:{title:'1940년 지도에 없던 조직과 선이 붙었다',text:'쌀·고무제품·식료배급소·구 — 경로마다 담당이 다르다.'}},
- s7:{title:'이 기록으로 어디까지 말할 수 있는가',sub:'주장 네 개가 있다. 붙일 기록을 고르거나, 이 기록들로는 말할 수 없다고 판별한다.',mission:'주장마다 증거 기록(최대 2개)을 붙이거나 「이 기록들로는 말할 수 없다」를 고른다. 네 주장이 모두 정해지면 검수한다.',cant:'이 기록들로는 말할 수 없다',chips:[{id:1,label:'1939 식량 상황'},{id:2,label:'쌀 매출표 1940.5'},{id:3,label:'1942 경성 고무제품 배급 경로(연맹→애국반·학교)'},{id:4,label:'부영 식료배급소 1943.4'},{id:5,label:'1943 구제·배급사무 이관'}],verdictLabel:{direct:'직접 뒷받침',insufficient:'관련은 있으나 부족',scope_exceeded:'자료 범위를 넘어섬',within:'범위 안의 판별'},claims:[{id:'claim_a',layer:'해석 주장',text:'1939년의 식량 사정 악화는 경성 쌀 통제가 시작된 계기 중 하나였다.',chipFb:{1:'식량 사정 기록이다. 통제 시작 기록이 더 필요하다.',2:'1940년 5월 통제 시작 기록. 계기 기록이 더 필요하다.',3:'고무제품 배급 경로. 쌀 통제의 계기와는 다른 선이다.',4:'1943년 식료배급소 기록. 1940년 쌀 통제의 계기가 아니다.',5:'1943년 행정 이관 기록. 쌀 통제 시작과 시기가 다르다.'},sum:{direct:'후대의 연구는 1939년 식량 악화 뒤 미곡 직접통제가 시작되었다고 설명한다. 1940년 5월 경성에서는 매출표제가 확인된다.',insufficient:'붙인 기록만으로는 계기까지 이어지지 않는다.',cant:'식량 사정과 매출표 기록을 함께 붙이면 말할 수 있다.'}},{id:'claim_b',layer:'사실 주장 · 범위',text:'처음부터 조선 전역에서 모든 생활필수품이 같은 방식으로 배급되었다.',chipFb:{1:'식량 사정 기록은 배급 방식의 동일함을 보이지 않는다.',2:'경성의 쌀 매출표다. 다른 지역·품목 방식을 말해 주지 않는다.',3:'경성 고무제품 한 사례. 전 품목의 같은 방식을 말할 수 없다.',4:'경성부 배급소 기록. 처음부터 전국에 있었다고 볼 수 없다.',5:'1943년 경성 행정 기록. ‘처음부터’와 ‘전역’을 뒷받침하지 않는다.'},sum:{scope_exceeded:'붙인 기록은 경성과 일부 품목에 한정된다.',cant:'현재 기록은 경성·일부 품목에 머문다.'}},{id:'claim_c',layer:'사실 주장',text:'배급 통제는 쌀에서 다른 품목과 경로로 넓어졌다.',chipFb:{1:'통제 배경 기록. 품목 확대 자체를 보여 주지는 않는다.',2:'쌀 통제 기록. 다른 품목 기록을 함께 붙여야 확대가 보인다.',3:'고무제품 배급 기록. 쌀 매출표와 함께 붙이면 확대가 보인다.',4:'식료배급소 기록. 쌀 매출표와 함께 붙이면 확대가 보인다.',5:'배급 사무의 행정 이관. 품목 확대의 직접 증거는 아니다.'},sum:{direct:'쌀에서 다른 품목으로 통제가 넓어졌다.',insufficient:'붙인 기록만으로는 쌀에서 다른 품목으로의 확대가 이어지지 않는다.',noRice:'쌀 기록이 없어 ‘쌀에서’를 말할 수 없다.',cant:'쌀 매출표와 다른 품목 기록을 붙이면 말할 수 있다.'}},{id:'claim_d',layer:'해석 주장',text:'전시 동원은 노동력뿐 아니라 소비·유통의 조직도 포함했다.',chipFb:{1:'식량 사정 기록. 소비·유통을 조직한 장면은 아니다.',2:'매출표는 소비 통제 기록. 조직·기관 기록이 더 필요하다.',3:'배급 조직을 거친 경로 기록. 하나 더 붙이면 성립한다.',4:'부가 직접 운영한 배급소. 하나 더 붙이면 성립한다.',5:'배급 사무를 구로 이관. 하나 더 붙이면 성립한다.'},sum:{direct:'배급 조직과 기관이 주민의 소비·유통을 편성했다.',insufficient:'조직·기관 기록이 하나 더 있어야 성립한다.',cant:'배급 조직·기관 기록이 둘 이상 있어 말할 수 있다.'}}],reviewBtn:'주장을 검수한다',done:{title:'검수 완료',text:'붙인 기록에 따라 판정이 갈렸다. 이제 복원한 지도를 처음 지도와 겹쳐 본다.'}},
- fin:{title:'처음 지도와 겹쳐 본다',sub:'아래 조절 막대를 왼쪽·오른쪽으로 움직여 1940년 이전 지도와 1943년 지도를 직접 겹쳐 본다.',lawBtn:'이 변화와 함께 시행된 법령을 확인한다',laws:[{year:'1938년',name:'국가총동원법',text:'전쟁 수행을 위해 인적·물적 자원을 통제·운용하는 법적 틀. 식량·피복 등도 총동원 물자에 포함되었다.'},{year:'1941년',name:'물자통제령',text:'생활필수품을 포함한 물자의 생산·판매·양도 등에 대한 통제가 확대되었다.'}],lawDone:'법령을 확인했다',anno:'상점이 사라졌다는 뜻은 아니다. 물건을 얻는 과정에 배급·지정·행정 절차가 더 많이 끼어들었음을 표시한 것이다.',s1:'복원한 연결선은 늘었다.',s2:'자유롭게 선택할 수 있는 구매 경로는 줄었다.',s2tag:'복원 기록을 종합한 해석',basis:'보강 근거(쌀 사례 한정) — 후대의 연구는 쌀 유통에서 종래 상업 조직이 배제되어 자유거래의 여지가 축소되었다고 설명한다.',question:'전시 동원은 전쟁터로 끌려간 사람에게만 일어난 일이었을까?',finalA:'전시 동원은 사람만 움직인 것이 아니었다.',finalB:'물건이 주민에게 도달하는 길과 소비 방식도 전쟁 수행 체제 안에서 다시 조직되었다.',writePrompt:'당신의 문장으로 — 이 문서철에서 무엇을 말할 수 있고, 무엇을 말할 수 없었는가? (선택. 아래 소감과 함께 한 번에 남겨진다)',copyBtn:'서술·소감을 남기고 결과를 복사한다',restartBtn:'다시 하기'}
+/* =====================================================================
+   배급망 1943 — DESIGN_LOCK v1.1.3 구현
+   데이터와 문안은 모두 DATA 객체에 있다. pending 승격 시 DATA.s4.lines[*].state 와
+   DATA.s5/s6 의 pending 선 상태값만 바꾸면 기대 판별·표시가 함께 바뀐다.
+   ===================================================================== */
+window.GAME_CONFIG = {
+  game_id: 'rationnet1943',
+  label: '배급망 1943',
+  era: '일제강점기',
+  version: '1.1.3'   /* 저장 스키마 변경(s2_cells → s2_classify) 이후 버전 */
 };
-var DATA=window.DATA;
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function T(text){var out=esc(text),keys=Object.keys(DATA.tooltips).sort(function(a,b){return b.length-a.length;});for(var i=0;i<keys.length;i++){var k=keys[i],idx=out.indexOf(k);if(idx<0)continue;var before=out.slice(0,idx);if((before.match(/<span/g)||[]).length!==(before.match(/<\/span>/g)||[]).length)continue;out=before+'<span class="tt" tabindex="0" role="button" data-tt="'+esc(k)+'">'+k+'</span>'+out.slice(idx+k.length);}return out;}
-function setLive(strong,text){var live=document.getElementById('live');live.hidden=false;live.innerHTML='<strong>'+esc(strong)+'</strong><br>'+esc(text||'');}function clearLive(){var live=document.getElementById('live');live.hidden=true;live.innerHTML='';}
-var scene=0,S=null;function freshState(){return{s1:{done:{},fb:{},hold:{}},s2:{sel:null,placed:{},fb:{},retry:{}},s3:{done:{},fb:{},hold:{}},s4:{judged:{},fixed:{},fb:{}},s5:{sel:null,ok:false,fb:null},s6:{read:null,readOk:false,readFb:null,dist:null,distOk:false,distFb:null},s7:{claims:{},reviewed:false,verdicts:{}},fin:{slider:0,lawOpen:false,lawDone:false,copied:false,finalDraft:'',commentDraft:''},map:{nodes:{home:1,market:1},edges:{'home-market':'free'}},submitted:false,commentSubmitted:false,commentPending:false,choices:{record_type:'result',version:GAME_CONFIG.version,s1_s3_misplace:{s1:0,s3:0},s2_cells:{c1_first:null,c2_first:null,c3_first:null,c4_first:null},s4_lines:{line1_first:null,line2_first:null,line3_first:null,line4_first:null,line5_first:null,line6_first:null},s5_node:null,s6_map_read:null,s6_district_node:null,s7:{claim_a:{mode:null,chips:[],verdict:null},claim_b:{mode:null,chips:[],verdict:null},claim_c:{mode:null,chips:[],verdict:null},claim_d:{mode:null,chips:[],verdict:null}},final_text:null}};}S=freshState();DATA.s7.claims.forEach(function(c){S.s7.claims[c.id]={mode:null,chips:[]};});
-var MAP={nodes:{gov:{x:330,y:70,label:'경성부',cls:'admin'},league:{x:550,y:70,label:'관련 연맹'},food:{x:110,y:190,label:'식료배급소',cls:'admin'},gu:{x:330,y:190,label:'구',cls:'admin'},aeguk:{x:550,y:190,label:'애국반'},school:{x:770,y:190,label:'학교'},home:{x:110,y:310,label:'우리 집'},docs:{x:330,y:310,label:'매출표·전표'},rice:{x:550,y:310,label:'쌀 판매처'},student:{x:770,y:310,label:'학생'},market:{x:110,y:430,label:'여러 상점'}},edges:{'home-market':'M110,330 L110,410','home-docs':'M190,310 L250,310','docs-rice':'M410,310 L470,310','gov-league':'M410,70 L470,70','league-aeguk':'M550,90 L550,170','league-school':'M630,70 L770,70 L770,170','aeguk-home':'M550,210 L550,250 L150,250 L150,290','school-student':'M770,210 L770,290','gov-food':'M250,70 L110,70 L110,170','food-home':'M110,210 L110,290','gov-gu':'M330,90 L330,170','gu-aeguk':'M410,190 L470,190'}};
-function mapAdd(nodes,edges){(nodes||[]).forEach(function(n){S.map.nodes[n]=1;});Object.keys(edges||{}).forEach(function(e){S.map.edges[e]=edges[e];});}function nodeSvg(id,extraCls){var n=MAP.nodes[id];return '<g class="node '+(n.cls||'')+' '+(extraCls||'')+'" data-node="'+id+'"><rect x="'+(n.x-80)+'" y="'+(n.y-20)+'" width="160" height="40" rx="3"/><text x="'+n.x+'" y="'+(n.y+5)+'">'+esc(n.label)+'</text></g>';}function edgeSvg(id,type,extraCls){return '<path class="edge '+(type==='pending'?'pending':type==='free'?'free':'')+' '+(extraCls||'')+'" data-edge="'+id+'" d="'+MAP.edges[id]+'"/>';}
-function renderMap(opts){opts=opts||{};var initialNodes=['home','market'],later=[],initial=[];Object.keys(S.map.edges).forEach(function(e){var s=edgeSvg(e,S.map.edges[e],(opts.faded&&e==='home-market')?'faded':'');if(e==='home-market')initial.push(s);else later.push(s);});Object.keys(S.map.nodes).forEach(function(n){if(!MAP.nodes[n])return;var s=nodeSvg(n,(opts.faded&&n==='market')?'faded':'');if(initialNodes.indexOf(n)>=0)initial.push(s);else later.push(s);});var lop=(opts.final?(S.fin.slider/100):1);var svg='<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="생활지도"><g id="g-initial">'+initial.join('')+'</g><g id="g-later" style="opacity:'+lop+'">'+later.join('')+'</g></svg>';var legend='<div class="legend"><span><i></i>기록이 진술한 선</span><span><i class="p"></i>기록이 여기까지만 말하는 선</span><span><i class="f"></i>처음 지도의 선</span></div>';return '<div class="mappanel"><div class="mt"><span>생활지도 — 우리 집에서 물건이 오는 길</span><span>'+(opts.caption||'')+'</span></div><div class="mapwrap">'+svg+'</div>'+legend+'</div>';}
-function cardHtml(c,opts){opts=opts||{};var cls='card'+(opts.done?' done':'')+(opts.hold?' hold':'')+(opts.sel?' sel':'');var meta='<div class="meta"><span>'+esc(opts.metaL||'문서철')+'</span><span>'+esc(opts.metaR||'')+'</span></div>';return '<div class="'+cls+'" data-card="'+esc(c.id)+'">'+meta+'<div class="cname">'+T(c.name||'')+'</div><div class="ctext">'+T(c.text||'')+'</div><div class="recon">'+RECON+'</div>'+(opts.fb?'<div class="fb">'+esc(opts.fb)+'</div>':'')+(opts.actions?'<div class="actions">'+opts.actions+'</div>':'')+'</div>';}
-function recordHtml(r){return '<div class="card" style="min-height:auto;margin-bottom:12px"><div class="meta"><span>'+esc(r.name)+'</span><span>'+esc(r.date||'')+'</span></div><div class="ctext">'+T(r.text)+'</div><div class="recon">'+RECON+'</div></div>';}function missionHtml(text){return '<div class="mission"><div class="lab">할 일</div><b>'+esc(text)+'</b></div>';}function doneHtml(d,sceneNo){return '<div class="card" style="min-height:auto;margin-top:16px"><div class="meta"><span>장면 완료</span></div><div class="cname">'+esc(d.title)+'</div><div class="ctext" style="font-family:var(--font-body)">'+esc(d.text)+'</div></div><div class="nav"><button class="btn primary" data-action="next">'+esc(DATA.nav[sceneNo])+'</button></div>';}function head(title,sub){return '<div class="kicker">장면 '+scene+' / 7</div><h2>'+esc(title)+'</h2><p class="sub">'+esc(sub)+'</p>';}function setProg(){var p=document.getElementById('prog');if(scene===0)p.innerHTML='';else if(scene===8)p.innerHTML='최종 · 겹쳐 보기';else p.innerHTML='장면 <b>'+scene+'</b> / 7';}
-function render(){var app=document.getElementById('app');setProg();var html='';if(scene===0)html=rIntro();else if(scene===1)html=rClassify('s1');else if(scene===2)html=rS2();else if(scene===3)html=rClassify('s3');else if(scene===4)html=rS4();else if(scene===5)html=rS5();else if(scene===6)html=rS6();else if(scene===7)html=rS7();else html=rFinal();app.innerHTML='<div class="scene">'+html+'</div>';try{window.scrollTo({top:0,behavior:'auto'});}catch(e){}}
-function rIntro(){var d=DATA.intro;return '<div class="kicker">'+esc(d.kicker)+'</div><h1>'+esc(d.title)+'</h1><p class="sub">당신은 <b>'+esc(d.role)+'</b>입니다. '+esc(d.setting)+'</p><div class="question">'+esc(d.question)+'</div><div class="mission"><div class="lab">복원 작업</div><b>'+esc(d.mission)+'</b></div><div class="notice">'+esc(d.notice)+'</div><div class="nav"><button class="btn primary" data-action="next">'+esc(DATA.nav[0])+'</button></div>';}
-function rClassify(key){var d=DATA[key],st=S[key];var cards=d.cards.map(function(c){var done=!!st.done[c.id];var btns=Object.keys(d.cats).map(function(cat){return '<button class="btn small" data-action="classify" data-scene="'+key+'" data-card="'+c.id+'" data-cat="'+cat+'"'+(done?' disabled':'')+'>'+esc(d.cats[cat])+'</button>';}).join('');return cardHtml(c,{done:done,hold:!!st.hold[c.id],fb:st.fb[c.id],actions:btns,metaR:done?d.cats[c.cat]:''});}).join('');var all=d.cards.every(function(c){return st.done[c.id];});return head(d.title,d.sub)+missionHtml(d.mission)+'<div class="grid">'+cards+'</div>'+(all?doneHtml(d.done,scene):'')+(scene>1?renderMap({caption:'지금까지 복원한 선'}):'');}
-function classify(key,cardId,cat){var d=DATA[key],st=S[key],c=d.cards.filter(function(x){return x.id===cardId;})[0];if(!c||st.done[cardId])return;if(c.cat===cat){st.done[cardId]=true;st.hold[cardId]=false;st.fb[cardId]=c.ok;setLive('연결됨',c.ok);if(d.cards.every(function(x){return st.done[x.id];}))onSceneDone(key);}else{st.hold[cardId]=true;st.fb[cardId]=d.miss[c.cat];S.choices.s1_s3_misplace[key]+=1;setLive('연결 보류',d.miss[c.cat]);}render();}
-function rS2(){var d=DATA.s2,st=S.s2;var picks=d.cards.map(function(c){var placed=!!st.placed[c.id];return '<button class="pick'+(st.sel===c.id?' sel':'')+(placed?' placed':'')+(st.retry[c.id]?' retry':'')+'" data-action="s2pick" data-card="'+c.id+'"'+(placed?' disabled':'')+' aria-pressed="'+(st.sel===c.id)+'"><span class="d">'+esc(c.date||'날짜 없음')+'</span>'+esc(c.text)+'<span class="d" style="font-weight:400;margin-top:4px">'+RECON+'</span></button>';}).join('');var thead='<tr><th class="rowh"></th>'+d.cols.map(function(col){return '<th>'+esc(col.label)+'</th>';}).join('')+'</tr>';var rows=d.rows.map(function(row){return '<tr><th class="rowh">'+esc(row.label)+'</th>'+d.cols.map(function(col){var key=row.id+'/'+col.id;var occupant=d.cards.filter(function(c){return st.placed[c.id]===key;})[0];if(occupant)return '<td><div class="cell filled">'+esc(occupant.date||'날짜 없음')+' · '+esc(occupant.text.slice(0,18))+(occupant.text.length>18?'…':'')+'</div></td>';return '<td><button class="cell'+(st.sel?' target':'')+'" data-action="s2cell" data-row="'+row.id+'" data-col="'+col.id+'"'+(st.sel?'':' disabled')+' aria-label="'+esc(row.label+' × '+col.label)+'">'+(st.sel?'여기에 놓는다':'')+'</button></td>';}).join('')+'</tr>';}).join('');var fbList=d.cards.filter(function(c){return st.fb[c.id];}).map(function(c){return '<li>'+esc(c.date||'날짜 없는 기록')+' — '+esc(st.fb[c.id])+'</li>';}).join('');var all=d.cards.every(function(c){return st.placed[c.id];});return head(d.title,d.sub)+missionHtml(d.mission)+'<div class="cardrow">'+picks+'</div><div class="board"><table>'+thead+rows+'</table></div>'+(fbList?'<ul class="evid" style="font-size:16px">'+fbList+'</ul>':'')+(all?doneHtml(d.done,scene):'')+renderMap({caption:'지금까지 복원한 선'});}
-function s2pick(id){if(S.s2.placed[id])return;S.s2.sel=(S.s2.sel===id?null:id);render();}function s2cell(row,col){var st=S.s2,d=DATA.s2;if(!st.sel)return;var c=d.cards.filter(function(x){return x.id===st.sel;})[0],key=row+'/'+col,idx=d.cards.indexOf(c)+1;if(S.choices.s2_cells['c'+idx+'_first']===null)S.choices.s2_cells['c'+idx+'_first']=key;if(c.col!==col){st.fb[c.id]=c.colMiss;st.retry[c.id]=true;setLive('다시 놓는다',c.colMiss);}else if(c.row!==row){var m=c.rowMiss[row]||'기록의 성격을 다시 보자.';st.fb[c.id]=m;st.retry[c.id]=true;setLive('다시 놓는다',m);}else{st.placed[c.id]=key;st.fb[c.id]=c.ok;st.retry[c.id]=false;st.sel=null;setLive('놓였다',c.ok);if(d.cards.every(function(x){return st.placed[x.id];}))onSceneDone('s2');}render();}
-function rS4(){var d=DATA.s4,st=S.s4;var rows=d.lines.map(function(l){var fixed=!!st.fixed[l.id],judged=st.judged[l.id],stateLabel=fixed?d.stateLabel[l.state]:'';return '<div class="lrow'+(fixed?' fixed':'')+(fixed&&l.state==='pending'?' dash':'')+(!fixed&&judged?' hold':'')+'"><div class="lname">'+T(l.from)+'<span class="arrow">→</span>'+T(l.to)+'</div><div class="lbtns"><button class="btn small'+(judged==='yes'?' sel':'')+'" data-action="s4judge" data-line="'+l.id+'" data-v="yes"'+(fixed?' disabled':'')+'>'+esc(d.yes)+'</button><button class="btn small'+(judged==='no'?' sel':'')+'" data-action="s4judge" data-line="'+l.id+'" data-v="no"'+(fixed?' disabled':'')+'>'+esc(d.no)+'</button></div>'+(stateLabel?'<span class="lstate">'+esc(stateLabel)+'</span>':'')+(st.fb[l.id]?'<div class="lfb">'+esc(st.fb[l.id])+'</div>':'')+'</div>';}).join('');var all=d.lines.every(function(l){return st.fixed[l.id];});return head(d.title,d.sub)+recordHtml(d.record)+missionHtml(d.mission)+'<div class="lines">'+rows+'</div>'+(all?doneHtml(d.done,scene):'')+renderMap({caption:'확인된 선만 지도에 남긴다'});}
-function s4judge(lineId,v){var st=S.s4,l=DATA.s4.lines.filter(function(x){return x.id===lineId;})[0];if(!l||st.fixed[lineId])return;if(S.choices.s4_lines[lineId+'_first']===null)S.choices.s4_lines[lineId+'_first']=(v==='yes'?'says':'not');st.judged[lineId]=v;var expected=(l.state==='stated'?'yes':'no'),set=l.fb[l.state]||l.fb.pending||l.fb.stated||l.fb.unstated;st.fb[lineId]=set[v];if(v===expected){st.fixed[lineId]=true;setLive('선 판별',set[v]);if(DATA.s4.lines.every(function(x){return st.fixed[x.id];}))onSceneDone('s4');}else setLive('판별 보류',set[v]);render();}
-function rS5(){var d=DATA.s5,st=S.s5;var opts=d.opts.map(function(o){return '<button class="opt'+(st.sel===o.id?' sel':'')+(st.sel===o.id&&!st.ok?' hold':'')+'" data-action="s5opt" data-id="'+o.id+'"'+(st.ok?' disabled':'')+'>'+esc(o.label)+'</button>';}).join('');return head(d.title,d.sub)+recordHtml(d.record)+'<div class="question">'+T(d.question)+'</div><div class="opts">'+opts+'</div>'+(st.fb?'<div class="live" style="margin-top:10px"><strong>'+(st.ok?'연결됨':'다시 본다')+'</strong><br>'+esc(st.fb)+'</div>':'')+(st.ok?doneHtml(d.done,scene):'')+renderMap({caption:'새 노드를 어디에 잇는가'});}
-function s5opt(id){var st=S.s5,d=DATA.s5,o=d.opts.filter(function(x){return x.id===id;})[0];if(st.ok||!o)return;if(S.choices.s5_node===null)S.choices.s5_node=id;st.sel=id;st.fb=o.fb;if(id===d.expect){st.ok=true;onSceneDone('s5');}setLive(id===d.expect?'연결됨':'다시 본다',o.fb);render();}
-function rS6(){var d=DATA.s6,st=S.s6;var opts=d.read.opts.map(function(o){return '<button class="opt'+(st.read===o.id?' sel':'')+(st.read===o.id&&!st.readOk?' hold':'')+'" data-action="s6read" data-id="'+o.id+'"'+(st.readOk?' disabled':'')+'>'+esc(o.label)+'</button>';}).join('');var part=head(d.title,d.sub)+renderMap({caption:'세 사례의 선을 비교한다'})+'<div class="question">'+esc(d.read.question)+'</div><div class="opts">'+opts+'</div>'+(st.readFb?'<div class="live"><strong>'+(st.readOk?'지도 읽기':'다시 본다')+'</strong><br>'+esc(st.readFb)+'</div>':'');if(st.readOk){var di=d.district,opts2=di.opts.map(function(o){return '<button class="opt'+(st.dist===o.id?' sel':'')+(st.dist===o.id&&!st.distOk?' hold':'')+'" data-action="s6dist" data-id="'+o.id+'"'+(st.distOk?' disabled':'')+'>'+esc(o.label)+'</button>';}).join('');part+='<h3 style="margin-top:22px">1943년 6월 이후</h3>'+recordHtml(di.record)+'<div class="question">'+T(di.question)+'</div><div class="opts">'+opts2+'</div>'+(st.distFb?'<div class="live"><strong>'+(st.distOk?'배치됨':'다시 본다')+'</strong><br>'+esc(st.distFb)+'</div>':'')+(st.distOk?doneHtml(d.done,scene):'');}return part;}
-function s6read(id){var st=S.s6,d=DATA.s6.read,o=d.opts.filter(function(x){return x.id===id;})[0];if(st.readOk||!o)return;if(S.choices.s6_map_read===null)S.choices.s6_map_read=id;st.read=id;st.readFb=o.fb;if(id===d.expect)st.readOk=true;setLive(id===d.expect?'지도 읽기':'다시 본다',o.fb);render();}function s6dist(id){var st=S.s6,d=DATA.s6.district,o=d.opts.filter(function(x){return x.id===id;})[0];if(st.distOk||!o)return;if(S.choices.s6_district_node===null)S.choices.s6_district_node=id;st.dist=id;st.distFb=o.fb;if(id===d.expect){st.distOk=true;onSceneDone('s6');}setLive(id===d.expect?'배치됨':'다시 본다',o.fb);render();}
-function rS7(){var d=DATA.s7,st=S.s7;var claims=d.claims.map(function(c){var cs=st.claims[c.id];var chips=d.chips.map(function(ch){var sel=cs.chips.indexOf(ch.id)>=0,disable=st.reviewed||cs.mode==='cannot'||(!sel&&cs.chips.length>=2);return '<button class="chip'+(sel?' sel':'')+'" data-action="s7chip" data-claim="'+c.id+'" data-chip="'+ch.id+'"'+(disable?' disabled':'')+' aria-pressed="'+sel+'">'+esc(ch.label)+'</button>';}).join('');var cant='<button class="chip cant'+(cs.mode==='cannot'?' sel':'')+'" data-action="s7cant" data-claim="'+c.id+'"'+(st.reviewed?' disabled':'')+' aria-pressed="'+(cs.mode==='cannot')+'">'+esc(d.cant)+'</button>';var rv='';if(st.reviewed){var v=st.verdicts[c.id],label=(cs.mode==='cannot'&&c.id==='claim_b'?d.verdictLabel.within:d.verdictLabel[v]);var lis=(cs.mode==='cannot'?[]:cs.chips.map(function(id){return '<li>'+esc(c.chipFb[id]||'')+'</li>';})).join('');var sum=(cs.mode==='cannot'?c.sum.cant:(v==='direct'?c.sum.direct:v==='scope_exceeded'?c.sum.scope_exceeded:(c.id==='claim_c'&&cs.chips.indexOf(2)<0?c.sum.noRice:c.sum.insufficient)));rv='<details class="review" open><summary><span class="vd">'+esc(label)+'</span> 검수 결과</summary>'+(lis?'<ul>'+lis+'</ul>':'')+'<div class="sum">'+esc(sum||'')+'</div></details>';}return '<div class="claim"><div class="ctitle"><span class="lab">'+esc(c.layer)+'</span><span class="txt">'+T(c.text)+'</span></div><div class="chips">'+chips+cant+'</div>'+rv+'</div>';}).join('');var ready=d.claims.every(function(c){var cs=st.claims[c.id];return cs.mode==='cannot'||cs.chips.length>0;});return head(d.title,d.sub)+missionHtml(d.mission)+claims+(!st.reviewed?'<div class="nav"><button class="btn primary" data-action="s7review"'+(ready?'':' disabled')+'>'+esc(d.reviewBtn)+'</button></div>':'<div class="nav"><button class="btn ghost" data-action="s7redo">기록을 다시 붙인다</button><button class="btn primary" data-action="next">'+esc(DATA.nav[7])+'</button></div>');}
-function s7chip(claimId,chipId){var cs=S.s7.claims[claimId];if(S.s7.reviewed||!cs)return;if(cs.mode==='cannot'){cs.mode=null;cs.chips=[];}var i=cs.chips.indexOf(chipId);if(i>=0)cs.chips.splice(i,1);else if(cs.chips.length<2)cs.chips.push(chipId);cs.mode=cs.chips.length?'evidence':null;render();}function s7cant(claimId){var cs=S.s7.claims[claimId];if(S.s7.reviewed||!cs)return;if(cs.mode==='cannot'){cs.mode=null;}else{cs.mode='cannot';cs.chips=[];}render();}
-function verdict(c,cs){if(cs.mode==='cannot')return(c.id==='claim_b'?'direct':'insufficient');var chips=cs.chips;if(c.id==='claim_a')return(chips.indexOf(1)>=0&&chips.indexOf(2)>=0?'direct':'insufficient');if(c.id==='claim_b')return'scope_exceeded';if(c.id==='claim_c')return(chips.indexOf(2)>=0&&(chips.indexOf(3)>=0||chips.indexOf(4)>=0)?'direct':'insufficient');if(c.id==='claim_d'){var n=[3,4,5].filter(function(x){return chips.indexOf(x)>=0;}).length;return n>=2?'direct':'insufficient';}return'insufficient';}
-function s7review(){if(S.s7.reviewed)return;var ready=DATA.s7.claims.every(function(c){var cs=S.s7.claims[c.id];return cs.mode==='cannot'||cs.chips.length>0;});if(!ready)return;S.s7.reviewed=true;DATA.s7.claims.forEach(function(c){var cs=S.s7.claims[c.id],v=verdict(c,cs);S.s7.verdicts[c.id]=v;var first=S.choices.s7[c.id];if(first.mode===null){first.mode=(cs.mode==='cannot'?'cannot_say':'evidence');first.chips=cs.chips.slice();first.verdict=v;}});render();}function s7redo(){S.s7.reviewed=false;S.s7.verdicts={};render();}
-function rFinal(){var d=DATA.fin,st=S.fin;var sl='<div class="slider"><label for="slider">1940 이전</label><input id="slider" type="range" min="0" max="100" value="'+st.slider+'" aria-label="지도 시점 조절 막대: 왼쪽 1940 이전, 오른쪽 1943"><label for="slider">1943</label></div>';var lawBtn=(!st.lawOpen&&!st.lawDone)?'<div class="nav" id="lawbtn"'+(st.slider>=95?'':' hidden')+'><button class="btn" data-action="lawopen">'+esc(d.lawBtn)+'</button></div>':'';var laws=(st.lawOpen||st.lawDone)?'<h3>이 변화와 함께 시행된 법령</h3>'+d.laws.map(function(l){return '<div class="law"><div class="lyear">'+esc(l.year)+'</div><div class="lname">'+T(l.name)+'</div><div class="ltext">'+T(l.text)+'</div></div>';}).join('')+(st.lawDone?'':'<div class="nav"><button class="btn primary" data-action="lawdone">'+esc(d.lawDone)+'</button></div>'):'';var after='';if(st.lawDone){var evid=DATA.s7.claims.map(function(c){var cs=S.s7.claims[c.id],v=S.s7.verdicts[c.id],label=(cs.mode==='cannot'&&c.id==='claim_b')?DATA.s7.verdictLabel.within:DATA.s7.verdictLabel[v],chips=cs.mode==='cannot'?DATA.s7.cant:cs.chips.map(function(n){return DATA.s7.chips.filter(function(x){return x.id===n;})[0].label;}).join(' + ');return '<li><b>'+esc(label)+'</b> — '+esc(c.text)+'<br><span style="color:var(--muted)">붙인 기록: '+esc(chips)+'</span></li>';}).join('');after='<div class="sig"><div class="s1">'+esc(d.s1)+'</div><div class="s2">'+esc(d.s2)+'<span class="tag">'+esc(d.s2tag)+'</span></div><div class="anno"><b>'+esc(d.anno.split('. ')[0])+'.</b> '+esc(d.anno.split('. ').slice(1).join('. '))+'</div><div class="basis">'+esc(d.basis)+'</div></div><div class="question">'+esc(d.question)+'</div><div class="card" style="min-height:auto"><div class="meta"><span>최종 발견</span></div><div class="cname">'+esc(d.finalA)+'</div><div class="ctext" style="font-family:var(--font-body)">'+esc(d.finalB)+'</div></div><h3>검수에서 사용한 기록</h3><ul class="evid">'+evid+'</ul><h3>서술</h3><p class="sub">'+esc(d.writePrompt)+'</p><textarea id="finaltext" class="finaltext" maxlength="300" placeholder="예: 이 문서철로는 경성의 세 사례까지 말할 수 있었다. 전국은…"'+(S.commentSubmitted?' disabled':'')+'>'+esc(st.finalDraft)+'</textarea><h3>소감</h3><textarea id="comment" rows="2" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)" maxlength="100"'+(S.commentSubmitted?' disabled':'')+'>'+esc(st.commentDraft)+'</textarea>'+(S.commentSubmitted?'<div class="live" style="margin-top:8px"><strong>남겼다 — </strong>서술과 소감은 한 번만 저장된다. 복사는 다시 할 수 있다.</div>':'')+'<div class="nav"><button class="btn ghost" data-action="restart">'+esc(d.restartBtn)+'</button><button class="btn primary" data-action="copy">'+(st.copied?'복사됨 · 다시 복사':esc(d.copyBtn))+'</button></div><div class="footer">© 찰리쌤 · hischarlie.tistory.com</div>';}return '<div class="final"><div class="kicker">최종</div><h2>'+esc(d.title)+'</h2><p class="sub">'+esc(d.sub)+'</p>'+renderMap({final:true,faded:st.lawDone,caption:'조절 막대로 두 시점을 겹친다'})+sl+lawBtn+laws+after+'</div>';}
-function onSlider(v){S.fin.slider=Number(v);var g=document.getElementById('g-later');if(g)g.style.opacity=(S.fin.slider/100);var b=document.getElementById('lawbtn');if(b)b.hidden=S.fin.slider<95;}
-function buildCopyText(){var lines=['[배급망 1943] 복원 결과'];DATA.s7.claims.forEach(function(c){var cs=S.s7.claims[c.id],v=S.s7.verdicts[c.id],label=(cs.mode==='cannot'&&c.id==='claim_b')?DATA.s7.verdictLabel.within:DATA.s7.verdictLabel[v],chips=cs.mode==='cannot'?DATA.s7.cant:cs.chips.map(function(n){return DATA.s7.chips.filter(function(x){return x.id===n;})[0].label;}).join(' + ');lines.push('- '+c.text+' → '+label+' ('+chips+')');});lines.push('발견: '+DATA.fin.s1+' '+DATA.fin.s2+' ['+DATA.fin.s2tag+']');if(S.choices.final_text)lines.push('서술: '+S.choices.final_text);if(S.fin.commentDraft)lines.push('소감: '+S.fin.commentDraft);return lines.join('\n');}
-function copyResult(){var ft=document.getElementById('finaltext'),cm=document.getElementById('comment');var finalText=ft?ft.value.trim():S.fin.finalDraft,comment=cm?cm.value.trim():S.fin.commentDraft;S.fin.finalDraft=finalText;S.fin.commentDraft=comment;if(S.choices.final_text===null&&finalText)S.choices.final_text=finalText;sendCommentRow(comment);var text=buildCopyText();var done=function(){S.fin.copied=true;setLive('복사됨','패들렛이나 하이러닝에 붙여 넣을 수 있다.');render();};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,done);else done();}
-function onSceneDone(key){if(key==='s1')mapAdd(['docs'],{'home-docs':'stated'});if(key==='s2')mapAdd(['rice'],{'docs-rice':'stated'});if(key==='s4'){var L={};DATA.s4.lines.forEach(function(l){L[l.id]=l.state;});var e={'gov-league':L.line1,'league-aeguk':L.line2,'league-school':L.line3,'aeguk-home':L.line4,'school-student':L.line5};Object.keys(e).forEach(function(k){if(e[k]==='unstated')delete e[k];});mapAdd(['gov','league','aeguk','school','student'],e);}if(key==='s5')mapAdd(['food'],{'gov-food':'stated','food-home':DATA.s5.homeLine});if(key==='s6')mapAdd(['gu'],{'gov-gu':'stated','gu-aeguk':DATA.s6.district.aegukLine});}
-function next(){if(scene===7&&!S.s7.reviewed)return;scene=Math.min(scene+1,8);clearLive();if(scene===8&&!S.submitted){sendToSupabase(S.choices,'');S.submitted=true;}render();}function restart(){scene=0;S=freshState();DATA.s7.claims.forEach(function(c){S.s7.claims[c.id]={mode:null,chips:[]};});clearLive();render();}
-function publicHeaders(extra){var key=(window.CHARLIE_CONFIG&&window.CHARLIE_CONFIG.supabasePublishableKey)||'';var headers=Object.assign({apikey:key},extra||{});if(key.indexOf('eyJ')===0)headers.Authorization='Bearer '+key;return headers;}
-function sendToSupabase(choiceData,comment){var url=window.CHARLIE_CONFIG.supabaseUrl,key=window.CHARLIE_CONFIG.supabasePublishableKey;if(!url||!key||key.indexOf('__')===0)return Promise.resolve({ok:false,skipped:true});return fetch(url+'/rest/v1/game_results',{method:'POST',headers:publicHeaders({'Content-Type':'application/json',Prefer:'return=minimal'}),body:JSON.stringify({class:new URLSearchParams(location.search).get('class')||'미입력',game:window.GAME_CONFIG.game_id,choices:choiceData,comment:comment||'',timestamp:new Date().toISOString()})}).then(function(res){if(!res.ok)console.warn('[Supabase] 전송 실패 HTTP '+res.status);return res;}).catch(function(err){console.warn('[Supabase] 네트워크 전송 실패',err);return{ok:false,failed:true};});}
-function sendCommentRow(comment){if(S.commentSubmitted||S.commentPending)return Promise.resolve();if(!comment&&!S.choices.final_text)return Promise.resolve();S.commentPending=true;return sendToSupabase({record_type:'comment',version:GAME_CONFIG.version,final_text:S.choices.final_text},comment).then(function(res){S.commentPending=false;if(res&&res.skipped){S.commentSubmitted=true;render();return res;}if(res&&res.ok){S.commentSubmitted=true;render();return res;}setLive('저장 실패','복사 버튼을 다시 누르면 재시도한다.');render();return res;});}
-var bubbleTimer=null;function tt(target){var key=target.getAttribute('data-tt'),text=DATA.tooltips[key]||key,b=document.getElementById('tt-bubble');b.querySelector('.tb-word').textContent=key;b.querySelector('.tb-desc').textContent=text.replace(/^.*? — /,'');b.classList.remove('below');b.style.left='0';b.style.top='0';b.classList.add('show');requestAnimationFrame(function(){var r=target.getBoundingClientRect(),br=b.getBoundingClientRect(),left=Math.max(8,Math.min(r.left+r.width/2-br.width/2,window.innerWidth-br.width-8)),top=r.top-br.height-10;if(top<8){top=r.bottom+10;b.classList.add('below');}b.style.left=left+'px';b.style.top=top+'px';b.style.setProperty('--arrow-left',(r.left+r.width/2-left)+'px');});clearTimeout(bubbleTimer);}function hideTt(){document.getElementById('tt-bubble').classList.remove('show');}
-document.getElementById('app').addEventListener('click',function(ev){var t=ev.target.closest('.tt');if(t){ev.preventDefault();tt(t);return;}var a=ev.target.closest('[data-action]');if(!a||a.disabled){hideTt();return;}hideTt();var act=a.getAttribute('data-action'),ds=a.dataset;if(act==='next')next();else if(act==='classify')classify(ds.scene,ds.card,ds.cat);else if(act==='s2pick')s2pick(ds.card);else if(act==='s2cell')s2cell(ds.row,ds.col);else if(act==='s4judge')s4judge(ds.line,ds.v);else if(act==='s5opt')s5opt(ds.id);else if(act==='s6read')s6read(ds.id);else if(act==='s6dist')s6dist(ds.id);else if(act==='s7chip')s7chip(ds.claim,Number(ds.chip));else if(act==='s7cant')s7cant(ds.claim);else if(act==='s7review')s7review();else if(act==='s7redo')s7redo();else if(act==='lawopen'){S.fin.lawOpen=true;render();}else if(act==='lawdone'){S.fin.lawDone=true;setLive('법령 확인',DATA.fin.anno);render();}else if(act==='copy')copyResult();else if(act==='restart')restart();});
-document.getElementById('app').addEventListener('keydown',function(ev){var t=ev.target.closest('.tt');if(t&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();tt(t);}if(ev.key==='Escape')hideTt();});document.getElementById('app').addEventListener('input',function(ev){if(!ev.target)return;if(ev.target.id==='slider')onSlider(ev.target.value);if(ev.target.id==='finaltext')S.fin.finalDraft=ev.target.value;if(ev.target.id==='comment')S.fin.commentDraft=ev.target.value;});document.addEventListener('click',function(ev){if(!ev.target.closest('.tt')&&!ev.target.closest('#tt-bubble'))hideTt();});render();
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+
+const RECON = '당시 기록을 바탕으로 재구성';
+
+window.DATA = {
+  tooltips: {
+    '매출표':'매출표(賣出票) — 쌀을 살 때 사용하도록 한 판매표',
+    '전표':'전표(傳票) — 물품을 배급받을 때 내는 표',
+    '공정가격':'공정가격(公定價格) — 관청이 정해 고시한 판매 가격',
+    '절미':'절미(節米) — 쌀 소비를 줄이는 것',
+    '혼식':'혼식(混食) — 쌀에 잡곡을 섞어 먹는 것',
+    '대용식':'대용식(代用食) — 쌀 대신 먹도록 한 음식',
+    '부영':'부영(府營) — 부(府)가 직접 운영함',
+    '이관':'이관(移管) — 사무를 다른 기관으로 넘김',
+    '애국반':'애국반(愛國班) — 전시기에 배급·동원 등에 쓰인 말단 주민 조직',
+    '연맹':'연맹(聯盟) — 배급 과정에 등장하는 관련 연합 조직',
+    '구제':'구제(區制) — 부 아래에 구를 두는 행정 구역 제도',
+    '암거래':'암거래(暗去來) — 공식 통제 밖에서 몰래 이루어진 거래',
+    '물자통제령':'물자통제령 — 1941년, 물자의 생산·판매·양도 등을 통제한 법령',
+    '국가총동원법':'국가총동원법 — 1938년, 전쟁 수행 위해 인적·물적 자원을 통제한 법'
+  },
+
+  nav: {
+    0:'문서철을 연다',
+    1:'쌀 기록을 시간 위에 놓는다',
+    2:'다른 품목의 기록을 살핀다',
+    3:'고무제품 배급 경로를 더 추적한다',
+    4:'1943년의 새 기록을 연다',
+    5:'지금까지의 지도를 읽는다',
+    6:'이 기록으로 무엇을 말할 수 있는지 판정한다',
+    7:'복원한 지도를 처음과 겹쳐 본다'
+  },
+
+  intro: {
+    kicker:'1940 ~ 1943 · 경성',
+    title:'배급망 1943',
+    role:'당신은 1940년대 경성의 한 집에 남은 기록을 정리하는 사람입니다. 기록을 잇되, 기록이 말하지 않는 것은 긋지 않습니다.',
+    recon:'각 문서는 당시 기록을 바탕으로 재구성했습니다.',
+    question:'전시 동원은 전쟁터로 끌려간 사람에게만 일어난 일이었을까?',
+    notice:'주제 고지 — 전시 물자 통제와 생활 기록을 다룹니다. 점수는 없습니다.'
+  },
+
+  /* ---------- S1 문서철 ---------- */
+  s1: {
+    title:'문서철을 연다',
+    sub:'네 장의 기록이 있다. 물건이 오는 길을 정한 기록인가, 값을 정한 기록인가.',
+    mission:'각 기록을 「물건이 오는 길」 또는 「값을 정한 것」으로 나눈다.',
+    cats:{ purchase:'물건이 오는 길', price:'값을 정한 것' },
+    cards:[
+      { id:'rice', name:'쌀 매출표', text:'1940년 5월. 쌀을 살 때 매출표를 쓰도록 했다는 기록.', cat:'purchase', ok:'쌀을 사는 길에 표가 들어왔다.' },
+      { id:'rubber', name:'고무제품 배급 기록', text:'1942년 8월 초. 경성부 내 고무제품을 관련 연맹을 거쳐 배급한다는 기록.', cat:'purchase', ok:'고무제품이 조직을 거쳐 오게 됐다.' },
+      { id:'food', name:'부영 식료배급소 기록', text:'1943년 4월. 경성부가 직접 운영하는 식료배급소가 문을 열었다는 기록.', cat:'purchase', ok:'부가 운영하는 배급소가 생겼다.' },
+      { id:'price', name:'공정가격 기록', text:'정해진 공정가격에 맞추어 팔도록 했다는 기록.', cat:'price', ok:'값을 고시한 기록. 길이 아니라 값의 통제다.' }
+    ],
+    miss:{ purchase:'표·배급소처럼 물건이 오는 길을 정한 기록이다.', price:'이 기록은 물건이 오는 길이 아니라 값을 다룬다.' },
+    done:{ title:'첫 기록 복원 완료', text:'물건을 사는 데 돈 외에도 표·조직·배급소 같은 조건이 끼어들기 시작했다. 값을 정하는 통제는 그것과 다른 선에 있다.' }
+  },
+
+  /* ---------- S2 시간×성격 작업판 ---------- */
+  /* 시기는 카드가 알려 주고(자동 배치), 학생은 기록의 성격만 판단한다. */
+  s2: {
+    title:'쌀, 1940',
+    sub:'네 기록의 성격을 판단한다. 시기는 카드에 적힌 대로 표에 자리를 잡는다.',
+    mission:'카드마다 「상황·배경」 「배급·소비 통제」 「가격 통제」 중 하나를 고른다.',
+    cols:[ {id:'y1939',label:'1939'}, {id:'y1940_5',label:'1940년 5월'}, {id:'y1940_10',label:'1940년 10월 이후'}, {id:'unknown',label:'시기 미확인'} ],
+    rows:[ {id:'background',label:'상황·배경'}, {id:'distribution',label:'배급·소비 통제'}, {id:'price',label:'가격 통제'} ],
+    cards:[
+      { id:'c1', name:'식량 사정', date:'1939년', text:'흉작으로 식량 사정이 나빠졌다는 기록.', col:'y1939', row:'background',
+        ok:'1939년 기록. 통제가 아니라 통제 앞에 놓인 상황이다.',
+        rowMiss:{ distribution:'이 기록은 통제 조치가 아니다. 식량 사정을 적은 기록이다.', price:'이 기록은 통제 조치가 아니다. 식량 사정을 적은 기록이다.' } },
+      { id:'c2', name:'쌀 매출표', date:'1940년 5월', text:'서울지역 쌀 배급에 매출표제가 실시되었다는 기록.', col:'y1940_5', row:'distribution',
+        ok:'1940년 5월, 쌀 배급에 매출표가 들어왔다.',
+        rowMiss:{ background:'상황 기록이 아니라 실시된 통제 조치다.', price:'매출표는 값이 아니라 사는 방식을 바꾼 장치다.' } },
+      { id:'c3', name:'소비 규정', date:'1940년 10월 이후', text:'절미를 위해 대용식·혼식 등 소비 규정을 철저히 하도록 한 기록.', col:'y1940_10', row:'distribution',
+        ok:'1940년 10월 이후, 혼식 등 소비 규정을 강화했다.',
+        rowMiss:{ background:'상황 기록이 아니라 소비 규정을 정한 기록이다.', price:'값을 정한 통제가 아니라 소비 규정에 관한 기록이다.' } },
+      { id:'c4', name:'가격 단속', date:null, text:'공정가격을 어긴 판매를 단속했다는 기록. 시기는 이 문서철에서 확인되지 않는다.', col:'unknown', row:'price',
+        ok:'값을 어긴 판매를 단속한 기록. 배급과는 다른 통제다.',
+        rowMiss:{ background:'상황 기록이 아니라 단속이라는 조치 기록이다.', distribution:'배급 방식이 아니라 값을 다룬다. 가격 통제 선이다.' } }
+    ],
+    done:{ title:'쌀 기록 정리 완료', text:'1940년 5월, 경성에서 쌀을 사는 길에 매출표가 들어왔다. 가격을 제한하는 통제와는 다른 방식이었다. 모든 기록의 시기를 지금 알 수 있는 것은 아니다.' }
+  },
+
+  /* ---------- S3 품목 확대 ---------- */
+  s3: {
+    title:'표는 쌀에서 끝나지 않았다',
+    sub:'다른 품목의 기록이 섞여 있다. 배급 경로를 정한 기록인가, 통제망 밖 거래와 값을 단속한 기록인가.',
+    mission:'각 기록을 「배급 통제」 또는 「가격·단속」으로 분류한다. 이 기록들의 시기는 문서철에 적혀 있지 않다.',
+    cats:{ distribution:'배급 통제', price:'가격·단속' },
+    cards:[
+      { id:'sugar', name:'설탕·면포', text:'전표를 통한 배급 통제 대상이 되었다는 기록.', cat:'distribution', ok:'설탕과 면포에도 전표가 붙었다.' },
+      /* SR26: 서울역사편찬원 연구서 — 1941년 경성 배급통제 확대 품목(세탁비누 포함). 날짜는 S3 원칙대로 비노출 */
+      { id:'item26', name:'세탁비누', text:'배급 통제 대상 품목이 되었다는 기록.', cat:'distribution', ok:'세탁비누도 배급 통제 대상에 들어갔다.' },
+      { id:'towel', name:'타올', text:'전표 배급 대상이 되었다는 기록.', cat:'distribution', ok:'타올도 전표 배급 대상이다.' },
+      { id:'black', name:'암거래·가격 단속', text:'통제망 밖 거래와 가격 위반을 단속했다는 기록.', cat:'price', ok:'통제 밖으로 새는 거래와 값을 단속한 기록이다.' }
+    ],
+    miss:{ distribution:'이 기록은 값이 아니라 배급 대상을 정한 기록이다.', price:'이 기록은 배급 경로가 아니라 통제망 밖 거래와 값을 다룬다.' },
+    done:{ title:'통제 품목 확대 확인', text:'표는 쌀에서 끝나지 않았다. 설탕·면포·세탁비누·타올 등 여러 생활필수품으로 배급 통제가 넓어졌다. 시기는 이 문서철만으로는 알 수 없다.' }
+  },
+
+  /* ---------- S4 선 판별형 ---------- */
+  s4: {
+    title:'1942, 고무제품은 어디를 거쳤나',
+    sub:'기록이 직접 말하는 선만 실선으로 남긴다. 말하지 않는 선은 없었다는 뜻이 아니라, 이 기록으로는 그을 수 없다는 뜻이다.',
+    record:{ name:'고무제품 배급 기록', date:'1942년 7월 말', text:'8월 초 경성부 내 고무제품 배급 예정. 관련 연맹에서 「각 애국반을 거치거나」 「학교로 배급」한다고 적혀 있다.' },
+    mission:'지도의 옅은 후보선 여섯 개마다 「기록이 말한다」 또는 「기록이 말하지 않는다」를 판별한다. 판별한 선만 지도에 남는다.',
+    yes:'기록이 말한다', no:'기록이 말하지 않는다',
+    /* state: stated | pending | unstated. 기대 판별은 상태에서 도출한다. */
+    /* fb는 상태별로 둔다. pending 선을 stated로 승격하면 fb.stated가 자동으로 쓰인다.
+       fb.stated의 pending 선 문안은 원문 대조 후 확인 구절 기준으로 교체한다. */
+    lines:[
+      { id:'line1', from:'경성부에 배정된 물량', to:'관련 연맹', state:'stated',
+        fb:{ stated:{ yes:'1942년 8월 초 경성부 내 배급이 연맹을 통해 예정됐다.', no:'기록은 경성부 내 할당이 연맹으로 넘어감을 적고 있다.' } } },
+      { id:'line2', from:'관련 연맹', to:'애국반', state:'stated',
+        fb:{ stated:{ yes:'기록이 ‘각 애국반을 거쳐’ 배급한다고 적었다.', no:'‘각 애국반을 거치거나’라는 구절이 있다. 다시 보자.' } } },
+      { id:'line3', from:'관련 연맹', to:'학교', state:'stated',
+        fb:{ stated:{ yes:'기록이 ‘학교로 배급’한다고 적었다.', no:'‘학교로 배급’이라는 구절이 있다. 다시 보자.' } } },
+      { id:'line4', from:'애국반', to:'가구', state:'pending',
+        fb:{ pending:{ yes:'애국반을 ‘거친다’고만 적혔다. 가구 수령까지는 말하지 않는다.', no:'기록은 애국반까지만 말한다. 그 뒤는 현재 확정하지 않는다.' },
+             stated:{ yes:'기록이 애국반을 거쳐 가구에 배급한다고 적었다.', no:'애국반에서 가구로 이어지는 구절이 있다. 다시 보자.' } } },
+      { id:'line5', from:'학교', to:'학생', state:'pending',
+        fb:{ pending:{ yes:'‘학교로 배급’까지 적혔다. 학생 수령 방식은 말하지 않는다.', no:'기록은 학교까지만 말한다. 그 뒤는 현재 확정하지 않는다.' },
+             stated:{ yes:'기록이 학교를 거쳐 학생에게 배급한다고 적었다.', no:'학교에서 학생으로 이어지는 구절이 있다. 다시 보자.' } } },
+      { id:'line6', from:'관련 연맹', to:'지정 소매상', state:'unstated',
+        fb:{ unstated:{ yes:'이 기록에 지정 소매상 경로는 없다. 없었다는 뜻은 아니다.', no:'이 기록은 소매상 경로를 적지 않았다. 이 기록으로는 그을 수 없다.' } } }
+    ],
+    stateLabel:{ stated:'실선 — 기록이 말한다', pending:'점선 — 기록이 여기까지만', unstated:'미표시 — 이 기록에는 없음' },
+    done:{ title:'기록이 직접 말한 선만 남겼다', text:'경성의 고무제품은 관련 연맹에서 애국반 또는 학교로 이어졌다. 그러나 그 뒤의 최종 수령 경로까지는 현재 기록만으로 확정하지 않는다.' }
+  },
+
+  /* ---------- S5 부영 식료배급소 ---------- */
+  s5: {
+    title:'1943년 4월, 새 배급소',
+    sub:'지도에 새 자리가 하나 생긴다. 이 배급소는 지도의 어디에서 이어지는가.',
+    record:{ name:'부영 식료배급소 기록', date:'1943년 4월', text:'경성부가 직접 운영하는 부영(府營) 식료배급소가 문을 열었다는 기록.' },
+    question:'‘부영 식료배급소’는 지도의 어디에서 이어져야 할까?',
+    expect:'gov',
+    opts:[
+      { id:'gov', label:'경성부', fb:'‘부영’은 부가 운영한다는 뜻. 경성부에서 이어진다.' },
+      { id:'aeguk', label:'애국반', fb:'애국반은 주민 조직이다. 카드의 ‘부영’을 다시 보자.' },
+      { id:'league', label:'관련 연맹', fb:'연맹은 고무제품 배급 조직. 이 배급소는 ‘부영’이다.' },
+      { id:'market', label:'여러 상점', fb:'상점이 아니라 부가 운영하는 배급소다.' }
+    ],
+    /* 자동 표시: 경성부→식료배급소 실선, 식료배급소→우리 집 pending 점선 */
+    homeLine:'pending',
+    done:{ title:'경성부가 직접 운영하는 배급소', text:'경성부에서 식료배급소로 선이 하나 더 그어졌다. 배급소에서 집까지의 선은 이 기록이 말하지 않는다.' }
+  },
+
+  /* ---------- S6 생활지도 재구성 ---------- */
+  s6: {
+    title:'지도를 읽는다',
+    sub:'새 기록 없이, 지금까지 그린 지도를 먼저 읽는다.',
+    read:{
+      question:'지금까지 복원한 쌀·고무제품·식료배급소는 같은 하나의 담당선을 거쳤을까?',
+      expect:'none',
+      opts:[
+        { id:'all', label:'모두 같은 선', fb:'지도를 다시 보자. 세 사례의 선이 한 조직을 지나는가.' },
+        { id:'two', label:'두 사례만 같은 선', fb:'겹치는 조직을 짚어 보자. 같은 이름이 두 선에 있는가.' },
+        { id:'none', label:'하나로 묶이지 않는다', fb:'사례마다 서로 다른 조직과 경로가 보인다.' }
+      ]
+    },
+    district:{
+      record:{ name:'구 설치와 배급 사무', date:'1943년 6월 이후', text:'경성부에 구가 설치되고 생활필수품 배급 사무가 구로 이관되었다는 기록.' },
+      question:'배급 사무를 넘겨받은 ‘구’는 지도 어디에 추가해야 할까?',
+      expect:'under_gov',
+      opts:[
+        { id:'under_gov', label:'경성부 아래', fb:'부의 배급 사무가 구로 내려왔다. 그 아래 경로는 이 기록이 말하지 않는다.' },
+        { id:'replace_aeguk', label:'애국반을 대신하는 자리', fb:'구는 행정 단위다. 애국반이 없어졌다는 기록은 없다.' },
+        { id:'beside_aeguk', label:'애국반과 나란히', fb:'애국반은 주민 조직, 구는 부 아래 행정 단위다.' },
+        { id:'beside_market', label:'여러 상점 옆', fb:'구는 판매처가 아니라 사무를 넘겨받은 행정 단위다.' }
+      ],
+      aegukLine:'pending' /* SR16-B 대조 후 'stated'로 승격 */
+    },
+    done:{ title:'1940년 지도에 없던 조직과 선이 붙었다', text:'쌀·고무제품·식료배급소·구 — 경로마다 담당이 다르다.' }
+  },
+
+  /* ---------- S7 범위 판별형 ---------- */
+  s7: {
+    title:'이 기록으로 어디까지 말할 수 있는가',
+    sub:'주장 네 개를 하나씩 본다. 붙일 기록을 고르거나, 이 기록들로는 말할 수 없다고 판별한다.',
+    mission:'주장마다 기록을 두 개까지 붙이거나 「이 기록들로는 말할 수 없다」를 고른다. 네 주장을 모두 정하면 판정을 본다.',
+    maxNote:'기록은 두 개까지 붙일 수 있다.',
+    readyNote:'네 주장을 모두 정하면 판정을 볼 수 있다.',
+    cant:'이 기록들로는 말할 수 없다',
+    chips:[
+      { id:1, label:'① 1939 식량 상황' },
+      { id:2, label:'② 쌀 매출표 (1940.5)' },
+      { id:3, label:'③ 고무제품 배급 경로 (1942)' },
+      { id:4, label:'④ 부영 식료배급소 (1943.4)' },
+      { id:5, label:'⑤ 구 설치·배급 사무 이관 (1943.6)' }
+    ],
+    verdictLabel:{ direct:'직접 뒷받침', insufficient:'관련은 있으나 부족', scope_exceeded:'자료 범위를 넘어섬', within:'범위 안의 판별' },
+    claims:[
+      { id:'claim_a', layer:'해석 주장', text:'1939년의 식량 사정 악화는 경성 쌀 통제가 시작된 계기 중 하나였다.',
+        chipFb:{1:'식량 사정 기록이다. 통제 시작 기록이 더 필요하다.',2:'1940년 5월 통제 시작 기록. 계기 기록이 더 필요하다.',3:'고무제품 배급 경로. 쌀 통제의 계기와는 다른 선이다.',4:'1943년 식료배급소 기록. 1940년 쌀 통제의 계기가 아니다.',5:'1943년 행정 이관 기록. 쌀 통제 시작과 시기가 다르다.'},
+        sum:{ direct:'후대의 연구는 1939년 식량 악화 뒤 미곡 직접통제가 시작되었다고 설명한다. 1940년 5월 경성에서는 매출표제가 확인된다.', insufficient:'붙인 기록만으로는 계기까지 이어지지 않는다.', cant:'식량 사정과 매출표 기록을 함께 붙이면 말할 수 있다.' } },
+      { id:'claim_b', layer:'사실 주장 · 범위', text:'처음부터 조선 전역에서 모든 생활필수품이 같은 방식으로 배급되었다.',
+        chipFb:{1:'식량 사정 기록은 배급 방식의 동일함을 보이지 않는다.',2:'경성의 쌀 매출표다. 다른 지역·품목 방식을 말해 주지 않는다.',3:'경성 고무제품 한 사례. 전 품목의 같은 방식을 말할 수 없다.',4:'경성부 배급소 기록. 처음부터 전국에 있었다고 볼 수 없다.',5:'1943년 경성 행정 기록. ‘처음부터’와 ‘전역’을 뒷받침하지 않는다.'},
+        sum:{ scope_exceeded:'붙인 기록은 경성과 일부 품목에 한정된다.', cant:'현재 기록은 경성·일부 품목에 머문다.' } },
+      { id:'claim_c', layer:'사실 주장', text:'배급 통제는 쌀에서 다른 품목과 경로로 넓어졌다.',
+        chipFb:{1:'통제 배경 기록. 품목 확대 자체를 보여 주지는 않는다.',2:'쌀 통제 기록. 다른 품목 기록을 함께 붙여야 확대가 보인다.',3:'고무제품 배급 기록. 쌀 매출표와 함께 붙이면 확대가 보인다.',4:'식료배급소 기록. 쌀 매출표와 함께 붙이면 확대가 보인다.',5:'배급 사무의 행정 이관. 품목 확대의 직접 증거는 아니다.'},
+        sum:{ direct:'쌀에서 다른 품목으로 통제가 넓어졌다.', insufficient:'붙인 기록만으로는 쌀에서 다른 품목으로의 확대가 이어지지 않는다.', noRice:'쌀 기록이 없어 ‘쌀에서’를 말할 수 없다.', cant:'쌀 매출표와 다른 품목 기록을 붙이면 말할 수 있다.' } },
+      { id:'claim_d', layer:'해석 주장', text:'전시 동원은 노동력뿐 아니라 소비·유통의 조직도 포함했다.',
+        chipFb:{1:'식량 사정 기록. 소비·유통을 조직한 장면은 아니다.',2:'매출표는 소비 통제 기록. 조직·기관 기록이 더 필요하다.',3:'배급 조직을 거친 경로 기록. 하나 더 붙이면 성립한다.',4:'부가 직접 운영한 배급소. 하나 더 붙이면 성립한다.',5:'배급 사무를 구로 이관. 하나 더 붙이면 성립한다.'},
+        sum:{ direct:'배급 조직과 기관이 주민의 소비·유통을 편성했다.', insufficient:'조직·기관 기록이 하나 더 있어야 성립한다.', cant:'배급 조직·기관 기록이 둘 이상 있어 말할 수 있다.' } }
+    ],
+    reviewBtn:'기록으로 판정한다', prevBtn:'이전 주장', nextBtn:'다음 주장', redoBtn:'기록을 다시 붙여 본다',
+    done:{ title:'판정 완료', text:'붙인 기록에 따라 판정이 갈렸다. 이제 복원한 지도를 처음 지도와 겹쳐 본다.' }
+  },
+
+  /* ---------- 최종 해석 화면 ---------- */
+  fin: {
+    title:'처음 지도와 겹쳐 본다',
+    sub:'아래 조절 막대를 움직여 1940년 이전 지도와 1943년 지도를 직접 겹쳐 본다.',
+    slHint:'오른쪽 끝까지 밀어 두 지도를 완전히 겹치면 다음 기록이 열립니다.',
+    lawBtn:'이 변화와 함께 시행된 법령을 확인한다',
+    laws:[
+      { year:'1938년', name:'국가총동원법', text:'전쟁 수행을 위해 인적·물적 자원을 통제·운용하는 법적 틀. 식량·피복 등도 총동원 물자에 포함되었다.' },
+      { year:'1941년', name:'물자통제령', text:'생활필수품을 포함한 물자의 생산·판매·양도 등에 대한 통제가 확대되었다.' }
+    ],
+    lawDone:'법령을 확인했다',
+    anno:'상점이 사라졌다는 뜻은 아니다. 물건을 얻는 과정에 배급·지정·행정 절차가 더 많이 끼어들었음을 표시한 것이다.',
+    s1:'복원한 연결선은 늘었다.',
+    s2:'자유롭게 선택할 수 있는 구매 경로는 줄었다.',
+    s2tag:'복원 기록을 종합한 해석',
+    basis:'보강 근거(쌀 사례 한정) — 후대의 연구는 쌀 유통에서 종래 상업 조직이 배제되어 자유거래의 여지가 축소되었다고 설명한다.',
+    question:'전시 동원은 전쟁터로 끌려간 사람에게만 일어난 일이었을까?',
+    finalA:'전시 동원은 사람만 움직인 것이 아니었다.',
+    finalB:'물건이 주민에게 도달하는 길과 소비 방식도 전쟁 수행 체제 안에서 다시 조직되었다.',
+    writePrompt:'당신의 문장으로 — 이 문서철에서 무엇을 말할 수 있고, 무엇을 말할 수 없었는가? (선택. 아래 소감과 함께 한 번에 남겨진다)',
+    
+    copyBtn:'서술·소감을 남기고 결과를 복사한다',
+    restartBtn:'다시 하기'
+  }
+};
+var DATA = window.DATA;
+</script>
+<script>
+/* ---------- 유틸 ---------- */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+/* 용어 툴팁 래핑: 텍스트를 이스케이프한 뒤 등록 용어의 첫 등장만 .tt 스팬으로 감싼다 (문자열 연결만 사용) */
+function T(text){
+  var out = esc(text);
+  var keys = Object.keys(DATA.tooltips).sort(function(a,b){ return b.length-a.length; });
+  var used = [];
+  for (var i=0;i<keys.length;i++){
+    var k = keys[i];
+    var idx = out.indexOf(k);
+    if (idx<0) continue;
+    /* 이미 감싼 스팬 내부(예: 매출표 안의 표)는 건너뛴다 */
+    var before = out.slice(0,idx);
+    if ((before.match(/<span/g)||[]).length !== (before.match(/<\/span>/g)||[]).length) continue;
+    out = before + '<span class="tt" tabindex="0" role="button" data-tt="' + esc(k) + '">' + k + '</span>' + out.slice(idx+k.length);
+    used.push(k);
+  }
+  return out;
+}
+function setLive(strong, text){
+  var live = document.getElementById('live');
+  live.hidden = false;
+  live.innerHTML = '<strong>' + esc(strong) + '</strong><br>' + esc(text||'');
+}
+function clearLive(){ var live=document.getElementById('live'); live.hidden=true; live.innerHTML=''; }
+
+/* ---------- 상태 ---------- */
+var scene = 0;           /* 0 도입, 1~7 장면, 8 최종 */
+/* 같은 플레이의 result·comment 행을 잇는 키. 대시보드 병합 키(result_id/attempt_id/submission_id)와
+   다른 이름을 써서 mergeAttemptRows()의 choices 덮어쓰기를 피한다 (지침 v3 attempt_id 주의). */
+function newPlayId(){
+  return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2);
+}
+var S = null;
+function freshState(){
+  return {
+    s1:{ done:{}, fb:{}, hold:{} },
+    s2:{ placed:{}, fb:{}, retry:{} },
+    s4entered:false,
+    s3:{ done:{}, fb:{}, hold:{} },
+    s4:{ judged:{}, fixed:{}, fb:{} },
+    s5:{ sel:null, ok:false, fb:null },
+    s6:{ read:null, readOk:false, readFb:null, dist:null, distOk:false, distFb:null },
+    s7:{ claims:{}, cur:0, reviewed:false, verdicts:{} },
+    fin:{ slider:0, lawOpen:false, lawDone:false, copied:false, finalDraft:'', commentDraft:'' },
+    map:{ nodes:{ home:1, market:1 }, edges:{ 'home-market':'free' }, big:false },
+    submitted:false, commentSubmitted:false, commentPending:false,
+    play_id: newPlayId(),
+    choices:{
+      record_type:'result', version: GAME_CONFIG.version, play_id: null,
+      s1_s3_misplace:{ s1:0, s3:0 },
+      s2_classify:{ c1_first:null, c2_first:null, c3_first:null, c4_first:null },
+      s4_lines:{ line1_first:null, line2_first:null, line3_first:null, line4_first:null, line5_first:null, line6_first:null },
+      s5_node:null, s6_map_read:null, s6_district_node:null,
+      s7:{ claim_a:{mode:null,chips:[],verdict:null}, claim_b:{mode:null,chips:[],verdict:null}, claim_c:{mode:null,chips:[],verdict:null}, claim_d:{mode:null,chips:[],verdict:null} },
+      final_text:null
+    }
+  };
+}
+S = freshState(); S.choices.play_id = S.play_id;
+DATA.s7.claims.forEach(function(c){ S.s7.claims[c.id] = { mode:null, chips:[] }; });
+
+/* ---------- 생활지도 ---------- */
+var MAP = {
+  nodes:{
+    gov:{ x:330,y:70, label:'경성부', cls:'admin' },
+    league:{ x:550,y:70, label:'관련 연맹' },
+    food:{ x:110,y:190, label:'식료배급소', cls:'admin' },
+    gu:{ x:330,y:190, label:'구', cls:'admin' },
+    aeguk:{ x:550,y:190, label:'애국반' },
+    school:{ x:770,y:190, label:'학교' },
+    home:{ x:110,y:310, label:'우리 집' },
+    docs:{ x:330,y:310, label:'매출표·전표' },
+    rice:{ x:550,y:310, label:'쌀 판매처' },
+    student:{ x:770,y:310, label:'학생' },
+    market:{ x:110,y:430, label:'여러 상점' },
+    retail:{ x:770,y:430, label:'지정 소매상' }
+  },
+  edges:{
+    'home-market':'M110,330 L110,410',
+    'home-docs':'M190,310 L250,310',
+    'docs-rice':'M410,310 L470,310',
+    'gov-league':'M410,70 L470,70',
+    'league-aeguk':'M550,90 L550,170',
+    'league-school':'M630,70 L770,70 L770,170',
+    'aeguk-home':'M550,210 L550,250 L150,250 L150,290',
+    'school-student':'M770,210 L770,290',
+    'gov-food':'M250,70 L110,70 L110,170',
+    'food-home':'M110,210 L110,290',
+    'gov-gu':'M330,90 L330,170',
+    'gu-aeguk':'M410,190 L470,190',
+    'league-retail':'M630,85 L650,85 L650,430 L690,430'
+  }
+};
+function mapAdd(nodes, edges){
+  (nodes||[]).forEach(function(n){ S.map.nodes[n]=1; });
+  if (S.map.candNodes){ (nodes||[]).forEach(function(n){ delete S.map.candNodes[n]; }); }
+  Object.keys(edges||{}).forEach(function(e){ S.map.edges[e]=edges[e]; });
+}
+function nodeSvg(id, extraCls){
+  var n = MAP.nodes[id];
+  var cand = (S.map.candNodes && S.map.candNodes[id]) ? ' candidate' : '';
+  return '<g class="node ' + (n.cls||'') + ' ' + (extraCls||'') + cand + '" data-node="' + id + '">' +
+    '<rect x="' + (n.x-80) + '" y="' + (n.y-20) + '" width="160" height="40" rx="3"/>' +
+    '<text x="' + n.x + '" y="' + (n.y+5) + '">' + esc(n.label) + '</text></g>';
+}
+function edgeSvg(id, type, extraCls){
+  return '<path class="edge ' + (type==='pending'?'pending':type==='free'?'free':type==='candidate'?'candidate':'') + ' ' + (extraCls||'') + '" data-edge="' + id + '" d="' + MAP.edges[id] + '"/>';
+}
+/* opts: {final:true, faded:true, laterOpacity:n} */
+function renderMap(opts){
+  opts = opts||{};
+  var initialNodes = ['home','market'];
+  var later = [], initial = [];
+  Object.keys(S.map.edges).forEach(function(e){
+    var s = edgeSvg(e, S.map.edges[e], (opts.faded && e==='home-market')?'faded':'');
+    if (e==='home-market') initial.push(s); else later.push(s);
+  });
+  Object.keys(S.map.nodes).forEach(function(n){
+    if (!MAP.nodes[n]) return;
+    var s = nodeSvg(n, (opts.faded && n==='market')?'faded':'');
+    if (initialNodes.indexOf(n)>=0) initial.push(s); else later.push(s);
+  });
+  var lop = (opts.final ? (S.fin.slider/100) : 1);
+  var svg = '<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="생활지도">' +
+    '<g id="g-initial">' + initial.join('') + '</g>' +
+    '<g id="g-later" style="opacity:' + lop + '">' + later.join('') + '</g></svg>';
+  var hasCand = Object.keys(S.map.edges).some(function(e){ return S.map.edges[e]==='candidate'; });
+  var legend = '<div class="legend"><span><i></i>기록이 말한 선</span><span><i class="p"></i>기록이 여기까지만 말하는 선</span>' + (hasCand?'<span><i class="c"></i>아직 판별하지 않은 후보선</span>':'') + '<span><i class="f"></i>처음 지도의 선</span></div>';
+  var zoom = '<button class="btn ghost small mapzoom" data-action="mapzoom">' + (S.map.big?'작게 보기':'크게 보기') + '</button>';
+  return '<div class="mappanel"><div class="mt"><span>생활지도 — 우리 집에서 물건이 오는 길</span><span>' + (opts.caption||'') + '</span></div><div class="mapwrap' + (S.map.big?' big':'') + '">' + svg + '</div>' + legend + zoom + '</div>';
+}
+
+/* ---------- 공통 조각 ---------- */
+function cardHtml(c, opts){
+  opts = opts||{};
+  var cls = 'card' + (opts.done?' done':'') + (opts.hold?' hold':'') + (opts.sel?' sel':'');
+  var meta = '<div class="meta"><span>' + esc(opts.metaL||'문서철') + '</span><span>' + esc(opts.metaR||'') + '</span></div>';
+  var html = '<div class="' + cls + '" data-card="' + esc(c.id) + '">' + meta +
+    '<div class="cname">' + T(c.name||'') + '</div>' +
+    '<div class="ctext">' + T(c.text||'') + '</div>' +
+    '<div class="recon">' + RECON + '</div>' +
+    (opts.fb ? '<div class="fb">' + esc(opts.fb) + '</div>' : '') +
+    (opts.actions ? '<div class="actions">' + opts.actions + '</div>' : '') +
+    '</div>';
+  return html;
+}
+function recordHtml(r){
+  return '<div class="card" style="min-height:auto;margin-bottom:12px"><div class="meta"><span>' + esc(r.name) + '</span><span>' + esc(r.date||'') + '</span></div><div class="ctext">' + T(r.text) + '</div><div class="recon">' + RECON + '</div></div>';
+}
+function missionHtml(text){ return '<div class="mission"><div class="lab">할 일</div><b>' + esc(text) + '</b></div>'; }
+function doneHtml(d, sceneNo){
+  return '<div class="card" style="min-height:auto;margin-top:16px"><div class="meta"><span>장면 완료</span></div><div class="cname">' + esc(d.title) + '</div><div class="ctext" style="font-family:var(--font-body)">' + esc(d.text) + '</div></div>' +
+    '<div class="nav"><button class="btn primary" data-action="next">' + esc(DATA.nav[sceneNo]) + '</button></div>';
+}
+function head(title, sub, caption){
+  var map = (scene>=1 && scene<=7) ? renderMap({caption: caption||'지금까지 복원한 선'}) : '';
+  return '<div class="kicker">장면 ' + scene + ' / 7</div><h2>' + esc(title) + '</h2><p class="sub">' + esc(sub) + '</p>' + map;
+}
+function setProg(){
+  var p = document.getElementById('prog');
+  if (scene===0) p.innerHTML = '';
+  else if (scene===8) p.innerHTML = '최종 · 겹쳐 보기';
+  else p.innerHTML = '장면 <b>' + scene + '</b> / 7';
+}
+
+/* ---------- 렌더러 ---------- */
+function render(){
+  var app = document.getElementById('app');
+  setProg();
+  var html = '';
+  if (scene===0) html = rIntro();
+  else if (scene===1) html = rClassify('s1');
+  else if (scene===2) html = rS2();
+  else if (scene===3) html = rClassify('s3');
+  else if (scene===4) html = rS4();
+  else if (scene===5) html = rS5();
+  else if (scene===6) html = rS6();
+  else if (scene===7) html = rS7();
+  else html = rFinal();
+  app.innerHTML = '<div class="scene">' + html + '</div>';
+  try { window.scrollTo({ top:0, behavior:'auto' }); } catch(e){}
+}
+
+function rIntro(){
+  var d = DATA.intro;
+  return '<div class="kicker">' + esc(d.kicker) + '</div><h1>' + esc(d.title) + '</h1>' +
+    '<p class="sub" style="font-size:17px;color:var(--text)">' + esc(d.role) + '</p>' +
+    '<p class="sub" style="font-size:14px">' + esc(d.recon) + '</p>' +
+    '<div class="question">' + esc(d.question) + '</div>' +
+    '<div class="notice">' + esc(d.notice) + '</div>' +
+    '<div class="nav"><button class="btn primary" data-action="next">' + esc(DATA.nav[0]) + '</button></div>';
+}
+
+/* S1 · S3 분류 */
+function rClassify(key){
+  var d = DATA[key], st = S[key];
+  var cards = d.cards.map(function(c){
+    var done = !!st.done[c.id];
+    var btns = Object.keys(d.cats).map(function(cat){
+      return '<button class="btn small" data-action="classify" data-scene="' + key + '" data-card="' + c.id + '" data-cat="' + cat + '"' + (done?' disabled':'') + '>' + esc(d.cats[cat]) + '</button>';
+    }).join('');
+    return cardHtml(c, { done:done, hold:!!st.hold[c.id], fb:st.fb[c.id], actions:btns, metaR: done ? d.cats[c.cat] : '' });
+  }).join('');
+  var all = d.cards.every(function(c){ return st.done[c.id]; });
+  return head(d.title, d.sub) + missionHtml(d.mission) + '<div class="grid">' + cards + '</div>' +
+    (all ? doneHtml(d.done, scene) : '');
+}
+function classify(key, cardId, cat){
+  var d = DATA[key], st = S[key];
+  var c = d.cards.filter(function(x){ return x.id===cardId; })[0];
+  if (!c || st.done[cardId]) return;
+  if (c.cat===cat){
+    st.done[cardId] = true; st.hold[cardId] = false; st.fb[cardId] = c.ok;
+    setLive('연결됨', c.ok);
+    if (d.cards.every(function(x){ return st.done[x.id]; })) onSceneDone(key);
+  } else {
+    st.hold[cardId] = true; st.fb[cardId] = d.miss[c.cat];
+    S.choices.s1_s3_misplace[key] += 1;
+    setLive('연결 보류', d.miss[c.cat]);
+  }
+  render();
+}
+
+/* S2 시간×성격 — 카드마다 성격 버튼 3개. 맞으면 카드가 자기 시기 열로 자동 배치된다 */
+function rS2(){
+  var d = DATA.s2, st = S.s2;
+  var thead = '<tr><th class="rowh"></th>' + d.cols.map(function(col){ return '<th>' + esc(col.label) + '</th>'; }).join('') + '</tr>';
+  var rows = d.rows.map(function(row){
+    return '<tr><th class="rowh">' + esc(row.label) + '</th>' + d.cols.map(function(col){
+      var occupant = d.cards.filter(function(c){ return st.placed[c.id] && c.row===row.id && c.col===col.id; })[0];
+      if (occupant) return '<td><div class="cell filled">' + esc(occupant.name) + '</div></td>';
+      return '<td><div class="cell empty" aria-hidden="true"></div></td>';
+    }).join('') + '</tr>';
+  }).join('');
+  var cards = d.cards.map(function(c){
+    var done = !!st.placed[c.id];
+    var btns = d.rows.map(function(row){
+      return '<button class="btn small" data-action="s2cls" data-card="' + c.id + '" data-row="' + row.id + '"' + (done?' disabled':'') + '>' + esc(row.label) + '</button>';
+    }).join('');
+    return cardHtml(c, { done:done, hold:!!st.retry[c.id], fb:st.fb[c.id], actions:btns, metaL:'문서철', metaR:'시기: ' + (c.date || '미확인') });
+  }).join('');
+  var all = d.cards.every(function(c){ return st.placed[c.id]; });
+  return head(d.title, d.sub) + missionHtml(d.mission) +
+    '<div class="board"><table>' + thead + rows + '</table></div>' +
+    '<div class="grid">' + cards + '</div>' +
+    (all ? doneHtml(d.done, scene) : '');
+}
+function s2cls(cardId, row){
+  var st = S.s2, d = DATA.s2;
+  var c = d.cards.filter(function(x){ return x.id===cardId; })[0];
+  if (!c || st.placed[c.id]) return;
+  var idx = d.cards.indexOf(c) + 1;
+  if (S.choices.s2_classify['c'+idx+'_first']===null) S.choices.s2_classify['c'+idx+'_first'] = row;
+  if (c.row!==row){ var m = c.rowMiss[row] || '기록의 성격을 다시 보자.'; st.fb[c.id] = m; st.retry[c.id] = true; setLive('다시 고른다', m); }
+  else {
+    st.placed[c.id] = true; st.fb[c.id] = c.ok; st.retry[c.id] = false;
+    setLive('놓였다', c.ok);
+    if (d.cards.every(function(x){ return st.placed[x.id]; })) onSceneDone('s2');
+  }
+  render();
+}
+
+/* S4 선 판별 — 후보선은 지도에 옅게 미리 그리고, 판별할 때마다 그 선만 상태가 바뀐다 */
+var S4_EDGE = { line1:'gov-league', line2:'league-aeguk', line3:'league-school', line4:'aeguk-home', line5:'school-student', line6:'league-retail' };
+var S4_NODES = ['gov','league','aeguk','school','student','retail'];
+function s4enter(){
+  if (S.s4entered) return;
+  S.s4entered = true;
+  S.map.candNodes = {};
+  S4_NODES.forEach(function(n){ S.map.nodes[n]=1; S.map.candNodes[n]=1; });
+  DATA.s4.lines.forEach(function(l){ S.map.edges[S4_EDGE[l.id]] = 'candidate'; });
+}
+function rS4(){
+  var d = DATA.s4, st = S.s4;
+  s4enter();
+  var rows = d.lines.map(function(l){
+    var fixed = !!st.fixed[l.id], hold = (!fixed && st.judged[l.id]);
+    var state = fixed ? '<span class="lstate">' + esc(d.stateLabel[l.state]) + '</span>' : '';
+    var btns = fixed ? '' : '<div class="lbtns">' +
+      '<button class="btn small" data-action="s4judge" data-line="' + l.id + '" data-v="yes">' + esc(d.yes) + '</button>' +
+      '<button class="btn small" data-action="s4judge" data-line="' + l.id + '" data-v="no">' + esc(d.no) + '</button></div>';
+    return '<div class="lrow' + (fixed?' fixed':'') + (fixed && l.state!=='stated'?' dash':'') + (hold?' hold':'') + '">' +
+      '<div class="lname">' + esc(l.from) + '<span class="arrow">→</span>' + esc(l.to) + '</div>' + state + btns +
+      (st.fb[l.id] ? '<div class="lfb">' + (hold?'<b>판별 보류 — </b>':'') + esc(st.fb[l.id]) + '</div>' : '') + '</div>';
+  }).join('');
+  var all = d.lines.every(function(l){ return st.fixed[l.id]; });
+  return head(d.title, d.sub, '옅은 선은 아직 판별하지 않은 후보') + recordHtml(d.record) + missionHtml(d.mission) + '<div class="lines">' + rows + '</div>' +
+    (all ? doneHtml(d.done, scene) : '');
+}
+function s4judge(lineId, v){
+  var d = DATA.s4, st = S.s4;
+  var l = d.lines.filter(function(x){ return x.id===lineId; })[0];
+  if (!l || st.fixed[lineId]) return;
+  var expect = (l.state==='stated') ? 'yes' : 'no';
+  if (S.choices.s4_lines[lineId+'_first']===null) S.choices.s4_lines[lineId+'_first'] = (v==='yes'?'says':'not');
+  var fbset = l.fb[l.state] || {};
+  st.judged[lineId] = v; st.fb[lineId] = fbset[v] || '';
+  if (v===expect){
+    st.fixed[lineId] = true; setLive('선 확정', st.fb[lineId]);
+    var e = S4_EDGE[lineId];
+    if (l.state==='unstated'){ delete S.map.edges[e]; if (lineId==='line6'){ delete S.map.nodes.retail; delete S.map.candNodes.retail; } }
+    else { S.map.edges[e] = l.state; }
+    /* 선이 하나라도 확정된 노드는 후보 표시를 푼다 */
+    Object.keys(S.map.candNodes||{}).forEach(function(n){
+      var touched = Object.keys(S.map.edges).some(function(k){ return S.map.edges[k]!=='candidate' && k.indexOf(n)>=0; });
+      if (touched) delete S.map.candNodes[n];
+    });
+  }
+  else { setLive('판별 보류', st.fb[lineId]); }
+  if (d.lines.every(function(x){ return st.fixed[x.id]; })) onSceneDone('s4');
+  render();
+}
+
+/* S5 노드 연결 */
+function rS5(){
+  var d = DATA.s5, st = S.s5;
+  var opts = d.opts.map(function(o){
+    var sel = st.sel===o.id;
+    return '<button class="opt' + (sel?' sel':'') + (sel && !st.ok?' hold':'') + '" data-action="s5opt" data-id="' + o.id + '"' + (st.ok?' disabled':'') + '>' + esc(o.label) + '</button>';
+  }).join('');
+  return head(d.title, d.sub) + recordHtml(d.record) + '<div class="question">' + esc(d.question) + '</div><div class="opts">' + opts + '</div>' +
+    (st.fb ? '<div class="live" style="margin-top:8px">' + (st.ok?'':'<strong>다시 고른다 — </strong>') + esc(st.fb) + '</div>' : '') +
+    (st.ok ? doneHtml(d.done, scene) : '');
+}
+function s5opt(id){
+  var d = DATA.s5, st = S.s5;
+  if (st.ok) return;
+  var o = d.opts.filter(function(x){ return x.id===id; })[0];
+  if (S.choices.s5_node===null) S.choices.s5_node = id;
+  st.sel = id; st.fb = o.fb;
+  if (id===d.expect){ st.ok = true; setLive('선 확정', o.fb); onSceneDone('s5'); }
+  else setLive('다시 고른다', o.fb);
+  render();
+}
+
+/* S6 지도 읽기 + 구 배치 */
+function rS6(){
+  var d = DATA.s6, st = S.s6;
+  var readOpts = d.read.opts.map(function(o){
+    var sel = st.read===o.id;
+    return '<button class="opt' + (sel?' sel':'') + (sel && !st.readOk?' hold':'') + '" data-action="s6read" data-id="' + o.id + '"' + (st.readOk?' disabled':'') + '>' + esc(o.label) + '</button>';
+  }).join('');
+  var html = head(d.title, d.sub, '세 사례가 그려진 지도') +
+    '<h3>1 · 지도를 읽는다</h3><div class="question">' + esc(d.read.question) + '</div><div class="opts">' + readOpts + '</div>' +
+    (st.readFb ? '<div class="live" style="margin-top:8px">' + (st.readOk?'':'<strong>다시 본다 — </strong>') + esc(st.readFb) + '</div>' : '');
+  if (st.readOk){
+    var distOpts = d.district.opts.map(function(o){
+      var sel = st.dist===o.id;
+      return '<button class="opt' + (sel?' sel':'') + (sel && !st.distOk?' hold':'') + '" data-action="s6dist" data-id="' + o.id + '"' + (st.distOk?' disabled':'') + '>' + esc(o.label) + '</button>';
+    }).join('');
+    html += '<h3>2 · 1943년 6월 이후</h3>' + recordHtml(d.district.record) + '<div class="question">' + esc(d.district.question) + '</div><div class="opts">' + distOpts + '</div>' +
+      (st.distFb ? '<div class="live" style="margin-top:8px">' + (st.distOk?'':'<strong>다시 고른다 — </strong>') + esc(st.distFb) + '</div>' : '');
+  }
+  if (st.distOk) html += doneHtml(d.done, scene);
+  return html;
+}
+function s6read(id){
+  var d = DATA.s6.read, st = S.s6;
+  if (st.readOk) return;
+  var o = d.opts.filter(function(x){ return x.id===id; })[0];
+  if (S.choices.s6_map_read===null) S.choices.s6_map_read = id;
+  st.read = id; st.readFb = o.fb;
+  if (id===d.expect){ st.readOk = true; setLive('읽었다', o.fb); } else setLive('다시 본다', o.fb);
+  render();
+}
+function s6dist(id){
+  var d = DATA.s6.district, st = S.s6;
+  if (st.distOk) return;
+  var o = d.opts.filter(function(x){ return x.id===id; })[0];
+  if (S.choices.s6_district_node===null) S.choices.s6_district_node = id;
+  st.dist = id; st.distFb = o.fb;
+  if (id===d.expect){ st.distOk = true; setLive('지도에 추가', o.fb); onSceneDone('s6'); } else setLive('다시 고른다', o.fb);
+  render();
+}
+
+/* S7 범위 판별 */
+function claimReady(cs){ return cs.mode==='cannot' || (cs.mode==='evidence' && cs.chips.length>0); }
+function computeVerdict(claimId, cs){
+  var has = function(n){ return cs.chips.indexOf(n)>=0; };
+  if (cs.mode==='cannot') return claimId==='claim_b' ? 'direct' : 'insufficient';
+  if (claimId==='claim_a') return (has(1)&&has(2)) ? 'direct' : 'insufficient';
+  if (claimId==='claim_b') return 'scope_exceeded';
+  if (claimId==='claim_c') return (has(2)&&(has(3)||has(4))) ? 'direct' : 'insufficient';
+  if (claimId==='claim_d') return ([3,4,5].filter(has).length>=2) ? 'direct' : 'insufficient';
+  return 'insufficient';
+}
+function sumText(claim, cs, verdict){
+  var has = function(n){ return cs.chips.indexOf(n)>=0; };
+  if (cs.mode==='cannot') return claim.sum.cant;
+  if (claim.id==='claim_c' && verdict==='insufficient' && !has(2) && (has(3)||has(4))) return claim.sum.noRice;
+  return claim.sum[verdict] || claim.sum.insufficient || '';
+}
+function rS7(){
+  var d = DATA.s7, st = S.s7;
+  var n = d.claims.length;
+  var claimBox = function(c, withControls){
+    var cs = st.claims[c.id];
+    var chips = '';
+    if (withControls){
+      var chipBtns = d.chips.map(function(ch){
+        var sel = cs.mode==='evidence' && cs.chips.indexOf(ch.id)>=0;
+        var full = cs.mode==='evidence' && cs.chips.length>=2 && !sel;
+        return '<button class="chip' + (sel?' sel':'') + '" data-action="s7chip" data-claim="' + c.id + '" data-chip="' + ch.id + '"' + (full?' disabled':'') + ' aria-pressed="' + sel + '">' + esc(ch.label) + '</button>';
+      }).join('');
+      var cant = '<button class="chip cant' + (cs.mode==='cannot'?' sel':'') + '" data-action="s7cant" data-claim="' + c.id + '" aria-pressed="' + (cs.mode==='cannot') + '">' + esc(d.cant) + '</button>';
+      var counter = cs.mode==='cannot' ? '이 기록들로는 말할 수 없다 — 선택됨' : '붙인 기록 ' + cs.chips.length + ' / 2' + (cs.chips.length>=2 ? ' · ' + d.maxNote : '');
+      chips = '<div class="meta" style="margin-top:10px;font-size:14px;color:var(--sepia);font-weight:700">' + esc(counter) + '</div><div class="chips">' + chipBtns + cant + '</div>';
+    }
+    var review = '';
+    if (st.reviewed){
+      var v = st.verdicts[c.id];
+      var label = (cs.mode==='cannot' && c.id==='claim_b') ? d.verdictLabel.within : d.verdictLabel[v];
+      var lines = (cs.mode==='evidence') ? '<ul>' + cs.chips.map(function(k){ var ch = d.chips.filter(function(x){ return x.id===k; })[0]; return '<li><b>' + esc(ch.label) + '</b> — ' + esc(c.chipFb[k]) + '</li>'; }).join('') + '</ul>' : '<div style="font-size:16px;color:var(--muted)">' + esc(d.cant) + '</div>';
+      review = '<details class="review" open><summary><span class="vd">' + esc(label) + '</span>판정</summary>' + lines + '<div class="sum">' + esc(sumText(c, cs, v)) + '</div></details>';
+    }
+    return '<div class="claim"><div class="ctitle"><span class="lab">' + esc(c.layer) + '</span><span class="txt">' + T(c.text) + '</span></div>' + chips + review + '</div>';
+  };
+  var body, footer;
+  if (st.reviewed){
+    body = d.claims.map(function(c){ return claimBox(c, false); }).join('');
+    footer = '<div class="nav"><button class="btn ghost" data-action="s7redo">' + esc(d.redoBtn) + '</button><button class="btn primary" data-action="next">' + esc(DATA.nav[7]) + '</button></div>';
+  } else {
+    var cur = Math.max(0, Math.min(n-1, st.cur));
+    var c = d.claims[cur];
+    var dots = d.claims.map(function(x,i){ return '<i class="' + (claimReady(st.claims[x.id])?'on':'') + (i===cur?' cur':'') + '"></i>'; }).join('');
+    var stepbar = '<div class="stepbar"><span>주장 ' + (cur+1) + ' / ' + n + '</span><span class="dots" aria-hidden="true">' + dots + '</span></div>';
+    body = stepbar + claimBox(c, true);
+    var ready = d.claims.every(function(x){ return claimReady(st.claims[x.id]); });
+    var curReady = claimReady(st.claims[c.id]);
+    var prev = '<button class="btn ghost" data-action="s7prev"' + (cur===0?' disabled':'') + '>' + esc(d.prevBtn) + '</button>';
+    var next = (cur<n-1)
+      ? '<button class="btn primary" data-action="s7next"' + (curReady?'':' disabled') + '>' + esc(d.nextBtn) + '</button>'
+      : '<button class="btn primary" data-action="s7review"' + (ready?'':' disabled') + '>' + esc(d.reviewBtn) + '</button>';
+    var note = (!curReady) ? '기록을 붙이거나 「' + d.cant + '」를 고르면 다음으로 갈 수 있다.' : (cur===n-1 && !ready ? d.readyNote : '');
+    footer = (note ? '<p class="sub" style="text-align:right;font-size:14px;margin:12px 0 0">' + esc(note) + '</p>' : '') + '<div class="nav">' + prev + next + '</div>';
+  }
+  return head(d.title, d.sub, '복원한 지도') + missionHtml(d.mission) + body + footer;
+}
+function s7nav(dir){ var n = DATA.s7.claims.length; S.s7.cur = Math.max(0, Math.min(n-1, S.s7.cur + dir)); render(); }
+function s7chip(claimId, chipId){
+  var cs = S.s7.claims[claimId];
+  if (S.s7.reviewed) return;
+  if (cs.mode!=='evidence'){ cs.mode='evidence'; cs.chips=[]; }
+  var i = cs.chips.indexOf(chipId);
+  if (i>=0) cs.chips.splice(i,1);
+  else if (cs.chips.length<2) cs.chips.push(chipId);
+  if (cs.chips.length===0) cs.mode=null;
+  render();
+}
+function s7cant(claimId){
+  var cs = S.s7.claims[claimId];
+  if (S.s7.reviewed) return;
+  if (cs.mode==='cannot'){ cs.mode=null; } else { cs.mode='cannot'; cs.chips=[]; }
+  render();
+}
+function s7review(){
+  var d = DATA.s7, st = S.s7;
+  if (!d.claims.every(function(c){ return claimReady(st.claims[c.id]); })) return;
+  d.claims.forEach(function(c){
+    var cs = st.claims[c.id];
+    var v = computeVerdict(c.id, cs);
+    st.verdicts[c.id] = v;
+    var first = S.choices.s7[c.id];
+    if (first.mode===null){ first.mode = (cs.mode==='cannot'?'cannot_say':'evidence'); first.chips = cs.chips.slice(); first.verdict = v; }
+  });
+  st.reviewed = true;
+  setLive('판정 완료', d.done.text);
+  render();
+}
+function s7redo(){ S.s7.reviewed = false; S.s7.verdicts = {}; S.s7.cur = 0; render(); }
+
+/* 최종 해석 화면 */
+function rFinal(){
+  var d = DATA.fin, st = S.fin;
+  var sl = '<div class="slider"><label for="slider">1940 이전</label><input id="slider" type="range" min="0" max="100" value="' + st.slider + '" aria-label="지도 시점 조절 막대: 왼쪽 1940 이전, 오른쪽 1943"><label for="slider">1943</label></div><p class="slhint">' + esc(d.slHint) + '</p>';
+  var lawBtn = (!st.lawOpen && !st.lawDone) ? '<div class="nav" id="lawbtn"' + (st.slider>=95?'':' hidden') + '><button class="btn" data-action="lawopen">' + esc(d.lawBtn) + '</button></div>' : '';
+  var laws = (st.lawOpen || st.lawDone) ? '<h3>이 변화와 함께 시행된 법령</h3>' + d.laws.map(function(l){ return '<div class="law"><div class="lyear">' + esc(l.year) + '</div><div class="lname">' + T(l.name) + '</div><div class="ltext">' + T(l.text) + '</div></div>'; }).join('') +
+    (st.lawDone ? '' : '<div class="nav"><button class="btn primary" data-action="lawdone">' + esc(d.lawDone) + '</button></div>') : '';
+  var after = '';
+  if (st.lawDone){
+    var evid = DATA.s7.claims.map(function(c){
+      var cs = S.s7.claims[c.id]; var v = S.s7.verdicts[c.id];
+      var label = (cs.mode==='cannot' && c.id==='claim_b') ? DATA.s7.verdictLabel.within : DATA.s7.verdictLabel[v];
+      var chips = cs.mode==='cannot' ? DATA.s7.cant : cs.chips.map(function(n){ return DATA.s7.chips.filter(function(x){ return x.id===n; })[0].label; }).join(' + ');
+      return '<li><b>' + esc(label) + '</b> — ' + esc(c.text) + '<br><span style="color:var(--muted)">붙인 기록: ' + esc(chips) + '</span></li>';
+    }).join('');
+    after = '<div class="sig"><div class="s1">' + esc(d.s1) + '</div><div class="s2">' + esc(d.s2) + '<span class="tag">' + esc(d.s2tag) + '</span></div>' +
+      '<div class="anno"><b>' + esc(d.anno.split('. ')[0]) + '.</b> ' + esc(d.anno.split('. ').slice(1).join('. ')) + '</div><div class="basis">' + esc(d.basis) + '</div></div>' +
+      '<div class="question">' + esc(d.question) + '</div>' +
+      '<div class="card" style="min-height:auto"><div class="meta"><span>최종 발견</span></div><div class="cname">' + esc(d.finalA) + '</div><div class="ctext" style="font-family:var(--font-body)">' + esc(d.finalB) + '</div></div>' +
+      '<h3>판정에 사용한 기록</h3><ul class="evid">' + evid + '</ul>' +
+      '<h3>서술</h3><p class="sub">' + esc(d.writePrompt) + '</p>' +
+      '<textarea id="finaltext" class="finaltext" maxlength="300" placeholder="예: 이 문서철로는 경성의 세 사례까지 말할 수 있었다. 전국은…"' + (S.commentSubmitted?' disabled':'') + '>' + esc(st.finalDraft) + '</textarea>' +
+      '<h3>소감</h3><textarea id="comment" rows="2" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)" maxlength="100"' + (S.commentSubmitted?' disabled':'') + '>' + esc(st.commentDraft) + '</textarea>' +
+      (S.commentSubmitted ? '<div class="live" style="margin-top:8px"><strong>남겼다 — </strong>서술과 소감은 한 번만 저장된다. 복사는 다시 할 수 있다.</div>' : '') +
+      '<div class="nav"><button class="btn ghost" data-action="restart">' + esc(d.restartBtn) + '</button><button class="btn primary" data-action="copy">' + (st.copied?'복사됨 · 다시 복사':esc(d.copyBtn)) + '</button></div>' +
+      '<div class="footer">© 찰리쌤 · hischarlie.tistory.com</div>';
+  }
+  return '<div class="final"><div class="kicker">최종</div><h2>' + esc(d.title) + '</h2><p class="sub">' + esc(d.sub) + '</p>' +
+    renderMap({ final:true, faded:st.lawDone, caption:'조절 막대로 두 시점을 겹친다' }) + sl + lawBtn + laws + after + '</div>';
+}
+function onSlider(v){
+  S.fin.slider = Number(v);
+  var g = document.getElementById('g-later'); if (g) g.style.opacity = (S.fin.slider/100);
+  var b = document.getElementById('lawbtn'); if (b) b.hidden = S.fin.slider < 95;
+}
+function buildCopyText(){
+  var lines = ['[배급망 1943] 복원 결과'];
+  DATA.s7.claims.forEach(function(c){
+    var cs = S.s7.claims[c.id]; var v = S.s7.verdicts[c.id];
+    var label = (cs.mode==='cannot' && c.id==='claim_b') ? DATA.s7.verdictLabel.within : DATA.s7.verdictLabel[v];
+    var chips = cs.mode==='cannot' ? DATA.s7.cant : cs.chips.map(function(n){ return DATA.s7.chips.filter(function(x){ return x.id===n; })[0].label; }).join(' + ');
+    lines.push('- ' + c.text + ' → ' + label + ' (' + chips + ')');
+  });
+  lines.push('발견: ' + DATA.fin.s1 + ' ' + DATA.fin.s2 + ' [' + DATA.fin.s2tag + ']');
+  if (S.choices.final_text) lines.push('서술: ' + S.choices.final_text);
+  if (S.fin.commentDraft) lines.push('소감: ' + S.fin.commentDraft);
+  return lines.join('\n');
+}
+function copyResult(){
+  var ft = document.getElementById('finaltext'), cm = document.getElementById('comment');
+  var finalText = ft ? ft.value.trim() : S.fin.finalDraft, comment = cm ? cm.value.trim() : S.fin.commentDraft;
+  S.fin.finalDraft = finalText; S.fin.commentDraft = comment;
+  if (S.choices.final_text===null && finalText) S.choices.final_text = finalText;
+  /* 서술과 소감을 하나의 comment 행으로 한 번만 전송한다 */
+  sendCommentRow(comment);
+  var text = buildCopyText();
+  var done = function(){ S.fin.copied = true; setLive('복사됨', '패들렛이나 하이러닝에 붙여 넣을 수 있다.'); render(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done); else done();
+}
+
+/* ---------- 장면 완료 → 지도 반영 ---------- */
+function onSceneDone(key){
+  if (key==='s1') mapAdd(['docs'], { 'home-docs':'stated' });
+  if (key==='s2') mapAdd(['rice'], { 'docs-rice':'stated' });
+  if (key==='s4'){
+    Object.keys(S.map.edges).forEach(function(e){ if (S.map.edges[e]==='candidate') delete S.map.edges[e]; });
+    S.map.candNodes = {};
+  }
+  if (key==='s5') mapAdd(['food'], { 'gov-food':'stated', 'food-home':DATA.s5.homeLine });
+  if (key==='s6') mapAdd(['gu'], { 'gov-gu':'stated', 'gu-aeguk':DATA.s6.district.aegukLine });
+}
+function next(){
+  if (scene===7 && !S.s7.reviewed) return;
+  scene = Math.min(scene+1, 8);
+  clearLive();
+  if (scene===8 && !S.submitted){
+    sendToSupabase(S.choices, '');
+    S.submitted = true;
+  }
+  render();
+}
+function restart(){
+  scene = 0; S = freshState(); S.choices.play_id = S.play_id;
+  DATA.s7.claims.forEach(function(c){ S.s7.claims[c.id] = { mode:null, chips:[] }; });
+  clearLive(); render();
+}
+
+/* ---------- Supabase ---------- */
+function publicHeaders(extra){
+  var key = (window.CHARLIE_CONFIG && window.CHARLIE_CONFIG.supabasePublishableKey) || '';
+  var headers = Object.assign({ apikey:key }, extra||{});
+  if (key.indexOf('eyJ')===0) headers.Authorization = 'Bearer ' + key;
+  return headers;
+}
+function sendToSupabase(choiceData, comment){
+  var url = window.CHARLIE_CONFIG.supabaseUrl, key = window.CHARLIE_CONFIG.supabasePublishableKey;
+  if (!url || !key || key.indexOf('__')===0) return Promise.resolve({ ok:false, skipped:true });
+  return fetch(url + '/rest/v1/game_results', {
+    method:'POST',
+    headers: publicHeaders({ 'Content-Type':'application/json', Prefer:'return=minimal' }),
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment: comment || '',
+      timestamp: new Date().toISOString()
+    })
+  }).then(function(res){
+    if (!res.ok) console.warn('[Supabase] 전송 실패 HTTP ' + res.status);
+    return res;
+  }).catch(function(err){
+    console.warn('[Supabase] 네트워크 전송 실패', err);
+    return { ok:false, failed:true };
+  });
+}
+/* 소감 행: 소감 또는 서술이 있을 때 한 번만. 서술(final_text)은 result 행 전송 이후에 작성되므로 comment 행 choices에 실린다. */
+function sendCommentRow(comment){
+  if (S.commentSubmitted || S.commentPending) return Promise.resolve();
+  if (!comment && !S.choices.final_text) return Promise.resolve();
+  S.commentPending = true;
+  return sendToSupabase({ record_type:'comment', version:GAME_CONFIG.version, play_id:S.play_id, final_text:S.choices.final_text }, comment)
+    .then(function(res){
+      S.commentPending = false;
+      /* 키 미주입(skipped)은 서버 없음이므로 잠근다. 네트워크·HTTP 실패는 잠그지 않고 재시도를 허용한다. */
+      if (res && (res.ok || res.skipped)){ S.commentSubmitted = true; }
+      else { S.commentSubmitted = false; setLive('저장 실패', '서술·소감이 아직 저장되지 않았다. 복사 버튼을 다시 누르면 재시도한다.'); }
+      if (scene===8) render();
+    });
+}
+
+/* ---------- 툴팁 (왕의 결재함 v3 패턴) ---------- */
+var bubbleTimer = null;
+function tt(target){
+  var bubble = document.getElementById('tt-bubble');
+  var key = target.getAttribute('data-tt');
+  var full = DATA.tooltips[key]; if (!full) return;
+  var sep = full.indexOf(' — ');
+  var word = sep>0 ? full.slice(0,sep) : key, desc = sep>0 ? full.slice(sep+3) : full;
+  bubble.querySelector('.tb-word').textContent = word;
+  bubble.querySelector('.tb-desc').textContent = desc;
+  var rect = target.getBoundingClientRect();
+  var bw = 240;
+  var left = Math.max(8, Math.min(rect.left + rect.width/2 - bw/2, window.innerWidth - bw - 8));
+  bubble.style.width = bw + 'px';
+  bubble.style.left = left + 'px';
+  bubble.style.top = '-9999px';
+  bubble.classList.remove('below');
+  bubble.classList.add('show');
+  bubble.style.setProperty('--arrow-left', ((rect.left + rect.width/2) - left) + 'px');
+  var bubH = bubble.offsetHeight;
+  if (rect.top - bubH - 14 < 8){ bubble.style.top = (rect.bottom + 10) + 'px'; bubble.classList.add('below'); }
+  else bubble.style.top = (rect.top - bubH - 14) + 'px';
+  if (bubbleTimer) clearTimeout(bubbleTimer);
+  bubbleTimer = setTimeout(hideTt, 4000);
+}
+function hideTt(){ var b = document.getElementById('tt-bubble'); b.classList.remove('show'); if (bubbleTimer){ clearTimeout(bubbleTimer); bubbleTimer=null; } }
+
+/* ---------- 이벤트 ---------- */
+document.getElementById('app').addEventListener('click', function(ev){
+  var t = ev.target.closest('.tt');
+  if (t){ ev.preventDefault(); tt(t); return; }
+  var a = ev.target.closest('[data-action]');
+  if (!a || a.disabled) { hideTt(); return; }
+  hideTt();
+  var act = a.getAttribute('data-action'), ds = a.dataset;
+  if (act==='next') next();
+  else if (act==='classify') classify(ds.scene, ds.card, ds.cat);
+  else if (act==='s2cls') s2cls(ds.card, ds.row);
+  else if (act==='s7prev') s7nav(-1);
+  else if (act==='s7next') s7nav(1);
+  else if (act==='mapzoom'){ S.map.big = !S.map.big; render(); }
+  else if (act==='s4judge') s4judge(ds.line, ds.v);
+  else if (act==='s5opt') s5opt(ds.id);
+  else if (act==='s6read') s6read(ds.id);
+  else if (act==='s6dist') s6dist(ds.id);
+  else if (act==='s7chip') s7chip(ds.claim, Number(ds.chip));
+  else if (act==='s7cant') s7cant(ds.claim);
+  else if (act==='s7review') s7review();
+  else if (act==='s7redo') s7redo();
+  else if (act==='lawopen'){ S.fin.lawOpen = true; render(); }
+  else if (act==='lawdone'){ S.fin.lawDone = true; setLive('법령 확인', DATA.fin.anno); render(); }
+  else if (act==='copy') copyResult();
+  else if (act==='restart') restart();
+});
+document.getElementById('app').addEventListener('keydown', function(ev){
+  var t = ev.target.closest('.tt');
+  if (t && (ev.key==='Enter' || ev.key===' ')){ ev.preventDefault(); tt(t); }
+  if (ev.key==='Escape') hideTt();
+});
+document.getElementById('app').addEventListener('input', function(ev){
+  if (!ev.target) return;
+  if (ev.target.id==='slider') onSlider(ev.target.value);
+  if (ev.target.id==='finaltext') S.fin.finalDraft = ev.target.value;
+  if (ev.target.id==='comment') S.fin.commentDraft = ev.target.value;
+});
+document.addEventListener('click', function(ev){ if (!ev.target.closest('.tt') && !ev.target.closest('#tt-bubble')) hideTt(); });
+
+render();
 </script>
 </body>
 </html>
