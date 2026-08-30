@@ -1,0 +1,46 @@
+name: Verify rationnet1943 release manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rationnet-manifest-branch-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: publish-rationnet1943
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore existing dashboard grade and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('games.manifest.json')
+          s=p.read_text(encoding='utf-8')
+          old='{ "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "geunal1945", "renderer": "geunal1945", "aliases": [] }'
+          new='{ "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "geunal1945", "aliases": [] }'
+          if s.count(old)!=1: raise SystemExit('unexpected geunal manifest anchor')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+          npm run audit:games
+          git diff --check
+      - name: Commit verified branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add games.manifest.json
+          git commit -m 'games: verify rationnet1943 published manifest'
+          git push origin HEAD:publish-rationnet1943
