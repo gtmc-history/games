@@ -21,8 +21,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
           const html = fs.readFileSync('rationnet1943/index.html','utf8');
           const url = html.match(/supabaseUrl:\s*'([^']+)'/)?.[1];
           const key = html.match(/supabasePublishableKey:\s*'([^']+)'/)?.[1];
