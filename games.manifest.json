@@ -33,6 +33,6 @@
     { "slug": "aegukban1938", "title": "열 집을 묶다", "era": "일제강점기·전시 동원", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "rationnet1943", "title": "배급망 1943", "era": "일제강점기·전시 동원", "status": "published", "save": "required", "dashboard": "A", "renderer": "rationnet1943", "aliases": [] },
     { "slug": "haebang1945", "title": "도둑같이 온 해방 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "haebang1945", "aliases": [] },
-    { "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "geunal1945", "renderer": "geunal1945", "aliases": [] }
+    { "slug": "geunal1945", "title": "그날, 아무도 몰랐다 — 1945", "era": "해방기·1945", "status": "published", "save": "required", "dashboard": "A", "renderer": "geunal1945", "aliases": [] }
   ]
 }
