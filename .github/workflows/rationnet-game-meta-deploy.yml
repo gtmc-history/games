@@ -1,0 +1,55 @@
+name: Deploy rationnet1943 game_meta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rationnet-game-meta-deploy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-meta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Upsert the prepared public metadata row
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const html = fs.readFileSync('rationnet1943/index.html','utf8');
+          const url = html.match(/supabaseUrl:\s*'([^']+)'/)?.[1];
+          const key = html.match(/supabasePublishableKey:\s*'([^']+)'/)?.[1];
+          if (!url || !key) throw new Error('public Supabase config not found');
+          const row = {
+            game_id: 'rationnet1943',
+            label: '배급망 1943',
+            era: '일제강점기 · 전시 동원',
+            axes: [], scenes: [], sliders: [], endings: [],
+            updated_at: new Date().toISOString()
+          };
+          const endpoint = `${url}/rest/v1/game_meta?on_conflict=game_id`;
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              apikey: key,
+              'Content-Type': 'application/json',
+              Prefer: 'resolution=merge-duplicates,return=representation'
+            },
+            body: JSON.stringify(row)
+          });
+          const text = await response.text();
+          console.log('upsert HTTP:', response.status);
+          if (!response.ok) throw new Error(`game_meta upsert HTTP ${response.status}: ${text}`);
+          const verify = await fetch(`${url}/rest/v1/game_meta?game_id=eq.rationnet1943&select=game_id,label,era`, { headers: { apikey: key } });
+          if (!verify.ok) throw new Error(`verify HTTP ${verify.status}`);
+          const rows = await verify.json();
+          console.log('verified:', JSON.stringify(rows));
+          if (!Array.isArray(rows) || rows.length !== 1 || rows[0].label !== '배급망 1943') throw new Error('game_meta verification failed');
+          NODE
