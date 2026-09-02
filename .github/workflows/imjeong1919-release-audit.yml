@@ -1,5 +1,6 @@
 name: One-time imjeong1919 release audit
 
+# rerun after renderer registration
 on:
   push:
     branches: [main]
