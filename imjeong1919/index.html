@@ -1,1 +1,652 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1919~1925, 임시 정부를 다시 설계하다</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f0ece4; --surface:#e8e0d4; --primary:#003087; --accent:#cd2e3a;
+    --text:#1a1a1a; --sepia:#8b7355; --sepia-light:#c9b89a; --paper:#f7f2e8;
+    --font-display:'Black Han Sans',sans-serif;
+    --font-body:'Noto Sans KR',sans-serif;
+    --font-doc:'Gowun Batang','Noto Serif KR',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.5;
+    background-image:radial-gradient(rgba(139,115,85,.08) 1px,transparent 1px);background-size:14px 14px}
+  .frame{max-width:960px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:0 16px 8px}
+  header{display:flex;align-items:baseline;justify-content:space-between;padding:10px 0 6px;border-bottom:1px solid var(--sepia-light)}
+  header h1{font-family:var(--font-display);font-size:22px;color:var(--primary);letter-spacing:.5px}
+  header .step{font-size:14px;color:var(--sepia)} header .step b{color:var(--text)}
+
+  .record{display:flex;gap:6px;align-items:center;padding:6px 0;font-size:13px;color:var(--sepia);overflow:hidden;white-space:nowrap}
+  .record .tag{font-family:var(--font-doc);font-weight:700;border:1px solid var(--sepia-light);padding:1px 6px;margin-right:4px}
+  .record .ev{padding:1px 6px;background:var(--surface);opacity:.35} .record .ev.done{opacity:1} .record .ev.now{background:var(--sepia);color:#fff;opacity:1}
+  .record .arrow{opacity:.5}
+  .mine{display:flex;gap:6px;align-items:center;padding:0 0 6px;font-size:13px;color:var(--primary);overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--sepia-light);scrollbar-width:none} .mine::-webkit-scrollbar{display:none}
+  .mine .tag{font-weight:700;border:1px solid var(--primary);padding:1px 6px;margin-right:4px}
+  .mine .ev{padding:1px 6px;background:rgba(0,48,135,.06)} .mine .ev.now{background:var(--primary);color:#fff}
+  .confirm{display:none;align-self:flex-start;margin:2px 0 8px 14px} .confirm.show{display:inline-block}
+  .stampq{font-size:15px;font-weight:500;margin:8px 0 4px}
+
+  .scene{flex:1;display:flex;flex-direction:column;min-height:0;animation:scene-in .4s ease forwards}
+  @keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .year{font-family:var(--font-display);font-size:34px;color:var(--sepia);line-height:1;margin:10px 0 2px}
+  .situ{font-size:16px;margin:4px 0 6px;max-width:760px}
+  .role{font-size:14px;padding:4px 0 6px;color:var(--text)} .role b{font-family:var(--font-doc);color:var(--primary)}
+  .q{font-size:17px;font-weight:500;margin:6px 0}
+
+  .choices{display:flex;flex-direction:column;gap:8px;margin:6px 0}
+  .choice{display:flex;align-items:flex-start;gap:10px;min-height:48px;padding:10px 12px;border:1px solid var(--sepia-light);border-left:3px solid transparent;
+    background:var(--surface);font-size:17px;text-align:left;cursor:pointer;font-family:var(--font-body);border-radius:4px;
+    transition:border-color .2s,background .2s,transform .15s}
+  .choice:hover{border-left-color:var(--primary);background:#fff;transform:translateX(4px)}
+  .choice.on{border-left-color:var(--primary);background:#fff;box-shadow:inset 0 0 0 1px var(--primary)}
+  .choice.off{opacity:.45;pointer-events:none}
+  .choice .k{font-family:var(--font-display);color:var(--sepia);min-width:22px}
+  .cond{display:none;margin:4px 0 8px 14px;padding:8px 12px;border-left:3px solid var(--sepia);background:var(--paper);font-size:15px}
+  .cond.show{display:block;animation:scene-in .3s ease}
+  .cond b{color:var(--sepia);font-weight:700;margin-right:6px}
+
+  .cards{display:grid;gap:8px;margin:6px 0}
+  .cards.c4{grid-template-columns:repeat(4,1fr)} .cards.c3{grid-template-columns:repeat(3,1fr)} .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{padding:8px 10px;display:flex;flex-direction:column;gap:4px;min-height:0}
+  .card .layer{font-size:11px;letter-spacing:.5px;color:var(--sepia)} .card p{font-size:15px;line-height:1.45} .card .src{font-size:11px;color:var(--sepia);margin-top:auto}
+  .card.doc{background:var(--paper);border:1px solid var(--sepia-light);font-family:var(--font-doc)} .card.doc p{font-family:var(--font-doc);font-size:15.5px}
+  .card.judge{background:#fff;border-top:2px solid var(--primary);border-bottom:1px solid var(--sepia-light)} .card.judge .layer{color:var(--primary)}
+  .card.event{background:#fff;border:1px solid var(--sepia-light);border-top:3px solid var(--sepia)}
+  .card.event .fixed{font-size:11px;color:var(--accent);letter-spacing:.5px}
+  .card.flip{cursor:pointer} .card.flip .back{display:none} .card.flip.open .front{display:none} .card.flip.open .back{display:block}
+  .card.hist{background:var(--surface);border-left:3px solid var(--sepia)}
+
+  .cb{border-left:3px solid var(--primary);background:rgba(0,48,135,.06);padding:5px 10px;font-size:14px;line-height:1.4;margin:3px 0}
+  .cb .who{font-weight:700;color:var(--primary);margin-right:6px}
+
+  .puz{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0;flex:1;min-height:0}
+  .pool,.slots{display:flex;flex-direction:column;gap:6px}
+  .pcard{min-height:48px;padding:8px 10px;background:var(--paper);border:1px solid var(--sepia-light);font-family:var(--font-doc);font-size:15px;cursor:pointer;border-radius:4px;transition:transform .15s}
+  .pcard:hover{transform:translateX(4px)} .pcard.pick{box-shadow:inset 0 0 0 2px var(--primary)} .pcard.gone{display:none}
+  .slot{min-height:48px;padding:8px 10px;border:1px dashed var(--sepia);background:var(--surface);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:4px}
+  .slot .nm{font-weight:500;white-space:nowrap} .slot .got{font-size:13px;color:var(--primary);font-family:var(--font-doc);text-align:right}
+  .slot.full{border-style:solid;border-color:var(--primary);background:#fff}
+  @keyframes correct-pulse{0%{box-shadow:0 0 0 0 rgba(46,213,115,.6)}70%{box-shadow:0 0 0 12px rgba(46,213,115,0)}100%{box-shadow:0 0 0 0 rgba(46,213,115,0)}}
+  .correct{animation:correct-pulse .6s ease}
+  @keyframes wrong-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+  .wrong{animation:wrong-shake .4s ease}
+
+  .grid6{display:grid;grid-template-columns:90px 1fr 1fr;gap:6px;flex:1;min-height:0}
+  .ghead{font-size:12px;letter-spacing:.5px;color:var(--sepia);padding:0 6px 2px;border-bottom:1px solid var(--sepia-light)} .ghead.r{color:var(--primary);border-bottom-color:var(--primary)}
+  .issue{display:flex;flex-direction:column;justify-content:center;padding:6px;border-right:2px solid var(--sepia-light)}
+  .issue .name{font-family:var(--font-display);font-size:18px} .issue .s2{font-size:11px;color:var(--primary);border:1px solid var(--primary);padding:0 5px;margin-top:4px;align-self:flex-start}
+  .decide{margin-top:6px;border-top:1px solid var(--sepia-light);padding-top:6px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{min-height:44px;padding:8px 14px;border:1px solid var(--sepia);background:var(--surface);font-size:16px;cursor:pointer;border-radius:4px;font-family:var(--font-body);transition:transform .15s,border-color .2s,background .2s}
+  .chip:hover{transform:translateY(-2px)} .chip[disabled]{opacity:.4;pointer-events:none} .chip.on{border-color:var(--primary);background:#fff;box-shadow:inset 0 0 0 1px var(--primary)} .chip.on::before{content:"✓ ";color:var(--primary)}
+  .verdict{display:flex;flex-direction:column;gap:6px;min-width:250px}
+  .stage2{display:none;gap:6px} .stage2.show{display:flex}
+  .stage2 input{flex:1;min-height:44px;border:1px solid var(--sepia-light);padding:0 10px;font-family:var(--font-body);font-size:15px;background:#fff}
+  .hint{font-size:12px;color:var(--sepia)}
+
+  .btn{min-height:48px;padding:0 18px;border:1px solid var(--primary);background:var(--surface);color:var(--primary);font-family:var(--font-body);font-size:17px;font-weight:500;cursor:pointer;border-radius:4px;transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)} .btn:active{transform:translateY(0) scale(.97)}
+  .btn.on,.btn.primary{background:var(--primary);color:#fff} .btn.ghost{border-color:var(--sepia);color:var(--sepia)}
+  .btn[disabled]{opacity:.4;pointer-events:none}
+  .nav{display:flex;justify-content:flex-end;gap:8px;padding:8px 0 4px;margin-top:auto;flex-wrap:wrap}
+
+  .tt{border-bottom:1px dotted var(--sepia);cursor:help}
+  #tt-bubble{position:absolute;top:-9999px;left:0;max-width:280px;background:#1a1a1a;color:#f0ece4;font-size:13px;line-height:1.4;padding:8px 10px;border-radius:4px;z-index:50;pointer-events:none;opacity:0;transition:opacity .15s}
+  #tt-bubble.show{opacity:1}
+
+  .result{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin:8px 0}
+  .traj{background:#fff;border-left:3px solid var(--primary);padding:12px 14px} .traj p{margin:4px 0;font-size:15.5px}
+  .traj h3,.hist2 h3{font-family:var(--font-display);font-size:18px;margin-bottom:6px} .traj h3{color:var(--primary)} .hist2 h3{color:var(--sepia)}
+  .hist2{background:var(--paper);border-left:3px solid var(--sepia);padding:12px 14px;font-family:var(--font-doc)} .hist2 p{margin:4px 0;font-size:15px}
+  .labels{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0} .lab{font-size:13px;border:1px solid var(--sepia);padding:2px 8px;color:var(--sepia)}
+  .ask{margin:8px 0;padding:10px 12px;background:var(--surface);font-size:15px} .ask p{margin:3px 0}
+  textarea{width:100%;min-height:52px;border:1px solid var(--sepia-light);padding:8px;font-family:var(--font-body);font-size:15px;background:#fff;resize:vertical}
+  .stats{margin:6px 0;font-size:14px} .stats .row{display:flex;gap:6px;align-items:center;margin:2px 0} .stats .bar{height:8px;background:var(--primary);opacity:.6;display:inline-block}
+  footer{text-align:center;font-size:12px;color:rgba(120,100,80,0.4);padding:12px 0 4px}
+  .intro{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;max-width:720px;margin:0 auto;width:100%}
+  .intro .big{font-family:var(--font-display);font-size:40px;color:var(--primary);line-height:1.15;white-space:pre-line}
+  .intro .sub{font-family:var(--font-doc);font-size:18px;color:var(--sepia)}
+  .intro .notice{font-size:13px;color:var(--sepia);border-left:2px solid var(--sepia-light);padding-left:8px}
+
+  @media (max-width:820px){
+    .cards.c4,.cards.c3{grid-template-columns:1fr 1fr} .puz,.result{grid-template-columns:1fr}
+    .grid6{grid-template-columns:90px 1fr 1fr} .decide{grid-template-columns:1fr} .card p{font-size:14px}
+    .record{font-size:12px} .intro .big{font-size:30px}
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <h1>1919~1925, 임시 정부를 다시 설계하다</h1>
+    <div class="step" id="step"></div>
+  </header>
+  <div class="record" id="record"></div>
+  <div class="mine" id="mine"></div>
+  <div id="stage"></div>
+</div>
+<div id="tt-bubble"></div>
+
+<script>
+/* ───────── 배포 설정 (지침 v3 신규 표준) ───────── */
+window.GAME_CONFIG = { game_id:'imjeong1919', label:'임시 정부를 다시 설계하다', era:'근현대', version:'0.4.3' };
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'
+};
+function publicHeaders(extra){
+  var key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  var h = Object.assign({ apikey:key }, extra || {});
+  if (key.indexOf('eyJ') === 0) h.Authorization = 'Bearer ' + key;
+  return h;
+}
+function sendToSupabase(choiceData, comment){
+  var url = window.CHARLIE_CONFIG.supabaseUrl, key = window.CHARLIE_CONFIG.supabasePublishableKey;
+  if (!url || !key || key.indexOf('__') === 0) return Promise.resolve({ ok:false, skipped:true });
+  return fetch(url + '/rest/v1/game_results', {
+    method:'POST',
+    headers: publicHeaders({ 'Content-Type':'application/json', Prefer:'return=minimal' }),
+    body: JSON.stringify({
+      class: new URLSearchParams(location.search).get('class') || '미입력',
+      game: window.GAME_CONFIG.game_id,
+      choices: choiceData,
+      comment: comment || '',
+      timestamp: new Date().toISOString()
+    })
+  }).then(function(res){ if(!res.ok) console.warn('[Supabase] 전송 실패 HTTP ' + res.status); return res; })
+    .catch(function(err){ console.warn('[Supabase] 네트워크 전송 실패', err); return { ok:false, failed:true }; });
+}
+
+/*CORE-START*/
+/* ───────── 콘텐츠 (DESIGN_LOCK v0.4 / SOURCE_REGISTER v0.2) ───────── */
+var TIP = {
+  '연통제':'연통제(聯通制) — 임시 정부가 국내에 둔 비밀 행정 조직',
+  '교통국':'교통국(交通局) — 국내 연락·망명·자금을 맡은 통신 기관',
+  '한성 정부':'한성 정부(漢城政府) — 1919년 4월 서울에서 선포된 임시 정부',
+  '법통':'법통(法統) — 정통성을 잇는 계보',
+  '집정관총재':'집정관총재(執政官總裁) — 한성 정부의 수반 직명',
+  '의정원':'의정원(議政院) — 임시 정부의 입법 기관',
+  '국무원':'국무원(國務院) — 임시 정부의 행정 기관',
+  '부서':'부서(副署) — 대통령 명령에 국무원이 함께 서명하는 것',
+  '약법':'약법(約法) — 한성 정부가 선포한 6개조 기본법',
+  '위임 통치':'위임 통치(委任統治) — 국제 연맹이 특정국에 통치를 맡기는 제도',
+  '성토문':'성토문(聲討文) — 죄상을 공개적으로 규탄하는 글',
+  '창조파':'창조파(創造派) — 임정을 해산하고 새 기관을 세우자는 측',
+  '개조파':'개조파(改造派) — 임정을 존속시키되 고치자는 측',
+  '탄핵':'탄핵(彈劾) — 고위 공직자의 위법 책임을 물어 심판에 부치는 절차',
+  '공첩':'공첩(公牒) — 관청에서 보내는 공문서',
+  '면직':'면직(免職) — 직에서 물러나게 함',
+  '국무령':'국무령(國務領) — 1925년 개헌 후 임시 정부의 수반 직명',
+  '공채':'공채(公債) — 정부가 상환을 약속하고 발행하는 채권',
+  '의연금':'의연금(義捐金) — 공익을 위해 내는 기부금',
+  '인구세':'인구세(人口稅) — 20세 이상 국민에게 연 1원을 부과한 임정 세금',
+  '구미 위원부':'구미 위원부(歐美委員部) — 미국·유럽 외교를 맡은 기관',
+  '시베리아 출병':'시베리아 출병 — 1918년부터 일본군이 러시아 연해주에 주둔한 일',
+  '인선':'인선(人選) — 자리에 맞는 사람을 고르는 것',
+  '모반':'모반(謀反) — 나라를 뒤엎으려는 행위'
+};
+var RECORD = ['1919.9 통합·상하이','연통제·외교·공채','1921 침체·성토문','1923 결렬·해산령','1925 탄핵·국무령제'];
+
+var S1 = {
+  situ:'3·1 운동 뒤 연해주의 대한 국민 의회, 상하이 임시 정부, 국내 {{한성 정부}}가 따로 섰다. 1919년 여름, 통합 협상이 시작된다.',
+  role:'1919년 여름, 당신은 통합 협상에 참여한 한 정부의 대표다. 당신 정부의 통합안을 정해야 한다.',
+  q:'서로 다른 정부와 의회를 하나로 합친다면, 어떤 통합안을 지지할 것인가?',
+  opts:[
+    {k:'A',t:'국내 13도 대표가 세운 정부를 계승한다',c:'국내 13도 대표가 세운 정부라는 명분을 내세울 수 있다.',l:'{{집정관총재}} 제도와 그 {{인선}}을 받아야 한다.'},
+    {k:'B',t:'세 정부와 두 의회(의정원·국민의회)를 모두 해산하고 새 의회를 세운다',c:'어느 쪽도 흡수되지 않는다.',l:'기존 {{의정원}}이 스스로 해산에 동의해야 한다.'},
+    {k:'C',t:'의회만 합치고 상하이 정부는 그대로 둔다',c:'이미 움직이는 정부를 유지한다.',l:'연해주 측은 이를 흡수로 받아들인다.'},
+    {k:'D',t:'일본군의 {{시베리아 출병}}이 끝난 뒤 정부를 연해주로 옮겨 합친다',c:'만주·연해주 세력과 가깝다.',l:'일본군이 물러나기 전까지는 옮길 수 없다.'}
+  ],
+  brief:[
+    {h:'한성 정부 (서울)',t:'국민대회 선포문에 13도 대표 명단이 실림. 수반 직명은 {{집정관총재}}.'},
+    {h:'상하이 임시 정부',t:'이미 정부와 {{의정원}}이 운영 중.'},
+    {h:'대한 국민 의회 (연해주)',t:'별도의 의회 체제로 활동 중.'}
+  ],
+  hist:['한성 정부의 내각 구성안을 중심으로 통합했다. 위치는 당분간 상하이. (1919.9)','그러나 국민의회는 {{의정원}}이 해산하지 않은 것을 약속 위반이라 하여 1920년 2월 재건을 선언했다.'],
+  costA:'한성 정부의 {{집정관총재}} 제도를 받아들이면서, 통합과 헌법 개정 과정에서 국가 수반은 국무총리에서 임시 대통령으로 바뀌었다.'
+};
+var S2 = {
+  situ:'1919년 4월의 임시 헌장과 9월의 임시 헌법. 조문을 원칙에 연결하라.',
+  role:'이 헌법을 공포한 것은 임시 {{의정원}}이다.',
+  cards:[
+    {t:'제2조 대한민국의 주권은 대한 인민 전체에 있음.',ans:'주권'},
+    {t:'제5조 … 입법권은 의정원이 …',ans:'입법'},
+    {t:'제5조 … 행정권은 국무원이 …',ans:'행정'},
+    {t:'제5조 … 사법권은 법원이 행사함.',ans:'사법'},
+    {t:'헌장 제3조 남녀 귀천, 빈부의 계급이 없고 일체 평등함.',ans:'평등'}
+  ],
+  slots:['주권','입법','행정','사법','평등'],
+  slotName:{'주권':'국민 주권','입법':'입법','행정':'행정','사법':'사법','평등':'평등'},
+  q:'국토를 회복하지 못한 정부가 왜 이 구조를 먼저 선언했을까?',
+  views:['정부의 형태를 먼저 정해야 바깥에 국가로 나설 수 있었다','황제가 아니라 국민이 주권자임을 선언하는 것 자체가 목표였다','여러 세력이 합칠 수 있는 최소한의 약속이 필요했다'],
+  after:'이 헌법은 광복 이후 제정된 제헌 헌법에 큰 영향을 미쳤다.'
+};
+var S3 = {
+  situ:'1920년. 정부는 국내와 연결되어야 하고, 자금이 있어야 하고, 바깥에 알려져야 한다. 각 기관을 그 자리에 놓아라.',
+  role:'당신은 정부 운영 방침을 검토하는 위치에 있다. (자료 시점: 1920년까지)',
+  cards:[
+    {t:'{{연통제}} — 문서·명령 전달, 자금 조달, 정보 수집',ans:'in'},
+    {t:'{{교통국}} — 국내 연락, 망명 지원, 자금 모금',ans:'in'},
+    {t:'독립신문 — 독립운동 소식 전달',ans:'out'},
+    {t:'{{구미 위원부}} — 미국·유럽 외교',ans:'us'},
+    {t:'독립 {{공채}}·{{의연금}} — 활동 자금',ans:'fund'}
+  ],
+  slots:['in','out','us','fund'],
+  slotName:{in:'국내 ↔ 상하이',out:'상하이 → 각지',us:'상하이 ↔ 미국',fund:'미주·중국 → 상하이'},
+  board:[
+    ['국내 연결','{{연통제}}·{{교통국}}으로 국내와 연락 중'],
+    ['자금','{{공채}}·{{의연금}}으로 활동 자금 확보'],
+    ['외교','파리 강화 회의·{{구미 위원부}}로 국제 여론화 시도'],
+    ['조직','독립운동의 방법을 둘러싼 서로 다른 방향이 존재']
+  ],
+  q:'지금 가장 놓쳐서는 안 될 기반은 무엇인가?',
+  opts:[
+    {k:'연결',t:'국내 연결',c:'비밀 행정·통신망으로 국내와 이어진다.',l:'비밀 조직은 발각에 취약하다.'},
+    {k:'자금',t:'자금',c:'{{공채}}·{{의연금}}으로 활동비를 마련한다.',l:'상환은 광복 이후이며, 소지 자체가 처벌 대상이다.'},
+    {k:'외교',t:'외교',c:'국제 여론에 독립 문제를 알릴 수 있다.',l:'성과를 직접 통제하기 어렵다.'},
+    {k:'조직',t:'노선 합의',c:'무장 투쟁·외교·실력 양성의 방향을 하나로 모은다.',l:'합의에 시간이 들고 이탈이 생긴다.'}
+  ],
+  bond:'정부는 광복 후 5년째부터 30년 안에 갚겠다는 약속으로 100·500·1,000원 {{공채}}를 팔았다. 소지만으로 처벌될 수 있어 태워 버린 이들도 많았다. 1983년 특별 조치법이 생긴 뒤에야 상환이 시작되어, 2011년 기준 신고된 57여 건이 상환되었다.'
+};
+var S4 = {
+  situ:'1921년. 앞서 무엇을 우선했든, 아래 일들은 일어났다. 이 사건들은 당신의 선택과 관계없이 일어났다.',
+  role:'당신은 임시 정부 운영을 재검토하는 위치에 있다.',
+  events:[
+    {t:'일제의 탄압으로 {{연통제}}와 {{교통국}}이 무너졌다.',src:'교과서'},
+    {t:'외교 활동에서 뚜렷한 성과를 거두지 못했다.',src:'교과서'},
+    {t:'무장 투쟁·외교·실력 양성을 둘러싼 갈등이 계속되었다. 1월 국무총리가 사임했고, 봄에는 각 부의 책임자들이 잇달아 물러났다.',src:'교과서 · 국립임시정부기념관'},
+    {t:'4월, 신채호 등 54인이 임시 대통령의 {{위임 통치}} 청원을 규탄하는 {{성토문}}을 발표했다.',src:'성토문(1921.4.19) · 『대한민국임시정부공보』 제42호 수록',
+     back:'［사실］ 청원서 문면: 일본 지배에서 벗어나게 하고 장래의 완전 독립을 보장하면서 국제 연맹의 위임 통치하에 두어 달라. ／ ［해석］ 성토문의 규정: 독립에서 한 발 물러서면 이완용·송병준이 된다.'}
+  ],
+  react:{
+    '연결':'당신은 국내와의 연결을 가장 중요한 기반으로 판단해 왔다. 그 연결망이 무너졌다.',
+    '자금':'당신은 자금을 우선했다. 자금을 나르던 연락망이 무너졌다.',
+    '외교':'당신은 외교를 우선했다. 그 외교에서 뚜렷한 성과가 나오지 않았다.',
+    '조직':'당신은 내부의 합의를 중요하게 보았다. 그러나 방향을 둘러싼 갈등은 계속되었고, {{위임 통치}} 청원 문제도 비판의 대상이 되었다.'
+  },
+  q:'기존 판단을 유지할 것인가, 다른 기반을 우선할 것인가?',
+  reasons:['연락망 붕괴','외교 성과 부족','노선 갈등','청원 성토'],
+  rq:'내 판단을 가장 흔든 사건은?'
+};
+var S5 = {
+  situ:'1923년 1월부터 6월까지, 125명의 대표가 상하이에 모였다. 시국문제 — 임시 정부를 어떻게 할 것인가 — 에서 회의는 갈라졌다.',
+  role:'1923년, 당신이 속한 독립운동 세력은 임시 정부 문제에 대한 입장을 정해야 한다.',
+  docs:[
+    {layer:'개조를 주장한 측',t:'"임시정부의 전통을 인정하고, 그것을 개조해서 독립운동의 최고기관으로 하자."',src:'국립대한민국임시정부기념관'},
+    {layer:'창조를 주장한 측',t:'"임시정부를 최고기관으로 인정한다면 국민의회도 동시에 최고기관이었음을 인정하라." 중앙이 만들어 승인하는 연합에는 반대한다.',src:'뜻: 어느 한쪽만 인정할 수 없으니, 둘 다 없애고 새로 세우자 · 국립대한민국임시정부기념관'},
+    {layer:'임시 정부 측',t:'임시 정부가 회의에 참여하자는 안은 {{의정원}}에서 부결되었다.',src:'신편 한국사 48'}
+  ],
+  q:'당신의 세력은 어느 입장에 서는가?',
+  reasons:['개조측 주장','창조측 주장','임시 정부 측'],
+  rq:'내 판단의 근거가 된 자료는?',
+  opts:[
+    {k:'개조',t:'개조 — 전통을 인정하고 고쳐서 최고기관으로',c:'임정의 존재 자체는 부정하지 않으며 다수파를 이룬다.',l:'1919년 통합의 균열(승인·개조 분쟁)은 그대로 남는다.'},
+    {k:'창조',t:'창조 — 과거 정부를 모두 부인하고 새 최고기관을',c:'중앙이 만들어 승인하는 연합에 반대한다.',l:"임정이 '민국(대한민국)에 대한 {{모반}}'으로 규정한다."},
+    {k:'고수',t:'회의의 결정을 인정하지 않는다',c:'정부의 연속성을 지킨다.',l:"'6월 2일 이후의 일체 불법행위 철폐·대표회 즉각 해산'을 명하고 회의 세력과 결별한다."}
+  ],
+  hist:'회의는 성과 없이 결렬되었다. 창조파는 따로 국호를 정했고, 임시 정부는 해산령을 내렸다. 많은 독립운동가가 떠났다.',
+  extra:'"두 개의 정부가 생기는 것을 피하고, 독립운동 단체들을 하나의 대독립당으로 조직하자." (여운형 등, 1923.4.11)',
+  cbB:['1919년 당신은 두 의회를 해산하고 새 국회를 세우는 통합안을 지지했다.','실제로 당시 이 입장에 섰던 세력은 1923년 {{창조파}}로 다시 모였다.','당신의 1923년 판단은 1919년의 판단과 같았는가, 달라졌는가?']
+};
+var S6 = {
+  role:'당신은 임시 {{의정원}} 표결자다. 의원 10인이 임시 대통령 {{탄핵}}안을 발의했다. 당사자의 기록과 발의 의원들의 주장을 대조하라.',
+  rows:[
+    {k:'자금',name:'자금',s2:'S2 · 행정',
+     doc:'"하와이 교민의 {{인구세}} 중지는 내가 지휘했다. 하와이 민단장과 부인회장에게 상하이로 보낼 공금을 모두 멈추라고 지시했다."',dsrc:'『대한민국임시정부공보』 제42호 · 탄핵 결의안',
+     judge:'{{국무원}}의 {{부서}} 없이 대통령 명의만으로 납세 중지를 명령했다. — 헌법 제39조 위반',jsrc:'국고로 들어갈 돈을 중간에서 끊었다고 보았다'},
+    {k:'운영',name:'정부 운영',s2:'S2 · 행정',
+     doc:'"원동 각지는 상해에서, 미주·하와이는 워싱턴에서 관리하되 중대사만 서로 협의한다."',dsrc:'『대한민국임시정부공보』 제42호 · 탄핵 결의안',
+     judge:'정무 전체를 맡아야 할 대통령이 정무를 둘로 나누고, 인민을 정부와 분리시켰다. — 헌법 제11조',jsrc:'정부 수반이 아니라 한 당파 우두머리의 말이라고 보았다'},
+    {k:'법통',name:'헌법·법통',s2:'S2 · 입법',
+     doc:'"한성에서 선포한 {{약법}} 제6조에 어긋나는 {{의정원}} 결의는 결코 따르지 않겠다."',dsrc:'『대한민국임시정부공보』 제42호 · 탄핵 결의안',
+     judge:'약법에는 대통령제가 없었다. 발의 의원들은 현행 임시 헌법으로 대통령이 된 사람이 그 헌법과 의정원의 권한을 부정한다고 보았다.',jsrc:"'집정관총재를 대통령으로 바꾸도록 운동한 것은 본인'"}
+  ],
+  cbA:"당신은 1919년에 한성 정부의 계승을 중요하게 보았다. 1925년, '한성 조직의 계통'이라는 말이 이번에는 의정원의 권한을 부정하는 논거로 등장했다.",
+  cbFund:{
+    both:'당신은 1920년부터 자금을 중요한 기반으로 보았고, 위기 이후에도 그 판단을 유지했다. 1925년, 자금을 누가 통제할 권한이 있는지가 대통령의 책임 문제로 등장했다.',
+    s3:'당신은 1920년에 자금을 중요한 기반으로 보았다. 1925년, 자금을 누가 통제할 권한이 있는지가 대통령의 책임 문제로 등장했다.',
+    s4:'당신은 1921년 위기 이후 자금을 중요한 기반으로 다시 보았다. 1925년, 자금을 누가 통제할 권한이 있는지가 대통령의 책임 문제로 등장했다.'
+  },
+  hist:'{{의정원}}은 3월 18일 탄핵안을 통과시키고, 심판을 거쳐 3월 23일 {{면직}}을 결정했다. 박은식이 뒤를 이었고, 이후 대통령제는 {{국무령}}제로 바뀌었다.'
+};
+var ASK = [
+  '독립운동의 구심점으로 만들어진 임시 정부는 위기가 닥칠 때 무엇을 유지하고 무엇을 바꾸어야 했을까?',
+  '임시 대통령의 책임을 판단할 때 무엇을 기준으로 삼아야 할까? 독립운동의 성과, 정부 자금의 운영, 헌법과 절차의 준수, 정부 내부의 권한 관계 가운데 무엇을 가장 중요하게 보았는가? 그 기준을 다른 지도자에게도 똑같이 적용할 수 있는가?',
+  '1920년의 우선순위를 고를 때, 당신은 1921년에 연락망이 무너진다는 것을 알고 있었다. 몰랐다면 다른 선택을 했을까?'
+];
+
+/* ───────── 순수 로직 (Node 스모크 테스트 대상) ───────── */
+function priorityTransition(s3, s4){
+  if (s3 === null && s4 === null) return '비해당';
+  if (s3 === null) return '진입';
+  if (s4 === null) return '이탈';
+  return s3 === s4 ? '유지' : '전환';
+}
+function callbacksFor(S){
+  var out = [];
+  if (S.s1 === 'B') out.push('s1b_to_s5');
+  if (S.s1 === 'A') out.push('s1a_to_s6');
+  if (S.s3p === '자금' || S.s4p === '자금') out.push('fund_to_s6');
+  return out;
+}
+function fundVariant(S){
+  if (S.s3p === '자금' && S.s4p === '자금') return 'both';
+  if (S.s3p === '자금') return 's3';
+  return 's4';
+}
+function orgLabel(s5){ return {'개조':'존속-개조','창조':'해산-창조','고수':'현상 고수'}[s5] || ''; }
+function buildChoices(S, version){
+  var tr = priorityTransition(S.s3p, S.s4p);
+  return {
+    record_type:'result', version:version,
+    s1_integration_plan:S.s1, s2_correct:S.s2c,
+    s3_priority:S.s3p, s3_org_stance:S.s3o, s4_priority:S.s4p, s4_org_stance:S.s4o,
+    priority_transition:tr, org_shifted:S.s3o !== S.s4o, s4_reason_event:S.s4r,
+    s5_stance:S.s5, s5_reason_doc:S.s5r, s6_evidence_sufficient:S.s6ok, s6_verdict:S.s6v, s6_reason_issues:S.s6r.slice(),
+    callbacks_shown:S.shown.slice(),
+    pattern:{ priority:tr, org:orgLabel(S.s5) }
+  };
+}
+var S1NAME = {A:'국내 13도 대표 정부의 계승',B:'두 의회 해산·새 국회',C:'의회만 병합·상하이 정부 존속',D:'연해주 이전 후 통합'};
+var S1SHORT = {A:'한성 계승',B:'새 국회',C:'상하이 존속',D:'연해주 이전'};
+/* 나의 판단 띠 — 씬 진입 시 현재 칸은 '판단 중' */
+function mineLine(S, now){
+  var items=[['1919',S.s1?S1SHORT[S.s1]:null],['1920',pname(S.s3p,S.s3o)||null],['1921',pname(S.s4p,S.s4o)||null],['1923',S.s5],['1925',S.s6v]];
+  return items.map(function(it,i){ return it[0]+' '+(i===now?'판단 중':(it[1]||'?')); });
+}
+function pname(p, o){ return p ? p : (o ? '내부의 합의' : ''); }
+function josa(w, a, b){ if(!w) return a; var c=w.charCodeAt(w.length-1); var has=(c>=0xAC00&&c<=0xD7A3)?((c-0xAC00)%28)!==0:false; return has?a:b; }
+function trajectory(S){
+  var a = [];
+  a.push('당신은 1919년 통합안으로 「' + S1NAME[S.s1] + '」을 지지했다.');
+  var p3=pname(S.s3p,S.s3o); a.push('1920년에는 ' + p3 + josa(p3,'을','를') + ' 가장 중요하게 보았다.');
+  var same = (S.s3p === S.s4p) && (S.s3o === S.s4o);
+  var why = S.s4r ? '「' + S.s4r + '」을 보고 ' : '';
+  a.push('1921년 위기 이후 ' + why + (same ? '그 판단을 유지했다.' : (function(){ var p4=pname(S.s4p,S.s4o); return p4 + josa(p4,'으로','로') + ' 바꾸었다.'; })()));
+  a.push('1923년에는 ' + S.s5 + ' 입장에 섰다' + (S.s5r ? ' — 근거: ' + S.s5r : '') + '.');
+  if (S.s6v === '유보') a.push('1925년에는 자료가 부족하다고 판단했다.');
+  else a.push('1925년에는 탄핵에 ' + S.s6v + '했다 — 근거: ' + S.s6r.join(', ') + '.');
+  return a;
+}
+/*CORE-END*/
+
+/* ───────── DOM 헬퍼 — 템플릿 리터럴 안 태그 삽입 금지 → 노드 조립 ───────── */
+function el(tag, cls, text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; return e; }
+function rich(str){
+  var frag=document.createDocumentFragment(), re=/\{\{([^}]+)\}\}/g, last=0, m;
+  while((m=re.exec(str))){ if(m.index>last) frag.appendChild(document.createTextNode(str.slice(last,m.index))); frag.appendChild(tt(m[1])); last=re.lastIndex; }
+  if(last<str.length) frag.appendChild(document.createTextNode(str.slice(last)));
+  return frag;
+}
+function P(cls, str){ var p=el('p',cls||null); p.appendChild(rich(str)); return p; }
+function tt(term){
+  var s=el('span',null,term); var tip=TIP[term];
+  if(!tip) return s;
+  s.className='tt'; s.setAttribute('data-tip',tip);
+  s.addEventListener('click',function(ev){ ev.stopPropagation(); showTip(s); });
+  return s;
+}
+var bubble=document.getElementById('tt-bubble');
+function showTip(s){
+  bubble.textContent=s.getAttribute('data-tip'); bubble.style.top='-9999px'; bubble.classList.add('show');
+  var r=s.getBoundingClientRect(), h=bubble.offsetHeight, w=bubble.offsetWidth;
+  var top=window.scrollY+r.top-h-8; if(top<window.scrollY+4) top=window.scrollY+r.bottom+8;
+  var left=Math.max(8,Math.min(window.scrollX+r.left, window.innerWidth-w-8));
+  bubble.style.top=top+'px'; bubble.style.left=left+'px';
+}
+document.addEventListener('click',function(){ bubble.classList.remove('show'); bubble.style.top='-9999px'; });
+
+/* ───────── 상태 ───────── */
+var S;
+function reset(){ S={ s1:null,s2c:0,s3p:null,s3o:null,s4p:null,s4o:null,s4r:null,s5:null,s5r:null,s6ok:null,s6v:null,s6r:[],shown:[],submitted:false,commentSubmitted:false }; }
+reset();
+var stage=document.getElementById('stage'), stepEl=document.getElementById('step'), recEl=document.getElementById('record');
+function setHeader(n, label){ stepEl.textContent=''; stepEl.appendChild(document.createTextNode(label+'  ')); stepEl.appendChild(el('b',null,n+' / 6')); }
+function setRecord(done, now){ recEl.textContent=''; recEl.appendChild(el('span','tag','역사의 기록'));
+  RECORD.forEach(function(t,i){ if(i) recEl.appendChild(el('span','arrow','→')); var e=el('span','ev',t); if(i<done) e.classList.add('done'); if(i===now) e.classList.add('now'); recEl.appendChild(e); }); }
+var mineEl=document.getElementById('mine');
+function setMine(now){ mineEl.textContent=''; mineEl.appendChild(el('span','tag','나의 판단')); mineLine(S,now).forEach(function(t,i){ if(i) mineEl.appendChild(el('span','arrow','→')); var e=el('span','ev',t); if(i===now) e.classList.add('now'); mineEl.appendChild(e); }); var nowEl=mineEl.querySelector('.ev.now'); if(nowEl && nowEl.scrollIntoView) nowEl.scrollIntoView({block:'nearest',inline:'nearest'}); }
+function mount(node){ stage.textContent=''; stage.appendChild(node); window.scrollTo(0,0); }
+function navBtn(label, fn, primary){ var b=el('button','btn'+(primary?' primary':''),label); b.addEventListener('click',fn); return b; }
+function roleLine(str){ var r=el('div','role'); r.appendChild(rich(str)); return r; }
+function histCard(str, layer){ var c=el('div','card hist'); c.appendChild(el('span','layer',layer||'역사의 기록')); c.appendChild(P(null,str)); return c; }
+function cbBox(who, str){ var d=el('div','cb'); d.appendChild(el('span','who',who)); d.appendChild(rich(str)); return d; }
+function markShown(id){ if(S.shown.indexOf(id)<0) S.shown.push(id); }
+
+/* 판단형 선택지 — ① 탭: 조건·한계 미리보기(자유 비교) ② 「지지한다」로 확정 ③ 확정 후 잠금 → 그 뒤에만 역사 공개. 정오 색상 없음 */
+function choiceList(opts, onConfirm, confirmLabel){
+  var wrap=el('div','choices'); var conds=[]; var cur=-1; var locked=false;
+  var btn=el('button','btn primary confirm',confirmLabel||'이 안을 지지한다');
+  opts.forEach(function(o,i){
+    var b=el('button','choice'); b.appendChild(el('span','k',o.k)); b.appendChild(rich(o.t));
+    var c=el('div','cond'); c.appendChild(el('b',null,'조건')); c.appendChild(rich(o.c)); c.appendChild(el('br')); c.appendChild(el('b',null,'한계')); c.appendChild(rich(o.l));
+    b.addEventListener('click',function(){
+      if(locked) return; cur=i;
+      wrap.querySelectorAll('.choice').forEach(function(x,j){ x.classList.toggle('on',j===i); });
+      conds.forEach(function(x,j){ x.classList.toggle('show',j===i); });
+      btn.classList.add('show'); conds[i].appendChild(btn);
+    });
+    wrap.appendChild(b); wrap.appendChild(c); conds.push(c);
+  });
+  btn.addEventListener('click',function(){
+    if(cur<0||locked) return; locked=true; btn.classList.remove('show');
+    wrap.querySelectorAll('.choice').forEach(function(x,j){ x.classList.toggle('off',j!==cur); });
+    onConfirm(opts[cur],cur);
+  });
+  return wrap;
+}
+/* 근거 도장 — 자료와 선택을 잇는 행동 (S4·S5) */
+function stampRow(q, labels, onStamp){
+  var box=el('div'); box.appendChild(el('div','stampq',q)); var chips=el('div','chips');
+  var done=false; labels.forEach(function(t){ var c=el('button','chip',t); c.addEventListener('click',function(){ if(done) return; done=true; c.classList.add('on'); chips.querySelectorAll('.chip').forEach(function(x){ if(x!==c) x.disabled=true; }); onStamp(t); }); chips.appendChild(c); });
+  box.appendChild(chips); return box;
+}
+/* 퍼즐 — 카드 탭 → 슬롯 탭. 사실층이므로 정오 피드백 사용 */
+function puzzle(cfg, onDone){
+  var wrap=el('div','puz'); var pool=el('div','pool'), slots=el('div','slots'); var picked=null, correct=0;
+  pool.appendChild(el('span','hint','① 왼쪽 카드를 누르고 → ② 오른쪽 자리를 누른다. 틀리면 흔들린다.'));
+  cfg.cards.forEach(function(c){ var p=el('div','pcard'); p.appendChild(rich(c.t)); p.setAttribute('data-ans',c.ans);
+    p.addEventListener('click',function(){ pool.querySelectorAll('.pcard').forEach(function(x){x.classList.remove('pick');}); p.classList.add('pick'); picked=p; });
+    pool.appendChild(p); });
+  cfg.slots.forEach(function(k){ var s=el('div','slot'); s.appendChild(el('span','nm',cfg.slotName[k])); var got=el('span','got',''); s.appendChild(got);
+    s.addEventListener('click',function(){
+      if(!picked) return;
+      if(picked.getAttribute('data-ans')===k){
+        s.classList.remove('correct'); void s.offsetWidth; s.classList.add('correct'); s.classList.add('full');
+        var nm=picked.textContent.split(' — ')[0].slice(0,14); got.textContent=got.textContent?got.textContent+' · '+nm:nm;
+        picked.classList.add('gone'); picked=null; correct++;
+      } else { s.classList.remove('wrong'); void s.offsetWidth; s.classList.add('wrong'); picked.classList.remove('pick'); picked=null; }
+      if(pool.querySelectorAll('.pcard:not(.gone)').length===0) onDone(correct);
+    }); slots.appendChild(s); });
+  wrap.appendChild(pool); wrap.appendChild(slots); return wrap;
+}
+
+/* ───────── 도입 ───────── */
+function intro(){
+  setHeader(0,'도입'); setRecord(0,-1); setMine(-1);
+  var v=el('div','intro');
+  v.appendChild(el('div','big','1919~1925,\n임시 정부를 다시 설계하다'));
+  v.appendChild(el('div','sub','독립운동의 구심점으로 만들어진 정부는, 위기가 닥칠 때 무엇을 유지하고 무엇을 바꾸어야 했을까?'));
+  v.appendChild(el('p',null,'수업에서 배운 임시 정부의 흐름과 자료를 떠올리며, 당시의 조건 속에서 다시 판단해 보자. 당신의 선택은 역사를 바꾸지 않는다. 바뀌는 것은 당신의 판단, 그리고 같은 사건을 받아들이는 의미다. 1919년부터 1925년까지 여섯 번 판단한다.'));
+  v.appendChild(el('p','hint','점선 밑줄이 있는 낱말을 누르면 뜻이 나옵니다.'));
+  v.appendChild(el('p','notice','이 게임은 임시 정부의 운영·갈등·탄핵을 다룹니다. 인물에 대한 평가는 정답 없이 학생 자신의 근거로 내립니다. 소감 작성은 선택입니다.'));
+  var cls=new URLSearchParams(location.search).get('class'); v.appendChild(el('p','hint','반: '+(cls||'미입력')));
+  var nav=el('div','nav'); nav.appendChild(navBtn('1919년 여름으로',scene1,true)); v.appendChild(nav);
+  mount(v);
+}
+/* ───────── S1 ───────── */
+function scene1(){
+  setHeader(1,'S1 · 1919년 여름'); setRecord(0,-1); setMine(0);
+  var v=el('div','scene'); v.appendChild(el('div','year','1919'));
+  v.appendChild(P('situ',S1.situ));
+  var bg=el('div','cards c3'); S1.brief.forEach(function(b){ var c=el('div','card doc'); c.appendChild(el('span','layer',b.h)); c.appendChild(P(null,b.t)); c.appendChild(el('span','src','교과서 p.34 · 신편 한국사 48')); bg.appendChild(c); }); v.appendChild(bg);
+  v.appendChild(roleLine(S1.role)); v.appendChild(el('div','q',S1.q));
+  var after=el('div'); var nav=el('div','nav'); var next=navBtn('1919년 9월로',scene2,true); next.disabled=true;
+  v.appendChild(choiceList(S1.opts,function(o){
+    S.s1=o.k; setMine(-1); after.textContent=''; var g=el('div','cards c2');
+    g.appendChild(histCard(S1.hist[0])); g.appendChild(histCard(S1.hist[1])); after.appendChild(g);
+    if(o.k==='A') after.appendChild(histCard(S1.costA,'당신 선택의 대가'));
+    next.disabled=false;
+  }));
+  v.appendChild(after); nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── S2 ───────── */
+function scene2(){
+  setHeader(2,'S2 · 1919년 9월'); setRecord(1,0); setMine(-1);
+  var v=el('div','scene'); v.appendChild(el('div','year','1919'));
+  v.appendChild(P('situ',S2.situ)); v.appendChild(roleLine(S2.role));
+  var after=el('div'); var nav=el('div','nav'); var next=navBtn('1920년으로',scene3,true); next.disabled=true;
+  v.appendChild(puzzle(S2,function(correct){
+    S.s2c=correct; after.appendChild(el('div','q',S2.q)); after.appendChild(el('span','hint','생각해 보기 — 정답도, 기록도 없다. 하나 골라 보자.')); var g=el('div','cards c3');
+    S2.views.forEach(function(t){ var b=el('button','choice',t); b.addEventListener('click',function(){ g.querySelectorAll('.choice').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }); g.appendChild(b); });
+    after.appendChild(g); after.appendChild(histCard(S2.after)); next.disabled=false;
+  }));
+  v.appendChild(after); nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── S3 ───────── */
+function scene3(){
+  setHeader(3,'S3 · 1920년'); setRecord(1,1); setMine(1);
+  var v=el('div','scene'); v.appendChild(el('div','year','1920'));
+  v.appendChild(P('situ',S3.situ)); v.appendChild(roleLine(S3.role));
+  var after=el('div'); var nav=el('div','nav'); var next=navBtn('1921년으로',scene4,true); next.disabled=true;
+  v.appendChild(puzzle(S3,function(){
+    var bd=el('div','card hist'); bd.appendChild(el('span','layer','1920년 정부 운영 상황판'));
+    S3.board.forEach(function(r){ var p=el('p'); p.appendChild(el('b',null,r[0]+' — ')); p.appendChild(rich(r[1])); bd.appendChild(p); }); after.appendChild(bd);
+    after.appendChild(el('div','q',S3.q)); var bond=el('div');
+    after.appendChild(choiceList(S3.opts,function(o){
+      if(o.k==='조직'){ S.s3p=null; S.s3o='합의우선'; } else { S.s3p=o.k; S.s3o=null; }
+      setMine(-1); bond.textContent=''; if(o.k==='자금') bond.appendChild(histCard(S3.bond,'정부는 어떤 약속으로 자금을 모았나'));
+      next.disabled=false;
+    }));
+    after.appendChild(bond);
+  }));
+  v.appendChild(after); nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── S4 ───────── */
+function scene4(){
+  setHeader(4,'S4 · 1921년'); setRecord(2,2); setMine(2);
+  var v=el('div','scene'); v.appendChild(el('div','year','1921')); v.appendChild(P('situ',S4.situ));
+  var g=el('div','cards c4');
+  S4.events.forEach(function(e){ var c=el('div','card event'+(e.back?' flip':'')); c.appendChild(el('span','fixed','선택과 무관하게 일어난 사건'));
+    var f=el('div','front'); f.appendChild(P(null,e.t)); c.appendChild(f);
+    if(e.back){ var b=el('div','back'); b.appendChild(P(null,e.back)); c.appendChild(b); c.appendChild(el('span','src',e.src+' · 탭하여 문면과 해석 대조')); c.addEventListener('click',function(){ c.classList.toggle('open'); }); }
+    else c.appendChild(el('span','src',e.src));
+    g.appendChild(c); });
+  v.appendChild(g);
+  v.appendChild(cbBox('1920 → 1921',S4.react[S.s3p||'조직']));
+  v.appendChild(roleLine(S4.role)); v.appendChild(el('div','q',S4.q));
+  var nav=el('div','nav'); var next=navBtn('1923년으로',scene5,true); next.disabled=true; var after=el('div');
+  v.appendChild(choiceList(S3.opts,function(o){
+    if(o.k==='조직'){ S.s4p=null; S.s4o='합의우선'; } else { S.s4p=o.k; S.s4o=null; }
+    setMine(-1); after.textContent='';
+    after.appendChild(stampRow(S4.rq,S4.reasons,function(t){ if(S.s4r) return; S.s4r=t; next.disabled=false; }));
+  },'이 기반을 우선한다'));
+  v.appendChild(after); nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── S5 ───────── */
+function scene5(){
+  setHeader(5,'S5 · 1923년'); setRecord(3,3); setMine(3);
+  var v=el('div','scene'); v.appendChild(el('div','year','1923')); v.appendChild(P('situ',S5.situ));
+  var g=el('div','cards c3'); S5.docs.forEach(function(d){ var c=el('div','card doc'); c.appendChild(el('span','layer',d.layer)); c.appendChild(P(null,d.t)); c.appendChild(el('span','src',d.src)); g.appendChild(c); }); v.appendChild(g);
+  v.appendChild(roleLine(S5.role)); v.appendChild(el('div','q',S5.q));
+  var after=el('div'); var nav=el('div','nav'); var next=navBtn('1925년으로',scene6,true); next.disabled=true;
+  v.appendChild(choiceList(S5.opts,function(o){
+    S.s5=o.k; setMine(-1); after.textContent='';
+    var reveal=el('div'); /* 근거를 찍은 뒤에만 실제 역사·보조 카드·콜백 공개 (사후 합리화 차단) */
+    after.appendChild(stampRow(S5.rq,S5.reasons,function(t){
+      if(S.s5r) return; S.s5r=t;
+      var g2=el('div','cards c2'); g2.appendChild(histCard(S5.hist)); g2.appendChild(histCard(S5.extra,'회의에는 이런 제안도 있었다')); reveal.appendChild(g2);
+      if(S.s1==='B'){
+        var d=el('div','cb'); d.appendChild(el('span','who','1919 → 1923'));
+        S5.cbB.forEach(function(t2,i){ if(i) d.appendChild(el('br')); d.appendChild(rich(t2)); });
+        reveal.appendChild(d); markShown('s1b_to_s5');
+      }
+      next.disabled=false;
+    }));
+    after.appendChild(reveal);
+  },'이 입장에 선다'));
+  v.appendChild(after); nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── S6 ───────── */
+function scene6(){
+  setHeader(6,'S6 · 1925년 3월 18일'); setRecord(4,4); setMine(4);
+  var v=el('div','scene');
+  if(S.s1==='A'){ v.appendChild(cbBox('1919 → 1925',S6.cbA)); markShown('s1a_to_s6'); }
+  if(S.s3p==='자금'||S.s4p==='자금'){ v.appendChild(cbBox('1920 → 1925',S6.cbFund[fundVariant(S)])); markShown('fund_to_s6'); }
+  v.appendChild(roleLine(S6.role));
+  var g=el('div','grid6'); g.appendChild(el('div','ghead','')); g.appendChild(el('div','ghead','［사실］ 당사자 기록 — 임시 대통령 공첩, 1924.12')); g.appendChild(el('div','ghead r','［책임 주장］ 탄핵안 발의 의원들의 이유 — 1925.3.13'));
+  S6.rows.forEach(function(w){
+    var i=el('div','issue'); i.appendChild(el('span','name',w.name)); i.appendChild(el('span','s2',w.s2)); g.appendChild(i);
+    var d=el('div','card doc'); var ly=el('span','layer'); ly.appendChild(tt('공첩')); d.appendChild(ly); d.appendChild(P(null,w.doc)); d.appendChild(el('span','src',w.dsrc)); g.appendChild(d);
+    var j=el('div','card judge'); j.appendChild(el('span','layer','탄핵안 이유')); j.appendChild(P(null,w.judge)); j.appendChild(el('span','src',w.jsrc)); g.appendChild(j);
+  });
+  v.appendChild(g);
+  var dec=el('div','decide'); var left=el('div'), right=el('div','verdict');
+  left.appendChild(el('div','q','① 이 자료로 판단할 수 있는가?'));
+  var suff=el('div','chips'); var reasons=el('div'); reasons.style.display='none'; reasons.style.marginTop='8px';
+  var need=el('div','stage2'); need.style.marginTop='8px'; var vote=el('div','stage2'), hold=el('div','stage2');
+  var nav=el('div','nav'); var next=navBtn('결과 보기',result,true); next.disabled=true;
+  function setOk(ok){ S.s6ok=ok; S.s6v=null; S.s6r=[]; reasons.style.display=ok?'':'none'; reasons.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');});
+    vote.classList.toggle('show',ok); hold.classList.toggle('show',!ok); need.classList.toggle('show',!ok); right.querySelectorAll('.btn').forEach(function(x){x.classList.remove('on');}); next.disabled=true; }
+  [['판단할 수 있다',true],['자료가 부족하다',false]].forEach(function(p){ var c=el('button','chip',p[0]); c.addEventListener('click',function(){ suff.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');}); c.classList.add('on'); setOk(p[1]); }); suff.appendChild(c); });
+  left.appendChild(suff);
+  reasons.appendChild(el('div','q','② 근거로 삼는 쟁점 (복수 가능)')); var rc=el('div','chips');
+  function gate(){ var has=S.s6r.length>0; vote.querySelectorAll('.btn').forEach(function(b){ b.disabled=!has; if(!has){ b.classList.remove('on'); } }); if(!has){ S.s6v=null; next.disabled=true; } }
+  S6.rows.forEach(function(w){ var c=el('button','chip',w.name); c.addEventListener('click',function(){ c.classList.toggle('on'); var i=S.s6r.indexOf(w.k); if(i<0) S.s6r.push(w.k); else S.s6r.splice(i,1); gate(); }); rc.appendChild(c); });
+  reasons.appendChild(el('span','hint','근거 쟁점을 1개 이상 골라야 표결할 수 있다.'));
+  reasons.appendChild(rc); left.appendChild(reasons);
+  var inp=el('input'); inp.type='text'; inp.maxLength=60; inp.placeholder='어떤 자료가 더 있어야 판단할 수 있는가? (선택)'; need.appendChild(inp); left.appendChild(need);
+  ['찬성','반대'].forEach(function(t){ var b=el('button','btn','탄핵에 '+t); b.disabled=true; b.addEventListener('click',function(){ right.querySelectorAll('.btn').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); S.s6v=t; next.disabled=false; }); vote.appendChild(b); });
+  var hb=el('button','btn ghost','판단을 유보한다'); hb.addEventListener('click',function(){ hb.classList.add('on'); S.s6v='유보'; next.disabled=false; }); hold.appendChild(hb);
+  right.appendChild(vote); right.appendChild(hold); right.appendChild(el('span','hint','유보는 세 번째 표가 아니라 증거가 부족하다는 판단이다.'));
+  dec.appendChild(left); dec.appendChild(right); v.appendChild(dec);
+  nav.appendChild(next); v.appendChild(nav); mount(v);
+}
+/* ───────── 결과 ───────── */
+function result(){
+  setHeader(6,'결과'); setRecord(5,-1); setMine(-1);
+  var choices=buildChoices(S, GAME_CONFIG.version);
+  if(!S.submitted){ sendToSupabase(choices,''); S.submitted=true; }
+  var v=el('div','scene');
+  v.appendChild(histCard(S6.hist));
+  var grid=el('div','result');
+  var t=el('div','traj'); t.appendChild(el('h3',null,'나의 판단 궤적')); trajectory(S).forEach(function(s){ t.appendChild(el('p',null,s)); });
+  var labs=el('div','labels'); labs.appendChild(el('span','lab','우선순위 · '+choices.priority_transition)); labs.appendChild(el('span','lab','조직 · '+choices.pattern.org)); labs.appendChild(el('span','lab','책임 · '+S.s6v)); t.appendChild(labs);
+  grid.appendChild(t);
+  var h=el('div','hist2'); h.appendChild(el('h3',null,'역사의 기록'));
+  ['1919.9 통합 · 상하이 (국민의회는 이탈)','연통제 · 교통국 · 외교 · 공채','1921 침체 · 국무총리 사임 · 성토문','1923 국민 대표 회의 결렬 · 해산령','1925 탄핵 · 면직 · 국무령제'].forEach(function(s){ h.appendChild(el('p',null,s)); });
+  grid.appendChild(h); v.appendChild(grid);
+  var ask=el('div','ask'); ask.appendChild(el('b',null,'생각해 볼 것')); ASK.forEach(function(s){ ask.appendChild(el('p',null,'· '+s)); }); v.appendChild(ask);
+  var ta=el('textarea'); ta.id='comment'; ta.rows=2; ta.placeholder='한 줄 소감을 남겨보세요. (이름·학번 제외)'; ta.maxLength=100; v.appendChild(ta);
+  var nav=el('div','nav');
+  nav.appendChild(navBtn('결과 복사',function(){
+    var c=ta.value.trim();
+    if(c && !S.commentSubmitted){ sendToSupabase({record_type:'comment',version:GAME_CONFIG.version},c); S.commentSubmitted=true; }
+    var txt=['[임시 정부를 다시 설계하다]'].concat(trajectory(S)).concat(['패턴: 우선순위 '+choices.priority_transition+' / 조직 '+choices.pattern.org+' / 책임 '+S.s6v]).concat(c?['소감: '+c]:[]).join('\n');
+    navigator.clipboard.writeText(txt).then(function(){ alert('복사했습니다. 패들렛이나 하이러닝에 붙여 넣으세요.'); },function(){ alert('복사에 실패했습니다.'); });
+  },true));
+  nav.appendChild(navBtn('다시 하기',function(){ reset(); intro(); },false));
+  v.appendChild(nav);
+  v.appendChild(el('footer',null,'© 찰리쌤 · hischarlie.tistory.com'));
+  mount(v);
+}
+
+intro();
+</script>
+</body>
+</html>
