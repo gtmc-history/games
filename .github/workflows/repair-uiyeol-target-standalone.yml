@@ -1,0 +1,52 @@
+name: Repair uiyeol-target standalone
+
+on:
+  push:
+    paths:
+      - '.repair-uiyeol-target'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild standalone index from deployed payload
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const zlib = require('zlib');
+          const dir = 'uiyeol-target';
+          let b64 = '';
+          for (let i = 0; i < 10; i++) {
+            const p = `${dir}/payload-${String(i).padStart(2,'0')}.js`;
+            const text = fs.readFileSync(p, 'utf8');
+            const m = text.match(/\+\s*'([A-Za-z0-9+/=]+)'\s*;/);
+            if (!m) throw new Error(`payload parse failed: ${p}`);
+            b64 += m[1];
+          }
+          let html = zlib.gunzipSync(Buffer.from(b64, 'base64')).toString('utf8');
+          html = html.replaceAll('__배포_전_주입__', 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9');
+          if (!html.includes("game_id:'uiyeol-target'") && !html.includes('uiyeol-target')) throw new Error('game id missing');
+          if (!html.includes("version:'1.6'") && !html.includes('1.6')) throw new Error('version marker missing');
+          if (html.includes('__배포_전_주입__')) throw new Error('publishable key placeholder remains');
+          fs.writeFileSync(`${dir}/index.html`, html);
+          console.log(`rebuilt ${dir}/index.html (${Buffer.byteLength(html)} bytes)`);
+          NODE
+      - name: Commit repaired standalone entry
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add uiyeol-target/index.html
+          git diff --check
+          if git diff --cached --quiet; then
+            echo 'No repair needed.'
+            exit 0
+          fi
+          git commit -m 'fix: serve uiyeol-target as standalone html'
+          git push
