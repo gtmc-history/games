@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G350VXSFGE');
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>갈라진 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-bg:#f0ece4;
+  --color-surface:#e8e0d4;
+  --color-primary:#003087;
+  --color-accent:#cd2e3a;
+  --color-text:#1a1a1a;
+  --color-sepia:#8b7355;
+  --font-display:'Black Han Sans',sans-serif;
+  --font-body:'Noto Sans KR',sans-serif;
+  --font-document:'Noto Serif KR',serif;
+  --paper:#f8f2e7;
+  --line:#b9ad9a;
+  --line-dark:#837560;
+  --muted:#6e6457;
+  --blue-soft:#eef3fb;
+  --blue-line:#8da7cf;
+  --context:#5d564e;
+  --verified:#715d35;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)}
+body{min-height:100dvh;background-image:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)),repeating-linear-gradient(0deg,rgba(90,72,50,.02) 0,rgba(90,72,50,.02) 1px,transparent 1px,transparent 5px)}
+button,textarea{font:inherit}
+button{min-height:48px;cursor:pointer}
+button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(0,48,135,.28);outline-offset:2px}
+.wrap{max-width:900px;margin:0 auto;min-height:100dvh;background:rgba(240,236,228,.9);border-left:1px solid rgba(139,115,85,.25);border-right:1px solid rgba(139,115,85,.25)}
+.ghead{height:64px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:2px solid var(--color-primary);padding:0 16px;background:rgba(248,242,231,.95);position:sticky;top:0;z-index:30}
+.gtitle{font-family:var(--font-display);font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gprog{justify-self:center;font-size:12px;font-weight:900;color:var(--color-primary);border:1px solid var(--color-primary);padding:6px 9px;background:#fffdf8;border-radius:2px}
+.gscene{justify-self:end;font-size:12px;color:var(--muted);font-weight:800}
+.stage{padding:24px;min-height:calc(100dvh - 64px)}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--color-accent);margin-bottom:8px}
+.sc-title{font-family:var(--font-display);font-size:clamp(27px,4vw,36px);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+.lead{font-size:16px;line-height:1.75;margin:0 0 16px}
+.hint{font-size:13px;line-height:1.65;color:var(--muted)}
+.panel{border:1px solid var(--line);background:rgba(255,253,248,.74);padding:16px;margin:16px 0;border-radius:2px}
+.panel-title{font-size:14px;font-weight:900;color:var(--color-sepia);margin:0 0 10px}
+.paper{font-family:var(--font-document);background:var(--paper);border:1px solid var(--color-sepia);padding:20px;line-height:1.95;margin:18px 0;position:relative;white-space:pre-wrap}
+.paper::before{content:'자료';position:absolute;top:-11px;left:12px;background:var(--color-sepia);color:#fff;padding:2px 8px;font-family:var(--font-body);font-size:11px;font-weight:900}
+.source{display:block;text-align:right;font-family:var(--font-body);font-size:12px;color:var(--muted);margin-top:12px;white-space:normal}
+/* ── TOOLTIP · PATCH v1.1 ── */
+.tt{border-bottom:1.5px dashed var(--color-sepia);cursor:pointer;position:relative;color:inherit;text-decoration:none}
+.tt:hover,.tt:focus-visible{border-bottom-color:var(--color-primary);outline:none}
+#tt-bubble{position:fixed;z-index:9000;max-width:240px;background:#272522;border:1px solid rgba(139,115,85,.75);color:#f8f2e7;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.24);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s;border-radius:2px}
+#tt-bubble.show{opacity:1;transform:translateY(0)}
+#tt-bubble .tb-word{font-size:12px;font-weight:900;color:#ead9bd;margin-bottom:4px}
+#tt-bubble .tb-desc{font-size:12px;line-height:1.65;color:#f3eadc}
+.scope-compact{display:inline-block;margin-top:6px;border:1px solid var(--color-sepia);background:#f8f2e7;color:#4f4539;font-size:11px;font-weight:900;padding:4px 6px;border-radius:2px}
+.anchor{background:rgba(0,48,135,.065)}
+.focus{font-weight:800;border-bottom:2px solid var(--color-primary);background:rgba(0,48,135,.08)}
+.context{border-bottom:2px dotted var(--context);background:rgba(90,82,72,.055)}
+.context-label{display:inline-block;margin:-2px 0 7px;font-size:11px;font-weight:900;color:var(--context);border:1px solid var(--line);padding:3px 6px;background:#fffdf8}
+.relation-card{border:1px solid var(--line-dark);background:#fffdf8;margin:16px 0;padding:14px}
+.relation-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.9fr) minmax(0,1fr);gap:8px;align-items:center}
+.node{border:2px solid var(--color-sepia);background:#fffdf8;padding:12px;text-align:center;font-weight:900;line-height:1.45;min-height:56px;display:flex;align-items:center;justify-content:center}
+.rel-mid{display:flex;align-items:center;gap:7px;min-width:0}
+.rel-mid::before,.rel-mid::after{content:'';height:2px;background:var(--color-primary);flex:1;min-width:12px}
+.rel-mid.candidate::before,.rel-mid.candidate::after{height:1px;background:var(--line-dark)}
+.rel-mid.candidate .rel-label{color:var(--context)}
+.rel-mid.inference::before,.rel-mid.inference::after{background:repeating-linear-gradient(90deg,var(--color-primary) 0 7px,transparent 7px 12px)}
+.rel-label{font-size:11px;font-weight:900;color:var(--color-primary);text-align:center;white-space:normal}
+.rel-mid.verified::before,.rel-mid.verified::after{background:var(--verified)}
+.rel-mid.verified .rel-label{color:var(--verified)}
+.verified-tag{display:inline-block;font-size:10px;font-weight:900;border:1px solid var(--verified);color:var(--verified);padding:2px 5px;margin-left:5px;background:#fffaf0}
+.relation-card.selected{border:2px solid var(--color-primary);background:var(--blue-soft)}
+.relation-card.no-line{border-style:dashed;background:rgba(255,253,248,.58)}
+.relation-card.no-line .rel-mid::before,.relation-card.no-line .rel-mid::after{display:none}
+.relation-card.no-line .rel-mid{justify-content:center}
+.relation-card.no-line .rel-label{color:#655d53}
+.judgment-question{font-size:18px;font-weight:900;line-height:1.6;margin:18px 0 10px}
+/* ── INTERACTION REOPEN v1.1 · EVIDENCE_PICK ── */
+.evidence-question{font-size:18px;font-weight:900;line-height:1.6;margin:18px 0 10px}
+.evidence-help{font-size:12px;color:var(--muted);line-height:1.6;margin:-3px 0 10px}
+.evidence-paper{display:grid;gap:7px}
+.evidence-sentence{width:100%;min-height:0;border:1px solid rgba(139,115,85,.28);background:rgba(255,253,248,.38);color:inherit;padding:8px 9px;text-align:left;font-family:var(--font-document);font-size:inherit;line-height:1.85;border-radius:2px;cursor:pointer}
+.evidence-sentence:hover,.evidence-sentence:focus-visible{border-color:var(--color-primary);background:rgba(238,243,251,.5)}
+.evidence-sentence.last-wrong{border:1.5px solid var(--line-dark);background:rgba(232,224,212,.5)}
+.evidence-sentence.resolved{border:2px solid var(--color-primary);background:rgba(238,243,251,.72);font-weight:700}
+.evidence-sentence[disabled]{cursor:default;opacity:1}
+.evidence-sentence.paragraph-start{margin-top:10px}
+.evidence-feedback{margin:12px 0;padding:13px 14px;border-left:4px solid var(--color-primary);background:#fffdf8;line-height:1.7}
+.evidence-feedback.retry{border-left-color:var(--line-dark)}
+.evidence-feedback strong{display:block;margin-bottom:3px}
+.evidence-result{margin-top:14px}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.choice{border:1px solid var(--line);background:#fffdf8;color:var(--color-text);padding:12px 10px;text-align:center;font-weight:900;border-radius:2px;transition:border-color .12s ease,background .12s ease,transform .08s ease}
+.choice:hover{border-color:var(--color-primary)}
+.choice:active{transform:translateY(1px)}
+.choice.picked{border:2px solid var(--color-primary);background:var(--blue-soft)}
+.choice[disabled]{cursor:default;opacity:.96}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.btn{border:1px solid var(--color-primary);background:var(--color-primary);color:#fff;padding:11px 15px;min-width:132px;text-align:center;font-weight:900;border-radius:2px}
+.btn.secondary{background:#fffdf8;color:var(--color-primary)}
+.btn.ghost{background:transparent;color:var(--color-text);border-color:var(--line-dark)}
+.btn[disabled]{opacity:.36;cursor:not-allowed}
+.feedback{margin:12px 0;padding:13px 14px;border-left:4px solid var(--color-primary);background:#fffdf8;line-height:1.7}
+.feedback-title{font-size:12px;font-weight:900;color:var(--color-primary);margin-bottom:4px}
+.feedback p{margin:0}
+.feedback p+p{margin-top:8px}
+.badge-wrap{margin-top:10px}
+.scope-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-sepia);background:#f8f2e7;color:#4f4539;font-size:12px;font-weight:900;padding:6px 8px;cursor:pointer}
+.scope-detail{margin-top:7px;font-size:12px;line-height:1.6;color:var(--muted);border-left:2px solid var(--color-sepia);padding-left:9px}
+.scope-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:80;max-width:min(90vw,520px);background:#fffdf8;border:2px solid var(--color-sepia);padding:11px 14px;font-size:13px;font-weight:800;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.result-note{margin-top:10px;border:1px solid var(--line);background:#f8f2e7;padding:11px 12px;font-size:13px;line-height:1.65}
+.no-line-list{border:1px dashed var(--line-dark);background:rgba(255,253,248,.62);padding:14px;margin:16px 0}
+.no-line-list h3{margin:0 0 3px;font-size:15px}
+.no-line-list .sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+.no-line-item{padding:8px 0;border-top:1px solid rgba(139,115,85,.22);font-size:13px;line-height:1.55}
+.no-line-item:first-of-type{border-top:0}
+.fold-card{border:2px solid var(--color-sepia);background:#fffdf8;padding:16px;margin:18px 0;animation:foldIn .45s ease both}
+@keyframes foldIn{from{opacity:.25;transform:scale(.985) translateY(5px)}to{opacity:1;transform:none}}
+.fold-title{font-weight:900;font-size:18px;margin-bottom:9px}
+.summary-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.summary-tag{border:1px solid var(--line);padding:5px 8px;background:#f8f2e7;font-size:12px;font-weight:800}
+.auto-note{font-size:12px;color:var(--muted);margin-top:8px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mobile-tabs{display:none;gap:6px;margin:8px 0}.mobile-tab{border:1px solid var(--line-dark);background:#fffdf8;padding:8px 10px;min-height:42px;font-weight:900}.mobile-tab.active{border:2px solid var(--color-primary);background:var(--blue-soft)}
+.compare .paper{margin:10px 0}
+.compare-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.complete-chip{font-size:11px;font-weight:900;color:var(--color-primary);border:1px solid var(--blue-line);padding:4px 7px;background:var(--blue-soft)}
+.discover{border:1px solid var(--color-sepia);background:#f8f2e7;padding:18px;margin:18px 0}
+.discover h3{margin:0 0 8px;font-size:18px}
+.reading-point{border-left:4px solid var(--color-primary);background:#fffdf8;padding:12px 14px;margin:14px 0;line-height:1.7}
+.map-section{margin:18px 0}
+.map-section h3{font-size:14px;margin:0 0 8px;color:var(--color-sepia)}
+.map-core{display:grid;gap:9px}.goal-highlight>.relation-card:nth-child(-n+2){border:2px solid var(--color-primary);background:var(--blue-soft)}
+.map-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+details.map-node{border:1px solid var(--line-dark);background:#fffdf8;padding:0}
+details.map-node summary{list-style:none;cursor:pointer;padding:13px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details.map-node summary::-webkit-details-marker{display:none}
+details.map-node summary::after{content:'＋';color:var(--color-primary)}
+details.map-node[open] summary::after{content:'−'}
+.node-summary{font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
+.node-body{border-top:1px solid var(--line);padding:12px 13px;font-size:13px;line-height:1.65}
+.node-body ul{margin:6px 0;padding-left:18px}
+.node-body li+li{margin-top:5px}
+.branch-card{border:1px solid var(--line-dark);background:#f8f2e7;padding:14px;margin:12px 0}
+.branch-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.branch-source{border:2px solid var(--color-sepia);background:#fffdf8;padding:10px;text-align:center;font-weight:900}
+.branch-split{text-align:center;font-size:20px;color:var(--verified);font-weight:900}
+.branch-targets{display:grid;gap:7px}
+.branch-target{border:1px solid var(--line-dark);background:#fffdf8;padding:9px;text-align:center;font-weight:800}
+.verify-note{font-size:12px;color:var(--verified);border-left:3px solid var(--verified);padding-left:9px;margin-top:10px;line-height:1.6}
+.final-steps{display:grid;gap:16px;margin:18px 0}
+.final-step{border:1px solid var(--line);background:#fffdf8;padding:16px}
+.final-step h3{margin:0 0 8px;font-size:16px}
+.goal-btn,.split-btn{border:1px solid var(--line-dark);background:#fffdf8;padding:11px 12px;text-align:left;font-weight:800;min-height:48px}
+.goal-btn.selected,.split-btn.selected{border:2px solid var(--color-primary);background:var(--blue-soft)}
+.split-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+textarea{width:100%;resize:vertical;min-height:100px;border:1px solid var(--line-dark);background:#fffdf8;padding:12px;line-height:1.65;color:var(--color-text)}
+.answer-box{border:1px solid var(--color-sepia);background:#f8f2e7;padding:16px;margin:16px 0}
+.answer-box h3{margin:0 0 8px}
+.answer-box p{white-space:pre-wrap;line-height:1.7;margin:0}
+.comment-box{margin-top:16px}
+.footer{margin-top:30px;text-align:center;color:rgba(120,100,80,.4);font-size:11px}
+.hidden{display:none!important}
+@media(max-width:720px){
+  .stage{padding:18px 14px}
+  .ghead{grid-template-columns:1fr auto;padding:0 12px}.gprog{display:none}.gscene{font-size:11px}
+  .relation-grid{grid-template-columns:1fr;gap:5px}.rel-mid{justify-content:center}.rel-mid::before,.rel-mid::after{max-width:80px}
+  .choice-grid{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}.s5-compare .source-pane{display:none}.s5-compare .source-pane.active{display:block}.mobile-tabs{display:flex}.map-details{grid-template-columns:1fr}.split-grid{grid-template-columns:1fr}
+  .branch-row{grid-template-columns:1fr}.branch-split{transform:rotate(90deg)}
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   V7 · GAME PRESENTATION LAYER
+   역사/판정 로직은 유지하고 Scene / Live Map / Game Feel만 확장한다.
+   ═══════════════════════════════════════════════════════ */
+:root{
+  --game-navy:#0e2736;
+  --game-navy-2:#173847;
+  --game-paper:#f6eddc;
+  --game-ink:#1c1a17;
+  --game-rust:#9a3d2c;
+  --game-brass:#a77940;
+}
+body{background:#d8d0c3;background-image:linear-gradient(rgba(255,255,255,.12),rgba(0,0,0,.02)),repeating-linear-gradient(90deg,rgba(72,52,32,.025) 0,rgba(72,52,32,.025) 1px,transparent 1px,transparent 6px)}
+.wrap{max-width:1240px;background:rgba(239,233,222,.96);box-shadow:0 10px 40px rgba(43,31,19,.18)}
+.ghead{height:66px;background:linear-gradient(180deg,var(--game-navy),#0b202d);border-bottom:1px solid rgba(215,188,145,.45);color:#f5ead8;grid-template-columns:minmax(0,1fr) auto auto;gap:18px}
+.gtitle{font-size:23px;letter-spacing:.01em}
+.gprog{color:#f5ead8;border:1px solid rgba(231,208,169,.56);background:rgba(255,255,255,.06);padding:6px 12px}
+.gscene{color:#d6c6ae;min-width:130px;text-align:right}
+.stage{padding:18px 20px 30px;min-height:calc(100dvh - 66px)}
+
+.scene-hero{height:196px;border:1px solid #75624b;position:relative;overflow:hidden;margin:0 0 16px;background:#443a30 center/cover no-repeat;box-shadow:inset 0 -90px 90px rgba(12,20,24,.55)}
+.scene-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,25,32,.76) 0,rgba(12,25,32,.16) 45%,rgba(12,25,32,.42) 100%)}
+.scene-hero-copy{position:absolute;inset:auto 22px 18px 22px;z-index:2;color:#fff7e8;text-shadow:0 2px 10px rgba(0,0,0,.55)}
+.scene-file{display:inline-block;font:900 11px/1 var(--font-body);letter-spacing:.12em;padding:6px 8px;border:1px solid rgba(240,220,184,.72);background:rgba(23,38,44,.68);margin-bottom:8px}
+.scene-hero h2{font-family:var(--font-display);font-size:clamp(25px,3vw,38px);margin:0 0 4px;letter-spacing:-.02em}
+.scene-hero p{margin:0;font-size:13px;font-weight:700;color:#eadcc6}
+
+.scene-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.workbench{min-width:0;background:rgba(255,253,248,.58);border:1px solid rgba(125,103,73,.36);padding:18px;box-shadow:0 5px 18px rgba(70,50,30,.06)}
+.live-panel{position:sticky;top:84px;min-width:0;background:#e9ddc8;border:1px solid #7d684d;padding:10px;box-shadow:0 6px 22px rgba(64,43,25,.12)}
+.live-panel-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 0 8px;padding:3px 4px 8px;border-bottom:1px solid rgba(111,86,56,.35)}
+.live-panel-title{font-weight:900;font-size:14px;color:#342a20}
+.live-panel-count{font-size:11px;font-weight:900;color:var(--color-primary);background:#fffaf0;border:1px solid #ad9472;padding:3px 6px}
+.live-map-canvas{position:relative;height:330px;background-color:#d8c7aa;background-image:linear-gradient(rgba(84,68,45,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(84,68,45,.05) 1px,transparent 1px);background-size:24px 24px;border:1px solid rgba(111,86,56,.42);overflow:hidden}
+.live-map-canvas::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.38),transparent 32%),linear-gradient(135deg,transparent 0 65%,rgba(98,70,38,.05) 65% 66%,transparent 66%)}
+.live-map-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.live-map-svg line{stroke:#786d5e;stroke-width:1.5;opacity:.12;transition:opacity .25s ease,stroke .25s ease,stroke-width .25s ease}
+.live-map-svg line.active{stroke:#174e85;stroke-width:1.35;opacity:.95;stroke-dasharray:500;stroke-dashoffset:500;animation:v7Draw .75s ease forwards}
+.live-map-svg line.alert{stroke:#9a3d2c}
+@keyframes v7Draw{to{stroke-dashoffset:0}}
+.lm-node{position:absolute;z-index:2;transform:translate(-50%,-50%);min-width:82px;max-width:112px;padding:7px 8px;border:1px solid rgba(104,82,55,.36);background:rgba(246,237,220,.48);color:rgba(52,42,32,.42);font-size:11px;line-height:1.25;text-align:center;font-weight:900;box-shadow:0 1px 2px rgba(30,20,10,.04);transition:.25s ease}
+.lm-node.active{border:1.5px solid #8e704b;background:#fff7e8;color:#201b16;box-shadow:0 3px 10px rgba(60,40,20,.14);animation:v7NodePop .42s ease both}
+.lm-node.key.active{border-color:#174e85}
+.lm-node.warn.active{border-color:#92392d}
+@keyframes v7NodePop{0%{opacity:.4;transform:translate(-50%,-50%) scale(.92)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.live-log{margin-top:9px;border-top:1px solid rgba(111,86,56,.28);padding-top:8px;display:grid;gap:6px}
+.live-log-row{display:flex;gap:7px;align-items:flex-start;font-size:11px;line-height:1.45;color:#51483d}
+.live-log-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;background:#a58355;flex:none}
+.live-log-dot.active{background:#174e85;box-shadow:0 0 0 3px rgba(23,78,133,.1)}
+.unresolved-mini{margin-top:8px;border:1px dashed #866d4d;background:#f4ead8;padding:8px;font-size:11px;line-height:1.45}
+.unresolved-mini strong{display:block;margin-bottom:3px;color:#6d4d2c}
+
+.v7-s1{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:stretch}
+.v7-s1 .intro-card{background:#f8f1e5;border:1px solid #806b50;padding:20px}
+.v7-s1 .intro-card .sc-title{font-size:42px}
+.v7-empty-board{background:#342f29 url('assets/s1-room-v9.png') center/cover no-repeat;min-height:420px;border:1px solid #6f5a43;position:relative;box-shadow:inset 0 0 0 999px rgba(12,24,31,.3)}
+.v7-empty-board::after{content:'빈 지도를 자료로 채우세요';position:absolute;left:16px;bottom:14px;color:#f7ead5;font-size:12px;font-weight:900;letter-spacing:.03em;background:rgba(12,25,32,.72);padding:7px 9px}
+.rule-demo{display:grid;grid-template-columns:1fr auto 1fr;gap:7px;align-items:center;margin:10px 0;border:1px solid #b7a68f;background:#fffaf1;padding:9px}
+.rule-demo .dot-card{border:1px solid #927b60;padding:7px;text-align:center;font-weight:900;font-size:12px}
+.rule-demo .rule-line{height:2px;width:54px;background:#174e85;position:relative}.rule-demo .rule-line::after{content:'';position:absolute;right:-2px;top:-3px;border-left:6px solid #174e85;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.rule-demo.none .rule-line{height:0;border-top:1px dashed #756b5f;background:none}.rule-demo.none .rule-line::after{display:none}
+
+
+/* ── V7.1 · ART INTEGRATION PATCH ─────────────────────────────── */
+.scene-hero{height:238px;background-position:center 38%;box-shadow:inset 0 -110px 110px rgba(12,20,24,.48)}
+.scene-hero::before{background:linear-gradient(90deg,rgba(10,24,32,.68) 0,rgba(10,24,32,.08) 46%,rgba(10,24,32,.28) 100%)}
+.scene-hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:18px;background:linear-gradient(to bottom,transparent,rgba(19,15,10,.25));pointer-events:none}
+.scene-stage{position:relative;isolation:isolate;padding:18px;border:1px solid #6f5941;background-color:#5b4632;background-image:linear-gradient(rgba(35,25,16,.34),rgba(35,25,16,.48)),var(--scene-art);background-size:cover;background-position:center 28%;box-shadow:0 8px 24px rgba(45,31,19,.14);overflow:hidden}
+.scene-stage::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 14% 18%,rgba(255,240,209,.14),transparent 28%),linear-gradient(90deg,rgba(22,17,12,.2),transparent 18%,transparent 82%,rgba(22,17,12,.22));pointer-events:none}
+.scene-stage>*,.scene-stage .workbench,.scene-stage .live-panel{position:relative;z-index:1}
+.scene-stage .workbench{background:rgba(249,244,234,.94);border:1px solid rgba(111,88,58,.62);box-shadow:0 9px 24px rgba(31,22,14,.2),inset 0 0 0 1px rgba(255,255,255,.4)}
+.scene-stage .live-panel{background:rgba(232,218,190,.95);box-shadow:0 9px 24px rgba(31,22,14,.22)}
+.scene-stage-s2{background-position:center 34%}
+.scene-stage-s3{background-position:center 22%}
+.scene-stage-s4{background-position:center 30%}
+.scene-stage-s6{background-position:center 26%}
+.scene-stage-s7{background-position:center 28%}
+.scene-stage .paper{background:rgba(250,243,229,.96);box-shadow:0 5px 13px rgba(39,29,18,.12)}
+
+/* S5 is a persistent physical evidence desk, not a plain document page. */
+.s5-desk.scene-stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 286px;padding:22px;background-color:#3c2d20;background-image:linear-gradient(rgba(31,20,12,.28),rgba(31,20,12,.5)),url('assets/s5-desk-v9.png');background-size:cover;background-position:center top;border:1px solid #58412d}
+.s5-desk.scene-stage::after{content:'';position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 5px);pointer-events:none}
+.s5-desk .news-sheet{background:rgba(239,226,200,.97);border:2px solid #765b3d;box-shadow:0 12px 26px rgba(25,16,9,.28)}
+.s5-desk .news-sheet:nth-child(1){transform:rotate(-.18deg)}
+.s5-desk .news-sheet:nth-child(2){transform:rotate(.16deg)}
+.s5-desk .news-head{position:sticky;top:76px;z-index:8;background:rgba(238,224,198,.98);margin:-12px -12px 10px;padding:10px 12px 9px;border-bottom:2px solid #514235;box-shadow:0 5px 10px rgba(30,21,13,.08)}
+.s5-desk .investigation-tray{top:76px;background:rgba(231,213,181,.97);border:2px solid #6e5538;box-shadow:0 12px 26px rgba(25,16,9,.28)}
+.s5-desk .s5-question-bar{background:rgba(250,241,224,.98);border:2px solid #806344;box-shadow:0 10px 24px rgba(25,16,9,.22)}
+.s5-followup{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start;background-position:center top}
+
+@media(max-width:900px){
+  .scene-hero{height:205px}
+  .scene-stage{padding:12px}
+  .s5-desk.scene-stage{grid-template-columns:1fr;padding:12px}
+  .s5-desk .news-sheet{transform:none!important}
+  .s5-desk .news-head{position:relative;top:auto}
+  .s5-followup{grid-template-columns:1fr}
+}
+@media(max-width:640px){.scene-hero{height:180px}}
+
+/* S5 · EVIDENCE DESK */
+.s5-desk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 280px;gap:12px;align-items:start}
+.news-sheet{background:#eee2cd;border:1px solid #80684a;padding:12px;min-width:0;box-shadow:0 5px 18px rgba(45,31,19,.12);position:relative}
+.news-sheet.locked{filter:grayscale(.55);opacity:.58;min-height:430px;display:flex;align-items:center;justify-content:center;text-align:center}
+.news-head{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:2px solid #4f4438;padding:0 0 8px;margin-bottom:8px}
+.news-name{font-family:var(--font-display);font-size:22px}.news-date{font-size:11px;font-weight:900;color:#6e5c45}
+.news-sheet .paper{margin:0;border:0;padding:10px;background:rgba(255,250,239,.62);box-shadow:none}
+.news-sheet .paper::before{display:none}
+.investigation-tray{position:sticky;top:84px;background:#eadbc3;border:1px solid #745e43;padding:12px;box-shadow:0 5px 18px rgba(48,31,18,.1)}
+.tray-title{font-size:15px;font-weight:900;margin-bottom:4px}.tray-count{font-size:12px;color:#675844;margin-bottom:12px}
+.tray-item{display:flex;gap:8px;align-items:flex-start;border-top:1px solid rgba(111,86,56,.25);padding:9px 0;font-size:12px;line-height:1.45}
+.tray-check{width:17px;height:17px;border:1px solid #7f6a4e;background:#fff8e9;display:flex;align-items:center;justify-content:center;flex:none;font-size:12px;font-weight:900;color:#174e85}
+.tray-item.done .tray-check{border-color:#174e85;background:#eaf2fa}.tray-item.done{font-weight:800}
+.s5-map-mini{margin-top:12px;border-top:1px solid rgba(111,86,56,.3);padding-top:10px}
+.s5-question-bar{grid-column:1/-1;background:#f8f0e3;border:1px solid #8d7658;padding:12px 14px;margin-top:2px}
+.s5-question-bar .evidence-question,.s5-question-bar .judgment-question{margin:0 0 8px}
+.s5-pause{grid-column:1/-1;background:#1a2b34;color:#f8eedc;border:1px solid #44545a;padding:20px;text-align:center;margin-top:4px}
+.s5-pause h3{font-size:21px;margin:0 0 5px}.s5-pause p{margin:0;color:#d6c6ac;font-size:12px}
+
+/* S7 · FINALE */
+.finale-hero{min-height:560px;background:#211f1b url('assets/s1-room-v9.png') center/cover no-repeat;border:1px solid #65523e;position:relative;overflow:hidden;box-shadow:inset 0 0 0 999px rgba(8,18,25,.48)}
+.finale-title{position:absolute;left:24px;top:18px;z-index:4;color:#fff6e6}.finale-title .eyebrow{color:#e6bf82}.finale-title h1{font-family:var(--font-display);font-size:42px;margin:4px 0}.finale-title p{margin:0;color:#e3d4bd}
+.finale-board{position:absolute;left:24px;right:338px;top:112px;bottom:24px;background:rgba(219,199,164,.92);border:1px solid #8d704c;padding:12px;box-shadow:0 12px 28px rgba(0,0,0,.26)}
+.finale-board .live-map-canvas{height:100%;min-height:380px;background-color:#d1bc98}
+.finale-side{position:absolute;right:22px;top:112px;bottom:24px;width:294px;background:rgba(12,30,40,.94);border:1px solid #5f7280;padding:12px;color:#f5ead8;overflow:auto;z-index:4}
+.finale-side h3{margin:0 0 10px;font-size:15px}.inspect-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.inspect-chip{min-height:36px;border:1px solid #758690;background:#182f3b;color:#efe4d2;padding:6px 8px;font-size:11px;font-weight:900;text-align:left}.inspect-chip.selected{background:#a9773d;color:#fff;border-color:#d9b47c}
+.evidence-inspector{background:#f6eddd;color:#211b15;border:1px solid #b29b78;padding:12px;font-size:12px;line-height:1.65}.evidence-inspector strong{display:block;font-size:14px;margin-bottom:5px}.evidence-inspector .source{margin-top:8px}
+.final-action{margin-top:12px;width:100%;background:#b67c37;border-color:#d3a264;color:#fff7e9}
+
+
+
+/* S2 · approved scene image + real interactive overlays */
+body.v8-s2-mode .ghead{display:none}
+body.v8-s2-mode .stage{padding:0;min-height:100dvh}
+body.v8-s2-mode .wrap{max-width:none;background:#101719;border:0;box-shadow:none}
+.v8-s2-stage{position:relative;width:min(100%,1240px);aspect-ratio:697/440;margin:0 auto;background-position:center;background-size:100% 100%;background-repeat:no-repeat;overflow:hidden;box-shadow:0 16px 36px rgba(0,0,0,.26)}
+.v8-s2-nav{position:absolute;z-index:8;left:0;right:0;top:0;height:13.7%;display:flex;align-items:flex-start;justify-content:flex-end;padding:1.8% 2.4% 0;pointer-events:none}
+.v8-s2-nav-inner{display:flex;gap:5px;pointer-events:auto;background:rgba(8,28,39,.88);border:1px solid rgba(228,210,177,.4);padding:4px}
+.v8-s2-nav button{min-height:0!important;border:0;background:transparent;color:#efe2cb;font-size:clamp(10px,1.1vw,13px);font-weight:800;padding:6px 9px;cursor:pointer}
+.v8-s2-nav button:hover,.v8-s2-nav button:focus-visible{background:rgba(255,255,255,.10);outline:1px solid rgba(235,218,187,.6)}
+.v8-s2-card{position:absolute;z-index:5;left:2.1%;top:18.5%;width:28.2%;height:75.5%;padding:12px 12px 10px;background:rgba(245,236,219,.975);border:1px solid #7b6044;box-shadow:0 12px 28px rgba(22,15,9,.26);overflow:auto}
+.v8-s2-card::before{content:'장면 조사';display:block;font-family:var(--font-display);font-size:clamp(15px,1.7vw,23px);color:#251d16;margin-bottom:3px}
+.v8-s2-card::after{content:'S2. 같은 목표, 다른 생각';display:block;position:absolute;top:38px;left:12px;font-weight:900;font-size:clamp(10px,1vw,13px);color:#382b20}
+.v8-s2-card>.eyebrow,.v8-s2-card>.sc-title{display:none}
+.v8-s2-card .paper{margin:48px 0 10px;padding:10px 9px 10px;font-size:clamp(9px,.88vw,12px);line-height:1.62;background:rgba(255,250,239,.96)}
+.v8-s2-card .paper::before{display:none}
+.v8-s2-card .source{font-size:9px;margin-top:7px}
+.v8-s2-card .evidence-question,.v8-s2-card .judgment-question{font-size:clamp(11px,1.05vw,14px);line-height:1.45;margin:9px 0 6px}
+.v8-s2-card .evidence-help,.v8-s2-card .hint{font-size:9px;line-height:1.45}
+.v8-s2-card .evidence-sentence{padding:5px 6px;font-size:clamp(9px,.82vw,11px);line-height:1.5}
+.v8-s2-card .relation-card{margin:7px 0;padding:7px}.v8-s2-card .node{min-height:36px;padding:6px;font-size:10px}.v8-s2-card .rel-label{font-size:8px}
+.v8-s2-card .choice-grid{grid-template-columns:1fr;gap:5px;margin:7px 0}.v8-s2-card .choice{min-height:0!important;padding:7px;font-size:10px}
+.v8-s2-card .feedback,.v8-s2-card .evidence-feedback{font-size:10px;line-height:1.45;padding:8px;margin:7px 0}
+.v8-s2-card .btnrow{margin-top:8px}.v8-s2-card .btn{min-height:0!important;min-width:0;padding:8px 10px;font-size:10px}
+.v8-s2-card .panel{display:none}
+.v8-s2-clues{margin:6px 0 0;padding-top:7px;border-top:1px solid rgba(89,68,45,.35);font-size:10px;color:#46372a}
+.v8-s2-clues-head{display:flex;justify-content:space-between;gap:8px;font-weight:900;margin-bottom:6px}.v8-s2-clue{display:flex;align-items:center;gap:6px;padding:4px 0;border-top:1px solid rgba(89,68,45,.14)}
+.v8-s2-clue span:first-child{width:15px;height:15px;display:inline-grid;place-items:center;border:1px solid #8e7659;background:#e5d7c1;font-size:9px}.v8-s2-clue.found span:first-child{background:#173847;color:#fff;border-color:#173847}
+.v8-s2-map{position:absolute;z-index:5;left:68.0%;top:17.0%;width:29.0%;height:73.5%;padding:10px;background:rgba(215,190,150,.965);border:3px solid #65472d;box-shadow:0 12px 28px rgba(22,15,9,.30);transform:rotate(.15deg);overflow:hidden}
+.v8-s2-map .live-panel-head{margin:0 0 6px}.v8-s2-map .live-panel-title{font-family:var(--font-display);font-size:clamp(14px,1.5vw,20px)}
+.v8-s2-map .live-map-canvas{height:calc(100% - 46px);min-height:0}.v8-s2-map .live-log{display:none}.v8-s2-map .unresolved-mini{display:none}
+.v8-s2-caption{position:absolute;z-index:4;left:31%;right:31%;bottom:2.4%;text-align:center;color:#efe4d1;text-shadow:0 2px 8px rgba(0,0,0,.8);font-size:clamp(10px,1vw,13px);font-weight:800}
+.v8-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(7,14,18,.72);display:grid;place-items:center;padding:18px}.v8-modal{width:min(560px,94vw);max-height:80vh;overflow:auto;background:#f6eddd;border:2px solid #705238;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:20px;color:#251e18}.v8-modal h2{font-family:var(--font-display);margin:0 0 10px}.v8-modal p,.v8-modal li{line-height:1.7;font-size:14px}.v8-modal-close{float:right;border:1px solid #705238;background:#fff9ed;padding:7px 10px;min-height:0!important}
+@media(max-width:900px){body.v8-s2-mode .ghead{display:grid}.v8-s2-stage{aspect-ratio:auto;background-size:cover;background-position:center;min-height:100dvh;padding:180px 12px 18px}.v8-s2-nav{top:70px;height:auto;padding:0 12px}.v8-s2-card,.v8-s2-map{position:relative;left:auto;top:auto;width:auto;height:auto;transform:none;margin:0 0 12px}.v8-s2-card{max-height:none}.v8-s2-map .live-map-canvas{height:360px}.v8-s2-caption{position:relative;left:auto;right:auto;bottom:auto;padding:10px 0}}
+
+@media(max-width:980px){
+  .scene-grid{grid-template-columns:1fr}.live-panel{position:relative;top:auto}.live-map-canvas{height:300px}
+  .s5-desk{grid-template-columns:1fr 1fr}.investigation-tray{grid-column:1/-1;position:relative;top:auto}.s5-question-bar,.s5-pause{grid-column:1/-1}
+  .finale-hero{min-height:900px}.finale-board{left:18px;right:18px;top:118px;bottom:330px}.finale-side{left:18px;right:18px;top:auto;bottom:18px;width:auto;height:290px}
+}
+@media(max-width:720px){
+  .wrap{max-width:none}.stage{padding:10px}.scene-hero{height:170px}.scene-hero-copy{left:14px;right:14px;bottom:12px}
+  .scene-grid,.v7-s1{grid-template-columns:1fr}.v7-empty-board{min-height:320px;order:-1}.workbench{padding:13px}.live-panel{padding:8px}
+  .s5-desk{grid-template-columns:1fr}.investigation-tray,.s5-question-bar,.s5-pause{grid-column:1}.news-sheet.locked{min-height:180px}
+  .finale-title h1{font-size:31px}.finale-hero{min-height:980px}.finale-board{top:108px;bottom:390px}.finale-side{height:350px}.finale-board .live-map-canvas{min-height:430px}
+}
+@media(prefers-reduced-motion:reduce){.live-map-svg line.active,.lm-node.active{animation:none}.choice,.evidence-sentence{transition:none}}
+
+
+
+/* ═══════════════════════════════════════════════════════
+   V8 · ILLUSTRATION-FIRST REORGANIZATION
+   Generated scene artwork defines the play space instead of sitting above it.
+   ═══════════════════════════════════════════════════════ */
+:root{
+  --v8-ink:#132b39;
+  --v8-ink-2:#0b1d27;
+  --v8-paper:#f4ead8;
+  --v8-paper-2:#e4d1ad;
+  --v8-wood:#4a3321;
+  --v8-brass:#a87435;
+  --v8-rust:#8d3b2d;
+}
+.stage{padding:14px 16px 24px;background:linear-gradient(180deg,rgba(230,221,207,.52),rgba(211,199,181,.66))}
+.v8-scene{
+  --v8-art:none;
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:calc(100dvh - 96px);
+  border:1px solid #5f4a33;
+  background:#3c3127 var(--v8-art) center/cover no-repeat;
+  box-shadow:0 14px 34px rgba(34,24,15,.20);
+}
+.v8-scene::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(9,24,32,.18) 0,rgba(15,23,27,.26) 30%,rgba(36,25,16,.60) 100%),
+    radial-gradient(circle at 50% 18%,rgba(255,239,206,.13),transparent 40%);
+}
+.v8-scene>*{position:relative;z-index:1}
+.v8-scene-top{min-height:228px;display:flex;align-items:flex-end;padding:26px 28px 22px;background:linear-gradient(180deg,transparent 0,rgba(10,24,31,.10) 45%,rgba(10,24,31,.72) 100%)}
+.v8-scene-title{max-width:760px;color:#fff5e4;text-shadow:0 2px 14px rgba(0,0,0,.58)}
+.v8-scene-title .scene-file{background:rgba(9,28,38,.82);border-color:rgba(235,213,175,.72)}
+.v8-scene-title h1{font-family:var(--font-display);font-size:clamp(31px,4vw,48px);line-height:1.05;margin:7px 0 7px;letter-spacing:-.03em}
+.v8-scene-title p{margin:0;max-width:700px;color:#eadac1;font-size:14px;font-weight:800;line-height:1.55}
+.v8-scene-body{display:grid;grid-template-columns:minmax(0,1fr) 326px;gap:14px;padding:14px 16px 18px;align-items:start;background:linear-gradient(180deg,rgba(31,21,14,.18),rgba(31,21,14,.42))}
+.v8-workbench{min-width:0;padding:16px;border:1px solid rgba(111,82,51,.70);background:rgba(249,242,227,.955);box-shadow:0 10px 26px rgba(25,17,10,.26),inset 0 0 0 1px rgba(255,255,255,.42)}
+.v8-live{position:sticky;top:80px;min-width:0;padding:10px;border:2px solid rgba(88,62,35,.82);background:rgba(226,207,174,.965);box-shadow:0 10px 24px rgba(24,16,9,.25)}
+.v8-live .live-map-canvas{background-color:#d4bf98;background-image:linear-gradient(rgba(76,55,35,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(76,55,35,.06) 1px,transparent 1px);background-size:20px 20px}
+.v8-scene-s2{background-position:center 32%}.v8-scene-s3{background-position:center 25%}.v8-scene-s4{background-position:center 28%}.v8-scene-s6{background-position:center 30%}
+
+/* S1 · start inside the generated investigation room from the first frame */
+.v8-start{min-height:calc(100dvh - 96px);display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,43%);border:1px solid #5f4a33;background:#201d18 url('assets/s1-room-v9.png') center/cover no-repeat;position:relative;overflow:hidden;box-shadow:0 14px 34px rgba(34,24,15,.22)}
+.v8-start::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,23,31,.94) 0,rgba(8,23,31,.76) 43%,rgba(8,23,31,.22) 72%,rgba(8,23,31,.08) 100%)}
+.v8-start>*{position:relative;z-index:1}
+.v8-start-copy{align-self:center;padding:42px 34px;color:#fff3df;max-width:690px}
+.v8-start-copy .eyebrow{color:#d3ad72}.v8-start-copy .sc-title{font-family:var(--font-display);font-size:clamp(46px,6vw,72px);margin:8px 0 14px;letter-spacing:-.045em;color:#fff6e8}
+.v8-start-copy .lead{color:#ebdcc4;font-size:17px;line-height:1.75;max-width:610px}
+.v8-start-rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 18px}
+.v8-rule{background:rgba(244,231,205,.11);border:1px solid rgba(226,202,164,.42);padding:11px 12px;min-height:86px}
+.v8-rule strong{display:block;color:#fff2dc;margin-bottom:5px;font-size:13px}.v8-rule span{font-size:12px;line-height:1.55;color:#d7c8af}
+.v8-start-copy .btn{background:#b37b37;border-color:#d7aa70;color:#fff8e9;font-size:15px;min-height:52px;box-shadow:0 5px 15px rgba(0,0,0,.22)}
+.v8-start-board{align-self:stretch;display:flex;align-items:flex-end;justify-content:center;padding:28px 26px;background:linear-gradient(180deg,rgba(10,20,24,.02),rgba(10,20,24,.34))}
+.v8-start-board-card{width:min(100%,410px);margin-bottom:20px;background:rgba(225,204,166,.88);border:2px solid #705337;padding:12px;box-shadow:0 12px 30px rgba(0,0,0,.30);transform:rotate(.4deg)}
+.v8-start-board-card .live-map-canvas{height:250px;background-color:#d1bc94}.v8-start-board-card .live-log{display:none}.v8-start-board-card .live-panel-head{margin-bottom:7px}
+
+/* S5 · evidence desk is the scene, not a panel below a hero */
+.v8-desk{position:relative;isolation:isolate;min-height:calc(100dvh - 96px);padding:20px 20px 18px;border:1px solid #513822;background:#382719 url('assets/s5-desk-v9.png') center/cover no-repeat;box-shadow:0 14px 34px rgba(34,24,15,.22);overflow:hidden}
+.v8-desk::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,14,8,.22),rgba(21,14,8,.55));z-index:0}.v8-desk>*{position:relative;z-index:1}
+.v8-desk-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;padding:9px 12px 12px;background:linear-gradient(90deg,rgba(8,24,32,.92),rgba(8,24,32,.66),transparent);color:#fff5e4;border-left:4px solid #c08a4b}
+.v8-desk-head h1{font-family:var(--font-display);font-size:clamp(29px,3vw,42px);margin:2px 0 2px}.v8-desk-head p{margin:0;color:#e7d5bb;font-size:12px;font-weight:800}.v8-desk-head .scene-file{margin:0 0 3px}
+.v8-desk-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 292px;gap:14px;align-items:start}
+.v8-desk .news-sheet{background:rgba(242,229,204,.975);border:2px solid #6c5034;box-shadow:0 14px 30px rgba(20,12,6,.34)}
+.v8-desk .news-sheet:nth-child(1){transform:rotate(-.32deg)}.v8-desk .news-sheet:nth-child(2){transform:rotate(.26deg)}
+.v8-desk .investigation-tray{position:sticky;top:80px;background:rgba(231,211,174,.98);border:2px solid #6b4d31;box-shadow:0 14px 30px rgba(20,12,6,.34)}
+.v8-desk .s5-question-bar,.v8-desk .s5-pause{grid-column:1/-1;background:rgba(249,239,220,.985);border:2px solid #765637;box-shadow:0 12px 24px rgba(20,12,6,.28)}
+.v8-desk .s5-pause{background:rgba(10,31,41,.94);border-color:#6d7d80}
+.v8-desk .s5-map-mini .live-map-canvas{height:220px}
+.v8-desk .news-head{position:relative;top:auto;background:transparent;margin:0 0 8px;padding:0 0 8px;box-shadow:none}
+
+/* S5 follow-up screens keep the same physical desk so the scene never collapses back to a worksheet */
+.v8-s5-follow{min-height:calc(100dvh - 96px);padding:22px;border:1px solid #513822;background:#382719 url('assets/s5-desk-v9.png') center/cover no-repeat;position:relative;overflow:hidden;box-shadow:0 14px 34px rgba(34,24,15,.22)}
+.v8-s5-follow::before{content:'';position:absolute;inset:0;background:rgba(29,18,10,.52)}.v8-s5-follow>*{position:relative;z-index:1}.v8-s5-follow .v8-workbench{max-width:920px;margin:0 auto}
+
+/* S7 · actual investigation board occupies the board visible in the generated illustration */
+.v8-finale{position:relative;isolation:isolate;min-height:760px;border:1px solid #493725;background:#171a18 url('assets/s1-room-v9.png') center/cover no-repeat;overflow:hidden;box-shadow:0 14px 34px rgba(34,24,15,.26)}
+.v8-finale::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,19,25,.28),rgba(6,19,25,.18) 68%,rgba(6,19,25,.64) 100%);z-index:0}.v8-finale>*{position:relative;z-index:1}
+.v8-finale-head{padding:20px 24px;color:#fff4df;text-shadow:0 2px 12px rgba(0,0,0,.48)}
+.v8-finale-head h1{font-family:var(--font-display);font-size:clamp(34px,4vw,50px);margin:4px 0}.v8-finale-head p{margin:0;color:#e4d0b1;font-size:13px;font-weight:800}
+.v8-finale-layout{display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:16px;padding:6px 22px 22px;align-items:stretch}
+.v8-finale-board{min-height:560px;padding:18px;background:rgba(213,191,151,.82);border:2px solid #705136;box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.v8-finale-board .live-map-canvas{height:520px;background-color:rgba(211,188,148,.90)}
+.v8-finale-side{padding:12px;background:rgba(8,28,38,.94);border:1px solid #657784;color:#f4e8d5;box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.v8-finale-side h3{margin:0 0 10px}.v8-finale-side .no-line-list{background:rgba(255,255,255,.06);border-color:#6c7a80;color:#efe3d1}.v8-finale-side .no-line-item{background:rgba(244,234,215,.92);color:#30281e}
+
+/* Keep generic S7 / final prompt inside the generated-board world */
+.v8-board-follow{position:relative;isolation:isolate;min-height:calc(100dvh - 96px);padding:22px;border:1px solid #493725;background:#171a18 url('assets/s1-room-v9.png') center/cover no-repeat;overflow:hidden;box-shadow:0 14px 34px rgba(34,24,15,.26)}
+.v8-board-follow::before{content:'';position:absolute;inset:0;background:rgba(10,22,25,.58)}.v8-board-follow>*{position:relative;z-index:1}.v8-board-follow .v8-workbench{max-width:980px;margin:0 auto}
+
+@media(max-width:980px){
+  .v8-scene-body,.v8-desk-grid,.v8-finale-layout{grid-template-columns:1fr}.v8-live,.v8-desk .investigation-tray{position:relative;top:auto}
+  .v8-desk .news-sheet{transform:none!important}.v8-finale-board .live-map-canvas{height:460px}.v8-finale-side{min-height:260px}
+}
+@media(max-width:720px){
+  .stage{padding:8px}.v8-scene{min-height:auto}.v8-scene-top{min-height:180px;padding:18px 15px 15px}.v8-scene-body{padding:9px}.v8-workbench{padding:12px}
+  .v8-start{grid-template-columns:1fr;min-height:auto}.v8-start::before{background:linear-gradient(180deg,rgba(8,23,31,.78),rgba(8,23,31,.58) 62%,rgba(8,23,31,.28))}.v8-start-copy{padding:28px 18px}.v8-start-rules{grid-template-columns:1fr}.v8-start-board{padding:12px 18px 22px}.v8-start-board-card{margin:0}
+  .v8-desk{padding:10px}.v8-desk-head{align-items:flex-start;flex-direction:column}.v8-desk-grid{grid-template-columns:1fr}.v8-desk .s5-question-bar,.v8-desk .s5-pause{grid-column:1}.v8-desk .news-sheet{transform:none!important}
+  .v8-finale{min-height:auto}.v8-finale-head{padding:17px}.v8-finale-layout{padding:4px 10px 12px}.v8-finale-board{min-height:460px;padding:9px}.v8-finale-board .live-map-canvas{height:440px}
+}
+
+</style>
+<link rel="stylesheet" href="v9.css">
+<script src="v9.js"></script>
+<link rel="stylesheet" href="v91.css">
+<script src="progress.js"></script>
+<script src="global-map.js"></script>
+<script src="v91-renderers.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="ghead">
+    <div class="gtitle">갈라진 지도</div>
+    <div class="gprog" id="progress">학습 활동</div>
+    <div class="gscene" id="sceneLabel">S1 · 도입</div>
+  </header>
+  <main class="stage" id="app"></main>
+</div>
+<div id="scopeToast" class="scope-toast hidden" role="status" aria-live="polite"></div>
+<div id="tt-bubble" role="tooltip" aria-hidden="true"><div class="tb-word"></div><div class="tb-desc"></div></div>
+<script>
+window.GAME_CONFIG = {
+  game_id: 'bunhwa1920',
+  label: '갈라진 지도',
+  era: '일제강점기',
+  version: '1.6-v8-s2-interactive-scene'
+};
+
+window.CHARLIE_CONFIG = {
+  supabaseUrl: 'https://xgniwztlrakkrbzcfklb.supabase.co',
+  supabasePublishableKey: '__배포_전_주입__'
+};
+
+// PATCH v1.1 · TOOLTIP_EVIDENCE_GUARD
+// 툴팁은 어휘의 최소 의미만 제공한다. 주체·인과·찬반·비판·반어 등 판정 관계를 설명하지 않는다.
+const TOOLTIP_SET = {
+  S4: [
+    ['회사령','회사령(會社令) — 회사 설립·운영을 규제한 법령.'],
+    ['토산품','토산품(土産品) — 그 지역에서 생산한 물품.']
+  ],
+  S5A: [
+    ['기도하는','기도(企圖) — 어떤 일을 이루려고 꾀함.'],
+    ['자본주의하','자본주의하(資本主義下) — 자본주의 체제 아래에서.'],
+    ['유산, 무산 계급','유산·무산 계급(有産·無産階級) — 재산이 있는 계급과 없는 계급.'],
+    ['대동단결','대동단결(大同團結) — 큰 뜻 아래 여럿이 하나로 뭉침.']
+  ],
+  S5B: [
+    ['미사여구','미사여구(美辭麗句) — 아름답게 꾸민 말이나 글귀.'],
+    ['갈구하는','갈구(渴求) — 간절히 바라거나 구함.']
+  ],
+  S6A: [
+    ['본위','본위(本位) — 기준이나 중심으로 삼음.'],
+    ['민립','민립(民立) — 민간의 힘으로 세움.']
+  ],
+  S6B: [
+    ['부르주아적인','부르주아적 — 자본가 계층과 관련된 성격을 가리키는 말.']
+  ]
+};
+
+const TOOLTIP_FORBIDDEN = ['물산 장려 계급','치안 유지법','계급 해방','실력 양성 운동','비타협적 민족주의 세력'];
+
+// 「왕의 결재함」 v3 호환 패턴: TIPS + tt() + #tt-bubble
+const TIPS = Object.fromEntries(Object.values(TOOLTIP_SET).flat().map(([word,tip])=>[word,tip]));
+function tt(word, tipKey){
+  const key=tipKey||word;
+  const tip=TIPS[key]||'';
+  if(!tip) return word;
+  return `<span class="tt" tabindex="0" data-tip="${encodeURIComponent(tip)}" data-word="${word}">${word}</span>`;
+}
+
+function wrapTooltipInRoot(root, term, tip){
+  // 밀도 관리: 같은 자료에서 같은 용어는 첫 등장 1회만 툴팁 처리한다.
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
+    if(!node.nodeValue || !node.nodeValue.includes(term)) return NodeFilter.FILTER_REJECT;
+    const parent=node.parentElement;
+    if(!parent || parent.closest('.tt,.source')) return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  const node=walker.nextNode();
+  if(!node) return;
+  const raw=node.nodeValue, idx=raw.indexOf(term);
+  const frag=document.createDocumentFragment();
+  if(idx>0) frag.appendChild(document.createTextNode(raw.slice(0,idx)));
+  const template=document.createElement('template');
+  template.innerHTML=tt(term);
+  frag.appendChild(template.content.firstElementChild);
+  if(idx+term.length<raw.length) frag.appendChild(document.createTextNode(raw.slice(idx+term.length)));
+  node.replaceWith(frag);
+}
+
+function applyTooltips(root=document){
+  root.querySelectorAll('.paper[data-source-key]').forEach(paper=>{
+    const key=paper.dataset.sourceKey;
+    (TOOLTIP_SET[key]||[]).forEach(([term,tip])=>wrapTooltipInRoot(paper,term,tip));
+  });
+}
+
+let tooltipTimer=null;
+function hideTooltip(){
+  const bubble=document.getElementById('tt-bubble');
+  if(tooltipTimer){clearTimeout(tooltipTimer);tooltipTimer=null;}
+  if(!bubble) return; bubble.classList.remove('show'); bubble.setAttribute('aria-hidden','true');
+}
+function showTooltip(el){
+  const bubble=document.getElementById('tt-bubble'); if(!bubble) return;
+  bubble.querySelector('.tb-word').textContent=el.dataset.word||'';
+  bubble.querySelector('.tb-desc').textContent=decodeURIComponent(el.dataset.tip||'');
+  const rect=el.getBoundingClientRect(), bw=Math.min(240,window.innerWidth-16);
+  let left=rect.left+rect.width/2-bw/2; left=Math.max(8,Math.min(left,window.innerWidth-bw-8));
+  bubble.style.width=bw+'px'; bubble.style.left=left+'px'; bubble.style.top='-9999px';
+  bubble.classList.add('show'); bubble.setAttribute('aria-hidden','false');
+  const bh=bubble.offsetHeight;
+  bubble.style.top=(rect.top-bh-12<8 ? rect.bottom+10 : rect.top-bh-12)+'px';
+  if(tooltipTimer) clearTimeout(tooltipTimer);
+  tooltipTimer=setTimeout(hideTooltip,4000);
+}
+document.addEventListener('click',e=>{ const el=e.target.closest('.tt'); if(el){e.stopPropagation();showTooltip(el);} else hideTooltip(); });
+document.addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key===' ') && e.target.classList?.contains('tt')){e.preventDefault();showTooltip(e.target);}
+  if(e.key==='Escape') hideTooltip();
+});
+
+const ID_MAP = {
+  'S4-A':'S4_A',
+  'R11a':'R11A',
+  'R11b':'R11B',
+  'R11c′':'R11C'
+};
+
+const JUDGMENT = { DIRECT:'direct', INFERENCE:'inference', NONE:'none' };
+const LABEL = { direct:'직접 진술', inference:'추론 가능', none:'현재 근거 없음' };
+const EXPECTED = {
+  P01:'direct',P02:'direct',P03:'direct',P04:'none',
+  P05:'direct',P06:'direct',P07:'direct',
+  R09:'direct',R10:'direct',S4_A:'none',
+  R11A:'direct',R11B:'direct',R11C:'direct',R12:'direct'
+};
+
+// DESIGN_REOPEN R1 · interaction layer only
+// 14개 역사 관계와 EXPECTED 값은 유지하되, 학생 행동은 7개 근거 찾기 + 4개 관계 강도 판정으로 분리한다.
+const STRENGTH_JUDGMENTS = ['P03','P04','S4_A','R11C'];
+const EVIDENCE_TASKS = {
+  E01_S2_COMMON:{scene:'S2',title:'같은 목표, 다른 생각',source:'S2',sourceLabel:'교과서 41쪽',prompt:'두 세력이 함께 목표로 삼은 것을 직접 말하는 문장을 찾아보세요.',correct:'민족주의 세력과 사회주의 세력은 일제를 몰아내고 독립을 쟁취하자는 민족 해방이라는 공통의 목표를 갖고 있었다.',relations:['P01','P02'],next:'P03'},
+  E02_S3_MASS:{scene:'S3',title:'사회주의자들은 어디로 갔는가',source:'S3',sourceLabel:'교과서 41쪽',prompt:'사회주의자들이 주도했다고 자료가 직접 말하는 대중 운동이 나온 문장을 찾으세요.',correct:'사회주의자들은 노동 운동, 농민 운동 및 청년 운동 등 대중 운동을 주도했다.',relations:['P05','P06'],next:'E03_S3_REPRESSION'},
+  E03_S3_REPRESSION:{scene:'S3',title:'사회주의자들은 어디로 갔는가',source:'S3',sourceLabel:'교과서 41쪽',prompt:'일제가 사회주의 운동에 어떻게 대응했는지 직접 말하는 문장을 찾으세요.',correct:'이에 일제는 치안 유지법을 공포해 사회주의 운동을 대대적으로 탄압했다.',relations:['P07'],next:'foldS3'},
+  E04_S4_EMPHASIS:{scene:'S4',title:'실력을 먼저 키우자',source:'S4',sourceLabel:'교과서 42쪽',prompt:'실력 양성 운동이 무엇을 강조했는지 직접 말하는 문장을 찾으세요.',correct:'이들은 민족 산업의 육성과 교육을 통한 인재 양성을 강조하는 실력 양성 운동을 전개했다.',relations:['R09','R10'],next:'S4_A'},
+  E05_S5_PRIORITY:{scene:'S5',title:'같은 운동, 다른 근거',source:'S5A',sourceLabel:'《동아일보》, 1923. 1. 2.',prompt:'자료 1이 무엇을 먼저 해야 한다고 보는지 가장 분명하게 말하는 문장을 찾으세요.',correct:'우리는 조선 민족이 (다른 어떤 것보다) 먼저 조선 사람 자체의 생산력 발달부터 기도하는 것이 가장 시급하고 절실하다고 생각한다.',relations:['R11A'],next:'E06_S5_UNITY'},
+  E06_S5_UNITY:{scene:'S5',title:'같은 운동, 다른 근거',source:'S5A',sourceLabel:'《동아일보》, 1923. 1. 2.',prompt:'그 단결이 누구까지 포함하는지 가장 분명하게 말하는 문장을 찾으세요.',correct:'유산, 무산 계급을 막론한 모든 조선 사람이 대동단결해 조선인이 제작하는 물품을 조선인이 사용하는 그 확실한 정신을 수립하고 실현해야 한다.',relations:['R11B'],next:'R11C'},
+  E07_S6_GOAL:{scene:'S6',title:'대학을 세우자는 움직임',source:'S6A',sourceLabel:'교과서 42쪽',prompt:'민립 대학 설립 운동의 목표를 가장 분명하게 말하는 문장을 찾으세요.',correct:'이에 이상재 등을 중심으로 한국인 본위 교육을 위한 민립 대학 설립 운동을 전개했다.',relations:['R12'],next:'s6Reading'}
+};
+const ACTIVITY_INDEX = {
+  E01_S2_COMMON:1,P03:2,P04:3,E02_S3_MASS:4,E03_S3_REPRESSION:5,
+  E04_S4_EMPHASIS:6,S4_A:7,E05_S5_PRIORITY:8,E06_S5_UNITY:9,R11C:10,E07_S6_GOAL:11
+};
+
+const SOURCE = {
+  S2:`3·1 운동을 전후해 국내에서도 사회주의 사상이 빠르게 전파되었다. 사회주의가 확산하면서 국내의 민족 운동은 크게 민족주의 운동과 사회주의 운동의 두 진영으로 분화되었다. 민족주의 세력과 사회주의 세력은 일제를 몰아내고 독립을 쟁취하자는 민족 해방이라는 공통의 목표를 갖고 있었다. 그러나 사회주의 세력은 자본주의 체제를 비판하고 노동자와 농민의 계급 해방도 함께 추구했다. 이로 인해 민족을 계급보다 우선시한 민족주의 세력과 대립하기도 했다.`,
+  S3:`사회주의 사상을 접한 청년과 지식인들은 독서회, 토론회 등을 열며 사회주의 사상을 연구하고 이를 신문과 잡지에서 소개했다. 전국 각지에서 다양한 계층의 사회주의 운동 단체들이 조직되었으며, 서울에서는 비밀리에 조선 공산당이 조직되었다(1925). 조선 공산당은 1928년 일제의 탄압으로 해체되기 전까지 국내외의 다양한 사회주의 운동을 이끌었다.\n\n사회주의자들은 노동 운동, 농민 운동 및 청년 운동 등 대중 운동을 주도했다. 이에 일제는 치안 유지법을 공포해 사회주의 운동을 대대적으로 탄압했다. 사회주의 세력은 위기를 극복하기 위해 비타협적 민족주의 세력과 연합을 모색하기도 했다.`,
+  S4:`3·1 운동 이후 일부 민족주의 세력은 일제의 지배를 벗어나려면 먼저 실력을 키워 독립을 준비해야 한다고 생각했다. 이들은 민족 산업의 육성과 교육을 통한 인재 양성을 강조하는 실력 양성 운동을 전개했다.\n\n물산 장려 운동 회사령 철폐와 일제의 경제 침탈에 맞서 민족 산업을 육성하자는 분위기가 조성되었다. 그 가운데 경성 방직 주식회사, 평양 메리야스 공장 등 한국인이 세운 기업들이 성장했다. 그러나 이들 기업은 일본 기업보다 자본과 기술력이 부족해 어려움에 처했다. 특히 일본 상품의 관세 폐지 움직임까지 나타나자 한국인 자본가들은 위기의식을 느꼈다. 이에 1920년 평양에서 조만식 등이 조선 물산 장려회를 조직하고 물산 장려 운동을 전개했다. 이 운동은 '내 살림 내 것으로', '조선 사람 조선 것'의 구호를 내세우며 토산품을 애용해 민족 산업을 보호·육성할 것 등을 주장했다. 운동은 각 지역의 호응을 얻으며 전국으로 확산했다.`,
+  S5A:`(사회주의 세력이) 타파하고자 하는 자본주의는 일본 사람의 자본주의인가 혹은 조선 사람의 자본주의인가? …… 무릇 목적을 달성하기 위한 방법은 하나 둘만 있는 것이 아니다. 시대와 환경을 보아서 하는 것이 좋은 방법인 것이다. 우리는 조선 민족이 (다른 어떤 것보다) 먼저 조선 사람 자체의 생산력 발달부터 기도하는 것이 가장 시급하고 절실하다고 생각한다. 어찌하면 일본 사람의 자본주의하에서 조선 사람의 생산력을 발달시킬 수 있을 것인가? 이는 오직 조선 사람의 '단결'에 있는 것이다. 유산, 무산 계급을 막론한 모든 조선 사람이 대동단결해 조선인이 제작하는 물품을 조선인이 사용하는 그 확실한 정신을 수립하고 실현해야 한다.`,
+  S5B:`물산 장려 운동은 최근 우리 조선에서 일어난 대규모의 운동이라 할 수 있다. …… 실상 말하자면 노동자에게는 새삼스럽게 우리 물건을 장려할 필요가 없는 것이다. 그들은 오랜 옛날부터 훌륭한 물산 장려 계급이다. 자본가 중산 계급이 양복이나 비단옷을 입는 대신에 무명과 베옷을 입었고 저들 자본가가 일본 술을 마시는 대신에 소주나 막걸리를 먹지 않았는가. …… 저들은 민족적, 애국적이라는 감상적인 미사여구로 저들의 이익과는 상관없는 노동 계급의 후원을 갈구하는 것이다. …… 저들이 주장하는 생산 기관의 발달, 산업의 진흥, 생활의 경제적 독립 이것은 진실로 누구를 위한 것인가?`,
+  S6A:`3·1 운동 이후 일제는 이른바 문화 정치를 표방하며 한국인에 대한 교육 기회를 확대하겠다고 발표했다. 그러나 학교 수는 여전히 부족했고, 고등 교육의 기회도 주어지지 않았다. 이에 이상재 등을 중심으로 한국인 본위 교육을 위한 민립 대학 설립 운동을 전개했다. 1923년 조직한 조선 민립 대학 기성회는 대학 설립에 필요한 1천만 원을 모으는 전국적인 모금 운동을 전개했다.`,
+  S6B:`또한 청년운동을 비롯한 사회운동 세력들의 동향도 문제였다. 이들은 당시 물산장려운동을 부르주아적인 운동이라고 비판하고 있었다. 따라서 비슷한 성격을 가지고 있은 이 운동에 대해서도 소극적인 태도를 취했으리란 것은 쉽게 짐작할 수 있다. 이러한 점도 민립대학설립운동의 기세가 꺾이는데 영향을 미쳤다.`,
+  S7A:`실력 양성 운동이 구체적인 성과를 내지 못하자 이광수, 김성수, 최린 등 일부 민족주의 세력은 법률이 허락하는 한도 내에서 합법적인 정치 운동을 전개하자는 자치 운동을 벌였다. 이들은 독립이 당장은 불가능하다고 판단하고, 일제의 지배를 받아들인 채 조선 총독부와 협력해 자치 정부 또는 자치 의회를 구성하고자 했다.`,
+  S7B:`왜 지금의 조선 민족에게는 정치적 생활이 없나? …… 우리는 조선 내에서 (일본이) 허용하는 범위 내에서 일대 정치적 결사를 조직해야 한다.`
+};
+
+const ITEMS = {
+  P01:{scene:'S2',title:'같은 목표, 다른 생각',relation:['민족주의 세력','목표로 삼음','민족 해방'],source:'S2',sourceLabel:'교과서 41쪽',anchors:['민족주의 세력과 사회주의 세력은 일제를 몰아내고 독립을 쟁취하자는 민족 해방이라는 공통의 목표를 갖고 있었다.'],focus:['민족주의 세력','민족 해방이라는 공통의 목표']},
+  P02:{scene:'S2',title:'같은 목표, 다른 생각',relation:['사회주의 세력','목표로 삼음','민족 해방'],source:'S2',sourceLabel:'교과서 41쪽',anchors:['민족주의 세력과 사회주의 세력은 일제를 몰아내고 독립을 쟁취하자는 민족 해방이라는 공통의 목표를 갖고 있었다.'],focus:['사회주의 세력','민족 해방이라는 공통의 목표']},
+  P03:{scene:'S2',title:'같은 목표, 다른 생각',relation:['사회주의 세력','추가 추구','노동자·농민의 계급 해방'],source:'S2',sourceLabel:'교과서 41쪽',anchors:['그러나 사회주의 세력은 자본주의 체제를 비판하고 노동자와 농민의 계급 해방도 함께 추구했다.'],focus:['사회주의 세력','노동자와 농민의 계급 해방도 함께 추구했다']},
+  P04:{scene:'S2',title:'같은 목표, 다른 생각',relation:['민족주의 세력','추가 추구','노동자·농민의 계급 해방'],source:'S2',sourceLabel:'교과서 41쪽',anchors:[],focus:[],context:['민족을 계급보다 우선시한 민족주의 세력']},
+  P05:{scene:'S3',title:'사회주의자들은 어디로 갔는가',relation:['사회주의 세력','주도','노동 운동'],source:'S3',sourceLabel:'교과서 41쪽',anchors:['사회주의자들은 노동 운동, 농민 운동 및 청년 운동 등 대중 운동을 주도했다.'],focus:['사회주의자들','노동 운동','주도했다'],scope:true},
+  P06:{scene:'S3',title:'사회주의자들은 어디로 갔는가',relation:['사회주의 세력','주도','청년 운동'],source:'S3',sourceLabel:'교과서 41쪽',anchors:['사회주의자들은 노동 운동, 농민 운동 및 청년 운동 등 대중 운동을 주도했다.'],focus:['사회주의자들','청년 운동','주도했다'],scope:true},
+  P07:{scene:'S3',title:'사회주의자들은 어디로 갔는가',relation:['일제','치안유지법으로 탄압','사회주의 운동'],source:'S3',sourceLabel:'교과서 41쪽',anchors:['이에 일제는 치안 유지법을 공포해 사회주의 운동을 대대적으로 탄압했다.'],focus:['일제','치안 유지법','사회주의 운동'],resultNote:true},
+  R09:{scene:'S4',title:'실력을 먼저 키우자',relation:['실력 양성 운동','강조','민족 산업 육성'],source:'S4',sourceLabel:'교과서 42쪽',anchors:['이들은 민족 산업의 육성과 교육을 통한 인재 양성을 강조하는 실력 양성 운동을 전개했다.'],focus:['민족 산업의 육성','강조하는 실력 양성 운동']},
+  R10:{scene:'S4',title:'실력을 먼저 키우자',relation:['실력 양성 운동','강조','교육을 통한 인재 양성'],source:'S4',sourceLabel:'교과서 42쪽',anchors:['이들은 민족 산업의 육성과 교육을 통한 인재 양성을 강조하는 실력 양성 운동을 전개했다.'],focus:['교육을 통한 인재 양성','강조하는 실력 양성 운동']},
+  S4_A:{scene:'S4',title:'실력을 먼저 키우자',relation:['실력 양성 운동','강조','노동자·농민의 계급 해방'],source:'S4',sourceLabel:'교과서 42쪽',anchors:[],focus:[],context:['이들은 민족 산업의 육성과 교육을 통한 인재 양성을 강조하는 실력 양성 운동을 전개했다.'],contextFocus:['민족 산업의 육성','교육을 통한 인재 양성']},
+  R11A:{scene:'S5',title:'같은 운동, 다른 근거',relation:['자료 1','우선한다','조선인의 생산력 발전'],source:'S5A',sourceLabel:'《동아일보》, 1923. 1. 2.',anchors:['우리는 조선 민족이 (다른 어떤 것보다) 먼저 조선 사람 자체의 생산력 발달부터 기도하는 것이 가장 시급하고 절실하다고 생각한다.'],focus:['먼저 조선 사람 자체의 생산력 발달부터','가장 시급하고 절실하다고 생각한다']},
+  R11B:{scene:'S5',title:'같은 운동, 다른 근거',relation:['자료 1','주장한다','유산·무산 계급을 막론한 단결'],source:'S5A',sourceLabel:'《동아일보》, 1923. 1. 2.',anchors:['유산, 무산 계급을 막론한 모든 조선 사람이 대동단결해 조선인이 제작하는 물품을 조선인이 사용하는 그 확실한 정신을 수립하고 실현해야 한다.'],focus:['유산, 무산 계급을 막론한','대동단결']},
+  R11C:{scene:'S5',title:'같은 운동, 다른 근거',relation:['자료 2','문제 삼는다','물산 장려 운동의 계급적 이해관계'],source:'S5B',sourceLabel:'《동아일보》, 1923. 3. 20.',anchors:['저들은 민족적, 애국적이라는 감상적인 미사여구로 저들의 이익과는 상관없는 노동 계급의 후원을 갈구하는 것이다.','저들이 주장하는 생산 기관의 발달, 산업의 진흥, 생활의 경제적 독립 이것은 진실로 누구를 위한 것인가?'],focus:['저들의 이익과는 상관없는 노동 계급','진실로 누구를 위한 것인가?']},
+  R12:{scene:'S6',title:'대학을 세우자는 움직임',relation:['민립 대학 설립 운동','목표','한국인 본위의 고등교육'],source:'S6A',sourceLabel:'교과서 42쪽',anchors:['이에 이상재 등을 중심으로 한국인 본위 교육을 위한 민립 대학 설립 운동을 전개했다.'],focus:['한국인 본위 교육을 위한','민립 대학 설립 운동']}
+};
+
+const ORDER = ['P01','P02','P03','P04','P05','P06','P07','R09','R10','S4_A','R11A','R11B','R11C','R12'];
+const NEXT = {
+  P03:'P04',P04:'E02_S3_MASS',
+  S4_A:'foldS4',R11C:'s5Discover'
+};
+
+const FINAL_SPLITS = {
+  P03:'사회주의 세력은 계급 해방도 추가로 추구했다.',
+  R09:'실력 양성 운동은 민족 산업 육성을 강조했다.',
+  R10:'실력 양성 운동은 교육을 통한 인재 양성을 강조했다.',
+  R11C:'물산 장려 운동을 둘러싼 자료에서는 계급적 이해관계가 문제로 제기됐다.',
+  R14:'비타협적 민족주의 세력은 자치 운동을 비판·경계했다.'
+};
+
+const S = {
+  screen:'s1',
+  s5Tab:'b',
+  currentId:null,
+  judgmentState:{},
+  evidenceState:{},
+  mapState:{},
+  noLineState:{},
+  feedback:null,
+  scopeBadgeIntroSeen:false,
+  scopeExpanded:false,
+  s5NoteSeen:false,
+  submitted:false,
+  finalSubmitted:false,
+  commentSubmitted:false,
+  sessionId:(crypto && crypto.randomUUID) ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+  finalGoalConfirmed:false,
+  finalSplit:null,
+  finalExplanation:'',
+  inspectedRelation:'P03'
+};
+
+function publicHeaders(extra){
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  const headers = { apikey:key, ...(extra || {}) };
+  if(key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`;
+  return headers;
+}
+
+function classParam(){
+  const p = new URLSearchParams(location.search).get('class');
+  return p || '';
+}
+
+function canSubmit(){
+  const key = window.CHARLIE_CONFIG.supabasePublishableKey || '';
+  return key && !key.includes('__배포_전_주입__');
+}
+
+function postGameResult(choices, comment=''){
+  choices={...choices,presentation_version:'v9.2'};
+  if(!canSubmit()){
+    console.info('[Supabase] publishable key 미주입 — 개발 모드에서 전송 생략', choices);
+    return Promise.resolve({ok:false,skipped:true});
+  }
+  const body = {
+    class: classParam(),
+    game: window.GAME_CONFIG.game_id,
+    choices,
+    comment,
+    timestamp:new Date().toISOString()
+  };
+  return fetch(`${window.CHARLIE_CONFIG.supabaseUrl}/rest/v1/game_results`,{
+    method:'POST',
+    headers:publicHeaders({'Content-Type':'application/json','Prefer':'return=minimal'}),
+    body:JSON.stringify(body)
+  }).then(res=>{
+    if(!res.ok) console.warn(`[Supabase] 전송 실패 HTTP ${res.status}`);
+    return res;
+  }).catch(err=>{
+    console.warn('[Supabase] 네트워크 전송 실패',err);
+    return {ok:false,failed:true};
+  });
+}
+
+function matchedCount(){
+  return STRENGTH_JUDGMENTS.filter(id=>S.judgmentState[id]===EXPECTED[id]).length;
+}
+function evidenceFirstTryCount(){
+  return Object.values(S.evidenceState).filter(v=>v?.completed && v.first_choice===v.correct_index).length;
+}
+function evidencePayload(){
+  return Object.fromEntries(Object.entries(S.evidenceState).map(([id,v])=>[id,{
+    first_choice:v.first_choice,
+    attempt_count:v.attempt_count,
+    completed:!!v.completed
+  }]));
+}
+
+function sendResult(){
+  if(S.submitted) return;
+  S.submitted = true;
+  const choices = {
+    record_type:'result',
+    session_id:S.sessionId,
+    version:window.GAME_CONFIG.version,
+    judgments:{...S.judgmentState},
+    evidence_tasks:evidencePayload(),
+    analytics:{
+      judgment_count:4,
+      judgment_matched_count:matchedCount(),
+      evidence_task_count:7,
+      evidence_first_try_count:evidenceFirstTryCount(),
+      relation_count:14
+    },
+    progress:{s5_note_seen:!!S.s5NoteSeen}
+  };
+  postGameResult(choices);
+}
+
+function sendFinalAnswer(){
+  if(S.finalSubmitted) return;
+  S.finalSubmitted = true;
+  const choices = {
+    record_type:'final_answer',
+    session_id:S.sessionId,
+    version:window.GAME_CONFIG.version,
+    final_split:S.finalSplit,
+    final_explanation:S.finalExplanation.trim()
+  };
+  postGameResult(choices);
+}
+
+function sendComment(){
+  if(S.commentSubmitted) return;
+  const input = document.getElementById('comment');
+  const text = (input?.value || '').trim();
+  if(!text) return;
+  S.commentSubmitted = true;
+  postGameResult({record_type:'comment',session_id:S.sessionId,version:window.GAME_CONFIG.version},text);
+  const btn = document.getElementById('commentSend');
+  if(btn){btn.textContent='소감 전송됨';btn.disabled=true;}
+}
+
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function rangesFor(text, needles){
+  const out=[];
+  (needles||[]).forEach(needle=>{
+    if(!needle) return;
+    let from=0;
+    while(true){
+      const i=text.indexOf(needle,from);
+      if(i<0) break;
+      out.push([i,i+needle.length]);
+      from=i+needle.length;
+    }
+  });
+  return out;
+}
+
+function markedText(text,{anchors=[],focus=[],context=[],contextFocus=[]}={}){
+  const a=rangesFor(text,anchors), f=rangesFor(text,focus), c=rangesFor(text,context), cf=rangesFor(text,contextFocus);
+  const bounds=new Set([0,text.length]);
+  [...a,...f,...c,...cf].forEach(([s,e])=>{bounds.add(s);bounds.add(e)});
+  const pts=[...bounds].sort((x,y)=>x-y);
+  let html='';
+  for(let k=0;k<pts.length-1;k++){
+    const s=pts[k],e=pts[k+1],mid=(s+e)/2;
+    const has=(arr)=>arr.some(([x,y])=>mid>=x&&mid<y);
+    const cls=[];
+    if(has(a)) cls.push('anchor');
+    if(has(f)||has(cf)) cls.push('focus');
+    if(has(c)) cls.push('context');
+    const piece=esc(text.slice(s,e));
+    html+=cls.length?`<span class="${cls.join(' ')}">${piece}</span>`:piece;
+  }
+  return html.replace(/\n/g,'<br>');
+}
+
+function sourceBox(key,label,mark={}){
+  let body=markedText(SOURCE[key],mark);
+  if(key==='S4') body=body.replace('물산 장려 운동 회사령','<strong>물산 장려 운동</strong> 회사령');
+  return `<div class="paper" data-source-key="${esc(key)}">${body}<span class="source">— ${esc(label)}</span></div>`;
+}
+
+function relationCard(relation,{style='direct',badge=false,verified=false,noLine=false,selected=false,candidate=false}={}){
+  const [from,verb,to]=relation;
+  const midClass = candidate ? 'candidate' : verified ? 'verified' : style==='inference' ? 'inference' : '';
+  const tag = verified ? '<span class="verified-tag">검증 자료</span>' : '';
+  return `<div class="relation-card ${noLine?'no-line':''} ${selected?'selected':''}">
+    <div class="relation-grid">
+      <div class="node">${esc(from)}</div>
+      <div class="rel-mid ${midClass}"><div class="rel-label">${esc(verb)}${tag}</div></div>
+      <div class="node">${esc(to)}</div>
+    </div>
+    ${badge?scopeBadgeHtml():''}
+  </div>`;
+}
+
+function scopeBadgeHtml(compact=false){
+  const info='교과서는 시기를 밝히지 않지만, 사회주의 세력이 노동·청년 운동을 주도했다고 확인되는 것은 전국 조직이 만들어지던 1923~24년 무렵부터입니다.';
+  return `<details class="v91-scope" ${S.scopeExpanded?'open':''} ontoggle="S.scopeExpanded=this.open"><summary title="${info}">확인된 범위 · 1923~24년 ⓘ</summary><div class="scope-detail">${info}</div></details>`;
+}
+
+function toggleScope(){S.scopeExpanded=!S.scopeExpanded;render();}
+
+function showScopeIntro(){
+  S.scopeBadgeIntroSeen=true;
+}
+
+function sceneInfo(screen){
+  if(screen==='s1') return ['S1 · 도입','0 / 11'];
+  if(screen==='E01_S2_COMMON'||screen==='P03'||screen==='P04') return ['S2 · 목표와 차이',`${ACTIVITY_INDEX[screen]} / 11`];
+  if(screen==='E02_S3_MASS'||screen==='E03_S3_REPRESSION') return ['S3 · 대중 운동',`${ACTIVITY_INDEX[screen]} / 11`];
+  if(screen==='foldS3') return ['S3 · 대중 운동','5 / 11'];
+  if(screen==='E04_S4_EMPHASIS'||screen==='S4_A') return ['S4 · 실력 양성',`${ACTIVITY_INDEX[screen]} / 11`];
+  if(screen==='foldS4') return ['S4 · 실력 양성','7 / 11'];
+  if(screen==='E05_S5_PRIORITY'||screen==='E06_S5_UNITY'||screen==='R11C') return ['S5 · 자료 비교',`${ACTIVITY_INDEX[screen]} / 11`];
+  if(screen.startsWith('s5')||screen==='foldS5') return ['S5 · 자료 비교','10 / 11'];
+  if(screen==='E07_S6_GOAL') return ['S6 · 민립 대학','11 / 11'];
+  if(screen.startsWith('s6')||screen==='foldS6') return ['S6 · 민립 대학','11 / 11'];
+  if(screen.startsWith('s7')) return ['S7 · 지도 완성','11 / 11'];
+  if(screen.startsWith('final')||screen==='done') return ['최종 · 설명하기','11 / 11'];
+  return ['갈라진 지도',''];
+}
+
+function setHeader(){
+  const [scene,prog]=sceneInfo(S.screen);
+  document.getElementById('sceneLabel').textContent=scene;
+  document.getElementById('progress').textContent=prog;
+}
+
+function commonGoalMini(){
+  const p1=S.mapState.P01==='direct', p2=S.mapState.P02==='direct';
+  if(!p1&&!p2) return '';
+  return `<div class="panel"><div class="panel-title">현재 지도</div>
+    ${p1?relationCard(ITEMS.P01.relation):''}
+    ${p2?relationCard(ITEMS.P02.relation):''}
+    ${p1&&p2?'<div class="hint">두 세력이 같은 목표에 연결되었습니다.</div>':''}
+  </div>`;
+}
+
+function sceneHistory(scene,currentId){
+  const ids={S2:['P01','P02','P03'],S3:['P05','P06','P07'],S4:['R09','R10'],S5:['R11A','R11B','R11C'],S6:['R12']}[scene]||[];
+  const done=ids.filter(id=>id!==currentId&&S.mapState[id]);
+  if(!done.length) return '';
+  return `<div class="panel"><div class="panel-title">이 장면에서 쌓인 관계</div>${done.map(id=>relationCard(ITEMS[id].relation,{style:S.mapState[id],badge:(id==='P05'||id==='P06')})).join('')}</div>`;
+}
+
+function feedbackFor(id,selected){
+  const expected=EXPECTED[id];
+  if(expected==='direct'){
+    if(selected===expected) return {title:LABEL.direct,text:'자료가 이 관계를 직접 말하고 있습니다.'};
+    if(selected==='inference') return {title:LABEL.direct,text:'추론까지 갈 필요가 없습니다. 자료가 이 관계를 직접 말하고 있습니다.'};
+    return {title:LABEL.direct,text:'자료 안에 직접 근거가 있습니다. 표시된 부분을 다시 확인해 보세요.'};
+  }
+  if(id==='P04'){
+    if(selected==='none') return {title:LABEL.none,text:'자료는 민족주의 세력이 민족을 계급보다 우선시했다고 말합니다. 그러나 그것이 노동자·농민의 계급 해방을 추구했다는 뜻은 아닙니다.'};
+    if(selected==='direct') return {title:LABEL.none,text:"자료에는 '계급 해방'이라는 표현이 나오지만, 그것을 추구한 주체로 직접 제시된 것은 사회주의 세력입니다. 민족주의 세력이 계급 해방을 추구했다고는 말하지 않습니다.",closure:true};
+    return {title:LABEL.none,text:'자료는 민족주의 세력이 민족을 계급보다 우선시했다고 말합니다. 그러나 우선순위를 비교했다는 사실만으로 계급 해방도 추구했다고 추론할 수는 없습니다.',closure:true};
+  }
+  if(id==='S4_A'){
+    if(selected==='none') return {title:LABEL.none,text:'실력 양성 운동이 계급 해방을 반대했다는 뜻이 아닙니다. 지금 제시된 자료가 그것을 실력 양성 운동의 강조점으로 말하지 않는다는 뜻입니다.'};
+    if(selected==='direct') return {title:LABEL.none,text:'자료는 실력 양성 운동의 강조점으로 민족 산업의 육성과 교육을 통한 인재 양성을 직접 제시합니다. 노동자·농민의 계급 해방을 강조했다고는 말하지 않습니다.',closure:true};
+    return {title:LABEL.none,text:"'실력을 키워 독립을 준비한다'는 서술만으로 노동자·농민의 계급 해방을 강조했다고까지 추론할 수는 없습니다.",closure:true};
+  }
+  return {title:LABEL[expected],text:''};
+}
+
+function choose(id,value){
+  if(!STRENGTH_JUDGMENTS.includes(id)) return;
+  if(S.judgmentState[id]!==undefined) return;
+  S.judgmentState[id]=value;
+  const expected=EXPECTED[id];
+  if(expected==='direct') S.mapState[id]='direct';
+  else S.noLineState[id]=true;
+  S.feedback=feedbackFor(id,value);
+  render();
+}
+
+function evidenceSegments(text){
+  const out=[];
+  let start=0;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if((ch==='.'||ch==='?'||ch==='!') && (i===text.length-1 || /\s/.test(text[i+1]))){
+      out.push(text.slice(start,i+1));
+      start=i+1;
+      while(start<text.length && /[ \t]/.test(text[start])) start++;
+      if(text[start]==='\n'){
+        while(start<text.length && text[start]==='\n') start++;
+      }
+      i=start-1;
+    }
+  }
+  if(start<text.length) out.push(text.slice(start));
+  return out.map(s=>s.trim()).filter(Boolean);
+}
+
+function getEvidenceTaskState(taskId){
+  if(!S.evidenceState[taskId]) S.evidenceState[taskId]={first_choice:null,attempt_count:0,completed:false,last_choice:null,correct_index:null};
+  return S.evidenceState[taskId];
+}
+
+function evidencePickScreen(taskId){
+  const task=EVIDENCE_TASKS[taskId];
+  const state=getEvidenceTaskState(taskId);
+  const segments=evidenceSegments(SOURCE[task.source]);
+  const correctIndex=segments.findIndex(s=>s===task.correct);
+  state.correct_index=correctIndex;
+  if(correctIndex<0) console.warn('[EVIDENCE_PICK] 정답 문장 불일치',taskId,task.correct);
+  let cursor=0;
+  const rows=segments.map((sentence,i)=>{
+    const sourceIndex=SOURCE[task.source].indexOf(sentence,cursor);
+    const between=sourceIndex>=0?SOURCE[task.source].slice(cursor,sourceIndex):'';
+    const paragraphStart=between.includes('\n\n');
+    if(sourceIndex>=0) cursor=sourceIndex+sentence.length;
+    const cls=[paragraphStart?'paragraph-start':'',i===state.last_choice&&!state.completed?'last-wrong':'',i===correctIndex&&state.completed?'resolved':''].filter(Boolean).join(' ');
+    let sentenceHtml=esc(sentence);
+    if(task.source==='S4' && sentence.startsWith('물산 장려 운동 회사령')) sentenceHtml=sentenceHtml.replace('물산 장려 운동','<strong>물산 장려 운동</strong>');
+    return `<button type="button" class="evidence-sentence ${cls}" onclick="pickEvidence('${taskId}',${i})" ${state.completed?'disabled':''}>${sentenceHtml}</button>`;
+  }).join('');
+  const feedback=state.attempt_count?`<div class="evidence-feedback ${state.completed?'':'retry'}"><strong>${state.completed?'근거 확인':'다시 찾아보기'}</strong>${state.completed?'이 문장이 관계를 직접 말합니다.':'이 문장보다 관계를 직접 말하는 문장을 다시 찾아보세요.'}</div>`:'';
+  const relationHtml=state.completed?`<div class="evidence-result">${task.relations.map(id=>relationCard(ITEMS[id].relation,{style:'direct',badge:(id==='P05'||id==='P06')})).join('')}${taskId==='E02_S3_MASS'?'<div class="auto-note">농민 운동 · 자료에 함께 제시됨</div>':''}${taskId==='E03_S3_REPRESSION'?'<div class="result-note">이 선은 치안유지법이 사회주의 운동 탄압에 사용되었다는 관계를 보여줍니다. 치안유지법의 적용 대상이 사회주의에만 한정되었다는 뜻은 아닙니다.</div>':''}</div>`:'';
+  return `<div class="eyebrow">${esc(task.scene)}</div><h1 class="sc-title">${esc(task.title)}</h1>
+    <div class="paper evidence-paper" data-source-key="${esc(task.source)}">${rows}<span class="source">— ${esc(task.sourceLabel)}</span></div>
+    <div class="evidence-question">${esc(task.prompt)}</div>
+    <div class="evidence-help">문장 하나를 눌러 확인합니다. 근거를 찾는 활동은 다시 선택할 수 있습니다.</div>
+    ${feedback}${relationHtml}
+    ${state.completed?`<div class="btnrow"><button class="btn" onclick="continueEvidence('${taskId}')">계속</button></div>`:''}`;
+}
+
+function pickEvidence(taskId,index){
+  const task=EVIDENCE_TASKS[taskId];
+  const state=getEvidenceTaskState(taskId);
+  if(state.completed) return;
+  const segments=evidenceSegments(SOURCE[task.source]);
+  const correctIndex=segments.findIndex(s=>s===task.correct);
+  if(state.first_choice===null) state.first_choice=index;
+  state.attempt_count+=1;
+  state.last_choice=index;
+  state.correct_index=correctIndex;
+  if(index===correctIndex){
+    state.completed=true;
+    task.relations.forEach(id=>{S.mapState[id]='direct';});
+  }
+  render();
+  if(state.completed && taskId==='E02_S3_MASS' && !S.scopeBadgeIntroSeen) setTimeout(showScopeIntro,50);
+}
+
+function continueEvidence(taskId){
+  const state=getEvidenceTaskState(taskId);
+  if(!state.completed) return;
+  S.feedback=null;
+  S.scopeExpanded=false;
+  S.screen=EVIDENCE_TASKS[taskId].next;
+  if(ITEMS[S.screen]&&STRENGTH_JUDGMENTS.includes(S.screen)) S.currentId=S.screen;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function continueJudgment(id){
+  S.feedback=null;
+  S.scopeExpanded=false;
+  S.screen=NEXT[id];
+  if(ITEMS[S.screen]&&STRENGTH_JUDGMENTS.includes(S.screen)) S.currentId=S.screen;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchS5Tab(tab){S.s5Tab=tab;render();}
+function s5Compare(markRight={}){
+  return `<div class="mobile-tabs"><button class="mobile-tab ${S.s5Tab==='a'?'active':''}" onclick="switchS5Tab('a')">자료 1</button><button class="mobile-tab ${S.s5Tab==='b'?'active':''}" onclick="switchS5Tab('b')">자료 2</button></div><div class="compare s5-compare">
+    <div class="source-pane ${S.s5Tab==='a'?'active':''}"><div class="compare-head"><strong>자료 1</strong><span class="complete-chip">자료 1 확인 완료 ✓</span></div>${sourceBox('S5A','《동아일보》, 1923. 1. 2.')}</div>
+    <div class="source-pane ${S.s5Tab==='b'?'active':''}"><div class="compare-head"><strong>자료 2</strong></div>${sourceBox('S5B','《동아일보》, 1923. 3. 20.',markRight)}</div>
+  </div>`;
+}
+
+function judgmentScreen(id){
+  const item=ITEMS[id];
+  const chosen=S.judgmentState[id];
+  const hasFeedback=chosen!==undefined;
+  const mark=hasFeedback ? {anchors:item.anchors,focus:item.focus,context:item.context,contextFocus:item.contextFocus} : {};
+  const contextLabel=hasFeedback&&item.context?.length?'<div class="context-label">자료가 실제로 말한 부분</div>':'';
+  let sourceHtml='';
+  if(id==='R11C'){
+    sourceHtml=s5Compare(mark);
+  }else{
+    sourceHtml=contextLabel+sourceBox(item.source,item.sourceLabel,mark);
+  }
+  const buttons=['direct','inference','none'].map(v=>`<button class="choice ${chosen===v?'picked':''}" ${hasFeedback?'disabled':''} onclick="choose('${id}','${v}')">${LABEL[v]}</button>`).join('');
+  const feedback=hasFeedback?renderFeedback(id,item,chosen):'';
+  return `<div class="eyebrow">${esc(item.scene)}</div><h1 class="sc-title">${esc(item.title)}</h1>
+    ${sourceHtml}
+    ${relationCard(item.relation,{candidate:true})}
+    <div class="judgment-question">이 자료는 위 관계를 어디까지 말하고 있습니까?</div>
+    <div class="choice-grid">${buttons}</div>
+    ${feedback}
+    ${!hasFeedback?sceneHistory(item.scene,id):''}
+    ${id==='P02'&&hasFeedback?commonGoalMini():''}
+  `;
+}
+
+function renderFeedback(id,item,chosen){
+  const f=S.feedback;
+  let extras='';
+  if(EXPECTED[id]==='direct'){
+    extras+=relationCard(item.relation,{style:'direct',badge:item.scope});
+    if(item.resultNote){
+      extras+=`<div class="result-note">이 선은 치안유지법이 사회주의 운동 탄압에 사용되었다는 관계를 보여줍니다. 치안유지법의 적용 대상이 사회주의에만 한정되었다는 뜻은 아닙니다.</div>`;
+    }
+  }else{
+    extras+=relationCard(item.relation,{noLine:true});
+    if(f.closure) extras+=`<div class="result-note">이 관계는 현재 자료로 확인되지 않아 선을 긋지 않습니다.</div>`;
+    extras+=noLineList();
+  }
+  return `<div class="feedback"><div class="feedback-title">${esc(f.title)}</div><p>${esc(f.text)}</p></div>${extras}<div class="btnrow"><button class="btn" onclick="continueJudgment('${id}')">계속</button></div>`;
+}
+
+function noLineList(){
+  const rows=[];
+  if(S.noLineState.P04) rows.push('민족주의 세력 — 추가 추구 — 노동자·농민의 계급 해방');
+  if(S.noLineState.S4_A) rows.push('실력 양성 운동 — 강조 — 노동자·농민의 계급 해방');
+  if(!rows.length) return '';
+  return `<div class="no-line-list"><h3>선을 긋지 않은 판단</h3><div class="sub">현재 자료로 확인되지 않은 관계</div>${rows.map(x=>`<div class="no-line-item">${esc(x)}</div>`).join('')}</div>`;
+}
+
+
+
+// ═════════════════════ V7 PRESENTATION HELPERS ═════════════════════
+const V7_SCENES={
+  S1:{file:'FILE 01',title:'갈라진 지도',sub:'흩어진 기록을 조사해 1920년대 민족 운동의 분화 지도를 완성하세요.',img:'assets/s1-room-v9.png'},
+  S2:{file:'FILE 02',title:'같은 목표, 다른 생각',sub:'3·1운동 이후, 같은 독립을 바라보면서도 서로 다른 길이 나타났습니다.',img:'assets/s2-street-v9.png'},
+  S3:{file:'FILE 03',title:'사회주의자들은 어디로 갔는가',sub:'대중 운동의 확장과 일제의 탄압을 함께 추적합니다.',img:'assets/s3-reading-v9.png'},
+  S4:{file:'FILE 04',title:'실력을 먼저 키우자',sub:'산업과 교육을 통해 독립의 힘을 기르려 한 움직임을 조사합니다.',img:'assets/s4-workshop-v9.png'},
+  S5:{file:'FILE 05',title:'같은 운동, 다른 근거',sub:'1923년 두 신문 자료에서 같은 운동을 바라보는 다른 논리를 수집합니다.',img:'assets/s5-desk-v9.png'},
+  S6:{file:'FILE 06',title:'대학을 세우자는 움직임',sub:'한국인 본위의 고등교육을 준비한 움직임을 확인합니다.',img:'assets/s6-courtyard-v9.png'},
+  S7:{file:'FILE 07',title:'분화된 지도 완성',sub:'지금까지 확보한 근거를 하나의 지도에 조립합니다.',img:'assets/s1-room-v9.png'}
+};
+function v7SceneKey(screen=S.screen){
+  if(screen==='s1') return 'S1';
+  if(screen.includes('S2')||screen==='P03'||screen==='P04') return 'S2';
+  if(screen.includes('S3')||screen==='foldS3') return 'S3';
+  if(screen.includes('S4')||screen==='foldS4') return 'S4';
+  if(screen.includes('S5')||screen.startsWith('s5')||screen==='R11C'||screen==='foldS5') return 'S5';
+  if(screen.includes('S6')||screen.startsWith('s6')||screen==='foldS6') return 'S6';
+  if(screen.startsWith('s7')) return 'S7';
+  return null;
+}
+function v7Hero(scene){
+  const m=V7_SCENES[scene]; if(!m) return '';
+  return `<section class="scene-hero" style="background-image:url('${m.img}')"><div class="scene-hero-copy"><span class="scene-file">${m.file}</span><h2>${esc(m.title)}</h2><p>${esc(m.sub)}</p></div></section>`;
+}
+function v7MapFlags(){
+  const has=id=>!!S.mapState[id];
+  return {
+    p01:has('P01'),p02:has('P02'),p03:has('P03'),mass:has('P05')||has('P06'),rep:has('P07'),
+    skill:has('R09')||has('R10'),ind:has('R09'),edu:has('R10'),goods:has('R11A')||has('R11B')||S.judgmentState.R11C!==undefined,uni:has('R12'),
+    r14:S.screen==='s7B'||S.screen==='finalPrompt'||S.screen==='done'
+  };
+}
+function v7ActiveCount(){return Object.values(S.mapState).filter(Boolean).length;}
+function v7LiveMap(compact=false){
+  const f=v7MapFlags();
+  const node=(id,label,x,y,on,extra='')=>`<div class="lm-node ${extra} ${on?'active':''}" style="left:${x}%;top:${y}%">${label}</div>`;
+  const line=(x1,y1,x2,y2,on,extra='')=>`<line class="${on?'active':''} ${extra}" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%"></line>`;
+  return `<div class="live-panel-head"><div class="live-panel-title">현재 지도</div><div class="live-panel-count">${v7ActiveCount()}개 관계</div></div>
+  <div class="live-map-canvas ${compact?'compact':''}">
+    <svg class="live-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      ${line(16,15,42,15,f.p01)}${line(84,15,58,15,f.p02)}${line(84,15,84,39,f.p03)}
+      ${line(84,15,76,65,f.mass)}${line(16,50,16,72,f.ind)}${line(16,50,34,72,f.edu)}${line(34,72,34,90,f.uni)}
+      ${line(16,50,50,72,f.goods)}${line(92,72,76,65,f.rep,'alert')}
+    </svg>
+    ${node('nat','민족주의<br>세력',16,15,f.p01,'key')}
+    ${node('goal','민족 해방',50,15,f.p01&&f.p02,'key')}
+    ${node('soc','사회주의<br>세력',84,15,f.p02,'key')}
+    ${node('class','계급 해방',84,40,f.p03)}
+    ${node('mass','대중 운동',76,65,f.mass)}
+    ${node('skill','실력 양성<br>운동',16,50,f.skill)}
+    ${node('ind','민족 산업',8,76,f.ind)}
+    ${node('edu','교육·인재',34,76,f.edu)}
+    ${node('goods','물산 장려',52,76,f.goods)}
+    ${node('uni','민립 대학',34,92,f.uni)}
+    ${node('law','치안유지법',92,72,f.rep,'warn')}
+  </div>
+  <div class="live-log">
+    <div class="live-log-row"><span class="live-log-dot ${v7ActiveCount()?'active':''}"></span><span>근거를 찾을 때마다 지도에 관계가 남습니다.</span></div>
+    ${f.goods?'<div class="live-log-row"><span class="live-log-dot active"></span><span>물산 장려 운동 자료 비교가 기록되었습니다.</span></div>':''}
+  </div>
+  ${(v7SceneKey()==='S4' && !f.goods)?'<div class="unresolved-mini"><strong>미해결 단서</strong>물산 장려 운동 · 다음 FILE에서 다시 조사합니다.</div>':''}`;
+}
+function v7Present(inner,screen=S.screen){
+  const scene=v7SceneKey(screen);
+  if(!scene||scene==='S1'||scene==='S5'||scene==='S7') return inner;
+  const m=V7_SCENES[scene];
+  return `${v7Hero(scene)}<div class="scene-grid scene-stage scene-stage-${scene.toLowerCase()}" style="--scene-art:url('${m.img}')"><section class="workbench">${inner}</section><aside class="live-panel">${v7LiveMap()}</aside></div>`;
+}
+function v7Tray(){
+  const a=!!S.evidenceState.E05_S5_PRIORITY?.completed,b=!!S.evidenceState.E06_S5_UNITY?.completed,c=S.judgmentState.R11C!==undefined;
+  const item=(done,text)=>`<div class="tray-item ${done?'done':''}"><span class="tray-check">${done?'✓':''}</span><span>${text}</span></div>`;
+  return `<div class="tray-title">조사 기록함</div><div class="tray-count">확보한 근거 ${[a,b,c].filter(Boolean).length} / 3</div>${item(a,'생산력 발전을 우선')}${item(b,'유산·무산 계급을 막론한 단결')}${item(c,'계급적 이해관계를 문제 삼음')}<div class="s5-map-mini">${v7LiveMap(true)}</div>`;
+}
+function v7EvidenceRows(taskId){
+  const task=EVIDENCE_TASKS[taskId],state=getEvidenceTaskState(taskId),segments=evidenceSegments(SOURCE[task.source]);
+  const correctIndex=segments.findIndex(s=>s===task.correct);state.correct_index=correctIndex;let cursor=0;
+  return segments.map((sentence,i)=>{const sourceIndex=SOURCE[task.source].indexOf(sentence,cursor);const between=sourceIndex>=0?SOURCE[task.source].slice(cursor,sourceIndex):'';const paragraphStart=between.includes('\n\n');if(sourceIndex>=0)cursor=sourceIndex+sentence.length;const cls=[paragraphStart?'paragraph-start':'',i===state.last_choice&&!state.completed?'last-wrong':'',i===correctIndex&&state.completed?'resolved':''].filter(Boolean).join(' ');return `<button type="button" class="evidence-sentence ${cls}" onclick="pickEvidence('${taskId}',${i})" ${state.completed?'disabled':''}>${esc(sentence)}</button>`}).join('');
+}
+function v7S5Evidence(taskId){
+  const task=EVIDENCE_TASKS[taskId],state=getEvidenceTaskState(taskId),source1Rows=v7EvidenceRows(taskId);const bothDone=!!S.evidenceState.E06_S5_UNITY?.completed;
+  const feedback=state.attempt_count?`<div class="evidence-feedback ${state.completed?'':'retry'}"><strong>${state.completed?'근거 확보':'다시 찾아보기'}</strong>${state.completed?'이 문장이 조사 기록함에 들어갔습니다.':'관계를 더 직접 말하는 문장을 다시 찾아보세요.'}</div>`:'';
+  return `${v7Hero('S5')}<div class="s5-desk scene-stage scene-stage-s5" style="--scene-art:url('assets/s5-desk-v9.png')">
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 1. 2.</span></div><div class="paper evidence-paper">${source1Rows}<span class="source">— 《동아일보》, 1923. 1. 2.</span></div></section>
+    <section class="news-sheet locked"><div><strong>자료 2</strong><br><span class="hint">자료 1의 근거 두 개를 확보하면 개봉됩니다.</span></div></section>
+    <aside class="investigation-tray">${v7Tray()}</aside>
+    <section class="s5-question-bar"><div class="evidence-question">${esc(task.prompt)}</div><div class="evidence-help">신문에서 근거가 되는 문장을 클릭하세요.</div>${feedback}${state.completed?`<div class="btnrow"><button class="btn" onclick="continueEvidence('${taskId}')">${taskId==='E05_S5_PRIORITY'?'같은 신문에서 다음 근거 찾기':'자료 2 개봉'}</button></div>`:''}</section>
+  </div>`;
+}
+function v7S5Judgment(){
+  const item=ITEMS.R11C,chosen=S.judgmentState.R11C,hasFeedback=chosen!==undefined,mark=hasFeedback?{anchors:item.anchors,focus:item.focus}:{};
+  const buttons=['direct','inference','none'].map(v=>`<button class="choice ${chosen===v?'picked':''}" ${hasFeedback?'disabled':''} onclick="choose('R11C','${v}')">${LABEL[v]}</button>`).join('');
+  return `${v7Hero('S5')}<div class="s5-desk scene-stage scene-stage-s5" style="--scene-art:url('assets/s5-desk-v9.png')">
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 1. 2. · 조사 완료</span></div>${sourceBox('S5A','《동아일보》, 1923. 1. 2.')}</section>
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 3. 20.</span></div>${sourceBox('S5B','《동아일보》, 1923. 3. 20.',mark)}</section>
+    <aside class="investigation-tray">${v7Tray()}</aside>
+    <section class="s5-question-bar">${relationCard(item.relation,{candidate:true})}<div class="judgment-question">이 자료는 위 관계를 어디까지 말하고 있습니까?</div><div class="choice-grid">${buttons}</div>${hasFeedback?renderFeedback('R11C',item,chosen):''}</section>
+  </div>`;
+}
+function inspectRelation(id){S.inspectedRelation=id;render();}
+function v7Inspector(){
+  const id=S.inspectedRelation&&ITEMS[S.inspectedRelation]?S.inspectedRelation:'P03'; const it=ITEMS[id];
+  const quote=it.anchors?.[0]||'이 관계는 검증 자료에서 보완되었습니다.';
+  return `<div class="inspect-chips">${['P03','P07','R09','R10','R12'].map(x=>`<button class="inspect-chip ${id===x?'selected':''}" onclick="inspectRelation('${x}')">${esc(ITEMS[x].relation[2])}</button>`).join('')}</div><div class="evidence-inspector"><strong>${esc(it.relation[0])} → ${esc(it.relation[2])}</strong>“${esc(quote)}”<span class="source">— ${esc(it.sourceLabel)}</span></div>`;
+}
+function v7Finale(){
+  return `<section class="finale-hero"><div class="finale-title"><div class="eyebrow">S7 · FINAL ASSEMBLY</div><h1>갈라진 지도 완성</h1><p>지금까지 확보한 근거가 하나의 관계망으로 조립됩니다.</p></div><div class="finale-board">${v7LiveMap()}</div><aside class="finale-side"><h3>선택한 관계의 근거 자료</h3>${v7Inspector()}${noLineList()}<button class="btn final-action" onclick="go('finalPrompt')">조사를 마치고 설명하기 →</button></aside></section>`;
+}
+
+function renderS1(){ return v9S1(); }
+function startActivities(){S.screen='E01_S2_COMMON';render();}
+
+function foldS3(){
+  return `<div class="eyebrow">S3 · 정리</div><h1 class="sc-title">대중 운동으로 정리됩니다</h1>
+    <p class="lead">자료에서 확인한 관계가 대중 운동 노드 안으로 정리됩니다.</p>
+    <div class="fold-card"><div class="fold-title">대중 운동</div><div class="summary-tags"><span class="summary-tag">노동 운동</span><span class="summary-tag">농민 운동</span><span class="summary-tag">청년 운동</span></div><div class="auto-note">농민 운동 · 자료에 함께 제시됨</div>${scopeBadgeHtml(true)}</div>
+    <div class="btnrow"><button class="btn" onclick="go('E04_S4_EMPHASIS')">계속</button></div>`;
+}
+
+function foldS4(){
+  return `<div class="eyebrow">S4 · 정리</div><h1 class="sc-title">실력 양성 운동의 강조점을 정리합니다</h1>
+    <div class="fold-card"><div class="fold-title">실력 양성 운동</div><div class="summary-tags"><span class="summary-tag">민족 산업</span><span class="summary-tag">교육/인재</span></div></div>
+    <div class="fold-card"><div class="fold-title">물산 장려 운동</div><div class="auto-note">자료에서 확인한 운동</div><div class="hint">카드는 표시하지만, 실력 양성 운동과 물산 장려 운동 사이에 새로운 관계선을 긋지는 않습니다.</div></div>
+    ${noLineList()}
+    <div class="btnrow"><button class="btn" onclick="go('E05_S5_PRIORITY')">계속</button></div>`;
+}
+
+function s5Discover(){
+  return `<div class="eyebrow">S5 · 비교</div><h1 class="sc-title">두 자료 함께 보기</h1><p class="lead">이제 두 글을 나란히 봅니다.</p>
+    ${s5Compare({})}
+    <div class="discover"><h3>두 글의 주장만 보고 작성자의 정치적 소속까지 확정할 수 있을까?</h3><div class="btnrow"><button class="btn" onclick="revealS5()">계속</button></div></div>`;
+}
+function revealS5(){S.s5NoteSeen=true;S.screen='s5Reveal';render();}
+function s5Reveal(){
+  return `<div class="eyebrow">S5 · 비교</div><h1 class="sc-title">두 자료 함께 보기</h1>
+    ${s5Compare({})}
+    <div class="discover"><p>두 자료를 '민족주의 대 사회주의'의 주장으로 단순하게 나눌 수는 없습니다. 당시 사회주의 진영 안에서도 물산장려운동을 둘러싼 입장이 같지 않았습니다.</p><p>두 글은 모두 《동아일보》에 실렸습니다. 신문명이나 주장 하나만으로 필자의 사상적 소속을 단정할 수 없습니다.</p></div>
+    <div class="btnrow"><button class="btn" onclick="go('foldS5')">계속</button></div>`;
+}
+
+function foldS5(){
+  return `<div class="eyebrow">S5 · 정리</div><h1 class="sc-title">두 글의 주장이 물산 장려 운동 노드에 남습니다</h1>
+    <div class="fold-card"><div class="fold-title">물산 장려 운동 — 이 운동을 둘러싼 두 글</div>
+      <div class="node-body" style="border-top:0;padding:0">
+        <strong>자료 1 · 《동아일보》 1923.1.2</strong>
+        <ul><li>조선인의 생산력 발전을 우선</li><li>유산·무산 계급을 막론한 단결 주장</li></ul>
+        <strong>자료 2 · 《동아일보》 1923.3.20</strong>
+        <ul><li>물산장려운동의 계급적 이해관계를 문제 삼음</li></ul>
+        <div class="hint">※ 두 글의 주장이나 신문명만으로 작성자의 정치적 소속을 단정할 수 없음</div>
+      </div>
+    </div>
+    <div class="btnrow"><button class="btn" onclick="go('E07_S6_GOAL')">계속</button></div>`;
+}
+
+function s6Reading(){
+  return `<div class="eyebrow">S6 · 추가 읽기</div><h1 class="sc-title">대학을 세우자는 움직임</h1>
+    <div class="complete-chip" style="display:inline-block">근거 확인 완료 ✓</div>
+    <h2 style="font-size:18px;margin:18px 0 4px">추가 읽기</h2><p class="hint">민립 대학 설립 운동을 둘러싼 또 다른 서술입니다.</p>
+    ${sourceBox('S6B','국사편찬위원회 『우리역사넷』 「민립대학설립운동」')}
+    <div class="reading-point"><strong>읽기 포인트</strong><br>'쉽게 짐작할 수 있다'는 표현은 앞의 사실을 바탕으로 다음 판단을 추론하고 있음을 보여줍니다.</div>
+    <div class="btnrow"><button class="btn" onclick="go('foldS6')">계속</button></div>`;
+}
+
+function foldS6(){
+  return `<div class="eyebrow">S6 · 정리</div><h1 class="sc-title">민립 대학 설립 운동 노드를 정리합니다</h1>
+    <div class="fold-card"><div class="fold-title">민립 대학 설립 운동</div><div class="summary-tags"><span class="summary-tag">한국인 본위 고등교육</span></div><div class="auto-note">추가 읽기 · 사회운동 세력의 태도를 다룬 연구 서술 — 국사편찬위원회 『우리역사넷』</div></div>
+    <div class="btnrow"><button class="btn" onclick="go('s7A')">계속</button></div>`;
+}
+
+function s7A(){
+  return `<div class="eyebrow">S7 · 읽기</div><h1 class="sc-title">분화된 지도 완성</h1>
+    ${sourceBox('S7A','교과서 43쪽 첫 문단')}
+    <h2 style="font-size:18px;margin:22px 0 5px">「민족적 경륜」</h2>
+    ${sourceBox('S7B','《동아일보》, 1924. 1. 3.')}
+    <div class="btnrow"><button class="btn" onclick="completeMap()">지도 완성</button></div>`;
+}
+
+function completeMap(){
+  S.screen='s7B';
+  sendResult();
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function s7B(){
+  return `<div class="eyebrow">S7 · 지도 완성</div><h1 class="sc-title">분화된 지도 완성</h1>
+    <p class="lead">민족주의 세력 내부에서도 자치운동을 둘러싼 입장이 갈렸습니다.</p>
+    ${finalMap(false)}
+    <div class="btnrow"><button class="btn" onclick="go('finalPrompt')">설명하기</button></div>`;
+}
+
+function coreRelations(goalHighlight=false){
+  const parts=[];
+  ['P01','P02','P03'].forEach(id=>{
+    if(S.mapState[id]) parts.push(relationCard(ITEMS[id].relation,{style:S.mapState[id],selected:S.finalSplit===id}));
+  });
+  if(S.mapState.P07) parts.push(`<div>${relationCard(ITEMS.P07.relation)}<details class="map-node"><summary><span>P07 해석 범위<span class="node-summary">치안유지법 탄압 관계</span></span></summary><div class="node-body">이 선은 치안유지법이 사회주의 운동 탄압에 사용되었다는 관계를 보여줍니다. 치안유지법의 적용 대상이 사회주의에만 한정되었다는 뜻은 아닙니다.</div></details></div>`);
+  return `<div class="map-core ${goalHighlight?'goal-highlight':''}">${parts.join('')}</div>`;
+}
+
+function verifiedR14(){
+  return relationCard(['비타협적 민족주의 세력','비판·경계','자치 운동'],{verified:true,selected:S.finalSplit==='R14'});
+}
+
+function detailNodes(openId=null){
+  const isOpen=(id)=>openId===id?' open':'';
+  return `<div class="map-details">
+    <details class="map-node" data-detail="R09"${isOpen('R09')}><summary><span>실력 양성 운동<div class="node-summary">민족 산업 · 교육/인재</div></span></summary><div class="node-body"><ul><li>R09 · 민족 산업 육성을 강조</li><li>R10 · 교육을 통한 인재 양성을 강조</li></ul></div></details>
+    <details class="map-node" data-detail="R11C"${isOpen('R11C')}><summary><span>물산 장려 운동<div class="node-summary">생산력 · 단결 · 계급 이해관계</div></span></summary><div class="node-body"><strong>이 운동을 둘러싼 두 글</strong><ul><li>자료1 · 《동아일보》 1923.1.2 — 조선인의 생산력 발전을 우선 / 유산·무산 계급을 막론한 단결 주장</li><li>자료2 · 《동아일보》 1923.3.20 — 물산장려운동의 계급적 이해관계를 문제 삼음</li></ul><div class="hint">※ 두 글의 주장이나 신문명만으로 작성자의 정치적 소속을 단정할 수 없음</div></div></details>
+    <details class="map-node" data-detail="R12"${isOpen('R12')}><summary><span>민립 대학 설립 운동<div class="node-summary">한국인 본위 고등교육</div></span></summary><div class="node-body"><ul><li>목표 → 한국인 본위의 고등교육</li><li>추가 읽기 · 사회운동 세력의 태도를 다룬 연구 서술 — 국사편찬위원회 『우리역사넷』</li></ul></div></details>
+    <details class="map-node" data-detail="P05"${isOpen('P05')}><summary><span>대중 운동<div class="node-summary">노동 · 농민 · 청년</div><span class="scope-compact">확인된 범위 · 1923~24년</span></span></summary><div class="node-body"><ul><li>P05 · 사회주의 세력 — 주도 — 노동 운동</li><li>농민 운동 · 자료에 함께 제시됨</li><li>P06 · 사회주의 세력 — 주도 — 청년 운동</li></ul><div class="scope-detail">교과서는 시기를 밝히지 않지만, 사회주의 세력이 노동·청년 운동을 주도했다고 확인되는 것은 전국 조직이 만들어지던 1923~24년 무렵부터입니다.</div></div></details>
+  </div>`;
+}
+
+function branchBlock(){
+  return `<div class="branch-card"><div class="branch-row"><div class="branch-source">민족주의 세력</div><div class="branch-split">→</div><div class="branch-targets"><div class="branch-target">비타협적 민족주의 세력</div></div></div><div class="verify-note"><strong>검증 자료 · 「민족적 경륜」</strong><br>대립 표면화의 계기 · 검증 자료</div></div>`;
+}
+
+function finalMap(forPrompt=true){
+  const openMap={R09:'R09',R10:'R09',R11C:'R11C',P03:null,R14:null};
+  const openId=forPrompt?openMap[S.finalSplit]:null;
+  return `<div class="map-section"><h3>A · 자료에서 확인한 관계</h3>${coreRelations(forPrompt && S.finalGoalConfirmed)}</div>
+    <div class="map-section"><h3>노드 내부에 정리된 관계</h3>${detailNodes(openId)}</div>
+    <div class="map-section"><h3>B · 검증 자료로 보완된 관계</h3>${verifiedR14()}${branchBlock()}</div>
+    <div class="map-section"><h3>C · 선을 긋지 않은 판단</h3>${noLineList()}</div>`;
+}
+
+function finalPrompt(){
+  const canWrite=S.finalGoalConfirmed&&!!S.finalSplit;
+  return `<div class="eyebrow">최종 · 설명하기</div><h1 class="sc-title">1920년대 민족 운동은 왜 하나의 길로 모이지 않았을까?</h1>
+    <p class="lead">완성된 지도에서 여러 세력이 <strong>함께 향한 목표</strong>를 확인하고, 서로 <strong>갈라진 지점 하나</strong>를 골라 설명해 보자.</p>
+    ${finalMap(true)}
+    <div class="final-steps">
+      <section class="final-step"><h3>1. 함께 향한 목표 확인</h3><button class="goal-btn ${S.finalGoalConfirmed?'selected':''}" onclick="confirmGoal()">민족 해방</button>${S.finalGoalConfirmed?'<div class="hint" style="margin-top:8px">민족주의 세력과 사회주의 세력이 함께 이 목표에 연결되어 있습니다.</div>':''}</section>
+      <section class="final-step"><h3>2. 갈라진 지점 하나 선택</h3><div class="split-grid">${Object.entries(FINAL_SPLITS).map(([id,t])=>`<button class="split-btn ${S.finalSplit===id?'selected':''}" onclick="selectSplit('${id}')">${esc(t)}</button>`).join('')}</div></section>
+      <section class="final-step"><h3>3. 1~2문장으로 설명</h3><textarea id="finalText" maxlength="300" placeholder="공통 목표와 갈라진 지점을 연결해 설명해 보세요." oninput="updateFinalText(this.value)" ${canWrite?'':'disabled'}>${esc(S.finalExplanation)}</textarea><div class="btnrow"><button class="btn" id="finalSubmit" onclick="submitFinal()" ${canWrite&&S.finalExplanation.trim()?'':'disabled'}>답 제출</button></div></section>
+    </div>`;
+}
+function confirmGoal(){S.finalGoalConfirmed=true;render();}
+function selectSplit(id){S.finalSplit=id;render();}
+function updateFinalText(v){S.finalExplanation=v;const b=document.getElementById('finalSubmit');if(b)b.disabled=!(S.finalGoalConfirmed&&S.finalSplit&&v.trim());}
+function submitFinal(){
+  const t=document.getElementById('finalText');
+  S.finalExplanation=(t?.value||S.finalExplanation).trim();
+  if(!S.finalGoalConfirmed||!S.finalSplit||!S.finalExplanation) return;
+  sendFinalAnswer();
+  S.screen='done';render();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function doneScreen(){
+  return `<div class="eyebrow">완료</div><h1 class="sc-title">지도를 완성했습니다</h1><p class="lead">자료로 확인한 관계와, 근거가 부족해 긋지 않은 판단을 함께 남겼습니다.</p>
+    <div class="answer-box"><h3>내 설명</h3><p>${esc(S.finalExplanation)}</p><div class="hint" style="margin-top:8px">선택한 갈라진 지점 · ${esc(FINAL_SPLITS[S.finalSplit]||'')}</div></div>
+    <div class="btnrow"><button class="btn secondary" onclick="copyAnswer()">내 답 복사</button></div>
+    <div class="comment-box"><label for="comment" class="panel-title" style="display:block">한 줄 소감</label><textarea id="comment" rows="2" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)" maxlength="100"></textarea><div class="btnrow"><button class="btn ghost" id="commentSend" onclick="sendComment()">소감 보내기</button></div></div>
+    ${finalMap(false)}
+    <div class="footer">© 찰리쌤 · hischarlie.tistory.com</div>`;
+}
+
+function copyAnswer(){
+  const text=S.finalExplanation;
+  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(()=>alert('내 답을 복사했습니다.')).catch(()=>fallbackCopy(text));}
+  else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('내 답을 복사했습니다.');
+}
+
+function go(screen){S.screen=screen;S.feedback=null;S.scopeExpanded=false;if(ITEMS[screen]&&STRENGTH_JUDGMENTS.includes(screen))S.currentId=screen;render();window.scrollTo({top:0,behavior:'smooth'});}
+
+function render(){
+  v91MapPrepare();
+  hideTooltip();
+  setHeader();
+  document.body.classList.add('v9-mode');
+  document.body.classList.remove('v8-s2-mode');
+  const app=document.getElementById('app');
+  if(v9IsLateScreen()){
+    app.innerHTML=v9LateRender();
+    if(S.screen==='finalPrompt') app.querySelectorAll('.v91-final-side, #finalForm, .v91-final-scroll').forEach(n=>n.scrollTop=0);
+    applyTooltips(app);
+    v9KeepEvidenceVisible(app);
+    return;
+  }
+  let html='';
+  if(S.screen==='s1') html=renderS1();
+  else if(EVIDENCE_TASKS[S.screen]) html=evidencePickScreen(S.screen);
+  else if(ITEMS[S.screen] && STRENGTH_JUDGMENTS.includes(S.screen)) html=judgmentScreen(S.screen);
+  else if(S.screen==='foldS3') html=foldS3();
+  else if(S.screen==='foldS4') html=foldS4();
+  else if(S.screen==='s5Discover') html=s5Discover();
+  else if(S.screen==='s5Reveal') html=s5Reveal();
+  else if(S.screen==='foldS5') html=foldS5();
+  else if(S.screen==='s6Reading') html=s6Reading();
+  else if(S.screen==='foldS6') html=foldS6();
+  else if(S.screen==='s7A') html=s7A();
+  else if(S.screen==='s7B') html=s7B();
+  else if(S.screen==='finalPrompt') html=finalPrompt();
+  else if(S.screen==='done') html=doneScreen();
+  if(S.screen==='E05_S5_PRIORITY'||S.screen==='E06_S5_UNITY') html=v7S5Evidence(S.screen);
+  else if(S.screen==='R11C') html=v7S5Judgment();
+  else if(S.screen==='s7B') html=v7Finale();
+  else if(v7SceneKey(S.screen)==='S5') html=`<section class="v8-s5-follow"><div class="v8-workbench">${html}</div></section>`;
+  else if(v7SceneKey(S.screen)==='S7') html=`<section class="v8-board-follow"><div class="v8-workbench">${html}</div></section>`;
+  else html=v7Present(html,S.screen);
+  app.innerHTML=html;
+  applyTooltips(app);
+  if(['S3','S4'].includes(v7SceneKey(S.screen))) v9KeepEvidenceVisible(app);
+}
+
+
+
+// ═════════════════════ V8 ILLUSTRATION-FIRST OVERRIDES ═════════════════════
+// SHOT ASSET INTEGRATION
+
+// S1, S2, S5, S7 now directly use cropped scene shots from the approved UI mockup image as in-game art assets.
+function v7Hero(scene){ return ''; }
+
+
+function v8S2ClueCount(){
+  let n=0;
+  if(S.evidenceState.E01_S2_COMMON?.completed) n++;
+  if(S.judgmentState.P03!==undefined) n++;
+  if(S.judgmentState.P04!==undefined) n++;
+  return n;
+}
+function v8S2Clues(){
+  const a=!!S.evidenceState.E01_S2_COMMON?.completed,b=S.judgmentState.P03!==undefined,c=S.judgmentState.P04!==undefined;
+  const row=(done,t)=>`<div class="v8-s2-clue ${done?'found':''}"><span>${done?'✓':'·'}</span><span>${t}</span></div>`;
+  return `<div class="v8-s2-clues"><div class="v8-s2-clues-head"><span>발견한 단서</span><span>${v8S2ClueCount()} / 3</span></div>${row(a,'두 세력의 공통 목표')}${row(b,'사회주의 세력의 추가 목표')}${row(c,'현재 자료로 확인되지 않는 관계')}</div>`;
+}
+function v8Home(){S.screen='s1';S.feedback=null;render();window.scrollTo({top:0,behavior:'smooth'});}
+function v8OpenModal(kind){
+  const old=document.querySelector('.v8-modal-backdrop'); if(old) old.remove();
+  const data={
+    intro:['게임 소개','《갈라진 지도》는 1920년대 민족 운동의 여러 흐름을 자료에서 확인하고, 근거가 있는 관계만 지도에 연결하는 역사 조사 게임입니다.'],
+    sources:['자료실','교과서 41쪽·43쪽, 《동아일보》 1923년 1월 2일·3월 20일, 《동아일보》 1924년 1월 3일, 국사편찬위원회 우리역사넷 자료를 게임 안에서 순서대로 확인합니다.']
+  }[kind];
+  const el=document.createElement('div');el.className='v8-modal-backdrop';el.onclick=e=>{if(e.target===el)el.remove();};el.innerHTML=`<section class="v8-modal"><button class="v8-modal-close" onclick="this.closest('.v8-modal-backdrop').remove()">닫기</button><h2>${data[0]}</h2><p>${data[1]}</p></section>`;document.body.appendChild(el);
+}
+function v8S2Scene(inner){ return v9S2(); }
+
+function v8SceneTitle(scene){
+  const m=V7_SCENES[scene];
+  return `<div class="v8-scene-top"><div class="v8-scene-title"><span class="scene-file">${m.file}</span><h1>${esc(m.title)}</h1><p>${esc(m.sub)}</p></div></div>`;
+}
+
+function v7Present(inner,screen=S.screen){
+  const scene=v7SceneKey(screen);
+  if(!scene||scene==='S1'||scene==='S5'||scene==='S7') return inner;
+  if(scene==='S2') return v8S2Scene(inner);
+  if(scene==='S3') return v9S3(inner);
+  if(scene==='S4') return v9S4(inner);
+  const m=V7_SCENES[scene];
+  return `<section class="v8-scene v8-scene-${scene.toLowerCase()}" style="--v8-art:url('${m.img}')">
+    ${v8SceneTitle(scene)}
+    <div class="v8-scene-body"><section class="v8-workbench">${inner}</section><aside class="v8-live">${v7LiveMap()}</aside></div>
+  </section>`;
+}
+
+function renderS1(){ return v9S1(); }
+
+function v8DeskHeader(){
+  const m=V7_SCENES.S5;
+  return `<div class="v8-desk-head"><div><span class="scene-file">${m.file}</span><h1>${esc(m.title)}</h1><p>${esc(m.sub)}</p></div><div class="scene-file">EVIDENCE DESK</div></div>`;
+}
+
+function v7S5Evidence(taskId){
+  const task=EVIDENCE_TASKS[taskId],state=getEvidenceTaskState(taskId),source1Rows=v7EvidenceRows(taskId);
+  const feedback=state.attempt_count?`<div class="evidence-feedback ${state.completed?'':'retry'}"><strong>${state.completed?'근거 확보':'다시 찾아보기'}</strong>${state.completed?'선택한 문장이 조사 기록함에 들어갔습니다.':'관계를 더 직접 말하는 문장을 다시 찾아보세요.'}</div>`:'';
+  return `<section class="v8-desk">${v8DeskHeader()}<div class="v8-desk-grid">
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 1. 2.</span></div><div class="paper evidence-paper">${source1Rows}<span class="source">— 《동아일보》, 1923. 1. 2.</span></div></section>
+    <section class="news-sheet locked"><div><strong>자료 2 · 1923. 3. 20.</strong><br><span class="hint">자료 1에서 필요한 근거를 모두 확보하면 개봉됩니다.</span></div></section>
+    <aside class="investigation-tray">${v7Tray()}</aside>
+    <section class="s5-question-bar"><div class="evidence-question">${esc(task.prompt)}</div><div class="evidence-help">신문에서 근거가 되는 문장을 클릭하세요.</div>${feedback}${state.completed?`<div class="btnrow"><button class="btn" onclick="continueEvidence('${taskId}')">${taskId==='E05_S5_PRIORITY'?'같은 신문에서 다음 근거 찾기':'자료 2 개봉'}</button></div>`:''}</section>
+  </div></section>`;
+}
+
+function v7S5Judgment(){
+  const item=ITEMS.R11C,chosen=S.judgmentState.R11C,hasFeedback=chosen!==undefined,mark=hasFeedback?{anchors:item.anchors,focus:item.focus}:{};
+  const buttons=['direct','inference','none'].map(v=>`<button class="choice ${chosen===v?'picked':''}" ${hasFeedback?'disabled':''} onclick="choose('R11C','${v}')">${LABEL[v]}</button>`).join('');
+  return `<section class="v8-desk">${v8DeskHeader()}<div class="v8-desk-grid">
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 1. 2. · 조사 완료</span></div>${sourceBox('S5A','《동아일보》, 1923. 1. 2.')}</section>
+    <section class="news-sheet"><div class="news-head"><span class="news-name">동아일보</span><span class="news-date">1923. 3. 20.</span></div>${sourceBox('S5B','《동아일보》, 1923. 3. 20.',mark)}</section>
+    <aside class="investigation-tray">${v7Tray()}</aside>
+    <section class="s5-question-bar">${relationCard(item.relation,{candidate:true})}<div class="judgment-question">이 자료는 위 관계를 어디까지 말하고 있습니까?</div><div class="choice-grid">${buttons}</div>${hasFeedback?renderFeedback('R11C',item,chosen):''}</section>
+  </div></section>`;
+}
+
+function v7Finale(){
+  return `<section class="v8-finale"><div class="v8-finale-head"><div class="eyebrow">S7 · FINAL ASSEMBLY</div><h1>갈라진 지도 완성</h1><p>지금까지 확보한 근거가 조사실의 한 장의 관계망으로 조립됩니다.</p></div><div class="v8-finale-layout"><div class="v8-finale-board">${v7LiveMap()}</div><aside class="v8-finale-side"><h3>선택한 관계의 근거 자료</h3>${v7Inspector()}${noLineList()}<button class="btn final-action" onclick="go('finalPrompt')">조사를 마치고 설명하기 →</button></aside></div></section>`;
+}
+
+function v8FinalPromptInner(){
+  const canWrite=S.finalGoalConfirmed&&!!S.finalSplit;
+  return `<div class="eyebrow">최종 · 설명하기</div><h1 class="sc-title">1920년대 민족 운동은 왜 하나의 길로 모이지 않았을까?</h1>
+    <p class="lead">완성된 지도에서 여러 세력이 <strong>함께 향한 목표</strong>를 확인하고, 서로 <strong>갈라진 지점 하나</strong>를 골라 설명해 보자.</p>
+    ${finalMap(true)}
+    <div class="final-steps">
+      <section class="final-step"><h3>1. 함께 향한 목표 확인</h3><button class="goal-btn ${S.finalGoalConfirmed?'selected':''}" onclick="confirmGoal()">민족 해방</button>${S.finalGoalConfirmed?'<div class="hint" style="margin-top:8px">민족주의 세력과 사회주의 세력이 함께 이 목표에 연결되어 있습니다.</div>':''}</section>
+      <section class="final-step"><h3>2. 갈라진 지점 하나 선택</h3><div class="split-grid">${Object.entries(FINAL_SPLITS).map(([id,t])=>`<button class="split-btn ${S.finalSplit===id?'selected':''}" onclick="selectSplit('${id}')">${esc(t)}</button>`).join('')}</div></section>
+      <section class="final-step"><h3>3. 1~2문장으로 설명</h3><textarea id="finalText" maxlength="300" placeholder="공통 목표와 갈라진 지점을 연결해 설명해 보세요." oninput="updateFinalText(this.value)" ${canWrite?'':'disabled'}>${esc(S.finalExplanation)}</textarea><div class="btnrow"><button class="btn" id="finalSubmit" onclick="submitFinal()" ${canWrite&&S.finalExplanation.trim()?'':'disabled'}>답 제출</button></div></section>
+    </div>`;
+}
+function finalPrompt(){return `<section class="v8-board-follow"><div class="v8-workbench">${v8FinalPromptInner()}</div></section>`;}
+
+function v8DoneInner(){
+  return `<div class="eyebrow">완료</div><h1 class="sc-title">지도를 완성했습니다</h1><p class="lead">자료로 확인한 관계와, 근거가 부족해 긋지 않은 판단을 함께 남겼습니다.</p>
+    <div class="answer-box"><h3>내 설명</h3><p>${esc(S.finalExplanation)}</p><div class="hint" style="margin-top:8px">선택한 갈라진 지점 · ${esc(FINAL_SPLITS[S.finalSplit]||'')}</div></div>
+    <div class="btnrow"><button class="btn secondary" onclick="copyAnswer()">내 답 복사</button></div>
+    <div class="comment-box"><label for="comment" class="panel-title" style="display:block">한 줄 소감</label><textarea id="comment" rows="2" placeholder="한 줄 소감을 남겨보세요. (이름·학번 제외)" maxlength="100"></textarea><div class="btnrow"><button class="btn ghost" id="commentSend" onclick="sendComment()">소감 보내기</button></div></div>
+    ${finalMap(false)}<div class="footer">© 찰리쌤 · hischarlie.tistory.com</div>`;
+}
+function doneScreen(){return `<section class="v8-board-follow"><div class="v8-workbench">${v8DoneInner()}</div></section>`;}
+
+v91Initialize();
+render();
+</script>
+</body>
+</html>

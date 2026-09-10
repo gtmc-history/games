@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "games": [
+    { "slug": "bunhwa1920", "title": "갈라진 지도", "era": "일제강점기·1920년대", "status": "tested", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "balhae", "title": "발해에서 고구려의 DNA를 찾아라", "era": "전근대·남북국", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },
     { "slug": "wang-geon", "title": "왕건의 외교전 — 918년 고려", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "B", "renderer": "generic", "aliases": [] },
     { "slug": "goryeo-debate", "title": "고려 말 대논쟁 — 정몽주 vs 정도전", "era": "전근대·고려", "status": "published", "save": "required", "dashboard": "A", "renderer": "generic", "aliases": [] },

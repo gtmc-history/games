@@ -1,0 +1,22 @@
+{
+  "pass": true,
+  "network": "intercepted; no production writes",
+  "records": [
+    {
+      "record_type": "result",
+      "presentation_version": "v9.2",
+      "version": "1.6-v8-s2-interactive-scene"
+    },
+    {
+      "record_type": "final_answer",
+      "presentation_version": "v9.2",
+      "version": "1.6-v8-s2-interactive-scene"
+    },
+    {
+      "record_type": "comment",
+      "presentation_version": "v9.2",
+      "version": "1.6-v8-s2-interactive-scene"
+    }
+  ],
+  "screenshots": 0
+}
