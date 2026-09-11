@@ -1,0 +1,2 @@
+-- Hub publication metadata only; no student rows or policy changes.
+insert into public.game_meta (game_id,label,era,axes,scenes,sliders,endings,updated_at) values ('bunhwa1920','갈라진 지도','일제강점기 · 1920년대','[]'::jsonb,'[]'::jsonb,'[]'::jsonb,'[]'::jsonb,now()) on conflict (game_id) do update set label=excluded.label,era=excluded.era,axes=excluded.axes,scenes=excluded.scenes,sliders=excluded.sliders,endings=excluded.endings,updated_at=excluded.updated_at;

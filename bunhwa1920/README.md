@@ -4,4 +4,4 @@
 
 로컬 1366×768 완주·7/7·저장 복원 검증 완료. 최종 버전 검사는 전송 3종을 가로채 검사했고 운영 학생 데이터를 만들지 않았다.
 
-운영 저장 키가 아직 미설정이므로 manifest는 tested를 유지하며 허브 공개는 보류한다. 현재 localStorage 저장·이어하기는 동작한다.
+허브 공개 승인에 따라 manifest를 published로 전환하고 기존 프로젝트의 publishable key를 연결했다. game_meta 1건과 대시보드 canonical label을 등록했다. UI·판정·payload·localStorage 구조는 변경하지 않았다. 학생 결과 테스트 INSERT와 RLS 변경은 수행하지 않았다.
