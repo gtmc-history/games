@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>신간회 — 지회의 4년</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="stage" class="stage" aria-live="polite">
+      <img id="bg" class="bg" alt="">
+      <div class="shade"></div>
+
+      <header class="hud">
+        <div>
+          <div class="game-title">신간회 — 지회의 4년</div>
+          <div class="game-sub">1927–1931 · 기록하고, 판단하고, 남기다</div>
+        </div>
+        <div class="hud-right">
+          <button id="soundBtn" class="ghost" aria-pressed="false">음향 OFF</button>
+          <button id="restartBtn" class="ghost">처음부터</button><span id="dbStatus" class="db-status" aria-live="polite"></span>
+        </div>
+      </header>
+
+      <nav id="progress" class="progress" aria-label="게임 진행"></nav>
+
+      <aside id="recordRail" class="record-rail">
+        <div class="rail-title">내 기록</div>
+        <div id="recordList" class="record-list"></div>
+      </aside>
+
+      <section id="sceneRoot" class="scene-root"></section>
+      <section id="overlayRoot" class="overlay-root" aria-live="assertive"></section>
+    </section>
+  </main>
+
+  <script>
+    // Static deployment contract for repository audit. Runtime logic lives in game.js.
+    window.__GAME_AUDIT__ = {
+      game: "singanhoe1927",
+      table: "game_results",
+      method: "POST",
+      choices: true,
+      classQuery: "URLSearchParams class",
+      timestamp: "toISOString"
+    };
+  </script>
+  <script src="scenes.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
