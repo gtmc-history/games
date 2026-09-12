@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>지회의 4년 — 신간회 1927~1931</title>
+  <style>
+    html,body{height:100%;margin:0;background:#17110d;color:#f7efe4;font-family:"Malgun Gothic",sans-serif}
+    main{height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}
+    .box{max-width:620px}.bar{height:7px;background:#34261d;border-radius:99px;overflow:hidden;margin:18px 0}.fill{height:100%;width:10%;background:#d5b184;transition:width .15s}
+    small{color:#cdbba8}
+  </style>
+</head>
+<body>
+<main><div class="box"><h1>지회의 4년</h1><p id="status">게임 자료를 불러오고 있습니다.</p><div class="bar"><div class="fill" id="fill"></div></div><small>신간회 1927~1931 · 기록하고, 판단하고, 남기다</small></div></main>
+<script>
+const GAME_ID='singanhoe1927';
+const PARTS=Array.from({length:17},(_,i)=>`payload/part-${String(i).padStart(2,'0')}.txt`);
+(async()=>{
+  try{
+    const chunks=[];
+    for(let i=0;i<PARTS.length;i++){
+      const r=await fetch(PARTS[i],{cache:'no-store'});
+      if(!r.ok) throw new Error(`${PARTS[i]}: HTTP ${r.status}`);
+      chunks.push((await r.text()).trim());
+      document.getElementById('fill').style.width=`${Math.round((i+1)/PARTS.length*80)}%`;
+    }
+    const binary=atob(chunks.join(''));
+    const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+    if(!('DecompressionStream' in window)) throw new Error('이 브라우저는 압축 해제를 지원하지 않습니다. 최신 Chrome을 사용하세요.');
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    document.getElementById('fill').style.width='100%';
+    document.open(); document.write(html); document.close();
+  }catch(err){
+    console.error(err);
+    document.getElementById('status').textContent='게임 자료를 불러오지 못했습니다. 새로고침하거나 최신 Chrome에서 다시 열어 주세요.';
+  }
+})();
+</script>
+</body>
+</html>
