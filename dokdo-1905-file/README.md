@@ -7,13 +7,14 @@
 - manifest: `draft`
 - S0~S7 핵심 동선: 구현 초안 있음
 - 선택 조사: 구현 초안 있음
+- S2: `죽도 외 1도` 본문 직접 문구와 현재 지명 식별을 분리하고, 식별/보류를 해석 메모로 저장하도록 DESIGN_LOCK v1.0과 구현을 다시 정렬
 - S4 니타카 자료: `작성 주체 / 정보 경로 / 명칭` 분해 조작 구현 초안 있음
 - S5: 1906 구절 직접 추출 후 과거 1900년 메모 재검토·수정 구현 초안 있음
 - S6 고정 시간축형 관계 보드: 구현 초안 있음
 - 결과 저장: `game_results` 공통 계약의 구조화 값만 전송하도록 구현
 - `source-overrides.js`: 핵심 사료의 학생용 현대어와 검증된 원문 핵심구절·정본 링크를 분리해 보강
-- `QA_CHECKLIST.md`: 브라우저·교실·SAVE payload 실기검사 기준 추가
-- GitHub Actions `Game Integration Audit` run #99: **SUCCESS**
+- runtime: `app-core.js` / `app-scenes-a.js` / `app-scenes-b.js` / `app-init.js`로 분리. 이전 단일 `app.js`는 제거
+- `QA_CHECKLIST.md`: 브라우저·교실·SAVE payload 실기검사 기준 및 자동 runtime smoke 결과 기록
 - 허브 공개/production release: 하지 않음
 
 ## 사료 화면 보강 상태
@@ -27,6 +28,31 @@
 - 1906 보고서 호외·지령 제3호: 국사편찬위원회 『各觀察道(去來)案』을 정본 링크로 사용하고, `本郡所屬獨島`, 일본 관리 일행의 발언 부분, `獨島領地之說은 全屬無根` 등을 학생용 설명과 분리해 표시한다.
 
 원문 전체 이미지가 아직 들어오지 않은 자료에서도 `원문 핵심구절 / 학생용 현대어 재구성 / 현대 정부·연구 해설`의 층위를 섞지 않는다.
+
+### S2 구현 정렬
+
+DESIGN_LOCK v1.0은 1877 지령의 `죽도 외 1도` 문구 확인은 사실층으로, 그 두 번째 섬을 현재 독도로 식별하는 것은 지도와 후대 연구를 연결하는 해석층으로 잠가 두었다. 이전 BUILD 초안은 실제 지도 단서 뒤 현재 독도 식별만 사실상 강제하여 이 규칙과 어긋났다.
+
+현재 runtime은 다음처럼 수정했다.
+
+1. `죽도 외 1도`가 일본과 관계없다는 취지의 본문 직접 문구를 따로 확인한다.
+2. 기죽도약도의 명칭·상대 위치 단서를 따로 확인한다.
+3. 그 뒤 학생은 `지도·공공교육 자료의 해석을 근거로 현재 독도로 식별` 또는 `현재 지명 식별 보류` 중 하나를 **해석 메모**로 저장할 수 있다.
+4. 두 선택에 정오·점수 판정을 붙이지 않고 `outside_one_status`에 판단 상태를 남긴다.
+
+이 수정은 새로운 설계 변경이 아니라 잠긴 DESIGN_LOCK의 `사실 / 해석` 층위 규칙을 구현에 복원한 것이다.
+
+## 자동 runtime smoke
+
+2026-09-14에 분리된 runtime 스크립트 자체를 검증하기 위해 최소 사료 stub과 headless Chromium을 사용한 자동 smoke를 수행했다.
+
+- `app-core.js`, `app-scenes-a.js`, `app-scenes-b.js`, `app-init.js`: `node --check` 통과.
+- S0 → S7 → 결과 화면 한 경로 완주.
+- S2 `현재 지명 식별 보류` 경로가 이후 상태에 유지됨을 확인.
+- Supabase POST를 브라우저 단계에서 intercept하여 production DB INSERT 없이 payload 캡처.
+- 캡처 payload에 `outside_one_status`, `revision_count`, `board_links`, `selected_exhibit_sources` 등 구조화 값이 있고 S7 `finalPanel.title/body/caution` 자유서술 원문은 없음을 확인.
+
+이 smoke는 **runtime 상태 전이와 저장 계약 검증**이다. 실제 branch의 모든 사료 텍스트·CSS·원문 링크를 함께 띄운 시각/교실 브라우저 실기 완료를 의미하지 않는다.
 
 ## 구현 완료로 올리기 전 blocker
 
@@ -50,19 +76,17 @@
    - 국사편찬위원회 한국사DB는 저작권 전부를 보유하지 않은 자료도 서비스하므로, DB 스캔·현대 번역·해설을 공개 웹게임 asset으로 자동 복제하지 않는다.
    - 대한민국 외교부 독도 홈페이지 이미지는 별도 권리 확인 없이 저장소에 복제하지 않는다.
 
-4. **저장 payload 및 브라우저 실기검사**
+4. **실제 branch 브라우저·릴리스 전 검증**
    - production DB에 테스트 결과를 INSERT하지 않는다.
-   - `payload()` 정적 검수 결과, 서버에는 `course_lens / evidence_seen / hint_used / revision_count / seokdo_status / context_relation / board_links / selected_exhibit_sources / completion`과 제출 ID·버전만 저장하고 S7의 제목·본문·주의문 같은 자유서술 원문은 저장하지 않는다.
+   - 실제 사료 데이터·스타일을 포함한 S0~S7 브라우저 완주와 모바일/태블릿 UI 검사를 `QA_CHECKLIST.md`에 따라 수행해야 한다.
    - 저장 실패 시 게임 완료를 막지 않고 재시도 버튼만 제공하는 fire-and-forget 동작을 유지한다.
-   - GitHub Actions에서 repository checkout 후 `npm run audit:games`는 run #99에서 통과했다.
-   - `QA_CHECKLIST.md`에 S0~S7, 모바일/태블릿, SAVE mock/intercept, 접근성, classroom 조건을 구체화했다.
-   - fetch intercept/mock을 통한 실제 POST payload 캡처와 실제 브라우저 S0~S7 실기 검사는 아직 남아 있다.
-   - 현재 이 대화 환경에서는 브라우저 GUI를 직접 조작할 수 없으므로 실기 항목은 체크 완료로 표시하지 않는다.
+   - `npm run audit:games`, `node --check`, `git diff --check`를 최종 branch 상태에서 다시 확인한다.
 
 ## 역사 처리 금지선
 
 - 칙령 제41호의 `석도`를 원문에서 곧바로 `독도`로 바꾸어 쓰지 않는다.
-- 태정관 지령 본문의 `외 1도` 식별과 본문 직접 문구를 구분한다.
+- 태정관 지령 본문의 `외 1도` 직접 문구와 현재 지명 식별을 구분한다.
+- `외 1도`의 현재 지명 식별에는 단일 정오를 붙이지 않고 지도·후대 해석과의 관계를 명시한다.
 - 1904 해군 통신 조사를 1905 편입의 단일·직접 원인으로 확정하지 않는다.
 - 현재 일본 정부의 `주권 재확인` 설명을 1905년 당대 결정문의 직접 문구로 제시하지 않는다.
 - 현대 국제법적 영유권 판정을 게임의 점수형 정답으로 만들지 않는다.
@@ -70,7 +94,10 @@
 ## 로컬 점검 권장
 
 ```bash
-node --check dokdo-1905-file/app.js
+node --check dokdo-1905-file/app-core.js
+node --check dokdo-1905-file/app-scenes-a.js
+node --check dokdo-1905-file/app-scenes-b.js
+node --check dokdo-1905-file/app-init.js
 node --check dokdo-1905-file/data.js
 node --check dokdo-1905-file/source-overrides.js
 npm run audit:games
