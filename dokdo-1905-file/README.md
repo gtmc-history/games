@@ -15,6 +15,7 @@
 - `source-overrides.js`: 핵심 사료의 학생용 현대어와 검증된 원문 핵심구절·정본 링크를 분리해 보강
 - runtime: `app-core.js` / `app-scenes-a.js` / `app-scenes-b.js` / `app-init.js`로 분리. 이전 단일 `app.js`는 제거
 - `QA_CHECKLIST.md`: 브라우저·교실·SAVE payload 실기검사 기준 및 자동 runtime smoke 결과 기록
+- GitHub Actions `Game Integration Audit` run #111: **SUCCESS**
 - 허브 공개/production release: 하지 않음
 
 ## 사료 화면 보강 상태
