@@ -4,7 +4,7 @@
   // This version uses a Wikimedia location map with published geographic bounds
   // and derives every city position from latitude/longitude.
   const BASE={
-    image:'https://upload.wikimedia.org/wikipedia/commons/b/b2/South_Korea_location_map.svg',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/South_Korea_location_map.svg/1280px-South_Korea_location_map.svg.png',
     page:'https://commons.wikimedia.org/wiki/File:South_Korea_location_map.svg',
     label:'South Korea location map',
     credit:'NordNordWest · Wikimedia Commons · CC BY-SA 3.0',
@@ -44,10 +44,21 @@
     case2:['iri','gwangju','naju','yeongsanpo'],
     case3:['mokpo']
   };
+  const MARKER_OPTIONS={
+    case1:{gongju:{dx:-55,dy:-8},daejeon:{dx:12,dy:-10}},
+    case2:{iri:{dx:12,dy:-10},gwangju:{dx:12,dy:-10},naju:{dx:-60,dy:-8},yeongsanpo:{dx:12,dy:18}},
+    case3:{mokpo:{dx:12,dy:-10}}
+  };
   const EFFECT_POINT={
     case1:{daejeon_growth:'daejeon',gongju_decline:'gongju'},
     case2:{iri_growth:'iri',naju_change:'naju',gwangju_node:'gwangju',yeongsanpo_growth:'yeongsanpo'},
     case3:{mokpo_start:'mokpo',mokpo_later:'mokpo'}
+  };
+  // Pixel offsets are display-only. The exact geographic anchor remains visible
+  // underneath, and a leader connects offset nodes to that anchor.
+  const NODE_OFFSET={
+    case2:{naju_change:{x:-86,y:-20},yeongsanpo_growth:{x:92,y:42}},
+    case3:{mokpo_start:{x:-78,y:-50},mokpo_later:{x:82,y:52}}
   };
 
   function sourceXY(lon,lat){
@@ -62,7 +73,7 @@
   }
   function markerSvg(key,v,opts={}){
     const p=POINTS[key],xy=sourceXY(p.lon,p.lat),vb=viewBoxFor(v);
-    const r=Math.max(3.5,vb.w/95),fs=Math.max(11,vb.w/25);
+    const r=Math.max(1.8,vb.w/140),fs=Math.max(4,vb.w/50);
     const dx=(opts.dx??10)*vb.w/520,dy=(opts.dy??-10)*vb.h/360;
     return `<g class="registered-marker" aria-hidden="true">
       <circle cx="${xy.x.toFixed(2)}" cy="${xy.y.toFixed(2)}" r="${r.toFixed(2)}"></circle>
@@ -79,13 +90,14 @@
   }
   function georefMap(caseId){
     const v=VIEWPORTS[caseId],vb=viewBoxFor(v);
-    const markers=CASE_POINTS[caseId].map((key,i)=>markerSvg(key,v,{dx:i%2?12:10,dy:i%2?-12:-9})).join('');
+    const markers=CASE_POINTS[caseId].map(key=>markerSvg(key,v,MARKER_OPTIONS[caseId]?.[key]||{})).join('');
     const era=caseId==='case1'?'현재 위치 기준 · 대전/공주':caseId==='case2'?'현재 위치 기준 · 이리/광주/나주/영산포':'현재 위치 기준 · 목포';
     return `<svg class="georef-map-svg" data-map-case="${caseId}" viewBox="${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}" role="img" aria-label="${era}" preserveAspectRatio="xMidYMid meet">
       <image href="${BASE.image}" x="0" y="0" width="${BASE.width}" height="${BASE.height}" preserveAspectRatio="none"></image>
       <rect class="registered-wash" x="${vb.x}" y="${vb.y}" width="${vb.w}" height="${vb.h}"></rect>
       ${markers}
     </svg>
+    <svg class="geo-anchor-layer" aria-hidden="true"></svg>
     <div class="map-era-chip registered-era">${era}</div>
     ${mapCredit('위치 표시는 공개 좌표로 지도에 등록')}`;
   }
@@ -109,26 +121,30 @@
   };
 
   function positionEffectNodes(caseId){
-    const board=document.getElementById(`${caseId}Board`),svg=board?.querySelector('.georef-map-svg');
-    if(!board||!svg)return;
+    const board=document.getElementById(`${caseId}Board`),svg=board?.querySelector('.georef-map-svg'),anchorLayer=board?.querySelector('.geo-anchor-layer');
+    if(!board||!svg||!anchorLayer)return;
     const boardRect=board.getBoundingClientRect(),svgRect=svg.getBoundingClientRect();
     const vb=viewBoxFor(VIEWPORTS[caseId]);
     const scale=Math.min(svgRect.width/vb.w,svgRect.height/vb.h);
     const drawW=vb.w*scale,drawH=vb.h*scale;
     const ox=(svgRect.width-drawW)/2,oy=(svgRect.height-drawH)/2;
+    const anchors={};
     Object.entries(EFFECT_POINT[caseId]).forEach(([effect,key])=>{
       const node=board.querySelector(`[data-effect="${effect}"]`);if(!node)return;
       const p=POINTS[key],xy=sourceXY(p.lon,p.lat);
-      let x=svgRect.left-boardRect.left+ox+(xy.x-vb.x)*scale;
-      let y=svgRect.top-boardRect.top+oy+(xy.y-vb.y)*scale;
+      const anchorX=svgRect.left-boardRect.left+ox+(xy.x-vb.x)*scale;
+      const anchorY=svgRect.top-boardRect.top+oy+(xy.y-vb.y)*scale;
+      const off=NODE_OFFSET[caseId]?.[effect]||{x:0,y:0};
+      const x=anchorX+off.x,y=anchorY+off.y;
+      anchors[effect]={anchorX,anchorY,x,y,offset:off};
       node.classList.add('geo-registered-node');
       node.style.left=`${x}px`;node.style.top=`${y}px`;
       node.style.right='auto';
       node.dataset.geoPoint=key;
-      if(caseId==='case3'){
-        node.classList.add(effect==='mokpo_start'?'geo-offset-up':'geo-offset-down');
-      }
     });
+    anchorLayer.setAttribute('viewBox',`0 0 ${board.clientWidth} ${board.clientHeight}`);
+    anchorLayer.setAttribute('width',board.clientWidth);anchorLayer.setAttribute('height',board.clientHeight);
+    anchorLayer.innerHTML=Object.entries(anchors).filter(([,a])=>a.offset.x||a.offset.y).map(([effect,a])=>`<line data-anchor-for="${effect}" x1="${a.anchorX}" y1="${a.anchorY}" x2="${a.x}" y2="${a.y}"/>`).join('');
     requestAnimationFrame(()=>drawLinks(caseId));
   }
 
@@ -142,10 +158,10 @@
     const v=VIEWPORTS.national,vb=viewBoxFor(v);
     const points=['gongju','daejeon','iri','naju','mokpo'];
     const labels={gongju:'공주',daejeon:'대전',iri:'이리',naju:'나주',mokpo:'목포'};
-    const marks=points.map((key,i)=>{
+    const marks=points.map(key=>{
       const p=POINTS[key],xy=sourceXY(p.lon,p.lat),r=10;
       const dx=key==='gongju'?-80:18,dy=key==='naju'?38:-14;
-      return `<g class="national-registered-marker"><circle cx="${xy.x}" cy="${xy.y}" r="${r}"></circle><text x="${xy.x+dx}" y="${xy.y+dy}" font-size="34">${labels[key]}</text></g>`;
+      return `<g class="national-registered-marker"><circle cx="${xy.x}" cy="${xy.y}" r="${r}"></circle><text x="${xy.x+dx}" y="${xy.y+dy}" font-size="42">${labels[key]}</text></g>`;
     }).join('');
     return `<div class="historic-national-stage registered-national-stage">
       <svg class="registered-national-svg" viewBox="${vb.x} ${vb.y} ${vb.w} ${vb.h}" role="img" aria-label="대한민국 위치도 위의 공주, 대전, 이리, 나주, 목포 위치">
