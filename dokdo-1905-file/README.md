@@ -12,7 +12,7 @@
 - S6 고정 시간축형 관계 보드: 구현 초안 있음
 - 결과 저장: `game_results` 공통 계약의 구조화 값만 전송하도록 구현
 - `source-overrides.js`: 핵심 사료의 학생용 현대어와 검증된 원문 핵심구절·정본 링크를 분리해 보강
-- GitHub Actions `Game Integration Audit` run #92: **SUCCESS**
+- GitHub Actions `Game Integration Audit` run #95: **SUCCESS**
 - 허브 공개/production release: 하지 않음
 
 ## 사료 화면 보강 상태
@@ -21,8 +21,9 @@
 
 - 1877 태정관 지령: 일본 국립공문서관 `公02032100-01600`을 정본 링크로 사용하고, 「伺之趣竹島外一島之儀本邦關係無之儀ト可相心得事」를 원문 핵심구절로 별도 표시한다.
 - 1900 칙령 제41호: 국사편찬위원회 한국사데이터베이스 관보 제1716호를 정본 링크로 사용하고, 제1·2조 원문 핵심구절을 학생용 현대어와 분리해 표시한다.
+- 1905 내각 결정: 내각관방 자료 페이지를 통해 원 소장처와 당대 핵심구절을 확인해 전사 레이어에 추가했다. 오늘날 일본 정부의 `주권 재확인` 설명은 별도 선택 자료로 유지한다.
+- 1905 시마네현 고시 제40호: 내각관방 자료 페이지가 안내하는 시마네현 공문서센터 원 자료를 기준으로 고시 핵심구절을 추가했다.
 - 1906 보고서 호외·지령 제3호: 국사편찬위원회 『各觀察道(去來)案』을 정본 링크로 사용하고, `本郡所屬獨島`, 일본 관리 일행의 발언 부분, `獨島領地之說은 全屬無根` 등을 학생용 설명과 분리해 표시한다.
-- 1905 내각 결정: 현재 화면 문장은 학생용 현대어 재구성임을 명시하고, 오늘날 일본 정부의 `주권 재확인` 설명은 별도 선택 자료로 유지한다.
 
 원문 전체 이미지가 아직 들어오지 않은 자료에서도 `원문 핵심구절 / 학생용 현대어 재구성 / 현대 정부·연구 해설`의 층위를 섞지 않는다.
 
@@ -32,7 +33,7 @@
    - 현재는 위치 조작을 검증하기 위한 명시적 `DEV PLACEHOLDER` 도식이다.
    - 원 자료는 일본 국립공문서관 Digital Archive의 `日本海内竹島外一島地籍ニ編纂方伺` (`公02032100-01600`)로 식별했다.
    - 국립공문서관 Digital Archive의 디지털 콘텐츠는 2차 이용 신청 없이 복제·개변·재배포할 수 있음을 확인했다. **권리 blocker는 해소됨.**
-   - 공식 item page에는 이미지 열람 기능이 있고 국립공문서관은 IIIF를 지원하지만, 현재 자동화 환경에서는 item `3018187`의 IIIF/image identifier를 안정적으로 추출하지 못했다. 제3자 복제본으로 대체하지 않는다.
+   - 공식 item page에는 이미지 열람 기능이 있고 국립공문서관은 IIIF를 지원하지만, 현재 자동화 환경에서는 item `3018187`의 IIIF/image identifier를 안정적으로 추출하지 못했다. 연구문헌에서 과거 이미지 열람 경로 `/img/3018187`도 확인했지만 현재 자동 접근에서는 403이다. 제3자 복제본으로 대체하지 않는다.
    - 실제 원 공개본 이미지 URI를 확보해 명칭·상대 위치 단서를 선택하는 상호작용으로 교체하기 전에는 `implemented`로 올리지 않는다.
 
 2. **1904 군함 쓰시마 전시일지 자산**
@@ -49,9 +50,11 @@
 
 4. **저장 payload 및 브라우저 실기검사**
    - production DB에 테스트 결과를 INSERT하지 않는다.
-   - fetch intercept/mock/test 환경에서 payload를 검사한다.
-   - GitHub Actions에서 repository checkout 후 `npm run audit:games`는 run #92에서 통과했다.
-   - 현재 로컬 실행 환경은 외부 GitHub clone 네트워크가 차단되어 별도의 `node --check`, `git diff --check`, 실제 브라우저 S0~S7 실기 검사는 아직 하지 못했다.
+   - `payload()` 정적 검수 결과, 서버에는 `course_lens / evidence_seen / hint_used / revision_count / seokdo_status / context_relation / board_links / selected_exhibit_sources / completion`과 제출 ID·버전만 저장하고 S7의 제목·본문·주의문 같은 자유서술 원문은 저장하지 않는다.
+   - 저장 실패 시 게임 완료를 막지 않고 재시도 버튼만 제공하는 fire-and-forget 동작을 유지한다.
+   - GitHub Actions에서 repository checkout 후 `npm run audit:games`는 run #95에서 통과했다.
+   - fetch intercept/mock을 통한 실제 POST payload 캡처와 실제 브라우저 S0~S7 실기 검사는 아직 남아 있다.
+   - 현재 로컬 실행 환경은 외부 GitHub clone 네트워크가 차단되어 별도의 `node --check`, `git diff --check` 실행은 아직 하지 못했다.
 
 ## 역사 처리 금지선
 
