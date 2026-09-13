@@ -6,7 +6,8 @@
 .registered-wash{fill:rgba(249,246,238,.20);pointer-events:none}
 .registered-marker circle,.national-registered-marker circle{fill:#315a63;stroke:#fffdf8;stroke-width:3;vector-effect:non-scaling-stroke}
 .registered-marker .registered-marker-ring{fill:none;stroke:rgba(49,90,99,.35);stroke-width:2;vector-effect:non-scaling-stroke}
-.registered-marker text,.national-registered-marker text{fill:#2d2924;font-weight:800;font-family:system-ui,-apple-system,"Noto Sans KR","Malgun Gothic",sans-serif;paint-order:stroke;stroke:rgba(255,253,248,.96);stroke-width:5;stroke-linejoin:round}
+.registered-marker text,.national-registered-marker text{fill:#2d2924;font-weight:800;font-family:system-ui,-apple-system,"Noto Sans KR","Malgun Gothic",sans-serif;paint-order:stroke;stroke:rgba(255,253,248,.96);stroke-width:3;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.geo-anchor-layer{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}.geo-anchor-layer line{stroke:rgba(49,90,99,.58);stroke-width:1.5;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
 .map-era-chip.registered-era{position:absolute;z-index:8;top:70px;left:14px;max-width:300px;border:1px solid rgba(69,60,49,.34);background:rgba(255,253,248,.94);padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;color:#50483e;box-shadow:0 3px 10px rgba(55,45,35,.08)}
 .map-era-chip.national-era{top:12px}
 .map-credit.registered-credit{position:absolute;z-index:8;left:13px;bottom:11px;display:flex;gap:8px;align-items:center;max-width:calc(100% - 26px);background:rgba(255,253,248,.95);border:1px solid rgba(91,80,64,.25);border-radius:9px;padding:6px 9px;font-size:10px;line-height:1.35;color:#655d53;box-shadow:0 2px 8px rgba(55,45,35,.08)}
@@ -15,14 +16,10 @@
 .registered-map-patch .board-head{position:relative;z-index:12;background:rgba(255,253,248,.98);backdrop-filter:blur(4px)}
 .registered-map-patch .effect-node{z-index:10;background:rgba(255,253,248,.96);border-color:#645b50;box-shadow:0 5px 14px rgba(55,45,35,.16);backdrop-filter:blur(2px)}
 .registered-map-patch .effect-node.geo-registered-node{transform:translate(-50%,-50%);margin:0}
-.registered-map-patch .effect-node.geo-offset-up{transform:translate(-50%,-125%)}
-.registered-map-patch .effect-node.geo-offset-down{transform:translate(-50%,25%)}
-.registered-map-patch .effect-node.geo-offset-up::after,.registered-map-patch .effect-node.geo-offset-down::before{content:"";position:absolute;left:50%;width:0;border-left:1px solid rgba(49,90,99,.6);pointer-events:none}
-.registered-map-patch .effect-node.geo-offset-up::after{top:100%;height:25px}.registered-map-patch .effect-node.geo-offset-down::before{bottom:100%;height:20px}
 .registered-map-patch .effect-node.active-target{outline:3px solid rgba(49,90,99,.45);box-shadow:0 0 0 5px rgba(255,253,248,.74),0 5px 14px rgba(55,45,35,.15)}
 .registered-map-patch .link-layer{z-index:6}.registered-map-patch .link-label{z-index:11;background:rgba(255,253,248,.97)}
 .registered-map-patch .cause-chip{background:#edf3f3}.registered-map-patch .source-card{background:#f4ead7}
 .registered-map-patch .statusbar{background:#f7f2e9;border:1px solid #d8cdbd;border-radius:999px;padding:4px 8px}
-.registered-map-patch .case-layout::after{content:"도시 표시는 공개 좌표로 지도에 등록했습니다. 배경 지도는 위치 확인용이며, 굵은 선만 학생의 인과 설명입니다.";position:absolute;left:14px;top:68px;z-index:8;max-width:430px;font-size:10px;line-height:1.4;color:#5f574d;background:rgba(255,253,248,.9);padding:5px 8px;border-radius:7px;pointer-events:none}
+.registered-map-patch .case-layout::after{content:"도시 기준점은 공개 좌표로 지도에 등록했습니다. 가까운 노드는 점선으로 기준점에 연결됩니다. 굵은 선만 학생의 인과 설명입니다.";position:absolute;left:14px;top:68px;z-index:8;max-width:455px;font-size:10px;line-height:1.4;color:#5f574d;background:rgba(255,253,248,.9);padding:5px 8px;border-radius:7px;pointer-events:none}
 @media(max-width:980px){.registered-national-stage{min-height:420px}}
-@media(max-width:780px){.registered-national-stage{min-height:370px}.map-era-chip.registered-era{top:66px;left:10px;max-width:220px;font-size:10px}.map-era-chip.national-era{top:10px}.map-credit.registered-credit{left:9px;right:9px;bottom:74px;max-width:none;flex-wrap:wrap}.registered-national-stage .map-credit.registered-credit{bottom:9px}.registered-map-patch .case-layout::after{display:none}.registered-map-patch .effect-node.geo-offset-up{transform:translate(-50%,-115%)}.registered-map-patch .effect-node.geo-offset-down{transform:translate(-50%,18%)}}
+@media(max-width:780px){.registered-national-stage{min-height:370px}.map-era-chip.registered-era{top:66px;left:10px;max-width:220px;font-size:10px}.map-era-chip.national-era{top:10px}.map-credit.registered-credit{left:9px;right:9px;bottom:74px;max-width:none;flex-wrap:wrap}.registered-national-stage .map-credit.registered-credit{bottom:9px}.registered-map-patch .case-layout::after{display:none}}
