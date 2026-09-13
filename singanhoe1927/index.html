@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>지회의 4년 — 신간회 1927~1931</title>
+<style>
+html,body{height:100%;margin:0;background:#17110d;color:#f7efe4;font-family:"Malgun Gothic",sans-serif}main{height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}.box{max-width:640px}.bar{height:8px;background:#34261d;border-radius:99px;overflow:hidden;margin:18px 0}.fill{height:100%;width:2%;background:#d5b184;transition:width .15s}small{color:#cdbba8}
+</style>
+</head>
+<body>
+<main><div class="box"><h1>지회의 4년</h1><p id="status">게임 자료를 불러오고 있습니다.</p><div class="bar"><div class="fill" id="fill"></div></div><small>신간회 1927~1931 · 기록하고, 판단하고, 남기다</small></div></main>
+<script>
+window.__GAME_AUDIT__={game:"singanhoe1927",table:"game_results",method:"POST",choices:true,classQuery:"URLSearchParams class",timestamp:"toISOString"};
+const PARTS=[
+  'part-00.txt','part-01.txt','part-02.txt','part-03.txt','part-04.txt','part-05a.txt','part-05b.txt','part-06.txt','part-07.txt','part-08.txt','part-09a.txt','part-09b.txt','part-10a.txt','part-10b.txt','part-11a.txt','part-11b.txt','part-12a.txt','part-12b.txt','part-13a.txt','part-13b.txt','part-14a.txt','part-14b.txt','part-15a.txt','part-15b.txt','part-16a.txt','part-16b.txt','part-17a.txt','part-17b.txt','part-18a.txt','part-18b.txt','part-19a.txt','part-19b.txt','part-20a.txt','part-20b.txt','part-21a.txt','part-21b.txt','part-22a.txt','part-22b.txt','part-23.txt','part-24.txt','part-25.txt','part-26.txt','part-27a.txt','part-27b1.txt','part-27b2.txt','part-27c.txt','part-27d.txt','part-28.txt','part-29.txt','part-30.txt','part-31.txt','part-32.txt'
+];
+(async()=>{
+ try{
+  if(!('DecompressionStream' in window)) throw new Error('이 브라우저는 압축 해제를 지원하지 않습니다. 최신 Chrome을 사용하세요.');
+  const chunks=[];
+  for(let i=0;i<PARTS.length;i++){
+   const r=await fetch(`payload/${PARTS[i]}`,{cache:'no-store'});
+   if(!r.ok) throw new Error(`${PARTS[i]}: HTTP ${r.status}`);
+   chunks.push((await r.text()).trim());
+   document.getElementById('fill').style.width=`${Math.max(2,Math.round((i+1)/PARTS.length*90))}%`;
+  }
+  const binary=atob(chunks.join(''));
+  const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const page=await new Response(stream).text();
+  document.getElementById('fill').style.width='100%';
+  document.open();document.write(page);document.close();
+ }catch(err){
+  console.error(err);
+  document.getElementById('status').textContent='게임 자료를 불러오지 못했습니다. 새로고침하거나 최신 Chrome에서 다시 열어 주세요.';
+ }
+})();
+</script>
+</body>
+</html>
