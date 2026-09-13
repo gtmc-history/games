@@ -12,7 +12,8 @@
 - S6 고정 시간축형 관계 보드: 구현 초안 있음
 - 결과 저장: `game_results` 공통 계약의 구조화 값만 전송하도록 구현
 - `source-overrides.js`: 핵심 사료의 학생용 현대어와 검증된 원문 핵심구절·정본 링크를 분리해 보강
-- GitHub Actions `Game Integration Audit` run #95: **SUCCESS**
+- `QA_CHECKLIST.md`: 브라우저·교실·SAVE payload 실기검사 기준 추가
+- GitHub Actions `Game Integration Audit` run #99: **SUCCESS**
 - 허브 공개/production release: 하지 않음
 
 ## 사료 화면 보강 상태
@@ -33,12 +34,13 @@
    - 현재는 위치 조작을 검증하기 위한 명시적 `DEV PLACEHOLDER` 도식이다.
    - 원 자료는 일본 국립공문서관 Digital Archive의 `日本海内竹島外一島地籍ニ編纂方伺` (`公02032100-01600`)로 식별했다.
    - 국립공문서관 Digital Archive의 디지털 콘텐츠는 2차 이용 신청 없이 복제·개변·재배포할 수 있음을 확인했다. **권리 blocker는 해소됨.**
-   - 공식 item page에는 이미지 열람 기능이 있고 국립공문서관은 IIIF를 지원하지만, 현재 자동화 환경에서는 item `3018187`의 IIIF/image identifier를 안정적으로 추출하지 못했다. 연구문헌에서 과거 이미지 열람 경로 `/img/3018187`도 확인했지만 현재 자동 접근에서는 403이다. 제3자 복제본으로 대체하지 않는다.
+   - 공식 item page에는 이미지 열람 기능이 있고 국립공문서관은 IIIF를 지원한다. IIIF manifest 형식은 `https://www.digital.archives.go.jp/api/iiif/[Image identifier]/manifest.json`임을 공식 도움말에서 확인했다.
+   - 다만 현재 자동화 환경에서는 item `3018187`의 **item-specific image identifier**를 안정적으로 추출하지 못했다. 과거 열람 경로 `/img/3018187`도 현재 자동 접근에서는 403이다. 제3자 복제본으로 대체하지 않는다.
    - 실제 원 공개본 이미지 URI를 확보해 명칭·상대 위치 단서를 선택하는 상호작용으로 교체하기 전에는 `implemented`로 올리지 않는다.
 
 2. **1904 군함 쓰시마 전시일지 자산**
    - JACAR ref: `C09050402800`
-   - 1904년 11월 20일 유선 전신소 설치 적합성 조사 사실까지는 정본 식별이 되어 있다.
+   - 1904년 11월 20일 유선 전신소 설치 적합성 조사 사실과 문서 단위 정본 locator는 확인했다.
    - 실제 게임에 사용할 스캔 프레임/이미지 번호는 현재 JACAR 뷰어에서 추가 확인해야 한다. 확인 전에는 번호를 추정해 기록하지 않는다.
    - 방위성 방위연구소 소장 자료의 이미지 2차 이용은 허가 확인 전까지 저장소에 원문 이미지를 복제하지 않는다. 텍스트·메타데이터 기반 플레이는 유지 가능하다.
 
@@ -52,9 +54,10 @@
    - production DB에 테스트 결과를 INSERT하지 않는다.
    - `payload()` 정적 검수 결과, 서버에는 `course_lens / evidence_seen / hint_used / revision_count / seokdo_status / context_relation / board_links / selected_exhibit_sources / completion`과 제출 ID·버전만 저장하고 S7의 제목·본문·주의문 같은 자유서술 원문은 저장하지 않는다.
    - 저장 실패 시 게임 완료를 막지 않고 재시도 버튼만 제공하는 fire-and-forget 동작을 유지한다.
-   - GitHub Actions에서 repository checkout 후 `npm run audit:games`는 run #95에서 통과했다.
+   - GitHub Actions에서 repository checkout 후 `npm run audit:games`는 run #99에서 통과했다.
+   - `QA_CHECKLIST.md`에 S0~S7, 모바일/태블릿, SAVE mock/intercept, 접근성, classroom 조건을 구체화했다.
    - fetch intercept/mock을 통한 실제 POST payload 캡처와 실제 브라우저 S0~S7 실기 검사는 아직 남아 있다.
-   - 현재 로컬 실행 환경은 외부 GitHub clone 네트워크가 차단되어 별도의 `node --check`, `git diff --check` 실행은 아직 하지 못했다.
+   - 현재 이 대화 환경에서는 브라우저 GUI를 직접 조작할 수 없으므로 실기 항목은 체크 완료로 표시하지 않는다.
 
 ## 역사 처리 금지선
 
@@ -74,4 +77,5 @@ npm run audit:games
 git diff --check
 ```
 
+브라우저 테스트는 `dokdo-1905-file/QA_CHECKLIST.md`를 따른다.
 실제 배포·허브 통합은 RELEASE gate에서 별도로 진행한다.
