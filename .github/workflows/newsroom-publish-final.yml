@@ -1,0 +1,37 @@
+name: One-shot publish newsroom1945
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/newsroom-publish-final.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mark newsroom1945 published
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('games.manifest.json')
+          s = p.read_text(encoding='utf-8')
+          old = '{ "slug": "newsroom1945", "title": "1945 NEWSROOM", "era": "해방기·1945", "status": "implemented",'
+          new = '{ "slug": "newsroom1945", "title": "1945 NEWSROOM", "era": "해방기·1945", "status": "published",'
+          if old in s:
+              p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          elif new not in s:
+              raise SystemExit('newsroom1945 manifest entry not found')
+          PY
+      - name: Commit manifest
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add games.manifest.json
+          git commit -m 'release: publish newsroom1945'
+          git push
