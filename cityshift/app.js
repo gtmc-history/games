@@ -1,5 +1,7 @@
 (async()=>{
-  for(const src of ['app-1.js','app-2.js','app-3.js']){
+  const css=document.createElement('link');
+  css.rel='stylesheet';css.href='visual.css';document.head.appendChild(css);
+  for(const src of ['app-1.js','app-2.js','app-3.js','app-visual.js']){
     await new Promise((resolve,reject)=>{
       const s=document.createElement('script');
       s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`load failed: ${src}`));

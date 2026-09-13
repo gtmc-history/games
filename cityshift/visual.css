@@ -1,0 +1,30 @@
+.real-map-patch .national-map{background:#d7d0c1;border-color:#a99e8d;box-shadow:0 12px 34px rgba(52,43,32,.12)}
+.historic-national-stage{position:relative;min-height:480px;height:100%;overflow:hidden;background:#d8d0bf}
+.historic-national-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:sepia(.24) saturate(.72) contrast(.92) brightness(.97);opacity:.92}
+.map-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,252,245,.08),rgba(245,239,226,.2));pointer-events:none}
+.national-pin{position:absolute;z-index:4;min-width:120px;padding:8px 10px;border-radius:11px;border:1px solid rgba(42,52,51,.42);background:rgba(255,253,248,.91);box-shadow:0 6px 16px rgba(55,45,35,.12);backdrop-filter:blur(2px)}
+.national-pin b{display:block;font-size:12px;color:var(--accent);letter-spacing:.08em}.national-pin span{display:block;margin-top:2px;font-size:15px;font-weight:800}.national-pin::before{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);left:-6px;top:50%;transform:translateY(-50%);box-shadow:0 0 0 4px rgba(255,253,248,.82)}
+.national-pin.p1{left:49%;top:43%}.national-pin.p2{left:43%;top:65%}.national-pin.p3{left:31%;top:78%}
+.real-map-layer{position:absolute;left:0;right:0;top:56px;bottom:0;overflow:hidden;z-index:0;background:#d9d1c2}
+.real-map-layer .real-map-img{width:100%;height:100%;display:block;pointer-events:none;user-select:none}
+.real-map-layer.rail-history .real-map-img{object-fit:cover;filter:sepia(.28) saturate(.65) contrast(.9) brightness(1.03);opacity:.8}
+.real-map-layer.rail-history.case1 .real-map-img{object-position:50% 45%;transform:scale(1.35)}
+.real-map-layer.rail-history.case2 .real-map-img{object-position:42% 73%;transform:scale(1.33)}
+.real-map-layer.mokpo-current .real-map-img{object-fit:cover;object-position:center;filter:grayscale(.48) sepia(.16) saturate(.72) contrast(.86) brightness(1.04);opacity:.78}
+.map-era-chip{position:absolute;z-index:7;top:70px;left:14px;max-width:280px;border:1px solid rgba(69,60,49,.34);background:rgba(255,253,248,.9);padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;color:#50483e;box-shadow:0 3px 10px rgba(55,45,35,.08)}
+.map-credit{position:absolute;z-index:7;left:13px;bottom:11px;display:flex;gap:7px;align-items:center;max-width:calc(100% - 26px);background:rgba(255,253,248,.92);border:1px solid rgba(91,80,64,.25);border-radius:9px;padding:5px 8px;font-size:10px;line-height:1.35;color:#655d53;box-shadow:0 2px 8px rgba(55,45,35,.08)}
+.map-credit span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.map-credit a{flex:0 0 auto;color:var(--accent);font-weight:800;text-decoration:none}.map-credit a:hover{text-decoration:underline}
+.locator-insets{position:absolute;z-index:2;right:12px;bottom:12px;display:flex;gap:7px;pointer-events:none}
+.locator-insets figure{width:84px;margin:0;border:1px solid rgba(71,64,55,.25);border-radius:9px;overflow:hidden;background:rgba(255,253,248,.83);box-shadow:0 3px 10px rgba(55,45,35,.07)}
+.locator-insets img{display:block;width:100%;height:62px;object-fit:contain;filter:grayscale(.52) sepia(.2);opacity:.58}.locator-insets figcaption{text-align:center;font-size:9px;padding:3px 2px;color:#665d51}
+.real-map-patch .board{background:#d8d0c0;border-color:#b7aa97}
+.real-map-patch .board-head{position:relative;z-index:12;background:rgba(255,253,248,.97);backdrop-filter:blur(4px)}
+.real-map-patch .effect-node{z-index:9;background:rgba(255,253,248,.93);border-color:#645b50;box-shadow:0 5px 14px rgba(55,45,35,.15);backdrop-filter:blur(2px)}
+.real-map-patch .effect-node.active-target{outline:3px solid rgba(49,90,99,.45);box-shadow:0 0 0 5px rgba(255,253,248,.74),0 5px 14px rgba(55,45,35,.15)}
+.real-map-patch .link-layer{z-index:6}.real-map-patch .link-label{z-index:11;background:rgba(255,253,248,.96)}
+.real-map-patch .cause-chip{background:#edf3f3}.real-map-patch .source-card{background:#f4ead7}
+.real-map-patch .statusbar{background:#f7f2e9;border:1px solid #d8cdbd;border-radius:999px;padding:4px 8px}
+.real-map-patch .case-layout::after{content:"배경 지도는 위치·지형 맥락을 위한 자료이며, 학생이 만든 굵은 선만 인과 설명입니다.";position:absolute;left:14px;top:68px;z-index:8;max-width:390px;font-size:10px;line-height:1.4;color:#5f574d;background:rgba(255,253,248,.86);padding:5px 8px;border-radius:7px;pointer-events:none}
+.real-map-patch .national-map .map-credit{bottom:10px}.real-map-patch .national-map .map-era-chip{top:12px}
+@media(max-width:980px){.historic-national-stage{min-height:420px}.national-pin.p1{left:52%;top:43%}.national-pin.p2{left:45%;top:65%}.national-pin.p3{left:31%;top:79%}.locator-insets{display:none}}
+@media(max-width:780px){.historic-national-stage{min-height:370px}.national-pin{min-width:98px;padding:6px 8px}.national-pin b{font-size:10px}.national-pin span{font-size:12px}.national-pin.p1{left:49%;top:42%}.national-pin.p2{left:40%;top:63%}.national-pin.p3{left:24%;top:76%}.map-era-chip{top:66px;left:10px;max-width:210px;font-size:10px}.map-credit{left:9px;right:9px;bottom:74px;max-width:none}.real-map-patch .national-map .map-credit{bottom:9px}.real-map-patch .case-layout::after{display:none}.real-map-layer.rail-history.case1 .real-map-img,.real-map-layer.rail-history.case2 .real-map-img{transform:scale(1.18)}}
