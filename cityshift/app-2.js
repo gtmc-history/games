@@ -5,7 +5,11 @@ function caseConfig(caseId){
     map:`<svg class="map-bg" viewBox="0 0 760 500" aria-hidden="true"><path class="region-fill" d="M80 90 Q260 35 440 82 T690 120 L655 430 Q410 468 105 410Z"/><path class="geo rail" d="M110 380 C250 305 330 260 470 125"/><path class="geo rail" d="M342 274 C435 300 522 344 650 390"/><text x="500" y="110" fill="#777168" font-size="15">경부선</text><text x="520" y="345" fill="#777168" font-size="15">호남선</text></svg>`,
     effects:[['daejeon_growth','대전','도시 위상 상승',62,35],['gongju_decline','공주','상대적 쇠퇴',28,61]],
     causes:[['rail_hub','철도 분기점','대전'],['admin_move','충남도청 이전','1932']],
-    sources:stage===0?[sourceCard('1933년의 대전 기록','자료는 대전이 한적한 촌이었으나 경부선 역 설치 뒤 대전이라 불리게 되었다고 전합니다.','S02 · 『충남산업지』(1933), 대전광역시 인용')]:[
+    sources:stage===0?[
+      sourceCard('철도와 새 중심지','대전은 경부선·호남선의 분기점이 되며 새 중심지로 떠올랐습니다.','S01 · 우리역사넷(국사편찬위원회)'),
+      sourceCard('1933년의 대전 기록','자료는 대전이 한적한 촌이었으나 경부선 역 설치 뒤 대전이라 불리게 되었다고 전합니다.','S02 · 『충남산업지』(1933), 대전광역시 인용')
+    ]:[
+      sourceCard('철도와 새 중심지','대전은 경부선·호남선의 분기점이 되며 새 중심지로 떠올랐습니다.','S01 · 우리역사넷(국사편찬위원회)'),
       sourceCard('1933년의 대전 기록','자료는 대전이 한적한 촌이었으나 경부선 역 설치 뒤 대전이라 불리게 되었다고 전합니다.','S02 · 『충남산업지』(1933), 대전광역시 인용'),
       sourceCard('T1 · 세 시점 연표',`<div class="timeline"><div class="time-row"><b>1905</b><span>대전역 개통</span></div><div class="time-row"><b>1913</b><span>호남선 분기</span></div><div class="time-row"><b>1932</b><span>충남도청 공주→대전 이전</span></div></div>`,'S03+S04 조합 카드. 이 연표가 직접 말하는 것은 철도 개통과 도청 이전이 즉시 연쇄적으로 일어난 것은 아니라는 점까지입니다.',true)
     ],
@@ -59,6 +63,39 @@ function mobileLinkText(caseId){
   const ls=S.cases[caseId].links.filter(l=>l.status!=='withdrawn');if(!ls.length)return '아직 만든 인과 연결이 없습니다.';
   return ls.map(l=>`${LABELS[l.cause]} → ${LABELS[l.effect]} · ${STATUS_LABEL[l.status]} · ${l.timeScope}`).join('<br>');
 }
+function labelPlacement(caseId,link){
+  const key=`${link.cause}>${link.effect}`;
+  const presets={
+    case1:{'rail_hub>daejeon_growth':{t:.58,dx:-6,dy:-28},'admin_move>daejeon_growth':{t:.7,dx:8,dy:28}},
+    case2:{
+      'rail>iri_growth':{t:.63,dx:-8,dy:-30},
+      'rail>naju_change':{t:.55,dx:-92,dy:-58},
+      'gwancharbu>gwangju_node':{t:.6,dx:18,dy:-28},
+      'gwangju_admin>naju_change':{t:.56,dx:34,dy:82},
+      'dongcheok>yeongsanpo_growth':{t:.64,dx:42,dy:34}
+    },
+    case3:{'rail>mokpo_later':{t:.64,dx:-12,dy:28},'port>mokpo_start':{t:.68,dx:18,dy:-28}}
+  };
+  return presets[caseId]?.[key]||{t:.62,dx:0,dy:0};
+}
+function declutterLinkLabels(layout,labels){
+  const items=[...labels.querySelectorAll('.link-label')],board=layout.querySelector('.board');
+  const minX=86,maxX=Math.max(minX,(board?.clientWidth||layout.clientWidth)-86),minY=82,maxY=Math.max(minY,layout.clientHeight-42);
+  const placed=[];
+  const candidates=[[0,0],[-64,-44],[64,44],[-72,48],[72,-48],[-110,0],[110,0],[0,-82],[0,82],[-120,-70],[120,70]];
+  for(const el of items){
+    const baseX=parseFloat(el.style.left||'0'),baseY=parseFloat(el.style.top||'0');
+    let chosen=null;
+    for(const [dx,dy] of candidates){
+      const x=Math.max(minX,Math.min(maxX,baseX+dx)),y=Math.max(minY,Math.min(maxY,baseY+dy));
+      el.style.left=`${x}px`;el.style.top=`${y}px`;
+      const r=el.getBoundingClientRect();
+      const overlaps=placed.some(q=>!(r.right+8<q.left||r.left-8>q.right||r.bottom+8<q.top||r.top-8>q.bottom));
+      if(!overlaps){chosen=r;break;}
+    }
+    placed.push(chosen||el.getBoundingClientRect());
+  }
+}
 function drawLinks(caseId){
   const layout=document.getElementById(`${caseId}Layout`),svg=document.getElementById(`${caseId}Links`),labels=document.getElementById(`${caseId}Labels`);if(!layout||!svg||!labels)return;
   const rect=layout.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${rect.width} ${rect.height}`);svg.setAttribute('width',rect.width);svg.setAttribute('height',rect.height);svg.innerHTML='';labels.innerHTML='';
@@ -67,8 +104,10 @@ function drawLinks(caseId){
     const a=src.getBoundingClientRect(),b=dst.getBoundingClientRect();const x1=a.left-rect.left+2,y1=a.top-rect.top+a.height/2,x2=b.right-rect.left-2,y2=b.top-rect.top+b.height/2;const bend=Math.max(60,Math.abs(x1-x2)*.38);const d=`M ${x1} ${y1} C ${x1-bend} ${y1}, ${x2+bend} ${y2}, ${x2} ${y2}`;
     const ns='http://www.w3.org/2000/svg';const hit=document.createElementNS(ns,'path');hit.setAttribute('d',d);hit.setAttribute('class','link-hit');hit.dataset.link=l.id;svg.append(hit);const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('class',`link-path ${l.directness==='unspoken'?'unspoken':''} ${l.status==='hold'?'hold':''} ${l.status==='withdrawn'?'withdrawn':''}`);path.dataset.link=l.id;svg.append(path);
     [hit,path].forEach(el=>el.addEventListener('click',()=>openLinkDialog(caseId,l.id)));
-    const div=document.createElement('button');div.type='button';div.className=`link-label ${l.directness==='unspoken'?'unspoken':''} ${l.status==='hold'?'hold':''} ${l.status==='withdrawn'?'withdrawn':''}`;div.style.left=`${(x1+x2)/2}px`;div.style.top=`${(y1+y2)/2}px`;div.innerHTML=`<span class="badge">${l.directness==='direct'?DIRECT_BADGE:UNSPOKEN_BADGE}</span><span class="time">${l.timeScope}</span>`;div.onclick=()=>openLinkDialog(caseId,l.id);labels.append(div);
+    const place=labelPlacement(caseId,l);const lx=x1+(x2-x1)*place.t+place.dx,ly=y1+(y2-y1)*place.t+place.dy;
+    const div=document.createElement('button');div.type='button';div.className=`link-label ${l.directness==='unspoken'?'unspoken':''} ${l.status==='hold'?'hold':''} ${l.status==='withdrawn'?'withdrawn':''}`;div.style.left=`${lx}px`;div.style.top=`${ly}px`;div.innerHTML=`<span class="badge">${l.directness==='direct'?DIRECT_BADGE:UNSPOKEN_BADGE}</span><span class="time">${l.timeScope}</span>`;div.onclick=()=>openLinkDialog(caseId,l.id);labels.append(div);
   }
+  requestAnimationFrame(()=>declutterLinkLabels(layout,labels));
 }
 window.addEventListener('resize',()=>{if(S.scene>=3&&S.scene<=5)requestAnimationFrame(()=>drawLinks(`case${S.scene-2}`))});
 
