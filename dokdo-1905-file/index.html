@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>독도연구소: 1905 파일</title>
+<link rel="stylesheet" href="style.css">
+<script type="text/plain" id="integration-contract">
+GAME_ID='dokdo-1905-file'; game='dokdo-1905-file'; game_results; method:'POST'; choices; new URLSearchParams('?class=x'); 'class'; timestamp;
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-wrap">
+    <div class="eyebrow">DOKDO HISTORY LAB · 1905 FILE</div>
+    <div class="brand">독도연구소: 1905 파일</div>
+  </div>
+  <div class="top-actions">
+    <button id="vnToggle" class="ghost" type="button" aria-pressed="true">대화 ON</button>
+    <button id="restartBtn" class="ghost" type="button">처음부터</button>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="progressFill"></span></div>
+</header>
+
+<main id="app">
+  <section id="startView" class="view hero">
+    <div class="hero-card">
+      <p class="kicker">고등학교 역사 탐구 게임 · BUILD DRAFT</p>
+      <h1>한 문장의 전시문을<br>기록으로 다시 검수하라.</h1>
+      <p class="lead">1877~1906년의 기록을 직접 읽고 필요한 보조자료만 선택해 조사합니다. 역사 사건은 바꾸지 않습니다. 바뀌는 것은 <strong>내 설명과 근거 선택</strong>입니다.</p>
+      <div class="notice">이 활동은 독도 관련 역사 사료와 한·일 정부의 현대 해설을 비교합니다. 정부 해설과 원사료는 작성 시점과 성격이 다르므로 화면에서 분리해 제시합니다.</div>
+      <fieldset class="lens-box">
+        <legend>수업 렌즈</legend>
+        <label><input type="radio" name="lens" value="한국사" checked> 한국사</label>
+        <label><input type="radio" name="lens" value="동아시아사"> 동아시아사</label>
+        <label><input type="radio" name="lens" value="독도교육"> 독도교육</label>
+      </fieldset>
+      <button id="startBtn" class="primary large" type="button">검수실 들어가기</button>
+    </div>
+  </section>
+
+  <section id="storyView" class="view" hidden>
+    <div class="story-shell">
+      <div class="portrait" aria-hidden="true">LAB</div>
+      <div class="dialogue">
+        <div id="storySpeaker" class="speaker"></div>
+        <p id="storyText"></p>
+        <button id="storyNext" class="primary" type="button">계속</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="sceneView" class="view" hidden>
+    <div class="scene-grid">
+      <article class="workspace">
+        <div class="scene-heading">
+          <div id="sceneIndex" class="kicker"></div>
+          <h1 id="sceneTitle"></h1>
+          <div id="sceneQuestion" class="question"></div>
+          <div id="sceneMission" class="mission"></div>
+        </div>
+        <div id="sceneContent"></div>
+        <div id="sceneFeedback" class="feedback" aria-live="polite"></div>
+        <div class="scene-actions"><button id="sceneNext" class="primary" type="button" disabled></button></div>
+      </article>
+      <aside class="sidebar">
+        <section class="panel sticky"><h2>연구 노트</h2><div id="memoPanel"></div></section>
+        <section class="panel"><h2>열람한 자료</h2><div id="seenPanel"></div></section>
+      </aside>
+    </div>
+  </section>
+
+  <section id="resultView" class="view" hidden>
+    <div class="result-shell">
+      <div class="kicker">RESEARCH RECORD</div>
+      <h1>전시 검수 기록</h1>
+      <div id="resultPath" class="path-grid"></div>
+      <div id="finalExhibit" class="exhibit-preview"></div>
+      <div class="result-actions">
+        <p id="saveStatus" aria-live="polite"></p>
+        <button id="retrySave" class="ghost" type="button" hidden>기록 저장 다시 시도</button>
+        <button id="playAgain" class="primary" type="button">처음부터 다시 보기</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog id="sourceDialog">
+  <form method="dialog" class="dialog-head"><strong id="dialogTitle">자료</strong><button type="submit">닫기</button></form>
+  <div id="dialogBody" class="dialog-body"></div>
+</dialog>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
