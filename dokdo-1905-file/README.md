@@ -7,31 +7,38 @@
 - manifest: `draft`
 - S0~S7 핵심 동선: 구현 초안 있음
 - 선택 조사: 구현 초안 있음
-- S5 과거 메모 재검토·수정: 구현 초안 있음
+- S4 니타카 자료: `작성 주체 / 정보 경로 / 명칭` 분해 조작 구현 초안 있음
+- S5: 1906 구절 직접 추출 후 과거 1900년 메모 재검토·수정 구현 초안 있음
 - S6 고정 시간축형 관계 보드: 구현 초안 있음
 - 결과 저장: `game_results` 공통 계약의 구조화 값만 전송하도록 구현
+- GitHub Actions `Game Integration Audit`: BUILD branch에서 통과
 - 허브 공개/production release: 하지 않음
 
 ## 구현 완료로 올리기 전 blocker
 
 1. **S2 기죽도약도 실제 이미지 상호작용**
    - 현재는 위치 조작을 검증하기 위한 명시적 `DEV PLACEHOLDER` 도식이다.
-   - 공식 원문 이미지의 게임 내 이용 조건을 확인한 뒤 실제 크롭 위에서 명칭·상대 위치 단서를 선택하도록 교체해야 한다.
+   - 원 자료는 일본 국립공문서관 Digital Archive의 `日本海内竹島外一島地籍ニ編纂方伺` (`公02032100-01600`)로 식별했다.
+   - 국립공문서관 Digital Archive의 디지털 콘텐츠는 2차 이용 신청 없이 복제·개변·재배포할 수 있음을 확인했다. **권리 blocker는 해소됨.**
+   - 남은 일은 실제 원 공개본에서 기죽도약도 이미지 파일/크롭을 확보해, 명칭·상대 위치 단서를 선택하는 상호작용으로 교체하는 것이다.
    - 이 작업이 끝나기 전에는 `implemented`로 올리지 않는다.
 
 2. **1904 군함 쓰시마 전시일지 자산**
    - JACAR ref: `C09050402800`
    - 실제 게임에 사용할 프레임/이미지 번호를 현재 JACAR 뷰어에서 확정해야 한다.
-   - 이용조건 확인 전에는 저장소에 원문 이미지를 복제하지 않는다.
+   - 방위성 방위연구소 소장 자료의 이미지 2차 이용은 소장기관 신청이 필요하므로, 허가 전에는 저장소에 원문 이미지를 복제하지 않는다.
+   - 텍스트·메타데이터 기반 플레이는 유지 가능하다.
 
 3. **핵심 원사료 이미지/원문 레이어**
    - 현재 BUILD는 충분한 학생용 현대어 재구성과 공식 공개 페이지 링크를 제공한다.
    - DESIGN_LOCK의 정식 사료 화면 요건을 만족하려면 이용조건이 확인된 원문 이미지 또는 전사 레이어를 핵심 사료 4묶음에 추가 검토한다.
+   - 대한민국 외교부 독도 홈페이지 이미지는 별도 권리 확인 없이 저장소에 복제하지 않는다.
 
-4. **저장 payload 및 회귀검사**
+4. **저장 payload 및 브라우저 실기검사**
    - production DB에 테스트 결과를 INSERT하지 않는다.
    - fetch intercept/mock/test 환경에서 payload를 검사한다.
-   - `npm run audit:games`와 `git diff --check`를 실제 clone에서 통과해야 한다.
+   - 실제 clone/browser에서 `node --check`, `git diff --check`, S0~S7 핵심 동선을 점검한다.
+   - repository GitHub Actions의 Game Integration Audit은 현재 통과 상태다.
 
 ## 역사 처리 금지선
 
@@ -47,6 +54,7 @@
 node --check dokdo-1905-file/app.js
 node --check dokdo-1905-file/data.js
 npm run audit:games
+git diff --check
 ```
 
 실제 배포·허브 통합은 RELEASE gate에서 별도로 진행한다.
