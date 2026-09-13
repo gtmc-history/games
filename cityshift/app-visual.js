@@ -27,7 +27,7 @@
   };
 
   function sourceLink(m,extra=''){
-    return `<div class="map-credit"><span>${extra||m.label}</span><a href="${m.page}" target="_blank" rel="noopener">지도 출처</a></div>`;
+    return `<div class="map-credit" title="${m.credit}"><span>${extra||m.label}</span><a href="${m.page}" target="_blank" rel="noopener">지도 출처</a></div>`;
   }
   function railFrame(kind){
     const captions={
@@ -102,4 +102,5 @@
   }
 
   document.documentElement.classList.add('real-map-patch');
+  if(S.scene>=3&&S.scene<=5)requestAnimationFrame(()=>renderCase(`case${S.scene-2}`));
 })();
