@@ -1,0 +1,32 @@
+name: One-shot newsroom cross-repo audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/newsroom-cross-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout games
+        uses: actions/checkout@v4
+        with:
+          path: games
+      - name: Checkout hub
+        uses: actions/checkout@v4
+        with:
+          repository: gtmc-history/gtmc-history.github.io
+          path: hub
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Cross-repo audit
+        run: |
+          cd games
+          npm run audit:games -- --hub-repo ../hub
