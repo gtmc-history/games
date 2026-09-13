@@ -24,7 +24,7 @@ function renderFinal(){
   document.getElementById('frozenChoice').textContent=S.initialPrediction==='A'?'조건 A · 오래된 행정 중심지':'조건 B · 장이 서던 작은 마을';document.getElementById('frozenReason').textContent=S.initialReason||'—';const fm=document.getElementById('finalModel');if(fm&&fm.value!==S.finalModel)fm.value=S.finalModel||'';const list=unresolvedClaims();const box=document.getElementById('unresolvedBox');const ul=document.getElementById('unresolvedList');box.style.display=list.length?'block':'none';ul.innerHTML=list.map(x=>`<li>${escapeHtml(x)}</li>`).join('');if(S.completedAt){document.getElementById('postPanel').classList.add('on');document.getElementById('finishCore').disabled=true;document.getElementById('saveStatus').textContent=S.submittedAt?'✓ 결과 기록을 저장했습니다.':S.submitError?'저장에 실패했습니다. 게임 완료에는 영향이 없습니다. 아래에서 같은 기록으로 재시도할 수 있습니다.':'결과 기록 저장을 준비합니다.';document.getElementById('retrySave').hidden=!S.submitError}}
 function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
 
-function resultLinks(caseId){return S.cases[caseId].links.map(l=>({cause:l.cause,effect:l.effect,status:STATUS_SAVE[l.status]||l.status,evidence:[...l.evidence],timeScope:l.timeScope}))}
+function resultLinks(caseId){return S.cases[caseId].links.filter(l=>l.status!=='withdrawn').map(l=>({cause:l.cause,effect:l.effect,status:STATUS_SAVE[l.status]||l.status,evidence:[...l.evidence],timeScope:l.timeScope}))}
 function resultPayload(){
   if(!S.completedAt)S.completedAt=new Date().toISOString();
   ['case1','case2','case3'].forEach(finalizeCase);
