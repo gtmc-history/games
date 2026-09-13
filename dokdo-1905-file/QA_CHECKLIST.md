@@ -9,6 +9,17 @@
 - 실제 학생 화면에 내부 A/B 등급, source ID, JACAR ref, QA 용어가 튀어나오지 않는지 확인한다.
 - 역사 판단을 바꾸지 않고 **화면 이해 가능성 / 동작 가능성 / 상태 보존 / 저장 계약**을 검사한다.
 
+### 자동 런타임 스모크 — 2026-09-14
+
+실제 사료·CSS의 시각 검수가 아니라, 현재 modular runtime의 상태 전이와 SAVE 계약을 깨지 않고 실행할 수 있는지 확인한 자동 테스트다.
+
+- [x] `app-core.js`, `app-scenes-a.js`, `app-scenes-b.js`, `app-init.js`를 각각 `node --check`로 검사했다.
+- [x] headless Chromium에서 최소 사료 stub을 주입해 S0 → S7 → 결과 화면까지 한 경로를 완주했다.
+- [x] S2에서 `현재 지명 식별은 보류` 경로로 진행한 뒤 그 상태가 결과 및 구조화 payload에 남는 것을 확인했다.
+- [x] Supabase POST를 브라우저 단계에서 intercept하여 production DB에 쓰지 않고 payload를 캡처했다.
+- [x] 캡처 payload에 S7 자유서술 제목·본문·주의문 원문이 들어가지 않는 것을 확인했다.
+- [ ] 실제 branch의 전체 사료 데이터·스타일·원문 링크를 함께 로드한 브라우저 시각/교실 실기는 별도로 수행한다.
+
 ## 1. 시작·공통 UI
 
 - [ ] `/dokdo-1905-file/?class=test` 직접 진입 시 게임이 열린다.
@@ -42,22 +53,25 @@
 
 ## 4. S2 — 1877 태정관 지령
 
-목표: `본문 직접 문구`와 `지도까지 연결한 식별`을 구분한다.
+목표: **`본문 직접 문구`와 `현재 지명 식별`을 같은 층위의 사실로 처리하지 않는다.** DESIGN_LOCK v1.0에서 현재 지명 식별은 해석층이며 단일 정오를 붙이지 않는다.
 
 현재는 실제 기죽도약도 asset blocker가 남아 있으므로 두 단계로 검사한다.
 
 ### DEV placeholder 상태
 - [ ] 화면에 `DEV PLACEHOLDER`가 명확히 표시되어 최종 사료 이미지로 오인되지 않는다.
 - [ ] 본문의 `죽도 외 1도` 처리 내용을 먼저 확인한다.
-- [ ] 지도 단서 2개를 확인하기 전에는 식별 메모가 활성화되지 않는다.
+- [ ] 지도 단서 2개를 확인하기 전에는 현재 지명 식별 메모 선택이 활성화되지 않는다.
+- [ ] 지도 단서 확인 뒤 `지도·공공교육 자료의 해석을 근거로 현재 독도로 식별`과 `현재 지명 식별 보류`가 모두 선택 가능하다.
+- [ ] 두 해석 선택에 성공/실패·정오 점수를 붙이지 않고, 본문 사실과 식별 해석을 분리했다는 피드백만 준다.
 - [ ] 힌트를 써도 자동 정답 처리되지 않고 다음으로 무엇을 봐야 하는지만 알려준다.
+- [ ] 선택한 해석/보류 상태가 `outside_one_status`로 저장된다.
 
 ### 실제 기죽도약도 asset 교체 후
 - [ ] 국립공문서관 원 공개본을 사용한다.
 - [ ] 크롭/강조를 했다면 가공 사실과 출처가 화면에 표시된다.
 - [ ] 실제 지도에서 명칭·방향·상대 위치 단서를 클릭/탭할 수 있다.
 - [ ] 모바일에서도 hotspot이 44px 이상 터치 가능 영역을 가진다.
-- [ ] 지도 이미지를 보지 않고 단순 버튼 문구만 읽어도 답이 노출되는 구조가 아니다.
+- [ ] 지도 이미지를 보지 않고 단순 버튼 문구만 읽어도 식별 결론이 자동 노출되는 구조가 아니다.
 
 ## 5. S3 — 1900 칙령 제41호
 
@@ -116,13 +130,13 @@
 - [ ] 선택하지 않은 자료의 문장은 최종 블록 목록에 나타나지 않는다.
 - [ ] `extractedNotes + boardLinks`에서만 전시문 재료가 생성된다.
 - [ ] 제목·본문·주의문 입력이 모바일에서 불편하지 않다.
-- [ ] 자유서술을 서버 저장하지 않는다는 설계가 코드와 일치한다.
+- [x] 자유서술을 서버 저장하지 않는다는 설계가 runtime payload와 일치한다. (headless intercept 확인)
 - [ ] 전시문에 `석도=독도 확정`, `러일전쟁이 유일한 원인` 같은 과잉 문구를 시스템이 자동 생성하지 않는다.
 - [ ] 전시 확정 뒤 처음 판단 → 중간 메모 → 최종 판단 변화가 결과 화면에 보인다.
 
 ## 10. SAVE payload
 
-브라우저 DevTools에서 `fetch`를 intercept하거나 mock endpoint로 전송해 확인한다.
+브라우저에서 `fetch`를 intercept하거나 mock endpoint로 전송해 확인한다. 2026-09-14에는 modular runtime을 headless Chromium으로 완주하면서 실제 `fetch` 호출을 intercept했다.
 
 필수 최상위:
 
@@ -138,24 +152,26 @@
 
 `choices`에서 확인:
 
-- [ ] `result_id`
-- [ ] `version`
-- [ ] `course_lens`
-- [ ] `evidence_seen`
-- [ ] `opened_optional`
-- [ ] `hint_used`
-- [ ] `revision_count`
-- [ ] `seokdo_status`
-- [ ] `context_relation`
-- [ ] `board_links`
-- [ ] `selected_exhibit_sources`
-- [ ] completion 관련 구조화 값
+- [x] `result_id`
+- [x] `version`
+- [x] `course_lens`
+- [x] `evidence_seen`
+- [x] `hint_used`
+- [x] `outside_one_status`
+- [x] `revision_count`
+- [x] `seokdo_status`
+- [x] `context_relation`
+- [x] `board_links`
+- [x] `selected_exhibit_sources`
+- [x] `completion`
+
+`openedOptional`은 브라우저 세션 UI 복원용 내부 상태이며 별도 서버 필드로 저장하지 않는다. 실제 열람 이력은 `evidence_seen`으로 저장한다.
 
 저장 금지 확인:
 
-- [ ] S7 자유서술 `finalPanel.title/body/caution` 원문이 payload에 없다.
-- [ ] service-role key가 client에 없다.
-- [ ] production DB INSERT 없이 검증했다.
+- [x] S7 자유서술 `finalPanel.title/body/caution` 원문이 payload에 없다.
+- [x] production DB INSERT 없이 intercept로 검증했다.
+- [ ] service-role key가 client에 없다 — 정적/보안 게이트에서 다시 확인한다.
 - [ ] 네트워크 저장 실패 시 완료/엔딩 화면은 계속 열린다.
 - [ ] 재시도 버튼은 저장만 재시도하고 게임 상태를 초기화하지 않는다.
 
@@ -175,9 +191,9 @@
 다음을 모두 만족하기 전에는 manifest를 `implemented`로 올리지 않는다.
 
 1. S2 실제 기죽도약도 원 공개본 asset + hotspot 상호작용 교체.
-2. 핵심 동선 S0→S7 브라우저 완주.
-3. SAVE payload mock/intercept 검증.
-4. `node --check` — `app.js`, `data.js`, `source-overrides.js`.
+2. 실제 branch의 사료·스타일을 포함한 핵심 동선 S0→S7 브라우저 완주.
+3. SAVE payload mock/intercept 검증 — **runtime smoke 수준에서는 완료**, 실제 branch 최종본에서 재확인.
+4. `node --check` — `app-core.js`, `app-scenes-a.js`, `app-scenes-b.js`, `app-init.js`, `data.js`, `source-overrides.js`.
 5. `npm run audit:games` PASS.
 6. `git diff --check` PASS.
 7. 실제 학생 화면에서 내부 검수 메타데이터 노출 없음.
