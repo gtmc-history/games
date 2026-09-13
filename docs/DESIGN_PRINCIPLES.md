@@ -1,26 +1,30 @@
-# Historical game design principles
+# Historical game design principles — compatibility entry point
 
-이 문서는 코드 운영 계약과 역사 설계의 안전선을 분리한다. 기존 코드·감사 규칙에서 확인되는 원칙만 기록한다.
+이 문서는 기존 링크와 작업 습관을 위한 호환 진입점이다.
+역사게임의 상세 설계 정본은 루트 `PROJECT_INSTRUCTIONS.md`와 아래 문서를 따른다.
 
-## 기본 원칙
+- 공통 역사 정확성·사료·인과: `HISTORY_ACCURACY_RULES.md`
+- 민감 역사·실존 인물·생성형 AI: `SENSITIVE_HISTORY_RULES.md`
+- 설계 절차: `DESIGN_WORKFLOW.md`
+- 게임 메커니즘: `GAME_DESIGN_TAXONOMY.md`
+- UI·연출: `VISUAL_DESIGN_RULES.md`
 
-- 역사적 정확성이 게임적 재미보다 우선한다.
-- 체험이나 재연 자체를 학습 목표로 만들지 않는다.
-- 학생의 선택은 역사적 자료·조건을 판단하는 활동으로 이어져야 한다.
-- 기본 학습 구조는 `선택 → 결과 → 발견`이다.
-- 하나의 정답을 강요하기보다 당시 정보, 권력 관계, 제약을 드러낸다.
-- 핵심 사료, 정답 판정, 역사 해석은 근거 없이 임의 수정하지 않는다.
+## 유지되는 안전선
+
+- 역사적 정확성과 근거를 게임적 편의보다 우선한다.
+- 핵심 사료, 정답 판정, 역사 해석을 근거 없이 임의 수정하지 않는다.
 - 게임 속 인물이 알 수 없었던 후대 정보를 선택 근거로 미리 주지 않는다.
+- 학생 선택 때문에 실제 역사 사건이 발생한 것처럼 인과를 만들지 않는다.
 - 민감한 피해 경험을 점수 경쟁, 승리 조건, 가벼운 역할극으로 소비하지 않는다.
-- 피해자·강제동원·식민 통치 자료는 존중, 맥락, 사료 한계를 함께 제시한다.
-
-## 변경 원칙
-
-- 역사 문구나 판정을 바꾸려면 사용 사료와 변경 이유를 먼저 확인한다.
 - 기술 통합 작업은 역사 콘텐츠 수정의 근거가 아니다.
-- 불확실한 세부 규칙을 새로 만들지 않는다. 확인이 필요하면 게임 README나 `TECH_DEBT.md`에 TODO로 남긴다.
-- 신규 게임의 상세 DESIGN_LOCK은 해당 `<slug>/README.md`에 기록한다.
 
-## 관련 자료
+## 변경된 설계 관점
 
-- 전체 baseline과 게임별 비고: `../AUDIT_GAMES_20260819.md`
+과거의 `선택 → 결과 → 발견`은 유용한 한 패턴이지만 모든 게임의 기본 구조로 강제하지 않는다.
+새 게임은 Player Verb와 역사 구조에 따라 Core Loop 또는 Core Sequence를 설계한다.
+Visual Novel, 지도, 카드, 신문 화면은 Presentation Layer일 수 있으며 실제 Gameplay Mechanic을 별도로 확인한다.
+
+## DESIGN_LOCK
+
+새 게임은 원칙적으로 `../design-locks/<slug>_DESIGN_LOCK_vX.Y.md`에 최신 설계 잠금을 둔다.
+기존 게임이 `<slug>/README.md`에 DESIGN_LOCK 또는 동등한 설계 확정을 가지고 있다면 즉시 이동시키지 않고 차기 리비전에서 통합한다.
