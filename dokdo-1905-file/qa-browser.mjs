@@ -204,8 +204,9 @@ async function runViewport(width, height, label) {
   await cdp.click('#sceneNext');
 
   // S6 — use relationships that make historical sense for the sources this QA path actually opened.
-  // 1900 jurisdiction wording is strengthened by the 1906 administrative expression;
-  // the central-government directive is a follow-up response to the 1906 report.
+  // A → label → B means the sentence is read from A toward B.
+  // The 1906 report strengthens the interpretation being built from the 1900 jurisdiction wording;
+  // the 1906 central-government directive is a follow-up response to the report.
   await cdp.waitFor(`document.querySelector('#sceneIndex')?.textContent.includes('SCENE 6')`);
   const boardSetup = await cdp.evalValue(`(()=>{
     const checks=[...document.querySelectorAll('.exsrc')];
@@ -214,8 +215,8 @@ async function runViewport(width, height, label) {
     if(!required.every(id=>byValue.has(id)))return {ok:false,available:checks.map(x=>x.value)};
     required.forEach(id=>byValue.get(id).click());
     const a=document.querySelector('#relA'),b=document.querySelector('#relB'),l=document.querySelector('#relLabel'),add=document.querySelector('#addRel');
-    a.value='ordinance1900';b.value='shim1906';l.value='보강한다';add.click();
-    a.value='shim1906';b.value='directive1906';l.value='후속 대응이다';add.click();
+    a.value='shim1906';b.value='ordinance1900';l.value='보강한다';add.click();
+    a.value='directive1906';b.value='shim1906';l.value='후속 대응이다';add.click();
     return {ok:true,selected:required};
   })()`);
   if (!boardSetup?.ok) throw new Error(`S6 board setup failed: ${JSON.stringify(boardSetup)}`);
@@ -249,8 +250,8 @@ async function runViewport(width, height, label) {
   if (!String(choices.outside_one_status || '').includes('보류')) throw new Error(`${label}: S2 hold path was not preserved`);
   if (!(choices.revision_count >= 1)) throw new Error(`${label}: revision_count was not incremented`);
   if (!Array.isArray(choices.board_links) || choices.board_links.length < 2) throw new Error(`${label}: board links missing`);
-  if (!choices.board_links.some(x=>x.a==='ordinance1900'&&x.b==='shim1906'&&x.label==='보강한다')) throw new Error(`${label}: expected 1900→1906 strengthening relation missing`);
-  if (!choices.board_links.some(x=>x.a==='shim1906'&&x.b==='directive1906'&&x.label==='후속 대응이다')) throw new Error(`${label}: expected 1906 report→directive follow-up relation missing`);
+  if (!choices.board_links.some(x=>x.a==='shim1906'&&x.b==='ordinance1900'&&x.label==='보강한다')) throw new Error(`${label}: expected 1906 report→1900 strengthening relation missing`);
+  if (!choices.board_links.some(x=>x.a==='directive1906'&&x.b==='shim1906'&&x.label==='후속 대응이다')) throw new Error(`${label}: expected directive→1906 report follow-up relation missing`);
   if (!Array.isArray(choices.selected_exhibit_sources) || choices.selected_exhibit_sources.length < 2) throw new Error(`${label}: exhibit sources missing`);
   if ('finalPanel' in choices || 'final_panel' in choices) throw new Error(`${label}: free-text final panel leaked into save choices`);
   if (payload.comment !== '') throw new Error(`${label}: comment should remain empty`);
