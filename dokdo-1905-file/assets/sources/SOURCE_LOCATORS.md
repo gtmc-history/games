@@ -4,18 +4,20 @@ BUILD에서 사료 이미지·전사·링크를 붙일 때 이 표를 우선 확
 
 | 연도 | 자료 | 정본 locator | 현재 BUILD 사용 |
 |---|---|---|---|
-| 1877 | 日本海内竹島外一島地籍ニ編纂方伺 / 磯竹島略圖 | National Archives of Japan Digital Archive, `公02032100-01600`, catalog `https://www.digital.archives.go.jp/item/en/3018187`, item metadata `https://www.digital.archives.go.jp/item/3018187.json`, content viewer pattern `https://www.digital.archives.go.jp/img/3018187#[page]` | 핵심 원문 전사 + 정본 링크. 공식 JSON/IIIF 경로는 식별했으나 지도 page/image identifier는 아직 미확정 |
+| 1876~1877 | 日本海内竹島外一島地籍ニ編纂方伺 / 磯竹島略圖 | National Archives of Japan Digital Archive `公02032100-01600`, catalog `https://www.digital.archives.go.jp/item/en/3018187`; JACAR cross-locator `A07060000300` (『公文録』 일건 자료). 별도 『太政類典』 대조본은 `A07060000100` | 지령 핵심 문구 + 같은 일건에 편철된 시마네현 제출 지도라는 provenance를 분리해 사용. 지도 page/image identifier는 아직 미확정 |
 | 1900 | 勅令第四十一號 | 국사편찬위원회 한국사DB `gbdh_1900_10_27_a01716_00040`, https://db.history.go.kr/id/gbdh_1900_10_27_a01716_00040 | 제1·2조 원문 전사 + 학생용 현대어 |
-| 1904 | 軍艦新高行動日誌（5） | JACAR Ref. `C09050457300`, 방위성 방위연구소 | 메타데이터·학생용 설명. 원문 이미지는 허가 전 미포함 |
-| 1904 | 軍艦對馬戰時日誌（5） | JACAR Ref. `C09050402800`, 방위성 방위연구소 | 1904-11-20 전신소 설치 적합성 조사 사실·메타데이터. 정확한 이미지 프레임 미확정 |
+| 1904 | 軍艦新高行動日誌（5） | JACAR Ref. `C09050457300`, 방위성 방위연구소, https://www.jacar.archives.go.jp/das/meta/C09050457300 | 메타데이터·학생용 설명. 원문 이미지는 허가 전 미포함 |
+| 1904 | 軍艦對馬戰時日誌（5） | JACAR Ref. `C09050402800`, 방위성 방위연구소, https://www.jacar.archives.go.jp/das/meta/C09050402800 | 1904-11-20 전신소 설치 적합성 조사 사실·메타데이터. 정확한 이미지 프레임 미확정 |
 | 1905 | 일본 내각 결정 | 내각관방 영토·주권대책기획조정실 자료 페이지, https://www.cas.go.jp/jp/ryodo/kenkyu/takeshima/shiryo_vol001-01.html ; 원문 소장: 일본 국립공문서관 「公文類聚・第二十九編・明治三十八年・第一巻」 | 당대 결정문의 핵심구절 전사 + 학생용 현대어. 현재 일본 정부의 `주권 재확인` 해설과 분리 |
 | 1905 | 島根縣告示第四十號 | 내각관방 영토·주권대책기획조정실 자료 페이지, https://www.cas.go.jp/jp/ryodo/kenkyu/takeshima/shiryo_vol001-05.html ; 원문 소장: 島根県公文書センター | 고시 핵심구절 전사 + 선택 조사 설명. 원문 이미지 미포함 |
 | 1906 | 報告書 號外 | 국사편찬위원회 한국사DB `mk_002_0010_0560`, 『各觀察道(去來)案』, https://db.history.go.kr/id/mk_002_0010_0560 | `本郡所屬獨島` 및 일본 관리 일행 통보 부분 원문 전사 + 학생용 현대어 |
-| 1906 | 指令 第三號 | 같은 DB 기사 `mk_002_0010_0560` | `獨島領地之說은 全屬無根…` 원문 전사 + 학생용 현대어 |
+| 1906 | 指令 第三號 | 같은 DB 기사 `mk_002_0010_0560` | `獨島領地之說은 全屬無根…` 원문 전사 + 학생용 현대어. 원문 말미 `五月十日`에 따라 1906-05-10 사용 |
 
-## 1877 공식 메타데이터 경로
+## 1877 문서 관계와 공식 메타데이터 경로
 
-일본 국립공문서관 최신 이용안내는 item metadata를 `item/[ID].json`으로 제공한다고 명시한다. item/file RDF 구조에서 다음 필드가 이미지 자산 식별에 직접 관련된다.
+`磯竹島略圖`는 학생 화면에서 단순히 “태정관 지령 첨부 지도”라고 부르지 않는다. 현재 확인한 편철 관계상 1876년 시마네현이 내무성에 제출한 질의에 `原由の大略` 등과 함께 낸 지도 자료이며, 이후 내무성 질의와 태정관 처리 문서가 같은 『公文録』 일건에 편철되어 있다. 지도 관찰 단서와 최종 지령 본문의 직접 문구는 자료 단계가 다르다.
+
+일본 국립공문서관 이용안내는 item metadata를 `item/[ID].json`으로 제공한다고 명시한다. item/file RDF 구조에서 다음 필드가 이미지 자산 식별에 직접 관련된다.
 
 - `owl:sameAs` — content URL
 - `rdfs:seeAlso` — IIIF manifest URL
@@ -24,11 +26,16 @@ BUILD에서 사료 이미지·전사·링크를 붙일 때 이 표를 우선 확
 
 IIIF manifest는 `https://www.digital.archives.go.jp/api/iiif/[Image identifier]/manifest.json` 형식이다. `[Image identifier]`는 catalog item ID와 같다고 가정하지 않고, item JSON의 `rdfs:seeAlso` 값으로 확정한다.
 
-따라서 S2 asset 확보 순서는 `item/3018187.json → rdfs:seeAlso → manifest canvas/page 확인 → 공식 image service → local crop`으로 고정한다. 구현 세부 계약은 `S2_MAP_ASSET_CONTRACT.md`를 따른다.
+JACAR 문헌 대조용 locator는 다음처럼 구분한다.
+
+- `A07060000300`: 『公文録』 `日本海内竹島外一島地籍ニ編纂方伺` 일건 자료. `磯竹島略圖`가 이 일건에 포함됨.
+- `A07060000100`: 『太政類典』 `日本海内竹島外一島ヲ版図外トス`. 지령 텍스트 대조용 별도 편찬 자료.
+
+따라서 S2 asset 확보 순서는 `item/3018187.json → rdfs:seeAlso → manifest canvas/page 확인 → JACAR A07060000300 교차 확인 → 공식 image service → local crop`으로 고정한다. 구현 세부 계약은 `S2_MAP_ASSET_CONTRACT.md`를 따른다.
 
 ## 현재 자산 blocker
 
-- **1877 기죽도약도**: 재사용 권리는 확인했다. 공식 item 페이지에 `Image / Browse`가 있고, 최신 국립공문서관 문서에서 item JSON과 IIIF manifest 노출 구조까지 확인했다. 다만 현재 자동 접근 환경은 `item/3018187.json`을 직접 가져오지 못하여 **실제 `rdfs:seeAlso` 값과 지도 page를 아직 읽지 못했다.** 제3자 복제본으로 canonical asset을 대체하지 않는다.
+- **1877 기죽도약도**: 재사용 권리는 확인했다. 공식 item 페이지와 JACAR cross-locator까지 식별했지만 현재 자동 접근 환경에서는 **실제 지도 page / image identifier를 안정적으로 읽지 못했다.** 일건 내 문서 순서를 근거로 프레임 번호를 추정하지 않는다. 제3자 복제본으로 canonical asset을 대체하지 않는다.
 - **1904 쓰시마**: `C09050402800`까지 정본 식별됨. 1904-11-20 기록의 정확한 스캔 이미지 번호는 아직 추정하지 않는다.
 - **NIKH 이미지**: 한국사DB 저작권 정책상 DB가 제공하는 스캔·현대 가공물의 공개 웹게임 재사용을 일괄 허용한다고 볼 수 없다. 역사적 원문 전사와 링크를 우선 사용한다.
 
