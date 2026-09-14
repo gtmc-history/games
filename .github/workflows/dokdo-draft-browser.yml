@@ -22,6 +22,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install Korean QA font
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+
       - name: Syntax check Dokdo runtime
         run: |
           node --check dokdo-1905-file/data.js
