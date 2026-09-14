@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" role="img" aria-labelledby="title desc">
+<title id="title">대전 공주 철도 관계도</title><desc id="desc">공주와 대전의 위치 관계, 경부선과 호남선의 대전 분기 관계를 단순화한 수업용 노선도. 축척 없음.</desc>
+<rect width="760" height="400" fill="#f3efe5"/>
+<g fill="none" stroke="#4e5860" stroke-width="8" stroke-linecap="round">
+<path d="M470 30 C452 100 448 170 456 238 C464 300 488 344 520 382"/>
+<path d="M457 222 C390 255 340 300 300 374"/>
+</g>
+<g fill="#fff" stroke="#315e63" stroke-width="5">
+<circle cx="456" cy="220" r="15"/><circle cx="250" cy="190" r="13"/>
+</g>
+<g font-family="system-ui, Noto Sans KR" fill="#20242b">
+<text x="482" y="215" font-size="28" font-weight="800">대전</text>
+<text x="175" y="183" font-size="28" font-weight="800">공주</text>
+<text x="510" y="80" font-size="20" fill="#59636a">경부선</text>
+<text x="314" y="332" font-size="20" fill="#59636a">호남선</text>
+<text x="24" y="36" font-size="18" font-weight="800" fill="#8e2f2b">수업용 노선 관계도 · 축척 없음</text>
+<text x="24" y="372" font-size="15" fill="#6f665c">노선 관계는 대전광역시 연혁·우리역사넷 자료를 바탕으로 단순화</text>
+</g>
+<path d="M264 198 C330 210 375 218 440 220" fill="none" stroke="#b7aa98" stroke-width="3" stroke-dasharray="8 8"/>
+</svg>

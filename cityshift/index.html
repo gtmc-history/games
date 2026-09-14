@@ -1,144 +1,45 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>도시의 자리 — 무엇이 도시를 바꿨나</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1d2835">
+  <title>도시의 자리 — 무엇이 도시를 바꿨나</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-<header class="topbar">
-  <div class="toprow">
-    <div class="brand"><h1>도시의 자리</h1><p>무엇이 도시를 바꿨나</p></div>
-    <nav class="progress" id="progress" aria-label="진행 단계"></nav>
-  </div>
-</header>
-<main>
-<section class="scene" id="scene1" data-scene="1">
-  <div class="kicker">SCENE 1 · 첫 판단</div>
-  <h2>어느 곳의 도시 위상이 더 커질까?</h2>
-  <p class="lead">아직 지명과 지도는 보이지 않습니다. 지금 가진 조건만으로 먼저 판단을 남겨 보세요.</p>
-  <div class="notice">이 게임은 <strong>식민 지배 아래 도시의 변화</strong>를 다룹니다. 실제 역사를 바꾸는 것이 아니라, 자료를 보며 자신의 설명을 만들고 고칩니다.</div>
-  <div class="condition-grid" id="conditionGrid">
-    <button class="condition" data-pick="A" type="button"><span class="tag">조건 A</span><strong>오래된 행정 중심지</strong><span>오랫동안 관청과 사람들이 모여 있던 곳입니다.</span></button>
-    <button class="condition" data-pick="B" type="button"><span class="tag">조건 B</span><strong>장이 서던 작은 마을</strong><span>규모는 작지만 주변 사람들이 오가던 곳입니다.</span></button>
-  </div>
-  <div class="panel">
-    <label class="field-label" for="initialReason">앞으로 어느 쪽의 도시 위상이 더 커질 것 같습니까? 그렇게 본 이유를 한 줄로 적어 주십시오.</label>
-    <textarea id="initialReason" maxlength="260" placeholder="예: 오래된 중심지에는 이미 사람들이 많이 모여 있었을 것 같다."></textarea>
-    <div class="validation" id="initialValidation" aria-live="polite"></div>
-    <div class="btnrow"><button class="btn primary" id="lockPrediction" type="button">첫 판단을 기록한다</button></div>
-  </div>
-</section>
+  <script>
+    window.__GAME_AUDIT__={game:'cityshift',table:'game_results',method:'POST',choices:true,classQuery:'URLSearchParams class',timestamp:'toISOString'};
+    window.GAME_CONFIG={game_id:'cityshift',title:'도시의 자리',version:'2.0'};
+    window.CHARLIE_CONFIG={supabaseUrl:'https://xgniwztlrakkrbzcfklb.supabase.co',supabasePublishableKey:'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9'};
+    // Audit-readable SAVE markers: game_results / POST / choices / timestamp / URLSearchParams(...).get('class')
+  </script>
 
-<section class="scene" id="scene2" data-scene="2">
-  <div class="kicker">SCENE 2 · 무대 공개</div>
-  <h2>세 사례를 같은 지도 위에 놓아 봅시다</h2>
-  <p class="lead">방금 고른 조건은 공주와 대전의 대비에서 출발합니다. 이제 세 지역을 오가며 하나의 규칙이 계속 통하는지 확인합니다.</p>
-  <div class="national-wrap" style="margin-top:20px">
-    <div class="national-map" aria-label="전국 약도">
-      <svg viewBox="0 0 520 620" role="img" aria-label="한반도 남부의 단순화된 약도와 사례 위치">
-        <path d="M214 40 C175 84 154 132 165 181 C133 212 130 268 156 307 C139 353 161 407 204 433 C222 475 254 523 315 555 C358 530 372 489 362 451 C402 420 410 366 382 332 C401 285 382 237 352 210 C359 159 333 107 294 77 C273 57 244 43 214 40Z" fill="#f7f3eb" stroke="#b9b2a8" stroke-width="3"/>
-        <path d="M290 237 C277 255 270 287 276 320 C279 355 275 390 258 420" fill="none" stroke="#aaa39a" stroke-width="3" stroke-dasharray="7 6"/>
-        <g font-family="system-ui" font-size="15" fill="#26231f">
-          <circle cx="251" cy="251" r="7" fill="#315a63"/><text x="262" y="247">공주·대전</text><text x="262" y="266" fill="#6e675d" font-size="12">사례 1</text>
-          <circle cx="258" cy="364" r="7" fill="#315a63"/><text x="269" y="360">이리·나주</text><text x="269" y="379" fill="#6e675d" font-size="12">사례 2</text>
-          <circle cx="231" cy="443" r="7" fill="#315a63"/><text x="242" y="448">목포</text><text x="242" y="467" fill="#6e675d" font-size="12">사례 3</text>
-        </g>
-      </svg>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-kicker">역사 교양지 · 도시 변화 특집</span>
+      <strong>도시의 자리</strong>
+      <span>무엇이 도시를 바꿨나</span>
     </div>
-    <aside class="map-note">
-      <div class="kicker">비교 프레임</div><h3>같은 규칙이 세 곳에서 모두 통할까?</h3>
-      <div class="case-list">
-        <div class="case-item"><strong>1 · 대전 / 공주</strong><span>철도와 행정 기능의 시차를 봅니다.</span></div>
-        <div class="case-item"><strong>2 · 이리 / 나주</strong><span>철도가 지나도 결과가 같지 않은 사례를 봅니다.</span></div>
-        <div class="case-item"><strong>3 · 목포</strong><span>앞서 만든 설명을 다른 성장 경로에 적용해 봅니다.</span></div>
-      </div>
-      <div class="btnrow"><button class="btn primary" id="openCase1" type="button">첫 사례를 살펴본다</button></div>
-    </aside>
-  </div>
-</section>
-
-<section class="scene" id="scene3" data-scene="3">
-  <div class="kicker">SCENE 3 · 사례 1</div>
-  <h2>대전과 공주 — 철도만으로 충분할까?</h2>
-  <p class="lead">원인 카드를 고른 뒤 지도 속 결과 노드를 탭해 연결하세요. 새 자료가 오면 선의 상태를 다시 판단할 수 있습니다.</p>
-  <div id="case1Mount"></div>
-</section>
-
-<section class="scene" id="scene4" data-scene="4">
-  <div class="kicker">SCENE 4 · 사례 2</div>
-  <h2>이리에서 만든 규칙이 나주에서도 통할까?</h2>
-  <p class="lead">먼저 이리에서 짧게 모델을 만들고, 같은 철도축의 나주에서 그 규칙이 어떻게 흔들리는지 확인합니다.</p>
-  <div id="case2Mount"></div>
-</section>
-
-<section class="scene" id="scene5" data-scene="5">
-  <div class="kicker">SCENE 5 · 사례 3</div>
-  <h2>목포 — 지금까지 쓰던 설명을 그대로 놓아 볼까?</h2>
-  <p class="lead">앞 사례에서 쓴 <strong>철도</strong> 원인 카드를 그대로 가져옵니다. 연결해도 되고, 아직 판단하지 않아도 됩니다.</p>
-  <div id="case3Mount"></div>
-</section>
-
-<section class="scene" id="scene6" data-scene="6">
-  <div class="kicker">SCENE 6 · 세 사례 대조</div>
-  <h2>세 장의 인과 지도를 나란히 놓아 봅시다</h2>
-  <p class="lead">여기에는 모범답안 대신 여러분이 마지막으로 남긴 연결과 유보가 표시됩니다.</p>
-  <div class="compare-grid" id="compareGrid"></div>
-  <div class="big-question">세 도시의 변화는 하나의 규칙으로 설명할 수 있었습니까?</div>
-  <div class="btnrow"><button class="btn primary" id="reviewInitial" type="button">처음의 판단을 다시 읽는다</button></div>
-</section>
-
-<section class="scene" id="scene7" data-scene="7">
-  <div class="kicker">SCENE 7 · 설명 다시 쓰기</div>
-  <h2>처음의 규칙을 지금 다시 쓴다면?</h2>
-  <div class="final-grid">
-    <div class="frozen">
-      <div class="kicker">처음에 남긴 판단 · 수정 불가</div>
-      <div class="choice-text" id="frozenChoice">—</div>
-      <div id="frozenReason" style="line-height:1.65">—</div>
+    <div class="top-actions">
+      <span id="classBadge" class="class-badge" aria-label="반 정보"></span>
+      <button id="restartBtn" class="ghost-btn" type="button">처음부터</button>
     </div>
-    <div class="panel" style="margin:0">
-      <label class="field-label" for="finalModel">일제강점기의 도시 변화는 __________만으로 설명할 수 없고, …</label>
-      <textarea id="finalModel" maxlength="700" placeholder="세 사례에서 바뀐 생각을 자신의 문장으로 써 보세요."></textarea>
-      <div class="validation" id="finalValidation" aria-live="polite"></div>
-    </div>
-  </div>
-  <div class="unresolved" id="unresolvedBox"><h4>끝까지 남은 판단 유보</h4><ul id="unresolvedList"></ul></div>
-  <div class="btnrow"><button class="btn primary" id="finishCore" type="button">설명을 기록하고 마무리한다</button></div>
-  <div class="save-status" id="saveStatus" aria-live="polite"></div>
-  <div class="post-panel" id="postPanel">
-    <div class="kicker">게임 후 발문</div>
-    <h2>도시가 성장했다. 그런데 누구의 도시였을까?</h2>
-    <div class="post-sources">
-      <div class="source-card"><div class="source-title">영산포 후속 자료</div><div class="source-body">목포 개항 이후 일본인 지주층이 형성되었고, 영산포에는 일본인 시가지가 만들어졌다.</div><details><summary>자료 정보</summary><div>나주문화원 자료집 소개 · S17. Core Play에서는 사용하지 않고 여기서 처음 제시합니다.</div></details></div>
-      <div class="source-card"><div class="source-title">교과서의 경성 자료</div><div class="source-body">도시 문화는 일본인과 일부 한국인만 누릴 수 있는 특권이었다. 청계천을 중심으로 북촌과 남촌이 나뉘었고, 그 일대에는 토막촌도 있었다.</div><details><summary>자료 정보</summary><div>교과서 48·50쪽의 도시 양면성 자료를 요약한 수업용 제시문입니다.</div></details></div>
-    </div>
-    <div class="post-question">지금까지 우리는 ‘어떤 도시가 성장했는가’를 추적했습니다. 그렇다면 도시의 성장은 그 안에 사는 모든 사람에게 같은 변화를 의미했을까요? 두 자료에서 다음 수업에 더 확인하고 싶은 차이를 하나 적어 봅시다.</div>
-    <label class="field-label" for="postInquiry">다음 수업에서 더 확인하고 싶은 차이</label>
-    <textarea id="postInquiry" maxlength="500" placeholder="이 입력은 결과 저장에 포함되지 않습니다."></textarea>
-    <div class="micro">이 후속 발문은 게임 결과의 자유 소감(comment)으로 저장하지 않습니다.</div>
-    <div class="restart"><button class="btn" id="retrySave" type="button" hidden>같은 기록으로 저장을 다시 시도한다</button> <button class="btn soft" id="restartGame" type="button">처음부터 다시 시작한다</button></div>
-  </div>
-</section>
-</main>
-</div>
+  </header>
 
-<dialog class="dialog" id="linkDialog">
-  <div class="dialog-inner">
-    <h3 id="dialogTitle">연결 상태</h3>
-    <div class="dialog-meta" id="dialogMeta"></div>
-    <div class="dialog-actions" id="dialogActions"></div>
-    <div class="btnrow"><button class="btn" id="closeDialog" type="button">보드로 돌아간다</button></div>
-  </div>
-</dialog>
+  <nav id="progress" class="progress" aria-label="진행 단계"></nav>
 
-<script>
-window.__GAME_AUDIT__={game:'cityshift',table:'game_results',method:'POST',choices:true,classQuery:'URLSearchParams class',timestamp:'toISOString'};
-window.GAME_CONFIG={game_id:'cityshift'};
-const __AUDIT_CLASS_PARAM=new URLSearchParams(location.search).get('class');
-</script>
-<script src="app.js"></script>
+  <main id="app" class="app-shell" aria-live="polite"></main>
+
+  <dialog id="sourceDialog" class="source-dialog">
+    <div class="dialog-head">
+      <strong id="sourceDialogTitle">자료 정보</strong>
+      <button id="closeSourceDialog" type="button" class="icon-btn" aria-label="닫기">×</button>
+    </div>
+    <div id="sourceDialogBody" class="dialog-body"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
 </body>
 </html>
