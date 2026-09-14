@@ -1,0 +1,74 @@
+name: Dokdo Draft Browser QA
+
+on:
+  pull_request:
+    paths:
+      - 'dokdo-1905-file/**'
+      - '.github/workflows/dokdo-draft-browser.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    if: github.head_ref == 'build/dokdo-1905-file'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout games repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax check Dokdo runtime
+        run: |
+          node --check dokdo-1905-file/data.js
+          node --check dokdo-1905-file/source-overrides.js
+          node --check dokdo-1905-file/app-core.js
+          node --check dokdo-1905-file/app-scenes-a.js
+          node --check dokdo-1905-file/app-scenes-b.js
+          node --check dokdo-1905-file/app-init.js
+          node --check dokdo-1905-file/qa-browser.mjs
+
+      - name: Locate Chrome
+        id: chrome
+        shell: bash
+        run: |
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo 'Chrome/Chromium is not available on this runner.' >&2
+            exit 1
+          fi
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          echo "Using $CHROME"
+
+      - name: Run S0-S7 browser regression at 390 / 768 / 1280
+        shell: bash
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dokdo-http.log 2>&1 &
+          HTTP_PID=$!
+          "${{ steps.chrome.outputs.path }}" \
+            --headless=new \
+            --no-sandbox \
+            --disable-gpu \
+            --disable-dev-shm-usage \
+            --remote-debugging-port=9222 \
+            --user-data-dir=/tmp/dokdo-chrome \
+            about:blank > /tmp/dokdo-chrome.log 2>&1 &
+          CHROME_PID=$!
+          trap 'kill $HTTP_PID $CHROME_PID 2>/dev/null || true' EXIT
+          node dokdo-1905-file/qa-browser.mjs
+
+      - name: Upload QA screenshots and summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dokdo-draft-browser-qa
+          path: |
+            dokdo-1905-file/qa-artifacts/**
+            /tmp/dokdo-http.log
+            /tmp/dokdo-chrome.log
+          if-no-files-found: warn
+          retention-days: 14
