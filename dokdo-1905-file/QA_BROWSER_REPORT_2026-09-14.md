@@ -10,8 +10,8 @@
 
 최신 확인:
 
-- GitHub Actions `Dokdo Draft Browser QA` run #11: **SUCCESS**
-- 동일 head의 `Game Integration Audit` run #139: **SUCCESS**
+- GitHub Actions `Dokdo Draft Browser QA` run #17: **SUCCESS**
+- 동일 head의 `Game Integration Audit` run #148: **SUCCESS**
 
 검사 viewport:
 
@@ -87,6 +87,12 @@ outside_one_status = 현재 지명 식별 보류 경로
 - 일본 국립공문서관: `公02032100-01600`, item `3018187`
 - JACAR cross-locator: `A07060000300` — 『公文録』 일건 자료
 - 별도 대조: `A07060000100` — 『太政類典』 `日本海内竹島外一島ヲ版図外トス`
+
+추가 교차검증:
+
+- 국사편찬위원회 「사료로 본 한국사」는 1876년 시마네현 문의에 `原由之大畧`과 도면이 붙었으며 해당 도면이 `磯竹島略圖`라고 설명한다.
+- 일본국제문제연구소 2022년 보고서는 현재 국립공문서관 전자판에서 지도가 일건의 뒤쪽에 배치된다고 설명한다.
+- 이 정보는 수동 뷰어 탐색 힌트일 뿐 안정적인 frame/image identifier로 사용하지 않는다.
 
 ## 5. 공식 asset metadata probe
 
