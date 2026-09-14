@@ -8,8 +8,10 @@
 
 ## 1. 실행 결과
 
-GitHub Actions `Dokdo Draft Browser QA` run #5: **SUCCESS**  
-동일 head의 `Game Integration Audit` run #133: **SUCCESS**
+최신 확인:
+
+- GitHub Actions `Dokdo Draft Browser QA` run #9: **SUCCESS**
+- 동일 head의 `Game Integration Audit` run #137: **SUCCESS**
 
 검사 viewport:
 
@@ -32,6 +34,9 @@ GitHub Actions `Dokdo Draft Browser QA` run #5: **SUCCESS**
 - [x] S5에서 1906 자료를 표시하기 전에는 수정 버튼이 잠겨 있고, 필요한 근거 확보 후 1900 메모를 수정할 수 있다.
 - [x] `revision_count`가 실제 수정 행동에 따라 증가한다.
 - [x] S6에서 핵심 사료 선택 및 관계 2개 이상 저장이 가능하다.
+- [x] S6 자동 경로도 임의 자료쌍이 아니라 역사적으로 의미 있는 관계를 사용한다.
+  - 1900 칙령 제41호 → `보강한다` → 1906 심흥택 관련 보고
+  - 1906 심흥택 관련 보고 → `후속 대응이다` → 1906 의정부 지령 제3호
 - [x] S7에서 실제 확보 메모를 이용해 제목·본문·주의문을 구성하고 결과 화면으로 진행한다.
 - [x] 390 / 768 / 1280에서 document horizontal overflow가 발생하지 않는다.
 - [x] 보이는 버튼 중 접근 가능한 이름이 없는 버튼이 없다.
@@ -64,7 +69,7 @@ outside_one_status = 현재 지명 식별 보류 경로
 
 추가로 900px 이하에서 `.sidebar{order:-1}` 때문에 `연구 노트/열람 자료`가 장면 질문보다 먼저 나타나던 구조를 제거했다. 이제 모바일·태블릿에서도 **장면 질문과 해야 할 일 → 사료·작업 → 연구 노트** 순서가 유지된다.
 
-수정 후 run #5 스크린샷에서 위 문제들이 해소된 것을 확인했다.
+수정 후 재실행한 브라우저 QA에서 위 문제들이 해소된 것을 확인했다.
 
 ## 4. S2 역사 provenance 재검수
 
@@ -85,7 +90,7 @@ outside_one_status = 현재 지명 식별 보류 경로
 
 ## 5. 공식 asset metadata probe
 
-run #5에서는 canonical asset blocker를 좁히기 위해 **공식 endpoint만** 비파괴적으로 조회하는 probe도 실행했다.
+canonical asset blocker를 좁히기 위해 **공식 endpoint만** 비파괴적으로 조회하는 probe도 실행한다.
 
 조회 대상:
 
@@ -94,7 +99,7 @@ run #5에서는 canonical asset blocker를 좁히기 위해 **공식 endpoint만
 - JACAR `A07060000300`
 - JACAR `C09050402800`
 
-CI runner에서는 모두 HTTP 403이 반환되었고, 공식 IIIF manifest 후보나 정확한 이미지 프레임을 추가로 얻지 못했다.
+CI runner에서는 HTTP 403이 반환되어 공식 IIIF manifest 후보나 정확한 이미지 프레임을 추가로 얻지 못했다. 공개 검색 색인에서는 국립공문서관 item `3018187`에 `Image / Browse`가 존재하고 자료가 공개 상태임을 확인할 수 있지만, 자동 접근으로 실제 이미지 identifier/page를 추출할 수 있는 것은 아니다.
 
 따라서 다음을 하지 않았다.
 
@@ -105,7 +110,16 @@ CI runner에서는 모두 HTTP 403이 반환되었고, 공식 IIIF manifest 후�
 
 이 결과는 **blocker가 해소되지 않았음을 확인한 것**이며 실패한 역사 검증이 아니다.
 
-## 6. 현재 판정
+## 6. 지령 제3호 날짜 검수
+
+`指令 第三號`의 날짜는 일부 2차 연표에서 5월 20일로 표기된 사례가 있으므로 원문과 현재 공식 설명을 다시 대조했다.
+
+- 국사편찬위원회 한국사DB 원문 말미: `五月十日`
+- 현재 대한민국 외교부 독도 자료: `지령 제3호(1906.5.10)`
+
+따라서 현재 BUILD는 **1906.5.10**을 유지한다. 2차 연표의 상이한 날짜 표기만으로 원문 날짜를 변경하지 않는다.
+
+## 7. 현재 판정
 
 ### 기술적 branch browser QA
 **통과**
