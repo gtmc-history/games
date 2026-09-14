@@ -37,6 +37,12 @@ jobs:
           node --check dokdo-1905-file/app-scenes-b.js
           node --check dokdo-1905-file/app-init.js
           node --check dokdo-1905-file/qa-browser.mjs
+          python3 -m py_compile dokdo-1905-file/qa-asset-probe.py
+
+      - name: Probe official source metadata
+        continue-on-error: true
+        run: |
+          python3 dokdo-1905-file/qa-asset-probe.py | tee dokdo-1905-file/qa-artifacts/asset-probe.log
 
       - name: Locate Chrome
         id: chrome
