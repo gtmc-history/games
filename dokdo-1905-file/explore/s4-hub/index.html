@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S4 연구소 Hub — EXPLORE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet">
+<!--
+  EXPLORE 프로토타입 — 정본 아님. manifest 미등록, 서버 저장 없음.
+  목적: DESIGN_V2_PROPOSAL_2026-09-23.md §12의 S4 Hub 게이트(이동 ≤ 8%, 질문 카드 닫기, 읽기 시간 유지)를 시험한다.
+  사료 텍스트는 v1 게임의 data.js / source-overrides.js를 그대로 읽는다.
+-->
+<style>
+:root{
+  --bg:#f0ece4;--paper:#fbf8f1;--ink:#1a1a1a;--muted:#5d5a52;--line:#b9ad98;--sepia:#8b7355;
+  --navy:#003087;--red:#cd2e3a;--note:#fff6d6;--ok:#2f6b4a;
+  --z1:#e9e2d3;--z2:#c9a877;--z3:#efe4c8;--z4:#cfd6cf;--z5:#e4ecf1;
+  --serif:'Noto Serif KR',serif;--doc:'Gowun Batang',serif;--sans:'Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+button{font:inherit;min-height:48px;border:1px solid var(--sepia);border-radius:4px;background:var(--paper);color:var(--ink);padding:8px 14px;cursor:pointer;transition:transform .15s ease}
+button:hover{transform:translateY(-2px)}button:active{transform:translateY(0) scale(.97)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+button:focus-visible{outline:3px solid rgba(0,48,135,.35);outline-offset:2px}
+.primary{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+.sel{border-color:var(--red);background:#fbe9e6;font-weight:700}
+header{position:sticky;top:0;z-index:20;background:rgba(240,236,228,.97);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+header .t{flex:1;min-width:180px}
+.badge{display:inline-block;font-size:11px;letter-spacing:.12em;font-weight:900;color:#fff;background:var(--red);padding:2px 6px;border-radius:2px}
+h1{font-family:var(--serif);font-size:20px;margin:2px 0 0}
+main{max-width:1100px;margin:0 auto;padding:12px 16px 60px}
+.vn{background:var(--paper);border-left:4px solid var(--navy);padding:10px 14px;margin:0 0 12px}
+.vn b{color:var(--navy)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;margin-bottom:12px}
+.qcard{background:var(--note);border:1px solid var(--sepia);padding:10px 12px;position:relative}
+.qcard h3{margin:0 0 4px;font-size:16px;font-family:var(--serif)}
+.qcard .st{font-size:13px;color:var(--muted)}
+.qcard.closed{background:#eef2ea}
+.qcard .att{font-size:13px;margin:4px 0 0;padding-left:18px}
+/* 복도 */
+.corridor-wrap{overflow-x:auto;border:1px solid var(--line);background:#d9d1c1;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.corridor{position:relative;display:flex;width:1500px;height:230px}
+.zone{flex:0 0 300px;position:relative;border-right:2px solid rgba(0,0,0,.12);padding:10px;cursor:pointer;text-align:left;border-radius:0;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:2px;background:none}
+.zone:hover{transform:none;filter:brightness(1.03)}
+.zone .zn,.zone .zd{position:relative;z-index:1;background:rgba(255,255,255,.72);display:inline-block;padding:0 4px}
+.zone .zn{font-family:var(--serif);font-weight:900;font-size:16px}
+.zone .zd{font-size:12.5px;color:var(--muted);margin-top:2px}
+.zone .floor{position:absolute;left:0;right:0;bottom:0;height:42px;background:rgba(0,0,0,.08)}
+.zone[data-z="1"]{background:var(--z1)}
+.zone[data-z="2"]{background:var(--z2) repeating-linear-gradient(45deg,rgba(0,0,0,.03) 0 4px,transparent 4px 8px)}
+.zone[data-z="3"]{background:var(--z3)}
+.zone[data-z="4"]{background:var(--z4)}
+.zone[data-z="5"]{background:var(--z5);border-right:0}
+.shelf{position:absolute;left:16px;right:16px;top:84px;height:84px;display:flex;gap:4px;align-items:flex-end}
+.shelf i{display:block;width:16px;background:var(--sepia);opacity:.55}
+.zone[data-z="5"] .shelf i{background:#7aa0b8}
+.zone[data-z="2"] .shelf i{background:#fff6d6;opacity:.9;width:30px;height:34px!important;align-self:flex-start;border:1px solid #9c7a4a}
+.npc{position:absolute;bottom:34px;width:26px;height:56px;border-radius:13px 13px 3px 3px;border:2px solid #333;background:#fff;font-size:10px;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;z-index:2}
+.me{position:absolute;bottom:30px;left:130px;width:30px;height:64px;border-radius:15px 15px 4px 4px;background:var(--navy);border:2px solid #001a4d;z-index:3;transition-property:left;transition-timing-function:ease-in-out}
+.me::after{content:'나';position:absolute;top:8px;left:0;right:0;text-align:center;color:#fff;font-size:12px;font-weight:900}
+.locked{position:absolute;left:14px;bottom:46px;z-index:1;font-size:12px;background:#fff;border:1px dashed var(--sepia);padding:2px 6px}
+/* 구역 목록 모드 */
+.zlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+/* 패널 */
+.panel{background:var(--paper);border:1px solid var(--line);padding:14px;margin-top:12px}
+.panel h2{font-family:var(--serif);font-size:20px;margin:0 0 6px}
+.doc-row{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px dashed var(--line);padding:8px 0;flex-wrap:wrap}
+.doc-row .m{font-size:13px;color:var(--muted)}
+.tray{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.slot{flex:1 1 220px;min-height:48px;border:2px dashed var(--sepia);padding:6px 10px;font-size:14px;background:#fff}
+.slot.full{border-style:solid;background:var(--note)}
+.passport{font-size:13px;display:grid;grid-template-columns:auto 1fr;gap:0 10px;background:#f4efe3;padding:8px 10px;margin:6px 0}
+.passport dt{color:var(--muted)}
+.passport dd{margin:0}
+.body{font-family:var(--doc);font-size:17px;line-height:1.85;border-left:3px solid var(--sepia);padding-left:12px}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+.task{background:#fff;border:1px solid var(--line);padding:10px;margin-top:10px}
+.task h4{margin:0 0 6px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px}
+.fb{margin-top:8px;padding:8px 10px;background:#eef2ea;border-left:4px solid var(--ok);font-size:14px}
+.fb.warn{background:#fdeee6;border-color:var(--red)}
+.wall{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;font-size:13px}
+.wall .col{background:#e9d7b4;padding:6px;min-height:90px}
+.wall .yr{font-weight:900;font-family:var(--serif)}
+.wall .pin{background:#fff6d6;border:1px solid #9c7a4a;padding:4px;margin-top:4px}
+.metrics{font-size:14px}
+.metrics table{border-collapse:collapse;width:100%}
+.metrics td{border-bottom:1px solid var(--line);padding:4px 6px}
+.pass{color:var(--ok);font-weight:900}.fail{color:var(--red);font-weight:900}
+.sr{position:absolute;left:-9999px}
+@media (max-width:600px){.wall{grid-template-columns:1fr 1fr}.corridor{height:210px}header{position:static}h1{font-size:18px}header button{padding:6px 10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="t"><span class="badge">EXPLORE</span> <span style="font-size:12px;color:var(--muted)">정본 아님 · 저장 없음</span><h1>S4 열린 조사 — 연구소 Hub</h1></div>
+  <button id="modeBtn" type="button" aria-pressed="true">이동 ON</button>
+  <button id="endBtn" class="primary" type="button" disabled>1906 보고를 기다린다</button>
+</header>
+<main>
+  <div class="vn" id="vn"><b>한 연구원</b> — 네 1900 메모는 연구 벽에 “추가 근거 필요”로 꽂혀 있어. 질문 두 장을 들고, 필요한 기록이 있을 것 같은 곳으로 가 봐. 다 열 필요는 없어.</div>
+
+  <section class="cards" id="cards" aria-label="질문 카드"></section>
+
+  <div id="walkView">
+    <div class="corridor-wrap" id="cwrap">
+      <div class="corridor" id="corridor">
+        <button class="zone" data-z="1" type="button"><div class="zn">① 검수실·내 책상</div><div class="zd">열람 트레이 2칸 · 여기서 읽는다</div><div class="floor"></div><div class="npc" style="left:230px" data-npc="park">박</div></button>
+        <button class="zone" data-z="2" type="button"><div class="zn">② 연구 벽</div><div class="zd">1877 · 1900 · 1904 · 1905 · 1906</div><div class="shelf"><i></i><i style="height:34px"></i><i></i><i></i><i></i></div><div class="floor"></div></button>
+        <button class="zone" data-z="3" type="button"><div class="zn">③ 대한제국 문서고</div><div class="zd">대한제국 정부·지방 행정 문서</div><div class="shelf"><i style="height:70px"></i><i style="height:84px"></i><i style="height:60px"></i><i style="height:90px"></i></div><span class="locked">1906 서가: 정리 중</span><div class="floor"></div><div class="npc" style="left:262px" data-npc="han">한</div></button>
+        <button class="zone" data-z="4" type="button"><div class="zn">④ 일본 공문서·해군 기록</div><div class="zd">일본 정부·지방·해군이 만든 기록</div><div class="shelf"><i style="height:88px"></i><i style="height:92px"></i><i style="height:76px"></i><i style="height:94px"></i><i style="height:80px"></i><i style="height:90px"></i></div><div class="floor"></div></button>
+        <button class="zone" data-z="5" type="button"><div class="zn">⑤ 현대 해설·연구 코너</div><div class="zd">오늘날의 연구·정부 해설·정리표</div><div class="shelf"><i style="height:50px"></i><i style="height:64px"></i><i style="height:58px"></i></div><div class="floor"></div><div class="npc" style="left:220px" data-npc="seo">서윤</div></button>
+        <div class="me" id="me" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+  <div id="listView" hidden><div class="zlist" id="zlist"></div></div>
+
+  <div class="panel" id="panel" aria-live="polite"></div>
+</main>
+
+<script src="../../data.js"></script>
+<script src="../../source-overrides.js"></script>
+<script>
+'use strict';
+const D=window.DOKDO_DATA.sources;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+// 구역 = 작성 주체. 역할 라벨(직접 근거/배경 맥락)은 붙이지 않는다.
+const ZONES={
+  1:{name:'① 검수실·내 책상',x:130},
+  2:{name:'② 연구 벽',x:430},
+  3:{name:'③ 대한제국 문서고',x:730,docs:['ordinance1900'],locked:'1906년 울도군 보고·의정부 지령 — 정리 중'},
+  4:{name:'④ 일본 공문서·해군 기록',x:1030,docs:['niitaka1904','tsushima1904','nakai1904','cabinet1905','shimane1905']},
+  5:{name:'⑤ 현대 해설·연구 코너',x:1330,docs:['toponymStudy','timeline1904','currentJapan']}
+};
+const SEEN_BEFORE=['ordinance1900','cabinet1905']; // S1·S3에서 이미 읽은 핵심 사료(가정)
+const NPC={
+  park:'박 기획자 — 청소년이 읽을 문장이야. 근거 하나로 버티는 문장인지, 여러 개가 받쳐 주는 문장인지 알고 싶어.',
+  han:'한 연구원 — 문서를 펼치기 전에 먼저 봐. 누가, 언제, 누구에게서 들은 정보를 적은 거지?',
+  seo:'서윤 — 여기 있는 건 다 요즘 만든 거지? 옛날 문서랑 같은 무게로 봐도 되나…?'
+};
+const Q=[
+  {id:'q1',title:'1900년 칙령의 “석도”는 무엇을 가리키나?',hint:'1900 메모에서 넘어온 질문'},
+  {id:'q2',title:'왜 하필 1904~1905년에 편입 결정이 이루어졌나?',hint:'1905 결정문을 읽고 생긴 질문'}
+];
+const S={mode:'walk',zone:1,x:130,cards:{q1:{status:'open',att:[]},q2:{status:'open',att:[]}},
+  tray:[],read:[],niitakaParts:[],ctx:'',t0:performance.now(),moveMs:0,deskMs:0,deskOpen:null,trips:0,walkTo:null};
+
+function dur(dx){return Math.min(1400,Math.max(350,Math.abs(dx)/0.9))}
+function go(z,after){
+  if(S.walkTo)return;
+  const tx=ZONES[z].x;closeDesk();
+  if(S.mode==='list'||tx===S.x){S.zone=z;S.x=tx;$('#me').style.transitionDuration='0ms';$('#me').style.left=tx+'px';after?.();return}
+  const ms=dur(tx-S.x);S.trips++;S.walkTo=z;
+  const me=$('#me');me.style.transitionDuration=ms+'ms';me.style.left=tx+'px';
+  const w=$('#cwrap');w.scrollLeft=Math.max(0,tx-w.clientWidth/2);
+  const st=performance.now();
+  setTimeout(()=>{S.moveMs+=performance.now()-st;S.walkTo=null;S.zone=z;S.x=tx;after?.()},ms);
+}
+function closeDesk(){if(S.deskOpen!=null){S.deskMs+=performance.now()-S.deskOpen;S.deskOpen=null}}
+
+function renderCards(){
+  $('#cards').innerHTML=Q.map(q=>{const c=S.cards[q.id];const lab={open:'열림 — 조사 중',evidence:'닫음 — 근거를 붙였다',held:'닫음 — 현재 근거로 보류'}[c.status];
+    return `<div class="qcard ${c.status!=='open'?'closed':''}" data-q="${q.id}"><h3>${esc(q.title)}</h3><div class="st">${esc(q.hint)} · <b>${lab}</b></div>${c.att.length?`<ul class="att">${c.att.map(a=>`<li>${esc(D[a].title)}</li>`).join('')}</ul>`:''}</div>`}).join('');
+  $('#endBtn').disabled=!Q.every(q=>S.cards[q.id].status!=='open');
+}
+
+function shelfPanel(z){
+  const Z=ZONES[z];
+  if(z==1)return deskPanel();
+  if(z==2)return wallPanel();
+  const rows=Z.docs.map(id=>{const s=D[id];const inTray=S.tray.includes(id),read=S.read.includes(id)||SEEN_BEFORE.includes(id);
+    return `<div class="doc-row"><div><b>${esc(s.title)}</b><div class="m">${esc(s.author)} · ${esc(s.date)} · ${esc(s.type)}${read?' · 읽음':''}</div></div><button type="button" data-take="${id}" ${inTray?'disabled':''}>${inTray?'트레이에 있음':'트레이에 담기'}</button></div>`}).join('');
+  $('#panel').innerHTML=`<h2>${esc(Z.name)}</h2>${Z.locked?`<p class="note">🔒 ${esc(Z.locked)}</p>`:''}${rows}${trayHtml()}<p><button class="primary" type="button" id="toDesk" ${S.tray.length?'':'disabled'}>트레이를 들고 책상으로 간다</button></p>`;
+  $$('[data-take]').forEach(b=>b.onclick=()=>{const id=b.dataset.take;
+    if(S.tray.length>=2){say('트레이는 두 칸이다. 책상에서 한 문서를 읽고 돌려놓은 뒤 가져오자.',true);return}
+    S.tray.push(id);shelfPanel(z)});
+  $('#toDesk').onclick=()=>go(1,()=>shelfPanel(1));
+}
+function trayHtml(){return `<div class="tray">${[0,1].map(i=>{const id=S.tray[i];return `<div class="slot ${id?'full':''}">${id?esc(D[id].title):'빈 칸'}</div>`}).join('')}</div>`}
+function say(t,warn){const p=$('#panel');const d=document.createElement('div');d.className='fb'+(warn?' warn':'');d.textContent=t;p.appendChild(d)}
+
+function deskPanel(){
+  closeDesk();S.deskOpen=performance.now();
+  if(!S.tray.length){$('#panel').innerHTML=`<h2>① 내 책상</h2><p>트레이가 비어 있다. 필요한 기록이 있을 것 같은 구역으로 가서 가져오자.</p>`;return}
+  const docs=S.tray.map(id=>{const s=D[id];uniq(S.read,id);
+    const body=s.paragraphs?s.paragraphs.map(p=>`<p>${esc(p)}</p>`).join(''):`<p>${esc(s.body)}</p>`;
+    return `<article class="task" data-doc="${id}"><h3 style="font-family:var(--serif);margin:0">${esc(s.title)}</h3>
+      <dl class="passport"><dt>작성</dt><dd>${esc(s.author)}</dd><dt>시점</dt><dd>${esc(s.date)}</dd><dt>종류</dt><dd>${esc(s.type)}</dd>${s.context?`<dt>맥락</dt><dd>${esc(s.context)}</dd>`:''}</dl>
+      <div class="body">${body}</div>${s.note?`<div class="note">${esc(s.note)}</div>`:''}
+      ${docTask(id)}
+      <div class="task"><h4>이 기록을 어느 질문 카드에 붙일까?</h4><div class="grid3">${Q.map(q=>`<button type="button" data-att="${id}|${q.id}" class="${S.cards[q.id].att.includes(id)?'sel':''}" ${S.cards[q.id].status!=='open'?'disabled':''}>${esc(q.title)}</button>`).join('')}</div></div>
+      <p><button type="button" data-return="${id}">다 읽었다 — 서가에 돌려놓기</button></p></article>`}).join('');
+  $('#panel').innerHTML=`<h2>① 내 책상</h2>${docs}${closePanel()}`;
+  bindDesk();
+}
+function docTask(id){
+  if(id==='niitaka1904'){const parts=[['누가 기록했나','일본 군함 니타카의 행동일지'],['정보는 어디서 왔나','울릉도에서 들은 정보'],['어떤 명칭인가','한국인은 “독도”라고 적음']];
+    return `<div class="task"><h4>니타카 기록을 세 부분으로 분해</h4><div class="grid3">${parts.map(([a,b])=>`<button type="button" class="npart ${S.niitakaParts.includes(a)?'sel':''}" data-p="${a}">${a}<br><b>${b}</b></button>`).join('')}</div></div>`}
+  if(id==='tsushima1904'||id==='timeline1904'){
+    return `<div class="task"><h4>현재 근거로 1904~1905 관계를 어떻게 메모할까?</h4><div class="grid3">${['직접 원인이라고 주장한다','배경 맥락으로 연결한다','관계 강도 보류'].map(v=>`<button type="button" class="ctx ${S.ctx===v?'sel':''}" data-v="${v}">${v}</button>`).join('')}</div></div>`}
+  return '';
+}
+function closePanel(){
+  return `<div class="task"><h4>질문 카드 닫기</h4><p class="note">근거를 붙였다면 “근거로 닫기”, 지금 읽은 자료로 충분하지 않다면 “보류”로 닫는다. 둘 다 정당한 연구 기록이다.</p>${Q.map(q=>{const c=S.cards[q.id];if(c.status!=='open')return `<p>✔ ${esc(q.title)} — ${c.status==='evidence'?'근거로 닫음':'보류로 닫음'}</p>`;
+    const need=q.id==='q2'&&c.att.some(a=>a==='tsushima1904'||a==='timeline1904')&&!S.ctx;
+    return `<div class="doc-row"><div>${esc(q.title)}</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" data-close="${q.id}|evidence" ${c.att.length&&!need?'':'disabled'}>근거로 닫기</button><button type="button" data-close="${q.id}|held">현재 근거로 보류</button></div></div>`}).join('')}</div>`;
+}
+function uniq(a,v){if(!a.includes(v))a.push(v)}
+function bindDesk(){
+  $$('.npart').forEach(b=>b.onclick=()=>{const p=b.dataset.p;const i=S.niitakaParts.indexOf(p);i<0?S.niitakaParts.push(p):S.niitakaParts.splice(i,1);deskPanel();
+    if(S.niitakaParts.length===3)say('작성 주체·정보 경로·명칭을 분리했다. 대한제국 정부의 공식 명명 문서로 바꾸어 읽지 않는다.')});
+  $$('.ctx').forEach(b=>b.onclick=()=>{S.ctx=b.dataset.v;deskPanel();
+    if(S.ctx.startsWith('직접'))say('지금 확보한 자료는 군사·통신 조사와 시간 순서를 보여 주지만, 이것만으로 편입 결정의 직접 원인을 하나로 확정하기에는 부족하다. 이 경고는 연구 기록에 남는다.',true);
+    else say('현재 읽은 범위에 맞춰 관계 강도를 정했다.')});
+  $$('[data-att]').forEach(b=>b.onclick=()=>{const [id,q]=b.dataset.att.split('|');const a=S.cards[q].att;const i=a.indexOf(id);i<0?a.push(id):a.splice(i,1);renderCards();deskPanel();
+    if(i<0&&id==='timeline1904')say('연표는 순서를 보여 주지만, 순서만으로 원인을 확정하지는 못한다.');
+    if(i<0&&(id==='toponymStudy'||id==='currentJapan'))say('이 기록은 오늘날 만든 해설·연구다. 당대 문서와 같은 층위로 섞지 않도록 메모에 표시했다.')});
+  $$('[data-return]').forEach(b=>b.onclick=()=>{S.tray=S.tray.filter(x=>x!==b.dataset.return);deskPanel()});
+  $$('[data-close]').forEach(b=>b.onclick=()=>{const [q,st]=b.dataset.close.split('|');S.cards[q].status=st;renderCards();deskPanel()});
+}
+function wallPanel(){
+  const yr=id=>({dajokan1877:'1877',ordinance1900:'1900',niitaka1904:'1904',tsushima1904:'1904',nakai1904:'1904',cabinet1905:'1905',shimane1905:'1905'}[id]||'현대');
+  const cols=['1877','1900','1904','1905','현대'];
+  const ids=[...new Set([...SEEN_BEFORE,...S.read])];
+  $('#panel').innerHTML=`<h2>② 연구 벽</h2><p class="note">책상에서 실제로 펼친 기록만 벽에 붙는다. (S6 연구 보드가 이 벽이 된다.)</p><div class="wall">${cols.map(c=>`<div class="col"><div class="yr">${c}</div>${c==='1900'?`<div class="pin"><b>내 1900 메모</b><br>“석도” — 현재 독도와의 연결은 추가 근거 필요</div>`:''}${ids.filter(i=>yr(i)===c).map(i=>`<div class="pin">${esc(D[i].title)}</div>`).join('')}</div>`).join('')}</div>`;
+}
+
+function renderList(){$('#zlist').innerHTML=Object.entries(ZONES).map(([z,Z])=>`<button type="button" data-lz="${z}" class="${S.zone==z?'sel':''}">${esc(Z.name)}</button>`).join('');
+  $$('[data-lz]').forEach(b=>b.onclick=()=>{go(+b.dataset.lz,()=>{shelfPanel(+b.dataset.lz);renderList()})})}
+
+$$('.zone').forEach(el=>el.onclick=e=>{const n=e.target.closest('[data-npc]');if(n){$('#vn').innerHTML=`<b>${esc(NPC[n.dataset.npc].split(' — ')[0])}</b> — ${esc(NPC[n.dataset.npc].split(' — ')[1])}`;return}
+  const z=+el.dataset.z;go(z,()=>shelfPanel(z))});
+$('#modeBtn').onclick=()=>{S.mode=S.mode==='walk'?'list':'walk';const w=S.mode==='walk';$('#modeBtn').textContent=w?'이동 ON':'이동 OFF';$('#modeBtn').setAttribute('aria-pressed',String(w));$('#walkView').hidden=!w;$('#listView').hidden=w;renderList()};
+$('#endBtn').onclick=()=>{closeDesk();const total=performance.now()-S.t0;const mv=S.moveMs/total*100;
+  const out={total_s:+(total/1000).toFixed(1),move_s:+(S.moveMs/1000).toFixed(1),move_pct:+mv.toFixed(1),desk_s:+(S.deskMs/1000).toFixed(1),trips:S.trips,read:S.read,cards:Object.fromEntries(Q.map(q=>[q.id,S.cards[q.id].status])),ctx:S.ctx,mode:S.mode};
+  window.__HUB_RESULT=out;
+  $('#walkView').hidden=true;$('#listView').hidden=true;$('#endBtn').disabled=true;
+  $('#panel').innerHTML=`<h2>S4 종료 — EXPLORE 측정</h2><div class="metrics"><table>
+   <tr><td>총 시간</td><td>${out.total_s}초</td></tr>
+   <tr><td>이동 시간 (이동 ${out.trips}회)</td><td>${out.move_s}초 — <span class="${mv<=8?'pass':'fail'}">${out.move_pct}% ${mv<=8?'≤ 8% 통과':'> 8% 초과'}</span></td></tr>
+   <tr><td>책상 읽기·판단 시간</td><td>${out.desk_s}초</td></tr>
+   <tr><td>실제로 펼친 기록</td><td>${out.read.map(i=>esc(D[i].title)).join(', ')||'없음'}</td></tr>
+   <tr><td>질문 카드</td><td>${Q.map(q=>esc(q.title)+': '+({evidence:'근거',held:'보류'}[S.cards[q.id].status])).join('<br>')}</td></tr>
+   <tr><td>1904~1905 관계 메모</td><td>${esc(S.ctx||'미지정')}</td></tr></table>
+   <p class="note">다음 장면(S5)에서 1906 보고가 도착하면 ③ 1906 서가가 열리고, ② 연구 벽의 1900 메모를 직접 떼어 와서 고친다(v2 Mission ②). 이 프로토타입은 여기까지다.</p></div>`};
+renderCards();shelfPanel(1);
+</script>
+</body>
+</html>
