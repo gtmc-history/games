@@ -64,7 +64,7 @@ button{font:inherit;color:inherit}
 
 /* work parts */
 .vn{display:flex;gap:10px;align-items:flex-start}
-.ava{flex:0 0 44px;height:44px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:18px;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.ava{flex:0 0 48px;height:48px;border-radius:50%;background:var(--sea) url(assets/yoon.jpg) center/cover;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
 .bubble{background:#fff;border:1px solid var(--line);padding:10px 12px;border-radius:0 8px 8px 8px;font-size:15px;line-height:1.55}
 .bubble b.who{display:block;font-size:12px;color:var(--sea);margin-bottom:2px}
 .task{background:var(--ink);color:#f5efe2;padding:12px 14px 14px;border-radius:3px}
@@ -107,7 +107,7 @@ button{font:inherit;color:inherit}
 /* meter */
 .meter{background:#fff;border:1px solid var(--line);padding:12px 16px 10px}
 .meter h4{margin:0 0 2px;font-size:13px;color:var(--muted);letter-spacing:.04em}
-.meter .mq{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:44px}
+.meter .mq{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:70px}
 .mtrack{position:relative;height:10px;margin:0 10px;background:linear-gradient(90deg,#d9d2c3,#efe9dc 50%,#cfe0e4);border-radius:5px}
 .mtick{position:absolute;top:-3px;width:2px;height:16px;background:#fff}
 .mk{position:absolute;bottom:-4px;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.3,.64,1);text-align:center;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
@@ -213,18 +213,70 @@ button{font:inherit;color:inherit}
 @keyframes stamp{0%{transform:scale(2.2) rotate(-14deg);opacity:0}100%{transform:scale(1) rotate(-7deg);opacity:1}}
 textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--line);border-radius:3px;background:#fff}
 
-/* intro overlay */
-.intro{position:fixed;inset:0;z-index:20;background:rgba(14,26,32,.94);display:grid;place-items:center;padding:20px}
-.folder{width:min(560px,100%);background:#d9c79c;color:var(--ink);padding:30px 30px 26px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:fold .5s cubic-bezier(.34,1.3,.64,1)}
-.folder::before{content:"";position:absolute;left:0;top:-22px;width:40%;height:24px;background:#d9c79c;border-radius:4px 4px 0 0}
-.folder .k{font-size:13px;letter-spacing:.14em;font-weight:700;color:var(--seal)}
-.folder .yr{font-family:var(--serif);font-size:76px;font-weight:900;line-height:1;margin:6px 0 4px}
-.folder .yr.sm{font-size:46px}
-.folder .t{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:12px}
-.folder p{font-size:15px;margin:0 0 18px;color:#3d3522}
-.folder .act{background:var(--ink)}
-@keyframes fold{from{transform:translateY(30px) scale(.96);opacity:0}to{transform:none;opacity:1}}
-
+/* ---------- 현장 장면(도입) ---------- */
+.top{position:relative;z-index:30}
+.ctrl{display:flex;gap:6px;align-items:center}
+.cbtn{min-height:40px;padding:6px 12px;background:#1d2a33;border:1px solid #3e5663;color:#dfe7ea;border-radius:3px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.cbtn:hover{border-color:#f0c96a}
+.cbtn.on{border-color:#f0c96a;color:#f0c96a}
+.fsico{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:4px;background:linear-gradient(currentColor,currentColor) 0 0/5px 2px no-repeat,linear-gradient(currentColor,currentColor) 0 0/2px 5px no-repeat,linear-gradient(currentColor,currentColor) 100% 0/5px 2px no-repeat,linear-gradient(currentColor,currentColor) 100% 0/2px 5px no-repeat,linear-gradient(currentColor,currentColor) 0 100%/5px 2px no-repeat,linear-gradient(currentColor,currentColor) 0 100%/2px 5px no-repeat,linear-gradient(currentColor,currentColor) 100% 100%/5px 2px no-repeat,linear-gradient(currentColor,currentColor) 100% 100%/2px 5px no-repeat}
+.intro{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse 80% 60% at 50% 40%,#1c2c36 0%,#0b1419 75%);overflow:auto;padding:72px 20px 28px;display:flex;flex-direction:column;align-items:center}
+.intro > *{flex:0 0 auto}
+.intro > :first-child{margin-top:auto}.intro > :last-child{margin-bottom:auto}
+.scn{width:100%;max-width:980px}
+.chiprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.chip{background:#f0c96a;color:#1b2430;font-weight:700;font-size:13px;padding:4px 12px;border-radius:99px;letter-spacing:.03em}
+.chip.file{background:transparent;color:#f0c96a;border:1px solid #f0c96a}
+.chip-where{color:#b9c7cc;font-size:14px;letter-spacing:.04em}
+.frame{position:relative;border:1px solid #4d6570;border-radius:6px;overflow:hidden;background:#0b1419;box-shadow:0 18px 44px rgba(0,0,0,.6)}
+.frame img{display:block;width:100%;height:auto;max-height:50vh;max-height:50dvh;object-fit:cover;animation:kb 18s ease-out both}
+@keyframes kb{from{transform:scale(1.06)}to{transform:scale(1)}}
+.frame::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 120px rgba(0,0,0,.55);pointer-events:none}
+.stagev{display:flex;align-items:flex-end;gap:14px;margin-top:16px}
+.pframe{flex:0 0 112px;border:1px solid #f0c96a;border-radius:6px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.6)}
+.pframe img{display:block;width:100%;height:auto}
+.speech{flex:1;min-width:0}
+.plate{display:inline-block;background:linear-gradient(180deg,#a3322a,#7a211b);color:#fbeed0;border:1px solid #f0c96a;border-bottom:0;padding:5px 16px;border-radius:6px 6px 0 0;font-weight:700;font-size:14px;letter-spacing:.06em}
+.plate.nar{background:linear-gradient(180deg,#2a3c46,#1b2a33);color:#dfe7ea}
+.dbox{background:linear-gradient(170deg,rgba(20,32,40,.97),rgba(12,20,25,.97));border:1px solid #f0c96a;border-radius:0 8px 8px 8px;padding:20px 24px 30px;min-height:112px;font-size:18px;line-height:1.9;color:#f2ecde;cursor:pointer;position:relative;font-family:var(--serif)}
+.dbox::after{content:"▼ 눌러서 계속";position:absolute;right:14px;bottom:8px;font-size:12px;color:#f0c96a;font-family:var(--sans);animation:blink 1.5s infinite;letter-spacing:.08em}
+.dbox.end::after{content:""}
+@keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+.dbox .typing{animation:enter .35s ease both}
+.intro .act{margin-top:14px;background:linear-gradient(180deg,#b33a30,#8a2820);border:1px solid #f0c96a}
+/* 타이틀 */
+.ttl-seal{display:inline-flex;align-items:center;justify-content:center;height:88px;padding:0 20px;border:3px solid #f0c96a;border-radius:8px;font-family:var(--serif);font-weight:900;font-size:46px;color:#f0c96a;letter-spacing:.12em;background:linear-gradient(160deg,#1d2e38,#0f1a20);box-shadow:0 0 40px rgba(240,201,106,.2),inset 0 0 30px rgba(240,201,106,.12)}
+.ttl-h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,5vw,48px);color:#f5efe2;letter-spacing:.08em;text-shadow:0 3px 18px #000;margin:18px 0 4px;text-align:center}
+.ttl-years{color:#f0c96a;letter-spacing:.42em;font-size:14px;text-align:center}
+.photo{margin:22px auto 0;padding:9px;background:linear-gradient(170deg,#e9dfc6,#cdbd98);border-radius:3px;box-shadow:0 16px 40px rgba(0,0,0,.7),0 0 0 1px #6b4a24;transform:rotate(-.7deg);width:min(640px,100%)}
+.photo img{display:block;width:100%;height:auto;filter:sepia(.45) contrast(1.02)}
+.ttl-card{max-width:720px;margin:22px auto 0;background:linear-gradient(170deg,#18252d,#0f181d);border:1px solid #4d6570;border-radius:8px;padding:18px 22px;color:#dfe2da;font-family:var(--serif);font-size:17px;line-height:1.95}
+.ttl-card b{color:#f0c96a}
+.hair{height:1px;background:linear-gradient(90deg,transparent,#f0c96a,transparent);margin:10px 0}
+/* 책상 상단 현장 띠 */
+.scenebar{position:relative;max-width:720px;margin:-6px auto 26px;height:118px;border-radius:4px;overflow:hidden;border:1px solid #4d6570;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.scenebar img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) brightness(.8)}
+.scenebar .chip{position:absolute;left:10px;bottom:10px}
+/* 사료 양식 */
+.sheet .wm{position:absolute;right:18px;top:14px;font-family:var(--serif);font-weight:900;font-size:26px;letter-spacing:.2em;color:rgba(163,50,42,.16);pointer-events:none}
+.k-jp{background:#f4eddb repeating-linear-gradient(90deg,transparent 0 37px,rgba(185,68,58,.16) 37px 38px);outline:2px solid rgba(185,68,58,.35);outline-offset:-10px}
+.k-dajo{background:#f1e8d2 repeating-linear-gradient(90deg,transparent 0 41px,rgba(185,68,58,.2) 41px 42px);outline:3px double rgba(185,68,58,.45);outline-offset:-10px}
+.k-dajo .stampmk{position:absolute;right:26px;bottom:22px;width:62px;height:62px;border:3px solid rgba(179,38,30,.7);color:rgba(179,38,30,.75);font-family:var(--serif);font-weight:900;font-size:17px;line-height:1.05;display:grid;place-items:center;text-align:center;transform:rotate(-6deg)}
+.k-gwan{background:#f5f1e6}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;border-top:4px solid #222;border-bottom:1px solid #222;padding:6px 0 4px;margin:0 0 10px;font-family:var(--serif)}
+.mast b{font-size:30px;font-weight:900;letter-spacing:.3em;color:#1b1b1b}
+.mast span{font-size:12px;color:#444;text-align:right;line-height:1.4}
+.k-gwan .mast{box-shadow:0 3px 0 -2px #222}
+.k-log{background:#f6f4ec}
+.k-log .body{background:repeating-linear-gradient(transparent 0 40px,rgba(58,110,160,.28) 40px 41px);border-left:2px solid rgba(190,60,60,.45);padding-left:14px}
+.logmast{font-family:var(--serif);font-weight:900;color:#2e4f73;letter-spacing:.2em;font-size:18px;border-bottom:2px solid #2e4f73;padding-bottom:4px;margin-bottom:10px}
+.k-han{background:#efe3c6 radial-gradient(circle at 20% 30%,rgba(160,130,80,.12) 0 2px,transparent 3px) 0 0/23px 29px,radial-gradient(circle at 70% 60%,rgba(160,130,80,.1) 0 1.5px,transparent 2.5px) 0 0/31px 19px}
+.k-han .body{background:repeating-linear-gradient(90deg,transparent 0 45px,rgba(139,105,60,.14) 45px 46px)}
+.hanmast{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:900;font-size:19px;color:#5a3d1c;letter-spacing:.24em;border-bottom:1px solid rgba(139,105,60,.5);padding-bottom:6px;margin-bottom:10px}
+.hanmast i{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid rgba(179,38,30,.75);color:rgba(179,38,30,.8);font-style:normal;font-size:12px;letter-spacing:0}
+.k-map{background:#eadcb8;box-shadow:0 10px 24px rgba(0,0,0,.28),inset 0 0 60px rgba(120,90,40,.35)}
+.tl-item.now .dot{animation:tlp 1.6s ease-in-out infinite;transform:scale(1.25)}
+@keyframes tlp{0%,100%{box-shadow:0 0 0 0 rgba(240,201,106,.6)}50%{box-shadow:0 0 0 7px rgba(240,201,106,0)}}
 /* result */
 .res{max-width:820px;margin:0 auto}
 .res h1{font-family:var(--serif);color:#f5efe2;font-size:30px;margin:6px 0 14px}
@@ -244,6 +296,7 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
   .prog li{padding:2px 6px;font-size:12px}
   .prog li:not(.now){display:none}
   .brand small{display:none}
+  .brand strong{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
   .tabs{display:flex;flex:0 0 auto;background:#121f27}
   .tabs button{flex:1;min-height:48px;background:none;border:0;color:#8fa1a9;font-weight:700;font-size:16px;border-bottom:3px solid transparent;position:relative;cursor:pointer}
   .tabs button.on{color:#fff;border-bottom-color:#f0c96a}
@@ -261,6 +314,13 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
   .expo .ttl{font-size:21px;padding-right:0}
   .stamp{position:static;display:inline-block;margin-bottom:8px}
   .tl-item{width:100px}
+  .intro{padding:64px 12px 20px}
+  .pframe{flex-basis:72px}
+  .dbox{font-size:16px;padding:16px 16px 28px}
+  .scenebar{height:84px;margin:-8px 0 24px}
+  .cbtn .lbl{display:none}
+  .ctrl{gap:4px}
+  .cbtn{padding:6px 9px}
   .mtask{display:block;position:sticky;top:-22px;z-index:4;margin:-22px -12px 16px;background:var(--ink);color:#f5efe2;padding:8px 14px 10px;border-bottom:3px solid #f0c96a;box-shadow:0 4px 10px rgba(0,0,0,.3)}
   .mtask.done{background:var(--ok)}
   .mtask .no{font-size:11px;color:#f0c96a;font-weight:700;letter-spacing:.06em;display:flex;gap:6px;align-items:center}
@@ -275,7 +335,7 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
 <body class="pane-desk">
 <header class="top">
   <div class="brand"><span class="seal">獨</span><div><strong>독도연구소 · 1905 파일</strong><small>전시 검수 인턴</small></div></div>
-  <ol class="prog" id="prog" aria-label="진행 단계"></ol>
+  <div class="ctrl"><ol class="prog" id="prog" aria-label="진행 단계"></ol><button class="cbtn" id="snd" type="button" aria-pressed="false">🔇<span class="lbl"> 소리 꺼짐</span></button><button class="cbtn" id="fs" type="button"><i class="fsico"></i><span class="lbl">전체 화면</span></button></div>
 </header>
 <nav class="timeline" id="timeline" aria-label="시간 띠"></nav>
 <div class="tabs" id="tabs"><button type="button" data-p="desk" class="on">사료 책상</button><button type="button" data-p="work">작업판</button></div>
@@ -287,16 +347,16 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
-/* 독도연구소: 1905 파일 v2.1 — DESIGN_LOCK: design-locks/dokdo1905_DESIGN_LOCK_v2.0.md
+/* 독도연구소: 1905 파일 v2.2 — DESIGN_LOCK: design-locks/dokdo1905_DESIGN_LOCK_v2.0.md
    흐름·메커닉(찾기·판단·배치)은 v2.0 잠금 그대로. v2.1은 화면(연구소 책상형) 개편. */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const P=new URLSearchParams(location.search);
-const GAME_ID='dokdo1905',VER='2.1',CLASS=(P.get('class')||'미입력').slice(0,40),NOSAVE=P.get('save')==='0';
+const GAME_ID='dokdo1905',VER='2.2',CLASS=(P.get('class')||'미입력').slice(0,40),NOSAVE=P.get('save')==='0';
 const SB='https://xgniwztlrakkrbzcfklb.supabase.co',KEY='sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9',SK='DOKDO1905_v2_1';
 const SCENES=['s0','s1','s2','s3','s4','s5','s6','r'];
 const SNAME={s0:'검수',s1:'1905',s2:'1877',s3:'1900',s4:'1904',s5:'1906',s6:'전시'};
 
-const S0={scene:'s0',step:0,intro:true,found:[],cards:[],lit:[],misses:0,j1900:'',u1904:'',u1906:'',s2id:'',opened:[],sortErr:0,placed1:{},placed5:{},
+const S0={scene:'s0',step:0,intro:true,titled:false,found:[],cards:[],lit:[],misses:0,j1900:'',u1904:'',u1906:'',s2id:'',opened:[],sortErr:0,placed1:{},placed5:{},
   panel:{cards:[null,null,null],claims:{},support:{}},review:'',reviewCard:'',closing:'',own:'',startedAt:'',resultId:'',completedAt:'',submittedAt:''};
 let S=JSON.parse(JSON.stringify(S0));
 function save(){try{sessionStorage.setItem(SK,JSON.stringify(S))}catch{}}
@@ -355,17 +415,47 @@ const CLOSING={
   c2:{t:'1877·1900·1904·1906년의 기록을 함께 읽으면, 1905년 결정문의 "다른 나라가 점유한 형적이 없다"는 판단은 그대로 받아들이기 어렵다.'},
   c3:{t:'독도는 우리 땅이니 더 설명할 필요가 없다.'}};
 
+/* ---------- 소리: 음원 파일 없이 브라우저에서 합성 (기본값 꺼짐) ---------- */
+const SND={on:false,ctx:null,amb:null};
+try{SND.on=localStorage.getItem('dokdo1905_sound')==='1'}catch{}
+function actx(){if(!SND.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;SND.ctx=new A()}if(SND.ctx.state==='suspended')SND.ctx.resume();return SND.ctx}
+function noise(c,sec,brown){const b=c.createBuffer(1,Math.floor(c.sampleRate*sec),c.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){const w=Math.random()*2-1;if(brown){l=(l+.02*w)/1.02;d[i]=l*3.5}else d[i]=w}return b}
+function ambient(on){const c=actx();if(!c)return;if(!on){if(SND.amb){SND.amb.g.gain.setTargetAtTime(0,c.currentTime,.4);const a=SND.amb;setTimeout(()=>{try{a.src.stop();a.lfo.stop()}catch{}},1500);SND.amb=null}return}
+  if(SND.amb)return;const src=c.createBufferSource();src.buffer=noise(c,6,true);src.loop=true;const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=480;
+  const g=c.createGain();g.gain.value=0;const lfo=c.createOscillator();lfo.frequency.value=.09;const lg=c.createGain();lg.gain.value=.022;lfo.connect(lg);lg.connect(g.gain);
+  src.connect(f);f.connect(g);g.connect(c.destination);src.start();lfo.start();g.gain.setTargetAtTime(.04,c.currentTime,1.2);SND.amb={src,lfo,g}}
+function tone(c,t,f,d,type='sine',v=.07,f2){const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.02)}
+function burst(c,t,d,freq,v=.12,type='bandpass'){const s=c.createBufferSource();s.buffer=noise(c,d);const f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;const g=c.createGain();
+  g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(c.destination);s.start(t)}
+function sfx(k){if(!SND.on)return;const c=actx();if(!c)return;const t=c.currentTime;
+  if(k==='tick')tone(c,t,1150,.05,'triangle',.05);
+  else if(k==='ok'){tone(c,t,660,.16,'sine',.07);tone(c,t+.08,990,.2,'sine',.06)}
+  else if(k==='wrong')tone(c,t,200,.2,'sine',.08,130);
+  else if(k==='card'){tone(c,t,880,.35,'sine',.06);tone(c,t+.1,1320,.4,'sine',.05)}
+  else if(k==='flip')burst(c,t,.16,2300,.1);
+  else if(k==='stamp'){tone(c,t,75,.25,'sine',.28,50);burst(c,t,.06,900,.18,'lowpass')}}
+function sndUI(){const b=$('#snd');b.classList.toggle('on',SND.on);b.setAttribute('aria-pressed',SND.on);b.innerHTML=SND.on?'🔊<span class="lbl"> 소리 켜짐</span>':'🔇<span class="lbl"> 소리 꺼짐</span>'}
+$('#snd').onclick=()=>{SND.on=!SND.on;try{localStorage.setItem('dokdo1905_sound',SND.on?'1':'0')}catch{}sndUI();ambient(SND.on);if(SND.on)sfx('tick')};
+document.addEventListener('pointerdown',()=>{if(SND.on&&!SND.amb)ambient(true)},{once:true});
+/* 전체 화면 (크롬북) */
+(()=>{const b=$('#fs'),d=document;if(!(d.fullscreenEnabled||d.webkitFullscreenEnabled)){b.hidden=true;return}
+  b.onclick=()=>{if(!(d.fullscreenElement||d.webkitFullscreenElement)){const e=d.documentElement;(e.requestFullscreen||e.webkitRequestFullscreen).call(e)?.catch?.(()=>{})}else (d.exitFullscreen||d.webkitExitFullscreen).call(d)};
+  const upd=()=>{const on=!!(d.fullscreenElement||d.webkitFullscreenElement);b.classList.toggle('on',on);b.querySelector('.lbl').textContent=on?'전체 화면 끄기':'전체 화면'};
+  d.addEventListener('fullscreenchange',upd);d.addEventListener('webkitfullscreenchange',upd)})();
+
 /* ---------- 공통 UI ---------- */
 const desk=$('#desk'),work=$('#work');
 const mobile=()=>matchMedia('(max-width:860px)').matches;
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2800)}
 function prog(){const i=SCENES.indexOf(S.scene);$('#prog').innerHTML=SCENES.slice(0,7).map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}">${SNAME[s]}</li>`).join('')}
+const NOW={s1:['t4','t5'],s2:['y1877'],s3:['y1900'],s4:['y1904'],s5:['t8','t9']};
 function timeline(fresh=[]){
-  $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${fresh.includes(x.id)?'fresh':''}"><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
+  $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${S.lit.includes(x.id)&&(NOW[S.scene]||[]).includes(x.id)?'now':''} ${fresh.includes(x.id)?'fresh':''}"><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
   const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
 function light(ids){const f=ids.filter(i=>!S.lit.includes(i));if(!f.length)return;S.lit.push(...f);save();timeline(f)}
-function gain(id){if(S.cards.includes(id))return;S.cards.push(id);S._fresh=id;save();toast(`사료 카드 확보 — ${CARDS[id].n}`)}
+function gain(id){if(S.cards.includes(id))return;S.cards.push(id);S._fresh=id;save();sfx('card');toast(`사료 카드 확보 — ${CARDS[id].n}`)}
 function pane(p,flag){document.body.classList.toggle('pane-desk',p==='desk');document.body.classList.toggle('pane-work',p==='work');
   $$('#tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.p===p);if(b.dataset.p===p)b.classList.remove('dot')});
   if(flag&&mobile()){const o=$(`#tabs button[data-p="${p==='desk'?'work':'desk'}"]`);o&&o.classList.add('dot')}}
@@ -379,7 +469,7 @@ function files(){if(!S.cards.length)return '';const f=S._fresh;S._fresh='';
 function syncTask(){const t=work.querySelector('.task');let m=desk.querySelector('.mtask');
   if(!t){m&&m.remove();return}if(!m){m=document.createElement('div');m.className='mtask';desk.prepend(m)}m.className='mtask'+(t.classList.contains('done')?' done':'');m.innerHTML=t.innerHTML}
 function setWork(html){work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;syncTask()}
-function setDesk(html){desk.innerHTML=`<div class="enter">${html}</div>`;syncTask()}
+function setDesk(html){desk.innerHTML=`<div class="enter">${SCN[S.scene]?scenebar(S.scene):''}${html}</div>`;syncTask()}
 
 /* 판단계 — "石島는 이 섬이다" 쪽으로 얼마나 기울었는가. 정답 위치는 없다. */
 const BASE={low:2,unsure:4,possible:6},DELTA={weaken:-1,same:0,strengthen:1};
@@ -392,13 +482,13 @@ function meter(pend,title='석도 판단계'){
   return `<div class="meter"><h4>${title}</h4><div class="mq">1900년 칙령의 "石島"는 우리가 조사하는 이 섬인가?</div>
    <div class="mtrack">${[1,2,3,4,5,6,7].map(v=>`<i class="mtick" style="left:${x(v)}"></i>`).join('')}
    ${p.map(([y,v],k)=>{const n=stack[v]=(stack[v]||0)+1,last=k===p.length-1,cls=pend&&last?'pend':last?'now':'ghost';
-     return `<div class="mk ${cls}" style="left:${x(v)};bottom:${-4+(n-1)*34}px">${y}<i></i></div>`}).join('')}</div>
+     return `<div class="mk ${cls}" style="left:${x(v)};bottom:${-4+(n-1)*27}px">${y}<i></i></div>`}).join('')}</div>
    <div class="mends"><span>← <b>다른 섬</b>일 것</span><span>보류</span><span><b>이 섬</b>일 것 →</span></div>
    ${p.length?'':'<p class="mends" style="justify-content:center;margin:6px 0 0">아직 판단 전이에요. 아래에서 고르면 점이 찍혀요.</p>'}</div>`}
 
 /* 찾기 */
-function doc({label,labelSea,title,meta=[],segs,orig,key,extra=''}){
-  return `<article class="sheet tilt">${label?`<span class="label ${labelSea?'sea':''}">${label}</span>`:''}${extra}
+function doc({label,labelSea,title,meta=[],segs,orig,key,extra='',kind=''}){
+  return `<article class="sheet tilt ${kind?'k-'+kind:''}">${label?`<span class="label ${labelSea?'sea':''}">${label}</span>`:''}${extra}
    <div class="meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>${title?`<h3>${title}</h3>`:''}
    <div class="body" data-key="${key}">${segs.map((s,i)=>{const hit=s.id&&S.found.includes(key+':'+s.id);return `<button class="seg ${hit?'hit':''}" data-i="${i}" type="button">${s.t}</button>`}).join(' ')}</div>
    ${orig?`<span class="orig">${orig}</span>`:''}</article>`}
@@ -407,14 +497,14 @@ function find(key,segs,targets,onDone){
   if(!left.size){root.querySelectorAll('.seg:not(.hit)').forEach(x=>x.classList.add('off'));return}
   root.querySelectorAll('.seg').forEach(b=>b.onclick=()=>{
     const s=segs[+b.dataset.i];if(b.classList.contains('hit')||b.classList.contains('off'))return;
-    if(left.has(s.id)){b.classList.add('hit');b.classList.remove('hint');left.delete(s.id);S.found.push(key+':'+s.id);save();if(s.ok)toast(s.ok);
+    if(left.has(s.id)){b.classList.add('hit');b.classList.remove('hint');left.delete(s.id);S.found.push(key+':'+s.id);save();sfx('ok');if(s.ok)toast(s.ok);
       if(!left.size){root.querySelectorAll('.seg:not(.hit)').forEach(x=>x.classList.add('off'));setTimeout(onDone,600)}}
-    else{S.misses++;miss++;save();b.classList.remove('miss');void b.offsetWidth;b.classList.add('miss');toast(s.note||'찾는 구절이 아니에요. 과제를 다시 읽어 보세요.');
+    else{S.misses++;miss++;save();sfx('wrong');b.classList.remove('miss');void b.offsetWidth;b.classList.add('miss');toast(s.note||'찾는 구절이 아니에요. 과제를 다시 읽어 보세요.');
       if(miss>=2){const t=[...root.querySelectorAll('.seg')].find(x=>left.has(segs[+x.dataset.i].id));t&&t.classList.add('hint')}}
   })}
 /* 판단 버튼 */
 function opts(el,map,cur,cb,cls='row3'){el.className='opts '+cls;el.innerHTML=Object.entries(map).map(([k,v])=>`<button type="button" class="opt ${cur===k?'on':''}" data-k="${k}">${v}</button>`).join('');
-  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>cb(b.dataset.k))}
+  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{sfx('tick');cb(b.dataset.k)})}
 /* 배치: 카드 → 칸 */
 function place(root,{items,check,store,errKey='sortErr',onDone}){
   let sel=null;const cards=root.querySelectorAll('.card[data-id]'),slots=root.querySelectorAll('.slot');
@@ -423,14 +513,63 @@ function place(root,{items,check,store,errKey='sortErr',onDone}){
   if(Object.keys(store).length===slots.length)return;
   cards.forEach(c=>c.onclick=()=>{sel=c.dataset.id;cards.forEach(x=>x.classList.toggle('sel',x===c));slots.forEach(s=>{if(!s.classList.contains('filled'))s.classList.add('ready')})});
   slots.forEach(s=>s.onclick=()=>{if(s.classList.contains('filled'))return;if(!sel){toast('먼저 카드를 한 장 고르세요.');return}
-    if(check&&!check(sel,s.dataset.slot)){S[errKey]++;save();s.classList.remove('wrong');void s.offsetWidth;s.classList.add('wrong');toast(items[sel].why||'이 칸이 아니에요.');return}
-    fill(s,sel);store[s.dataset.slot]=sel;save();sel=null;cards.forEach(x=>x.classList.remove('sel'));slots.forEach(x=>x.classList.remove('ready'));
+    if(check&&!check(sel,s.dataset.slot)){S[errKey]++;save();sfx('wrong');s.classList.remove('wrong');void s.offsetWidth;s.classList.add('wrong');toast(items[sel].why||'이 칸이 아니에요.');return}
+    fill(s,sel);store[s.dataset.slot]=sel;save();sfx('tick');sel=null;cards.forEach(x=>x.classList.remove('sel'));slots.forEach(x=>x.classList.remove('ready'));
     if(Object.keys(store).length===slots.length)setTimeout(onDone,450)})}
 
-function intro(k,yr,t,p,btn){const el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';
-  el.innerHTML=`<div class="folder" role="dialog" aria-label="${esc(t)}"><div class="k">${k}</div><div class="yr ${yr.length>5?'sm':''}">${yr}</div><div class="t">${t}</div><p>${p}</p><button class="act" id="introGo" type="button">${btn}</button></div>`;
-  $('#introGo').onclick=()=>{el.hidden=true;S.intro=false;save();R[S.scene]()};$('#introGo').focus()}
-function go(scene){S.scene=scene;S.step=0;S.intro=true;save();render()}
+/* ---------- 현장 장면: 삽화 + 날짜·장소 칩 + 한 줄씩 넘기는 대화 ---------- */
+const IMG={title:'assets/scene-title.jpg',s0:'assets/scene-s0.jpg',s1:'assets/scene-s1.jpg',s2:'assets/scene-s2.jpg',s3:'assets/scene-s3.jpg',s4:'assets/scene-s4.jpg',s5:'assets/scene-s5.jpg',s6:'assets/scene-s6.jpg',yoon:'assets/yoon.jpg'};
+const SCN={
+ s0:{chip:'현재',where:'독도연구소 전시실 · 개막 전날 밤',file:'',btn:'패널을 검수한다',lines:[
+   ['y','인턴님, 늦게까지 고생이 많아요. 내일 아침 청소년 디지털 전시가 열려요.'],
+   ['y','그런데 「독도, 1905년」 패널 하나에 검수 보류가 걸렸어요. 근거가 비어 있대요.'],
+   ['y','사료 책상에서 그 패널부터 같이 봐요.']]},
+ s1:{chip:'1905년 1월 28일',where:'도쿄 · 일본 내각',file:'FILE 01',btn:'1905 파일을 연다',lines:[
+   ['n','1905년 1월, 러일전쟁이 한창이던 때.'],
+   ['n','일본 내각은 동해의 한 섬을 편입하기로 결정했고, 한 달 뒤 시마네현이 이를 고시했다.'],
+   ['y','결정문부터 봐요. 이 섬에 대해 어떤 판단을 했는지.']]},
+ s2:{chip:'1877년 3월',where:'도쿄 · 태정관',file:'FILE 02',btn:'1877 파일을 연다',lines:[
+   ['n','1876년, 시마네현은 "동해의 죽도 외 일도"를 지적(토지 대장)에 넣을지 물었다.'],
+   ['n','내무성은 이를 당시 최고 국가기관인 태정관에 다시 물었고, 1877년 답이 내려왔다.'],
+   ['y','1905년보다 28년 앞선 기록이에요. 문서철을 열어 봐요.']]},
+ s3:{chip:'1900년 10월',where:'한성 · 대한제국 관보',file:'FILE 03',btn:'1900 파일을 연다',lines:[
+   ['n','1900년 10월, 대한제국은 울릉도를 울도군으로 승격했다.'],
+   ['n','군이 다스릴 구역을 정한 칙령은 관보 제1716호(1900.10.27)에 실렸다.'],
+   ['y','이번엔 대한제국 쪽 기록이에요. 울도군이 어디까지 다스렸는지 봐요.']]},
+ s4:{chip:'1904년 9월',where:'동해 해상',file:'FILE 04',btn:'1904 파일을 연다',lines:[
+   ['n','1904년 2월, 러일전쟁이 시작되었다. 같은 달 일본은 한일의정서로 대한제국 안의 군사 요지를 쓸 수 있게 했다.'],
+   ['n','그해 가을, 동해를 오가던 일본 군함들이 섬들을 조사하며 기록을 남겼다.'],
+   ['y','일본 군함의 기록이지만, 한국인들이 이 섬을 뭐라고 불렀는지가 적혀 있어요.']]},
+ s5:{chip:'1906년 3월',where:'울도군 도동',file:'FILE 05',btn:'1906 파일을 연다',lines:[
+   ['n','1906년 3월, 시마네현 관리 일행이 탄 배가 울도군 도동에 들어왔다.'],
+   ['n','편입 결정이 있은 지 1년이 넘어서였다. 울도군수 심흥택은 곧 상부에 보고했다.'],
+   ['y','새 기록이 도착했어요. 이번엔 대한제국 지방관의 보고서예요.']]},
+ s6:{chip:'현재',where:'독도연구소 전시실 · 개막 당일 아침',file:'FILE 06',btn:'패널 편집을 시작한다',lines:[
+   ['y','밤새 모은 사료가 일곱 장이에요.'],
+   ['y','이제 패널을 채울 차례예요. 검수 기준은 하나 — 각 문장이 그 자료가 말할 수 있는 범위를 넘지 않는가.']]}
+};
+function scenebar(k){const c=SCN[k];return `<div class="scenebar"><img src="${IMG[k]}" alt=""><span class="chip">${c.chip} · ${c.where}</span></div>`}
+function titleScreen(){const el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';
+  el.innerHTML=`<div class="scn" style="text-align:center"><span class="ttl-seal">獨島</span><div class="ttl-h1">독도연구소: 1905 파일</div><div class="ttl-years">1877 · 1900 · 1904 · 1906</div>
+   <div class="photo"><img src="${IMG.title}" alt="새벽 동해의 두 섬(삽화)"></div>
+   <div class="ttl-card" style="text-align:left">1905년, 일본은 동해의 한 섬을 자국 영토로 편입했다. 그 판단은 <b>그 이전과 이후의 기록</b> 앞에서도 그대로 설 수 있을까?<div class="hair"></div>당신은 청소년 디지털 전시를 준비하는 <b>독도연구소 인턴</b>이다. 개막 전날 밤, 패널 하나에 검수 보류가 걸렸다.</div>
+   <button class="act" id="introGo" type="button" style="max-width:420px;margin:18px auto 0">검수를 시작한다</button></div>`;
+  $('#introGo').onclick=()=>{sfx('flip');S.titled=true;save();R[S.scene]()};$('#introGo').focus()}
+function intro(){
+  if(S.scene==='s0'&&!S.titled)return titleScreen();
+  $('#toast').classList.remove('show');const c=SCN[S.scene],el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';let i=0;
+  el.innerHTML=`<div class="scn"><div class="chiprow">${c.file?`<span class="chip file">${c.file}</span>`:''}<span class="chip">${c.chip}</span><span class="chip-where">${c.where}</span></div>
+    <div class="frame"><img src="${IMG[S.scene]}" alt="${esc(c.where)} 장면 삽화"></div>
+    <div class="stagev"><div class="pframe" id="pf"><img src="${IMG.yoon}" alt="윤 연구원"></div><div class="speech"><span class="plate" id="plate"></span><div class="dbox" id="dbox" role="button" tabindex="0"></div></div></div>
+    <button class="act" id="introGo" type="button" hidden>${c.btn}</button></div>`;
+  const show=()=>{const [w,t]=c.lines[i];$('#plate').textContent=w==='y'?'윤 연구원 · 선임':'기록';$('#plate').className='plate'+(w==='y'?'':' nar');
+    $('#pf').style.visibility=w==='y'?'visible':'hidden';$('#dbox').innerHTML=`<span class="typing">${t}</span>`;
+    const last=i===c.lines.length-1;$('#dbox').classList.toggle('end',last);$('#introGo').hidden=!last;if(last)$('#introGo').focus()};
+  const adv=()=>{if(i<c.lines.length-1){i++;sfx('tick');show()}};
+  $('#dbox').onclick=adv;$('#dbox').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();adv()}};
+  $('#introGo').onclick=()=>{sfx('flip');el.hidden=true;S.intro=false;save();R[S.scene]()};
+  show();$('#dbox').focus()}
+function go(scene){sfx('flip');S.scene=scene;S.step=0;S.intro=true;save();render()}
 function step(n){S.step=n;save();R[S.scene]()}
 
 /* ---------- S0 검수 보류 ---------- */
@@ -440,14 +579,14 @@ const S0SEG=[
   {t:'일본은 이 섬에 주인이 없었다고 했지만,',note:'1905 파일에서 확인할 표현이에요. 메모는 "기록"에 대해 묻고 있어요.'},
   {t:'그 이전부터 이 섬에 관한 기록이 여러 개 남아 있다.',id:'x',ok:'찾았어요 — 어떤 기록인지 비어 있는 문장'}];
 function s0(){
-  if(S.intro)return intro('독도연구소 · 전시 검수','1905 파일','개막 하루 전, 패널 하나에 검수 보류가 걸렸다','당신은 청소년 디지털 전시를 준비하는 연구소 인턴입니다. 사료로 근거를 확인해 패널을 확정해야 합니다.','검수를 시작한다');
+  if(S.intro)return intro();
   const done=S.step>0;
   setDesk(doc({label:'전시 패널 초안',title:'「독도, 1905년」',meta:['전시 초안','작성: 이전 담당자'],segs:S0SEG,key:'p0',
     extra:`<div class="memo">검수 메모 ✎<br>어떤 기록? 날짜·작성자 표시 없음</div>`})+`<p class="desk-cap"><span class="hold ${done?'ok':''}">${done?'조사 착수':'검수 보류'}</span></p>`);
   if(!done){setWork(vn('인턴님, 내일 전시가 열려요. 그런데 이 패널에 <b>검수 보류</b> 메모가 붙었어요.<br>사료 책상의 <b>노란 형광펜 구절</b>은 모두 터치할 수 있어요.')+
       task(1,1,'노란 메모가 가리키는 <u>문장</u>을 찾아 터치하세요.','메모: "어떤 기록? 날짜·작성자 표시 없음"'));
     pane('desk');find('p0',S0SEG,['x'],()=>step(1));return}
-  find('p0',S0SEG,['x'],()=>{});
+  find('p0',S0SEG,['x'],()=>{});sfx('stamp');
   setWork(task(1,1,'근거가 비어 있는 문장을 찾았어요.','',true)+
     `<div class="note">이 패널은 결론은 있지만 근거가 비어 있어요. 이번 조사로 채워야 할 질문은 이것입니다.</div>
      <p class="q">1905년의 조치를 판단하려면, 그 이전의 어떤 기록을 확인해야 할까?</p>
@@ -464,8 +603,8 @@ const S1SEG=[
   {t:'국제법상 점령한 사실이 있다고 인정하여',note:'"주인 없는 땅을 먼저 차지했다"는 논리예요. 그 전제가 되는 구절을 찾아보세요.'},
   {t:'이 섬을 다케시마(竹島)라 이름 짓고 시마네현 소속 오키도사의 소관으로 한다.',note:'결정 내용(이름과 소속)이에요.'}];
 function s1(){
-  if(S.intro)return intro('FILE 01','1905','일본 내각의 결정','1905년 1월 28일, 일본 내각은 이 섬을 편입하기로 결정했고 한 달 뒤 시마네현이 고시했습니다. 먼저 이 결정문부터 읽습니다.','1905 파일을 연다');
-  const d=doc({label:'FILE 01 · 1905',title:'각의 결정문 (요지 번역)',meta:['1905.1.28','일본 내각','당대 문서'],segs:S1SEG,key:'p1',orig:'출처: 일본 국립공문서관 「공문류취」'});
+  if(S.intro)return intro();
+  const d=doc({kind:'jp',extra:'<span class="wm">閣議決定</span>',label:'FILE 01 · 1905',title:'각의 결정문 (요지 번역)',meta:['1905.1.28','일본 내각','당대 문서'],segs:S1SEG,key:'p1',orig:'출처: 일본 국립공문서관 「공문류취」'});
   if(S.step===0){setDesk(d);setWork(vn('편입 결정문이에요. 이 결정은 섬에 대해 어떤 판단을 했을까요?')+task(1,2,'결정문이 <u>"이 섬에는 주인이 없었다"</u>고 판단한 구절을 찾아 터치하세요.'));
     pane('desk');find('p1',S1SEG,['x'],()=>{gain('E00');light(['t4','t5']);step(1)});return}
   const items={a:{t:'㉠ 각의 결정문',why:'㉠은 1905년 결정문 속 구절이에요.'},b:{t:'㉡ 외무성 설명',why:'㉡은 오늘날 정부가 과거 사건을 설명한 글이에요.'}};
@@ -506,12 +645,12 @@ const MAP=`<svg viewBox="0 0 800 460" id="map" role="img" aria-label="기죽도�
   <rect x="600" y="300" width="104" height="30" fill="#1f4e5f"/><text x="610" y="321" fill="#fff" font-size="16">오늘의 오키</text></g>
 </svg>`;
 function s2(){
-  if(S.intro)return intro('FILE 02','1877','일본 태정관의 지령','1876년 시마네현이 "동해의 죽도 외 일도"를 지적(토지 대장)에 넣을지 물었습니다. 내무성은 당시 최고 국가기관인 태정관에 다시 물었고, 1877년 답이 내려왔습니다.','1877 파일을 연다');
-  const d=doc({label:'FILE 02 · 1877',title:'태정관 지령 (번역)',meta:['1877.3.29','일본 태정관','당대 문서'],segs:S2SEG,key:'p2',
+  if(S.intro)return intro();
+  const d=doc({kind:'dajo',extra:'<span class="wm">太政官 指令</span>',label:'FILE 02 · 1877',title:'태정관 지령 (번역)',meta:['1877.3.29','일본 태정관','당대 문서'],segs:S2SEG,key:'p2',
     orig:'원문: 伺之趣竹島外一嶋之義本邦関係無之義ト可相心得事<br>출처: 일본 국립공문서관 「公文録」, 日本海内竹島外一島地籍編纂方伺'});
   if(S.step===0){setDesk(d);setWork(vn('지령은 짧아요. 무엇에 대해, 어떻게 판단했는지 두 곳을 짚어 보세요.')+task(1,3,'지령에서 ① <u>판단 대상인 섬</u>과 ② <u>그 섬들이 일본과 어떤 관계인지</u>를 찾아 터치하세요.'));
     pane('desk');find('p2',S2SEG,['x','y'],()=>{gain('E01');step(1)});return}
-  const mapSheet=`<article class="sheet" id="mapSheet"><span class="label sea">같은 문서철 · 1876 시마네현 제출</span>
+  const mapSheet=`<article class="sheet k-map" id="mapSheet"><span class="label sea">같은 문서철 · 1876 시마네현 제출</span>
     <div class="meta"><span>기죽도약도(磯竹島略圖)</span><span>도식 재현 — 원본 아님</span></div>
     <p style="font-family:var(--serif);margin:0 0 10px">시마네현 문서: <b>"磯竹島, 일명 竹島 … 그 다음에 섬 하나가 있는데 松島라 부른다."</b></p>
     <div class="map">${MAP}<div class="maptools"><button type="button" id="zoom">확대</button></div></div>
@@ -554,8 +693,8 @@ const S3SEG=[
   {t:'석도(石島)를',id:'c',ok:'③ 석도(石島)'},
   {t:'관할할 것.',note:'"관할한다"는 동사예요. 섬 이름을 찾아보세요.'}];
 function s3(){
-  if(S.intro)return intro('FILE 03','1900','대한제국 칙령 제41호','1900년 대한제국은 울릉도를 울도군으로 승격하고, 군이 다스릴 구역을 정했습니다. 관보 제1716호(1900.10.27)에 실렸습니다.','1900 파일을 연다');
-  setDesk(doc({label:'FILE 03 · 1900',title:'칙령 제41호 「울릉도를 울도로 개칭하고 도감을 군수로 개정한 건」 (현대어)',meta:['1900.10.25 반포','대한제국','당대 문서'],segs:S3SEG,key:'p3',
+  if(S.intro)return intro();
+  setDesk(doc({kind:'gwan',extra:'<div class="mast"><b>官報</b><span>第一千七百十六號<br>光武四年 十月 二十七日</span></div>',label:'FILE 03 · 1900',title:'칙령 제41호 「울릉도를 울도로 개칭하고 도감을 군수로 개정한 건」 (현대어)',meta:['1900.10.25 반포','대한제국','당대 문서'],segs:S3SEG,key:'p3',
     orig:'원문 제2조: 郡廳位寘는 台霞洞으로 定하고 區域은 鬱陵全島와 竹島石島를 管轄할 事<br>출처: 대한제국 관보 제1716호(1900.10.27), 국사편찬위원회 한국사데이터베이스'}));
   if(S.step===0){setWork(vn('이번엔 대한제국의 기록이에요. 울도군이 어디까지 다스렸는지 보세요.')+task(1,2,'제2조에서 울도군의 <u>관할 구역으로 적힌 섬 이름 세 개</u>를 모두 찾아 터치하세요.'));
     pane('desk');find('p3',S3SEG,['a','b','c'],()=>{gain('E03');step(1)});return}
@@ -590,9 +729,9 @@ const OPT={
   b:{n:'해석 자료 · 돌섬과 독섬',body:'<span class="layer interp">해석</span>당시 울릉도 이주민 가운데 전라도 출신이 많았고, 전라도 방언에서는 "돌"을 "독"이라고도 한다. 그래서 "돌섬"을 한자로 뜻을 옮기면 <b>石島</b>, 소리를 옮기면 <b>獨島</b>가 된다는 설명이 있다. (한국 학계의 해석)'},
   c:{n:'맥락 자료 · 군함 쓰시마 조사',body:'<span class="layer fact">사실</span>1904년 11월, 러일전쟁 중이던 일본 해군은 군함 쓰시마를 보내 이 섬에 망루·전신 시설을 세울 수 있는지 조사했다. 1905년 편입 전후의 <b>시대 배경</b>이다. 이것 하나만으로 편입의 원인을 확정할 수는 없다.'}};
 function s4(){
-  if(S.intro)return intro('FILE 04','1904','러일전쟁 속 일본 군함의 기록','1904년 2월 러일전쟁이 시작됐고, 같은 달 일본은 한일의정서로 대한제국 안의 군사 요지를 쓸 수 있게 했습니다. 그해 동해를 조사하던 일본 군함이 남긴 기록입니다.','1904 파일을 연다');
+  if(S.intro)return intro();
   const optDesk=S.step>0?`<p class="desk-cap">선택 열람 — 더 조사하고 싶으면 열어 보세요 (안 열어도 됩니다)</p><div class="tray">${Object.entries(OPT).map(([k,v])=>`<button class="card" data-o="${k}" type="button"><b>선택 열람</b>${v.n}</button>`).join('')}</div><div id="optBody"></div>`:'';
-  setDesk(doc({label:'FILE 04 · 1904',title:'군함 니타카(新高) 행동일지 (요지 번역)',meta:['1904.9.25','일본 해군 군함','당대 문서'],segs:S4SEG,key:'p4',orig:'출처: 일본 방위성 방위연구소 소장 자료(아시아역사자료센터 JACAR)'})+optDesk);
+  setDesk(doc({kind:'log',extra:'<div class="logmast">行動日誌 · 軍艦 新高</div>',label:'FILE 04 · 1904',title:'군함 니타카(新高) 행동일지 (요지 번역)',meta:['1904.9.25','일본 해군 군함','당대 문서'],segs:S4SEG,key:'p4',orig:'출처: 일본 방위성 방위연구소 소장 자료(아시아역사자료센터 JACAR)'})+optDesk);
   if(S.step===0){setWork(vn('일본 군함이 울릉도에서 들은 이야기를 적었어요. 한국인들은 이 바위섬을 뭐라고 불렀을까요?')+task(1,2,'기록에서 <u>한국인이 이 바위섬을 부르던 이름</u>이 나오는 구절을 찾아 터치하세요.'));
     pane('desk');find('p4',S4SEG,['x'],()=>{gain('E04');light(['t1','t2','y1904','t3']);step(1)});return}
   find('p4',S4SEG,['x'],()=>{});
@@ -611,9 +750,9 @@ const S5SEG=[
   {t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"고 하였습니다.',note:'일본 관원이 한 말이에요. 울도군수 자신의 표현을 찾아보세요.'},
   {t:'… 호구·토지·생산을 조사해 기록해 갔기에 이에 보고하니 살펴 주시기 바랍니다.',note:'보고를 맺는 부분이에요.'}];
 function s5(){
-  if(S.intro)return intro('FILE 05','1906','새 기록이 도착했다','1906년 3월, 시마네현 관리 일행이 울도군에 들렀습니다. 편입 결정이 있은 지 1년이 넘어서였습니다. 울도군수 심흥택은 곧 상부에 보고했습니다.','1906 파일을 연다');
-  const rep=doc({label:'FILE 05 · 1906',title:'울도군수 심흥택 보고 (강원도 관찰사 서리 이명래의 보고서에 인용, 현대어 요지)',meta:['1906.3','울도군수 → 강원도 → 의정부','당대 문서'],segs:S5SEG,key:'p5',orig:'출처: 『각관찰도안』, 국사편찬위원회 한국사데이터베이스'});
-  const order=`<article class="sheet"><span class="label">1906.5.20 · 의정부 참정대신</span><div class="meta"><span>지령 제3호 (현대어 요지)</span><span>당대 문서</span></div>
+  if(S.intro)return intro();
+  const rep=doc({kind:'han',extra:'<div class="hanmast"><i>報告</i>報告書 號外</div>',label:'FILE 05 · 1906',title:'울도군수 심흥택 보고 (강원도 관찰사 서리 이명래의 보고서에 인용, 현대어 요지)',meta:['1906.3','울도군수 → 강원도 → 의정부','당대 문서'],segs:S5SEG,key:'p5',orig:'출처: 『각관찰도안』, 국사편찬위원회 한국사데이터베이스'});
+  const order=`<article class="sheet k-han"><span class="label">1906.5.20 · 의정부 참정대신</span><div class="hanmast"><i>指令</i>指令 第三號</div><div class="meta"><span>지령 제3호 (현대어 요지)</span><span>당대 문서</span></div>
     <div class="body" style="line-height:1.9">보고는 다 읽었다. 독도가 일본 영지가 되었다는 말은 <b>전혀 근거가 없으니(全屬無根)</b>, 그 섬의 형편과 일본인이 어떻게 행동했는지 <b>다시 조사하여 보고할 것</b>.</div></article>`;
   const items={p1:{t:'"본군 소속 독도"',why:'이 표현은 울도군수가 쓴 말이에요.'},p2:{t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"',why:'이 말은 울도를 찾아온 일본 관원이 한 말이에요.'},p3:{t:'"전혀 근거가 없으니 … 다시 조사하여 보고할 것"',why:'이 구절은 중앙정부(참정대신)의 지령이에요.'}};
   const right={p1:'gun',p2:'jp',p3:'gov'};
@@ -633,7 +772,7 @@ function s5(){
 
 /* ---------- S6 전시 ---------- */
 function s6(){
-  if(S.intro)return intro('FILE 06','전시 개막','검수 보류를 풀 패널을 완성한다','조사하며 모은 사료 카드로 패널을 채웁니다. 검수 기준은 하나 — 각 문장이 그 자료가 말할 수 있는 범위를 넘지 않는가.','패널 편집을 시작한다');
+  if(S.intro)return intro();
   const pc=S.panel.cards,filled=pc.filter(Boolean).length;
   const flagOf=c=>{const d=CARDS[c],k=S.panel.claims[c],sup=S.panel.support[c];if(k!=='x')return '';
     return d.xt==='over'?'<span class="flag red">검수 의견: 자료 범위 밖</span>':sup?`<span class="flag">해석 · ${CARDS[sup].n}와 연결</span>`:'<span class="flag">해석 · 추가 근거 필요</span>'};
@@ -726,7 +865,7 @@ function r(){
     <p class="savemsg" id="saveMsg"></p>
     <div class="btns"><button class="act ghost" id="retry" hidden>기록을 다시 저장한다</button><button class="act ghost" id="restart">처음부터 다시 조사한다</button></div></div>`);
   $('#restart').onclick=()=>{if(!confirm('조사 기록을 지우고 처음부터 시작할까요?'))return;try{sessionStorage.removeItem(SK)}catch{}location.href=location.pathname+location.search};
-  $('#retry').onclick=()=>submitUI(true);submitUI(false);
+  $('#retry').onclick=()=>submitUI(true);submitUI(false);sfx('stamp');
 }
 
 /* ---------- 저장 (구조화 값만, 자유서술 제외) ---------- */
@@ -749,7 +888,7 @@ function submitUI(force){const m=$('#saveMsg');if(!m)return;
 /* ---------- 시작 ---------- */
 const R={s0,s1,s2,s3,s4,s5,s6,r};
 function render(){$('#grid').classList.remove('single');$('#tabs').hidden=false;prog();timeline();desk.scrollTop=0;work.scrollTop=0;R[S.scene]()}
-load();if(!S.startedAt){S.startedAt=new Date().toISOString();save()}
+sndUI();load();if(!S.startedAt){S.startedAt=new Date().toISOString();save()}
 render();
 })();
 </script>
