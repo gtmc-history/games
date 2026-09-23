@@ -12,7 +12,7 @@
   EXPLORE 프로토타입 — 정본 아님 · manifest 미등록 · 서버 저장 없음.
   DESIGN_V2_EXPLORE_VN_2026-09-23.md §9: 1877 장면(원문 확대경 → 섬 가린 항로 재구성 → 원본 겹치기 → 명칭 연결 · 두 竹島).
   지도: assets/sources/kijukdo-yakudo.jpg (1000×841). 좌표는 이 스캔 픽셀 기준 실측.
-  방향 주기는 전사 검수 전이라 사용하지 않고, 거리 주기(八十里許·四十里許·五十里許)만 쓴다.
+  v2(사용자 피드백 반영): 섬 위치 찍기 삭제 → 가린 섬 이름에 이름표 붙이기 → 1905 카드를 지도에 올려 '같은 이름, 다른 자리'를 눈으로 보게 한다. 연결 강도·근거 칩 삭제.
 -->
 <style>
 :root{
@@ -105,6 +105,25 @@ aside{align-self:start;position:sticky;top:90px}
 pre{white-space:pre-wrap;word-break:break-all;font-size:12.5px;background:#0c121b;color:#b9c4d2;padding:10px;border:1px solid var(--line);margin:8px 0 0}
 .small{font-size:12.5px;color:var(--muted);margin-top:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tagbtn{font-family:var(--doc);font-size:19px;background:#fbf6ea;border:2px solid #7a5b2e;color:var(--ink);padding:6px 14px;min-height:48px}
+.tagbtn small{display:block;font-family:var(--sans);font-size:11px;color:#6b5f4c}
+.tagbtn.pick{border-color:var(--red);background:#f6ddd6}
+.tagbtn.used{opacity:.45}
+.sheet .hot,.hot{position:absolute;border:2px dashed transparent;border-radius:50%;background:transparent;transform:none!important;min-height:0;padding:0;transition:border-color .2s,background .2s}
+.sheet .armed .hot,.armed .hot{border-color:rgba(200,55,45,.75);background:rgba(200,55,45,.06);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{background:rgba(200,55,45,.16)}}
+.stick{position:absolute;transform:translate(-50%,-100%);font-family:var(--doc);font-size:clamp(12px,2.2vw,18px);line-height:1.2;padding:3px 8px;background:#fffaf0;border:2px solid #7a5b2e;color:var(--ink);white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,.25);pointer-events:none;animation:drop .45s cubic-bezier(.34,1.56,.64,1)}
+.stick.y05{background:#20150f;color:#ffd7cf;border-color:var(--red)}
+.stick.map{background:#1f6d5a;color:#eafff8;border-color:#1f6d5a}
+@keyframes drop{from{opacity:0;transform:translate(-50%,-160%)}to{opacity:1;transform:translate(-50%,-100%)}}
+.card05{display:flex;gap:12px;align-items:center;background:#20150f;color:#f3e3c2;border:1px solid var(--red);padding:10px 14px;margin:10px 0}
+.card05 .n{font-family:var(--doc);font-size:26px;color:#ffb4a8}
+.card05 button{margin-left:auto;background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;font-weight:700}
+.choices{display:grid;gap:8px;margin-top:10px}
+.choices button{text-align:left;min-height:56px}
+.layer{font-size:11px;letter-spacing:.06em;padding:1px 6px;border-radius:2px;background:#e7dcc2;margin-left:6px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -112,7 +131,7 @@ pre{white-space:pre-wrap;word-break:break-all;font-size:12.5px;background:#0c121
 <header>
   <div class="brand"><small>DOKDO HISTORY LAB · D-2 오후 · 수장고</small><b>두 개의 竹島</b></div>
   <span class="tag">EXPLORE · 임시 그림 없음 · 저장 없음</span>
-  <ol class="steps" id="steps"><li>원문</li><li>항로 재구성</li><li>겹쳐 보기</li><li>명칭 연결</li></ol>
+  <ol class="steps" id="steps"><li>원문</li><li>이름표</li><li>1905 카드</li><li>기록</li></ol>
 </header>
 
 <div class="layout">
@@ -134,188 +153,150 @@ pre{white-space:pre-wrap;word-break:break-all;font-size:12.5px;background:#0c121
 'use strict';
 const MAP_SRC='../../assets/sources/kijukdo-yakudo.jpg';
 // 스캔 픽셀 실측(1000×841)
-const OKI={x:810,y:730}, SMALL={x:452,y:403}, ISO={x:300,y:235};
-const PX_PER_RI=Math.hypot(OKI.x-SMALL.x,OKI.y-SMALL.y)/80; // 지도 자체 축척: 오키→작은 섬 주기 80里
-const MASKS=[{x:188,y:108,w:212,h:315},{x:368,y:292,w:134,h:150},{x:636,y:578,w:104,h:110}];
+const BIG={x:300,y:235,r:120,top:118}, SMALL={x:452,y:405,r:52,top:380};
+// 섬 이름·섬 이름이 드러나는 주기만 가린다(섬 그림은 보인다)
+const LABEL_MASKS=[{x:283,y:160,w:40,h:115},{x:436,y:388,w:34,h:30},{x:192,y:238,w:56,h:176},{x:372,y:300,w:62,h:86}];
 const $=s=>document.querySelector(s);
 const esc=v=>String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const S={step:0,found:new Set(),you:{small:null,iso:null},reveal:0,links:[],same:null,pick:null};
+const S={step:0,found:new Set(),tags:{},pick:null,y05:null,y05tries:0,record:null};
 
-const notes=[{n:'竹島',l:'1905 · 일본 내각 결정',t:'섬을 “다케시마(竹島)”라 부르고 오키도사 소관으로 결정. 고시: 오키에서 서북 85浬, 좌표 북위 37°9′30″'}];
+const notes=[{n:'竹島',l:'1905 · 일본 내각 결정·시마네현 고시',t:'오키에서 서북쪽, 사람이 살지 않는 섬(무인도)을 “竹島”라 부르고 오키도사 소관으로 결정.'}];
 function addNote(n,l,t){if(notes.some(x=>x.n===n&&x.l===l))return;notes.push({n,l,t});renderNotes()}
 function renderNotes(){$('#notes').innerHTML=notes.map(c=>`<div class="card"><span class="l">${esc(c.l)}</span><span class="n">${esc(c.n)}</span>${esc(c.t)}</div>`).join('')}
-
 function vn(face,who,text,btn,cb){
   $('#vn').innerHTML=`<div class="face ${face==='서'?'seo':''}" aria-hidden="true">${face}</div><div><div class="who">${esc(who)}<em>스토리 연출 · 가상 인물</em></div><p>${text}</p></div>${btn?`<button class="next" type="button" id="vnNext">${esc(btn)} ›</button>`:''}`;
   if(btn)$('#vnNext').onclick=cb;
 }
-function steps(){scrollTo({top:0,behavior:'smooth'});[...document.querySelectorAll('#steps li')].forEach((li,i)=>{li.className=i===S.step?'on':i<S.step?'done':''})}
+function steps(){scrollTo(0,0);[...document.querySelectorAll('#steps li')].forEach((li,i)=>{li.className=i===S.step?'on':i<S.step?'done':''})}
+const pct=(v,t)=>`${v/t*100}%`;
 
-/* ---------- 1. 원문 확대경 ---------- */
-const TOKENS=[['伺之趣',0],['竹島',1],['外一島',2],['之儀',0],['本邦關係無之',3],['儀ト可相心得事',0]];
-const FIND={1:{n:'竹島',l:'1877 · 태정관 지령',t:'지령이 다룬 첫 번째 섬의 이름. 일건은 17세기 말 울릉도를 둘러싼 조선과의 문서 왕래를 조사한 뒤 이 질의를 올렸다.'},
-  2:{n:'外一島',l:'1877 · 태정관 지령',t:'“그 밖의 섬 하나”. 지령 본문은 이 섬의 이름을 적지 않는다.'},
-  3:{n:'本邦關係無之',l:'1877 · 태정관 지령',t:'“본방(일본)과 관계없다”는 처리 방침.'}};
+/* ---------- 1. 원문 ---------- */
+const TOKENS=[['伺之趣',0],['竹島',1],['外一島',2],['之儀',0],['本邦關係無之',0],['儀ト可相心得事',0]];
 function renderOrig(){
   S.step=0;steps();
-  vn('한','한 연구원','1905년 문서에서 이 섬을 “竹島”라고 불렀지? 그런데 28년 전 일본 정부 문서에도 <b>같은 글자</b>가 나와. 원문에서 섬을 가리키는 말을 직접 찾아 봐.');
+  vn('한','한 연구원','1905년 문서에서 이 섬을 “竹島”라고 불렀지? 그런데 28년 전 일본 정부 문서에도 <b>같은 글자</b>가 나와. 원문에서 섬을 가리키는 말 두 개를 찾아 눌러 봐.');
   $('#stage').innerHTML=`<div class="sheet">
     <h2>1877년 태정관 지령 — 원문 핵심 구절</h2>
-    <div class="meta">일본 내무성 질의 → 태정관 지령 · 1877.3 · 소장: 일본 국립공문서관</div>
-    <div class="task">확대경으로 문장을 살피고, <u>섬을 가리키는 말</u>과 <u>처리 방침</u>을 눌러 표시하세요.</div>
-    <div class="orig" id="orig"><span id="origText">${TOKENS.map(([w,i])=>i?`<span class="t" data-i="${i}" role="button" tabindex="0">${w}</span>`:`<span>${w}</span>`).join('')}</span><div class="lens" id="lens"><div class="inner" id="lensInner"></div></div></div>
-    <div class="gloss" id="gloss">현대어: 질의한 취지의 <b>竹島 외 1도</b>의 건은 <b>본방(일본)과 관계없다</b>는 것으로 알 것.</div>
-    <div class="hint" id="found">찾은 표현 0 / 3</div>
-    <div class="row"><button class="go" id="toMap" type="button" disabled>편철된 지도를 펼친다</button></div>
+    <div class="meta">일본 내무성 질의 → 태정관 지령 · 1877 · 소장: 일본 국립공문서관</div>
+    <div class="orig" id="orig" style="margin-top:14px"><span id="origText">${TOKENS.map(([w,i])=>i?`<span class="t" data-i="${i}" role="button" tabindex="0">${w}</span>`:`<span>${w}</span>`).join('')}</span><div class="lens" id="lens"><div class="inner" id="lensInner"></div></div></div>
+    <div class="gloss">현대어: 질의한 취지의 <b>竹島 외 1도</b>의 건은 본방(일본)과 관계없다는 것으로 알 것.</div>
+    <div class="hint" id="found">섬을 가리키는 말 0 / 2</div>
   </div>`;
   const orig=$('#orig'),lens=$('#lens'),inner=$('#lensInner');
   inner.innerHTML=$('#origText').outerHTML.replace('id="origText"','');
   const Z=2;
-  orig.addEventListener('pointermove',e=>{const r=orig.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  orig.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const r=orig.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
     lens.style.display='block';lens.style.left=(x-75)+'px';lens.style.top=(y-75)+'px';
     const cs=getComputedStyle(orig);inner.style.width=r.width+'px';inner.style.padding=cs.padding;inner.style.textAlign='center';
     inner.style.transform=`translate(${75-x*Z}px,${75-y*Z}px) scale(${Z})`});
   orig.addEventListener('pointerleave',()=>lens.style.display='none');
   const hit=el=>{const i=+el.dataset.i;S.found.add(i);document.querySelectorAll(`.t[data-i="${i}"]`).forEach(x=>x.classList.add('found'));
-    const f=FIND[i];addNote(f.n,f.l,f.t);$('#found').textContent=`찾은 표현 ${S.found.size} / 3`;
-    if(S.found.has(1)&&S.found.has(2)){$('#toMap').disabled=false;
-      vn('서','서윤','어? 1905년에도 “竹島”, 1877년에도 “竹島”예요. 그럼 같은 섬 얘기 아니에요?','그런데 “外一島”는…',()=>vn('한','한 연구원','지령 본문엔 두 번째 섬의 이름이 없어. 같은 일건에 <b>1876년 시마네현이 제출한 지도</b>가 편철돼 있지. 그걸 보자.'))}};
+    if(i===1)addNote('竹島','1877 · 태정관 지령','지령이 다룬 첫 번째 섬. 일건은 17세기 말 울릉도를 둘러싼 조선과의 문서 왕래를 조사한 뒤 올라왔다.');
+    if(i===2)addNote('外一島','1877 · 태정관 지령','“그 밖의 섬 하나”. 본문에는 이름이 없다.');
+    $('#found').textContent=`섬을 가리키는 말 ${S.found.size} / 2`;
+    if(S.found.size===2)vn('서','서윤','1905년에도 “竹島”, 1877년에도 “竹島”… 그럼 같은 섬이죠?','지도를 펼친다',renderTags)};
   orig.querySelectorAll('.t').forEach(el=>{el.onclick=()=>hit(el);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hit(el)}}});
-  $('#toMap').onclick=renderRoute;
 }
 
-/* ---------- 2. 항로 재구성 ---------- */
-function mapHTML(){return `<div class="mapbox" id="map"><img src="${MAP_SRC}" alt="1876년 시마네현 제출 지도 「磯竹島略圖」(기죽도약도). 일부 섬과 주기가 가려져 있다." draggable="false">
-  ${MASKS.map((m,i)=>`<div class="mask" data-m="${i}" style="left:${m.x/10}%;top:${m.y/8.41}%;width:${m.w/10}%;height:${m.h/8.41}%">가림</div>`).join('')}
-  <svg viewBox="0 0 1000 841" id="svg" aria-hidden="true"></svg></div>`}
-function ri(a,b){return Math.hypot(a.x-b.x,a.y-b.y)/PX_PER_RI}
-function drawSvg(){
-  const g=[];const you=S.you;
-  g.push(`<circle cx="${OKI.x}" cy="${OKI.y}" r="9" fill="#2b3a52"/><text x="${OKI.x-14}" y="${OKI.y+34}" font-size="22" fill="#2b3a52" font-weight="700" text-anchor="end">출발: 隠岐</text>`);
-  if(S.step===1&&!you.small)g.push(`<circle cx="${OKI.x}" cy="${OKI.y}" r="${80*PX_PER_RI}" fill="none" stroke="#c8372d" stroke-width="3" stroke-dasharray="10 8" opacity=".75"/>`);
-  if(you.small){g.push(`<line x1="${OKI.x}" y1="${OKI.y}" x2="${you.small.x}" y2="${you.small.y}" stroke="#e0763a" stroke-width="3"/>`);
-    if(!you.iso&&S.step===1)g.push(`<circle cx="${you.small.x}" cy="${you.small.y}" r="${40*PX_PER_RI}" fill="none" stroke="#c8372d" stroke-width="3" stroke-dasharray="10 8" opacity=".75"/>`);
-    g.push(`<circle cx="${you.small.x}" cy="${you.small.y}" r="12" fill="#e0763a" stroke="#fff" stroke-width="3"/><text x="${you.small.x+18}" y="${you.small.y-14}" font-size="24" fill="#8f3f16" font-weight="700">내 작은 섬</text>`)}
-  if(you.iso){g.push(`<line x1="${you.small.x}" y1="${you.small.y}" x2="${you.iso.x}" y2="${you.iso.y}" stroke="#e0763a" stroke-width="3"/><circle cx="${you.iso.x}" cy="${you.iso.y}" r="12" fill="#e0763a" stroke="#fff" stroke-width="3"/><text x="${you.iso.x+18}" y="${you.iso.y-14}" font-size="24" fill="#8f3f16" font-weight="700">내 磯竹島</text>`)}
-  if(S.step>=2&&S.reveal>=.5){[[SMALL,'지도의 작은 섬'],[ISO,'지도의 磯竹島']].forEach(([p,l],i)=>{const y=i?you.iso:you.small;
-    if(y)g.push(`<line x1="${y.x}" y1="${y.y}" x2="${p.x}" y2="${p.y}" stroke="#2b3a52" stroke-width="2" stroke-dasharray="4 6"/>`);
-    g.push(`<circle cx="${p.x}" cy="${p.y}" r="30" fill="none" stroke="#1f6d5a" stroke-width="4"/>`)})}
-  $('#svg').innerHTML=g.join('');
+/* ---------- 지도 공통 ---------- */
+function mapHTML(){return `<div class="mapbox" id="map"><img src="${MAP_SRC}" alt="1876년 시마네현 제출 지도 「磯竹島略圖」(기죽도약도). 큰 섬과 작은 섬, 오른쪽 아래 隠岐, 왼쪽 朝鮮國 해안선이 그려져 있다." draggable="false">
+  ${LABEL_MASKS.map((m,i)=>`<div class="mask" data-m="${i}" style="left:${pct(m.x,1000)};top:${pct(m.y,841)};width:${pct(m.w,1000)};height:${pct(m.h,841)}"></div>`).join('')}
+  ${[['big',BIG,'큰 섬'],['small',SMALL,'작은 섬']].map(([k,p,l])=>`<button class="hot" type="button" data-hot="${k}" aria-label="${l}" style="left:${pct(p.x-p.r,1000)};top:${pct(p.y-p.r,841)};width:${pct(p.r*2,1000)};height:${pct(p.r*2,841)}"></button>`).join('')}
+  <div id="sticks"></div></div>`}
+function stick(cls,text,p,dy=0){return `<div class="stick ${cls}" style="left:${pct(p.x,1000)};top:${pct(p.top+dy,841)}">${text}</div>`}
+function drawSticks(extra=''){
+  const out=[];let off={big:0,small:0};
+  for(const [tag,isl] of Object.entries(S.tags)){const p=isl==='big'?BIG:SMALL;out.push(stick('',tag==='t77'?'竹島 <small>1877</small>':'外一島 <small>1877</small>',p,off[isl]));off[isl]-=34}
+  if(S.revealed){out.push(stick('map','磯竹島 <small>지도 표기</small>',{x:BIG.x-150,top:BIG.y+30}),stick('map','松島 <small>지도 표기</small>',{x:SMALL.x,top:SMALL.y+SMALL.r+40}))}
+  if(S.y05){const p=S.y05==='big'?BIG:SMALL;out.push(stick('y05','竹島 <small>1905</small>',p,off[S.y05]))}
+  $('#sticks').innerHTML=out.join('')+extra;
 }
-function renderRoute(){
+
+/* ---------- 2. 이름표 붙이기 ---------- */
+function renderTags(){
   S.step=1;steps();
-  vn('한','한 연구원','지도의 섬 그림은 가려 뒀어. 대신 지도에 적힌 <b>거리 주기</b>만 줄게. 이 지도가 두 섬을 어떤 관계로 그렸는지 네가 먼저 복원해 봐.');
+  vn('한','한 연구원','같은 일건에 편철된 1876년 시마네현 지도야. 섬은 두 개. <b>섬 이름은 가려 뒀어.</b> 지령의 竹島와 外一島는 각각 어느 섬일까? 이름표를 눌러 섬에 붙여 봐.');
   $('#stage').innerHTML=`<div class="sheet">
-    <h2>「磯竹島略圖」 — 1876년 시마네현 제출, 같은 일건에 편철</h2>
-    <div class="meta">섬 그림과 주기를 가린 상태 · 보이는 것: 隠岐, 朝鮮國 해안선, 방위표, 제목</div>
+    <h2>「磯竹島略圖」 — 1876년 시마네현 제출, 지령과 같은 일건에 편철</h2>
+    <div class="meta">섬 이름 표기만 가린 상태</div>
     <div class="clues">
-      <div class="clue"><span class="jp">八十里許</span><br>隠岐(島後) → 작은 섬 · 약 80리</div>
-      <div class="clue"><span class="jp">四十里許</span><br>작은 섬 → 磯竹島 · 약 40리</div>
-      <div class="clue"><span class="jp">五十里許</span><br>磯竹島에서 朝鮮國을 바라봄 · 약 50리</div>
+      <div class="clue">일건: 내무성은 <b>17세기 말 울릉도를 둘러싼 조선과의 문서 왕래</b>를 조사한 뒤 “竹島 외 1도”를 물었다.</div>
+      <div class="clue">지도 주기: 한 섬에서 <span class="jp">朝鮮國</span>을 바라보면 약 <span class="jp">五十里許</span>.</div>
     </div>
-    <div class="task" id="rtask">① 隠岐에서 약 80리 떨어진 곳에 <b>작은 섬</b>을 놓으세요. 지도를 탭하면 놓입니다(다시 탭하면 옮겨짐).</div>
+    <div class="tags"><button class="tagbtn" type="button" data-tag="t77">竹島<small>1877 지령</small></button><button class="tagbtn" type="button" data-tag="o77">外一島<small>1877 지령</small></button></div>
     ${mapHTML()}
-    <div class="readout" id="read">점선 원 = 이 지도 자체의 축척으로 잰 80리. 방향은 주기 원문 전사 검수 전이라 주지 않습니다 — 제목·朝鮮國 해안선·방위표를 보고 판단하세요.</div>
-    <div class="row"><button id="okSmall" class="go" type="button" disabled>작은 섬 위치 확정</button><button id="okIso" class="go" type="button" hidden disabled>磯竹島 위치 확정</button></div>
-    <p class="hint">주기 문구는 공개 해설 기준 전사이며 고해상도 원본 대조가 남아 있습니다. 里는 약식 거리라 절대 거리보다 순서와 비율을 봅니다.</p>
+    <div class="row"><button class="go" id="reveal" type="button" disabled>가린 이름 걷기</button></div>
   </div>`;
-  drawSvg();
-  const map=$('#map');
-  map.addEventListener('click',e=>{if(S.step!==1)return;const r=map.getBoundingClientRect();const p={x:(e.clientX-r.left)/r.width*1000,y:(e.clientY-r.top)/r.height*841};
-    if(!S.okSmall){S.you.small=p;$('#okSmall').disabled=false;$('#read').textContent=`내 작은 섬: 隠岐에서 약 ${Math.round(ri(OKI,p))}리`}
-    else{S.you.iso=p;$('#okIso').disabled=false;$('#read').textContent=`내 磯竹島: 내 작은 섬에서 약 ${Math.round(ri(S.you.small,p))}리 · 隠岐에서 약 ${Math.round(ri(OKI,p))}리`}
-    drawSvg()});
-  $('#okSmall').onclick=()=>{S.okSmall=true;$('#okSmall').hidden=true;$('#okIso').hidden=false;
-    $('#rtask').innerHTML='② 작은 섬에서 약 40리 떨어진 곳에 <b>磯竹島</b>를 놓으세요. 磯竹島에서는 朝鮮國이 약 50리 거리로 바라보인다고 적혀 있습니다.';drawSvg()};
-  $('#okIso').onclick=renderOverlay;
+  bindTags();drawSticks();
+}
+function bindTags(){
+  document.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>{S.pick=b.dataset.tag;document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('pick',x===b));$('#map').classList.add('armed')});
+  document.querySelectorAll('[data-hot]').forEach(h=>h.onclick=()=>{
+    if(S.step===1&&S.pick){const isl=h.dataset.hot;for(const k in S.tags)if(S.tags[k]===isl)delete S.tags[k];S.tags[S.pick]=isl;S.pick=null;
+      document.querySelectorAll('[data-tag]').forEach(x=>{x.classList.remove('pick');x.classList.toggle('used',!!S.tags[x.dataset.tag])});$('#map').classList.remove('armed');drawSticks();
+      $('#reveal').disabled=Object.keys(S.tags).length<2}
+    else if(S.step===2&&S.armed05)place05(h.dataset.hot)});
+  if($('#reveal'))$('#reveal').onclick=reveal;
+}
+function reveal(){
+  S.revealed=true;document.querySelectorAll('.mask').forEach(m=>m.style.opacity=0);drawSticks();$('#reveal').hidden=true;
+  const ok=S.tags.t77==='big';
+  addNote('磯竹島 · 松島','1876 · 시마네현 제출 지도','큰 섬에 “磯竹島”, 작은 섬에 “松島”라고 적혀 있다.');
+  if(ok)vn('한','한 연구원','지도에는 큰 섬 <b>磯竹島</b>, 작은 섬 <b>松島</b>. 네 이름표와 나란히 보이지? 이제 노트 맨 위의 <b>1905년 竹島</b> 카드를 이 지도에 올려 보자.','1905 카드 꺼내기',render05);
+  else vn('한','한 연구원','지도 표기와 네 이름표가 엇갈렸네. 일건이 무엇을 조사했는지, 朝鮮國과 가까운 섬이 어느 쪽인지 다시 보고 옮겨 붙여도 돼.','이대로 1905 카드 꺼내기',render05);
+  document.querySelectorAll('[data-tag]').forEach(b=>b.classList.remove('used'));
+  S.step=1;// 옮기기 허용
 }
 
-/* ---------- 3. 겹쳐 보기 ---------- */
-function renderOverlay(){
-  S.step=2;steps();
-  vn('한','한 연구원','이제 가린 종이를 걷어 보자. 맞았다, 틀렸다가 아니라 <b>네 복원과 지도가 어디서 어긋나는지</b> 보는 거야.');
-  const y=S.you;
-  const order=ri(OKI,y.iso)>ri(OKI,y.small);
+/* ---------- 3. 1905 카드 ---------- */
+function render05(){
+  S.step=2;steps();S.armed05=false;
+  vn('서','서윤','1905년의 竹島는 “오키에서 서북쪽, <b>사람이 살지 않는 섬</b>”이라고 했어요. 이 지도에서는 어느 섬 자리일까요?');
   $('#stage').innerHTML=`<div class="sheet">
-    <h2>원본 겹쳐 보기</h2>
-    <div class="meta">주황 = 내 복원 · 초록 원 = 지도에 그려진 섬</div>
+    <h2>1905년의 竹島를 1876년 지도 위에</h2>
+    <div class="meta">1905 결정·고시의 설명과 1876 지도의 두 섬을 비교</div>
+    <div class="card05"><span class="n">竹島</span><span>1905 · 오키에서 서북쪽의 무인도</span><button type="button" id="arm05">지도에 올리기</button></div>
     ${mapHTML()}
-    <div class="row"><label for="rev">가림 종이 걷기</label><input id="rev" type="range" min="0" max="100" value="0"></div>
-    <table class="compare"><tr><th></th><th>내 복원</th><th>지도에 그려진 관계</th></tr>
-      <tr><td>隠岐 → 작은 섬</td><td>약 ${Math.round(ri(OKI,y.small))}리</td><td>약 ${Math.round(ri(OKI,SMALL))}리 (주기 八十里許)</td></tr>
-      <tr><td>작은 섬 → 磯竹島</td><td>약 ${Math.round(ri(y.small,y.iso))}리</td><td>약 ${Math.round(ri(SMALL,ISO))}리 (주기 四十里許)</td></tr>
-      <tr><td>순서</td><td>${order?'隠岐 → 작은 섬 → 磯竹島':'磯竹島가 작은 섬보다 隠岐에 가까움'}</td><td>隠岐 → 작은 섬 → 磯竹島 (작은 섬이 사이에 있음)</td></tr>
-    </table>
-    <p class="hint">지도에서 잰 거리는 이 약도 자체의 축척(八十里許 구간 기준)으로 환산한 값입니다. 현대 지도와의 비교가 아닙니다.</p>
-    <div class="row"><button class="go" id="toNames" type="button" disabled>명칭을 연결한다</button></div>
+    <div id="after05"></div>
   </div>`;
-  drawSvg();
-  $('#rev').oninput=e=>{S.reveal=e.target.value/100;document.querySelectorAll('.mask').forEach(m=>m.style.opacity=1-S.reveal);drawSvg();
-    if(S.reveal>=.9&&$('#toNames').disabled){$('#toNames').disabled=false;
-      addNote('磯竹島','1876 · 시마네현 제출 지도','큰 섬. 朝鮮國 쪽, 隠岐에서 먼 쪽.');
-      addNote('작은 섬 (松島)','1876 · 시마네현 제출 지도','隠岐와 磯竹島 사이, 隠岐 쪽. 섬 이름은 공개 전사 기준 “松島”.');
-      vn('서','서윤','지도에는 섬이 딱 두 개네요. 큰 섬 磯竹島, 그리고 오키 쪽에 가까운 작은 섬.','연결해 보자',renderNames)}};
-  $('#toNames').onclick=renderNames;
+  document.querySelectorAll('.mask').forEach(m=>m.style.opacity=0);
+  bindTags();drawSticks();
+  $('#arm05').onclick=()=>{S.armed05=true;$('#map').classList.add('armed');$('#arm05').textContent='섬을 누르세요'};
+}
+function place05(isl){
+  S.y05=isl;S.armed05=false;S.y05tries++;$('#arm05').textContent='다시 올리기';$('#map').classList.remove('armed');drawSticks();
+  if(isl==='small'){
+    addNote('竹島 (1905) ↔ 松島 자리','1877 × 1905 · 내가 올린 위치','1905년의 竹島 설명(오키 쪽, 무인도)은 1876 지도의 작은 섬 松島 자리와 맞는다.');
+    vn('서','서윤','어… 잠깐만요. 1905년의 <b>竹島</b>가 올라간 섬에, 1876년 지도는 <b>松島</b>라고 써 놨어요. 1877년의 <b>竹島</b>는 저쪽 큰 섬이고요.','노트에 기록하기',renderRecord);
+    $('#after05').innerHTML=`<div class="aha"><b>같은 이름, 다른 자리.</b> 지도 위에 竹島가 두 번 붙었습니다 — 큰 섬(1877)과 작은 섬(1905).</div>`;
+  }else{
+    vn('한','한 연구원','큰 섬에 올렸구나. 이 섬엔 산이 그려져 있고, 일건은 이 섬을 울릉도 기록과 함께 다뤘어. 1905년의 설명 “<b>사람이 살지 않는 섬</b>”과 맞는지 한 번 더 볼래?','다시 올리기',()=>{$('#arm05').click()});
+    $('#after05').innerHTML=`<div class="row"><button type="button" id="keep05">그래도 이 섬이라고 본다</button></div>`;
+    $('#keep05').onclick=renderRecord;
+  }
 }
 
-/* ---------- 4. 명칭 연결 ---------- */
-const NAMES=[['t05','竹島','1905 결정'],['t77','竹島','1877 지령'],['o77','外一島','1877 지령'],['iso','磯竹島','1876 지도'],['sm','작은 섬 (松島)','1876 지도']];
-const EVID=[['e1','지령 일건: 울릉도 관련 문서 왕래 조사'],['e2','편철 지도: 섬 두 개와 거리 주기'],['e3','내 항로 재구성·겹쳐 보기'],['e4','1905 고시: 隠岐에서 서북 85浬의 무인도']];
-const KIND={ok:'확인됨',maybe:'가능함',hold:'아직 판단할 수 없음'};
-function nm(id){const x=NAMES.find(n=>n[0]===id);return `${x[1]} (${x[2]})`}
-function renderNames(){
+/* ---------- 4. 기록 ---------- */
+function renderRecord(){
   S.step=3;steps();
-  vn('한','한 연구원','카드 두 장을 차례로 눌러 연결하고, 연결의 강도를 정해. <b>확인됨·가능함</b>에는 근거를 하나 이상 붙여야 해. 근거가 없으면 “아직 판단할 수 없음”으로 두면 돼.');
+  vn('한','한 연구원','노트에 한 줄만 남기자. 원문에 적힌 <b>사실</b>과, 여러 자료를 이어서 얻은 <b>해석</b>을 섞지 않게.');
+  const opts=[
+    ['diff','1877년의 竹島와 1905년의 竹島는 이름은 같지만, 1876년 지도에서 서로 다른 섬 자리를 가리킨다.','해석 · 근거: 1877 일건, 1876 지도, 1905 결정'],
+    ['same','1877년의 竹島와 1905년의 竹島는 같은 섬이다.','해석 · 근거: 같은 이름'],
+    ['hold','두 竹島가 같은 섬인지는 아직 판단하지 않는다. 1905년 섬의 위치를 더 확인해야 한다.','보류']];
   $('#stage').innerHTML=`<div class="sheet">
-    <h2>명칭 연결</h2>
-    <div class="meta">같은 글자라도 문서·연도가 다르면 다른 카드입니다.</div>
-    <div class="names" id="names">${NAMES.map(([id,n,s])=>`<button class="nc" data-id="${id}" type="button"><span class="n">${esc(n)}</span><span class="s">${esc(s)}</span></button>`).join('')}</div>
-    <div id="picker"></div>
-    <div class="links" id="links"></div>
-    <div id="sameBox"></div>
+    <h2>조사 노트에 남길 문장</h2>
+    <div class="meta">사실: 1877 지령에 “竹島 外一島”, 1876 지도에 “磯竹島·松島”, 1905 결정에 “竹島”라고 적혀 있다.</div>
+    <div class="choices">${opts.map(([k,t,l])=>`<button type="button" data-rec="${k}">${esc(t)}<span class="layer">${esc(l)}</span></button>`).join('')}</div>
+    <div id="recOut"></div>
   </div>`;
-  document.querySelectorAll('.nc').forEach(b=>b.onclick=()=>{const id=b.dataset.id;
-    if(!S.pick){S.pick=id;b.classList.add('pick');return}
-    if(S.pick===id){S.pick=null;b.classList.remove('pick');return}
-    openPicker(S.pick,id);S.pick=null;document.querySelectorAll('.nc').forEach(x=>x.classList.remove('pick'))});
-  renderLinks();
-}
-function openPicker(a,b){
-  const st={kind:null,ev:new Set()};
-  const draw=()=>{$('#picker').innerHTML=`<div class="picker"><b>${esc(nm(a))}</b> ↔ <b>${esc(nm(b))}</b>
-    <div class="chips">${Object.entries(KIND).map(([k,v])=>`<button type="button" data-k="${k}" class="${st.kind===k?'sel':''}">${v}</button>`).join('')}</div>
-    <div class="hint">근거</div><div class="chips">${EVID.map(([k,v])=>`<button type="button" data-e="${k}" class="${st.ev.has(k)?'sel':''}">${esc(v)}</button>`).join('')}</div>
-    <div class="row"><button class="go" id="saveLink" type="button" ${!st.kind||(st.kind!=='hold'&&!st.ev.size)?'disabled':''}>연결 저장</button><button id="cancelLink" type="button">취소</button></div>
-    ${st.kind&&st.kind!=='hold'&&!st.ev.size?'<div class="hint">확인됨·가능함은 근거를 하나 이상 붙여야 저장됩니다.</div>':''}</div>`;
-    $('#picker').querySelectorAll('[data-k]').forEach(x=>x.onclick=()=>{st.kind=x.dataset.k;draw()});
-    $('#picker').querySelectorAll('[data-e]').forEach(x=>x.onclick=()=>{st.ev.has(x.dataset.e)?st.ev.delete(x.dataset.e):st.ev.add(x.dataset.e);draw()});
-    $('#saveLink').onclick=()=>{S.links=S.links.filter(l=>!((l.a===a&&l.b===b)||(l.a===b&&l.b===a)));S.links.push({a,b,kind:st.kind,ev:[...st.ev]});$('#picker').innerHTML='';renderLinks()};
-    $('#cancelLink').onclick=()=>$('#picker').innerHTML='';};
-  draw();
-}
-function renderLinks(){
-  $('#links').innerHTML=S.links.map(l=>`<div class="link k-${l.kind}"><span>${esc(nm(l.a))} ↔ ${esc(nm(l.b))}</span><span class="pill">${KIND[l.kind]}</span>${l.ev.length?`<span class="hint" style="margin:0">근거: ${l.ev.map(e=>esc(EVID.find(x=>x[0]===e)[1])).join(' · ')}</span>`:''}</div>`).join('')||'<div class="hint">아직 연결이 없습니다. 먼저 1877 지령의 두 섬(竹島, 外一島)을 지도의 섬과 연결해 보세요.</div>';
-  const has=id=>S.links.some(l=>l.a===id||l.b===id);
-  if(has('t77')&&has('o77')&&!$('#sameQ'))renderSame();
-}
-function renderSame(){
-  $('#sameBox').innerHTML=`<div class="picker" id="sameQ"><b>마지막 질문 — 1905년의 竹島와 1877년의 竹島는 같은 섬을 가리키는가?</b>
-    <div class="hint">노트의 1905 카드(隠岐에서 서북 85浬의 무인도)와, 방금 연결한 1877 카드를 함께 보세요.</div>
-    <div class="chips"><button type="button" data-s="same">같은 섬</button><button type="button" data-s="diff">다른 섬</button><button type="button" data-s="hold">아직 판단할 수 없음</button></div><div id="sameOut"></div></div>`;
-  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S.same=b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('sel',x===b));finish()});
-}
-function finish(){
-  const t77=S.links.find(l=>[l.a,l.b].includes('t77'));
-  const out={
-    same:'<div class="aha">서윤: “같은 글자인데요… 1877년 일건의 <b>竹島</b>는 울릉도 기록을 조사한 뒤 나온 이름이고, 지도에서는 큰 섬 <b>磯竹島</b> 쪽이에요. 1905년의 竹島는 <b>隠岐에서 가까운 작은 무인도</b>고요. 위치를 한 번만 더 겹쳐 볼래요.”<br>한 연구원: “좋아. 이름이 같으니까 같은 섬이라고 보고 싶어지지. 그럴수록 <b>위치와 문서 맥락</b>으로 확인해.”</div>',
-    diff:'<div class="aha"><b>같은 이름, 다른 섬.</b> 1877년 일건의 竹島는 울릉도 관련 기록을 조사한 뒤 나온 이름이고, 편철 지도에서는 큰 섬 磯竹島 쪽입니다. 1905년에 “竹島”라고 이름 붙인 섬은 隠岐에서 서북쪽의 작은 무인도 — 1876년 지도에서는 두 섬 가운데 <b>隠岐 쪽 작은 섬</b>의 자리입니다.<br><br>한 연구원: “이건 문서에 그대로 적힌 사실이 아니라, 지도·일건·고시를 <b>연결해서 얻은 해석</b>이야. 근거가 강한 해석이지만, 노트에는 근거와 함께 적어 두자.”</div>',
-    hold:'<div class="aha">보류도 정당한 기록입니다. 한 연구원: “무엇이 더 있으면 판단할 수 있을지 적어 둬. 예를 들면 1905년 섬의 위치를 1876년 지도의 두 섬과 직접 비교할 수 있는 근거.”</div>'
-  }[S.same];
-  const payload={scene:'1877',found:[...S.found],route:{oki_small_ri:Math.round(ri(OKI,S.you.small)),small_iso_ri:Math.round(ri(S.you.small,S.you.iso))},
-    links:S.links.map(l=>({pair:[l.a,l.b].sort().join('-'),kind:l.kind,evidence:l.ev})),takeshima_1877_vs_1905:S.same};
-  $('#sameOut').innerHTML=out+`<div class="hint" style="margin-top:12px">저장된다면 이런 구조화 값만 남습니다(학생 문장 원문 없음):</div><pre>${esc(JSON.stringify(payload))}</pre>`;
-  addNote(S.same==='diff'?'竹島 ≠ 竹島':'竹島 (1877) ? 竹島 (1905)','1877 × 1905 · 내 해석',S.same==='diff'?'같은 이름이 서로 다른 섬을 가리킨다고 판단(근거: 지도·일건·고시 연결).':S.same==='same'?'같은 섬으로 판단 — 위치 재확인 권장.':'판단 보류.');
-  if(!t77)return;
+  document.querySelectorAll('[data-rec]').forEach(b=>b.onclick=()=>{S.record=b.dataset.rec;document.querySelectorAll('[data-rec]').forEach(x=>x.classList.toggle('sel',x===b));
+    const fb={diff:'근거가 셋(일건·지도·결정)으로 받쳐지는 해석입니다. 단, 원문 어디에도 “두 竹島는 다르다”고 적혀 있지는 않다는 점 — 그래서 해석층입니다.',
+      same:'이름이 같다는 것 하나만 근거입니다. 1876 지도에서 1905년 竹島가 올라간 자리와 1877년 竹島의 자리를 다시 비교해 보세요.',
+      hold:'보류도 정당한 기록입니다. 4막(1906)에서 이 노트가 다시 펼쳐집니다.'}[S.record];
+    const payload={scene:'1877',tags:S.tags,y05:S.y05,y05_tries:S.y05tries,record:S.record};
+    $('#recOut').innerHTML=`<div class="gloss" style="margin-top:12px">${esc(fb)}</div><div class="hint" style="margin-top:12px">저장된다면 남는 값(학생 문장 원문 없음):</div><pre>${esc(JSON.stringify(payload))}</pre>`;
+    addNote(S.record==='diff'?'竹島 ≠ 竹島':S.record==='same'?'竹島 = 竹島 ?':'竹島 ? 竹島','1877 × 1905 · 내 해석',b.textContent.replace(/(해석|보류).*/,'').trim())});
 }
 renderNotes();renderOrig();
 </script>
