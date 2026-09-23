@@ -10,233 +10,294 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f3efe6; --paper:#fbf8f1; --ink:#1b2430; --muted:#5b6470; --line:#cfc6b4;
-  --sea:#1f4e5f; --sea-2:#2f6f83; --sea-soft:#dfe9ea;
-  --seal:#a3322a; --seal-soft:#f3dedb; --gold:#9a7a2c; --ok:#2f6b45; --ok-soft:#dcebdf;
+  --desk:#1d3440; --desk-line:rgba(255,255,255,.05);
+  --paper:#fbf7ee; --ink:#1b2430; --muted:#5b6470; --line:#d6ccb8;
+  --sea:#1f4e5f; --sea-soft:#e1ecee;
+  --seal:#a3322a; --seal-soft:#f5e1de; --gold:#b08a2e; --mark:#f7dc8a; --mark-soft:rgba(247,220,138,.38);
+  --ok:#2f6b45; --ok-soft:#dcebdf; --work:#f6f2e9;
   --serif:'Noto Serif KR',serif; --sans:'Noto Sans KR',sans-serif;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0}
-body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:17px;line-height:1.65;min-height:100dvh;display:flex;flex-direction:column}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--desk);font-size:17px;line-height:1.6;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
 button{font:inherit;color:inherit}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 20px;background:var(--ink);color:#f3efe6}
+
+/* header */
+.top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 18px;background:#121f27;color:#efe9dc}
 .brand{display:flex;align-items:center;gap:10px}
-.brand strong{font-family:var(--serif);font-size:19px;letter-spacing:.02em;display:block;line-height:1.2}
-.brand small{font-size:13px;opacity:.75}
-.seal{display:inline-grid;place-items:center;width:36px;height:36px;border:2px solid var(--seal);color:#fff;background:var(--seal);font-family:var(--serif);font-weight:900;border-radius:3px;font-size:19px}
-.steps{display:flex;gap:6px;list-style:none;margin:0;padding:0}
-.steps li{width:30px;height:6px;background:#3b4654;border-radius:1px}
-.steps li.done{background:#8fb3bd}
-.steps li.now{background:#f3efe6}
+.brand strong{font-family:var(--serif);font-size:18px;display:block;line-height:1.2}
+.brand small{font-size:12px;opacity:.7}
+.seal{display:inline-grid;place-items:center;width:34px;height:34px;background:var(--seal);color:#fff;font-family:var(--serif);font-weight:900;border-radius:3px;font-size:18px}
+.prog{display:flex;gap:4px;list-style:none;margin:0;padding:0;font-size:13px}
+.prog li{padding:3px 9px;border-radius:2px;color:#7f8c95;border:1px solid #2c3d47}
+.prog li.done{color:#b9d0d6;border-color:#3e5663}
+.prog li.now{color:#121f27;background:#efe9dc;border-color:#efe9dc;font-weight:700}
 
 /* timeline */
-.timeline{display:flex;gap:0;overflow-x:auto;background:#e6e0d3;border-bottom:1px solid var(--line);padding:8px 12px;scrollbar-width:thin}
-.tl{flex:0 0 auto;min-width:104px;max-width:150px;padding:4px 10px;border-left:1px solid var(--line);font-size:13px;line-height:1.35;color:#9a927f;transition:background .4s,color .4s}
-.tl b{display:block;font-size:12px;letter-spacing:.03em}
-.tl span{display:block;visibility:hidden}
-.tl.file b{color:var(--sea)}
-.tl.lit{color:var(--ink);background:var(--paper)}
-.tl.lit span{visibility:visible}
-.tl.lit b{color:var(--seal)}
-.tl.fresh{animation:tl-in 1.2s ease}
-@keyframes tl-in{0%{background:#f7e3b8}100%{background:var(--paper)}}
+.timeline{flex:0 0 auto;background:#16262f;border-bottom:1px solid #0e1a20;overflow-x:auto;scrollbar-width:thin}
+.tl-track{display:flex;min-width:max-content;padding:8px 18px 6px;position:relative}
+.tl-track::before{content:"";position:absolute;left:18px;right:18px;top:17px;height:2px;background:#33494f}
+.tl-item{position:relative;width:118px;padding-top:18px;font-size:12px;line-height:1.3;color:#6f8088}
+.tl-item .dot{position:absolute;top:3px;left:0;width:14px;height:14px;border-radius:50%;border:2px solid #55686f;background:#16262f}
+.tl-item b{display:block;font-weight:700;letter-spacing:.02em}
+.tl-item span{display:block;opacity:0;transition:opacity .5s;color:#e9e2d2;padding-right:8px}
+.tl-item.file .dot{border-radius:2px}
+.tl-item.lit{color:#f0c96a}
+.tl-item.lit .dot{background:#f0c96a;border-color:#f0c96a}
+.tl-item.lit.file{color:#8fc3d1}
+.tl-item.lit.file .dot{background:#8fc3d1;border-color:#8fc3d1}
+.tl-item.lit span{opacity:1}
+.tl-item.fresh .dot{animation:ping 1.4s ease 2}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(240,201,106,.8)}100%{box-shadow:0 0 0 12px rgba(240,201,106,0)}}
 
-.stage{flex:1;width:100%;max-width:960px;margin:0 auto;padding:24px 20px 120px;outline:none}
-.scene-enter{animation:scene-in .4s ease both}
-@keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h1,h2,h3{font-family:var(--serif);line-height:1.35;margin:0 0 8px}
-h1{font-size:30px}
-h2{font-size:24px}
-h3{font-size:19px}
-.kicker{font-size:13px;letter-spacing:.12em;color:var(--seal);font-weight:700;margin-bottom:4px}
-p{margin:0 0 12px}
-.muted{color:var(--muted);font-size:15px}
+/* panes */
+.tabs{display:none}
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr)}
+.desk{overflow:auto;padding:26px 22px 40px;background:var(--desk) repeating-linear-gradient(90deg,var(--desk-line) 0 1px,transparent 1px 38px)}
+.work{overflow:auto;background:var(--work);border-left:1px solid #0e1a20;padding:18px 20px 40px}
+.grid.single{grid-template-columns:1fr}
+.grid.single .work{display:none}
+.enter{animation:enter .35s ease both}
+.wcol{display:flex;flex-direction:column;gap:14px}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* VN line */
-.vn{display:flex;gap:12px;align-items:flex-start;background:var(--ink);color:#f3efe6;padding:14px 16px;border-radius:4px;margin:0 0 18px}
-.vn .who{flex:0 0 auto;font-size:13px;font-weight:700;color:#8fb3bd;padding-top:2px;min-width:64px}
-.vn p{margin:0}
-
-/* task bar */
-.task{border-left:4px solid var(--seal);background:var(--paper);padding:10px 14px;margin:0 0 14px;font-weight:500}
-.task small{display:block;color:var(--muted);font-weight:400;font-size:14px}
-.task.done{border-left-color:var(--ok);color:var(--ok)}
-
-/* documents */
-.doc{background:var(--paper);border:1px solid var(--line);padding:18px 20px;margin:0 0 16px;position:relative}
-.doc::before{content:"";position:absolute;inset:6px;border:1px solid #e6dfcf;pointer-events:none}
-.doc-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-bottom:10px;position:relative}
-.doc-meta .tag{border:1px solid var(--line);padding:0 6px;border-radius:2px;background:#fff}
-.doc-meta .tag.now{border-color:var(--sea);color:var(--sea)}
-.doc-title{font-family:var(--serif);font-weight:700;font-size:18px;margin-bottom:8px;position:relative}
-.doc-body{font-family:var(--serif);font-size:18px;line-height:2;position:relative}
-.orig{display:block;font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;font-family:var(--serif)}
-.seg{display:inline;background:none;border:0;padding:2px 1px;margin:0;font-family:inherit;font-size:inherit;line-height:inherit;text-align:left;cursor:pointer;border-bottom:1px dashed #b9ae98;border-radius:0}
-.seg:hover{background:#efe8d8}
-.seg:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
-.seg.hit{background:#f6e1a8;border-bottom:2px solid var(--seal);animation:mark .5s ease}
-.seg.miss{animation:wrong-shake .35s ease}
-.seg.static{cursor:default;border-bottom:0}
-.seg.static:hover{background:none}
-@keyframes mark{0%{background:transparent}100%{background:#f6e1a8}}
-@keyframes wrong-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
-.seg.hit{display:inline}
-.note{font-size:15px;background:var(--sea-soft);border-left:3px solid var(--sea);padding:8px 12px;margin:8px 0 14px}
-.note.warn{background:var(--seal-soft);border-left-color:var(--seal)}
-.note.ok{background:var(--ok-soft);border-left-color:var(--ok)}
-.layer{display:inline-block;font-size:12px;font-weight:700;padding:0 6px;border-radius:2px;margin-right:6px;vertical-align:1px}
+/* work parts */
+.vn{display:flex;gap:10px;align-items:flex-start}
+.ava{flex:0 0 44px;height:44px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:18px;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.bubble{background:#fff;border:1px solid var(--line);padding:10px 12px;border-radius:0 8px 8px 8px;font-size:15px;line-height:1.55}
+.bubble b.who{display:block;font-size:12px;color:var(--sea);margin-bottom:2px}
+.task{background:var(--ink);color:#f5efe2;padding:12px 14px 14px;border-radius:3px}
+.task .no{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.08em;color:#f0c96a;font-weight:700;margin-bottom:4px}
+.task .no i{display:inline-flex;gap:4px}
+.task .no i u{display:block;width:18px;height:4px;background:#46555f;text-decoration:none}
+.task .no i u.on{background:#f0c96a}
+.task p{margin:0;font-size:18px;font-weight:700;line-height:1.5}
+.task p u{text-decoration:none;background:linear-gradient(transparent 60%,rgba(240,201,106,.55) 60%)}
+.task small{display:block;margin-top:6px;font-size:14px;font-weight:400;color:#c7cfd4}
+.task.done{background:var(--ok)}
+.task.done .no{color:#cfe8d6}
+.where{display:inline-block;margin-top:8px;font-size:13px;background:#f0c96a;color:#1b2430;padding:2px 8px;border-radius:2px;font-weight:700}
+.note{font-size:15px;background:#fff;border-left:4px solid var(--sea);padding:9px 12px;line-height:1.6}
+.note.warn{border-left-color:var(--seal);background:var(--seal-soft)}
+.note.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+.layer{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px;margin-right:6px;vertical-align:1px;letter-spacing:.04em}
 .layer.fact{background:var(--ink);color:#fff}
 .layer.interp{background:var(--gold);color:#fff}
 .layer.gov{background:var(--sea);color:#fff}
-
-/* buttons */
-.act{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:10px 22px;background:var(--sea);color:#fff;border:0;border-radius:3px;font-weight:700;font-size:17px;cursor:pointer;transition:transform .15s,background .15s}
-.act:hover{background:var(--sea-2);transform:translateY(-1px)}
+.q{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.45;margin:0}
+.act{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;padding:10px 18px;background:var(--seal);color:#fff;border:0;border-radius:3px;font-weight:700;font-size:17px;cursor:pointer;transition:transform .15s,filter .15s}
+.act:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .act:active{transform:scale(.98)}
 .act.ghost{background:transparent;color:var(--sea);border:1.5px solid var(--sea)}
-.act.ghost:hover{background:var(--sea-soft)}
-.act:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0}
-
-/* judgement */
-.judge{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
-.opt{min-height:64px;padding:10px 12px;background:var(--paper);border:1.5px solid var(--line);border-radius:3px;cursor:pointer;font-size:17px;font-weight:500;text-align:center;transition:border-color .2s,background .2s,transform .15s}
+.act:disabled{background:#b9b2a3;cursor:not-allowed;transform:none;filter:none}
+.opts{display:grid;gap:8px}
+.opts.row3{grid-template-columns:repeat(3,1fr)}
+.opts.row2{grid-template-columns:1fr 1fr}
+.opts.wrap{display:flex;flex-wrap:wrap}
+.opt{min-height:54px;padding:8px 10px;background:#fff;border:1.5px solid var(--line);border-radius:3px;cursor:pointer;font-size:16px;font-weight:700;text-align:center;line-height:1.35;transition:border-color .2s,background .2s}
 .opt:hover{border-color:var(--sea)}
 .opt.on{border-color:var(--sea);background:var(--sea);color:#fff}
-.opt small{display:block;font-size:13px;font-weight:400;opacity:.8}
-.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
-.past{background:#e9e4d8;border:1px dashed #a79f8c;padding:12px 14px;font-size:15px}
-.past b{display:block;font-size:13px;color:var(--muted);font-weight:500}
-.past .val{font-size:18px;font-weight:700;color:var(--ink)}
-.newdoc{background:var(--paper);border:1px solid var(--sea);padding:12px 14px;font-size:15px}
-.newdoc b{display:block;font-size:13px;color:var(--sea)}
+.files h4{margin:0 0 6px;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.files .row{display:flex;flex-wrap:wrap;gap:6px}
+.ftab{font-size:12px;padding:4px 8px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--sea);border-radius:2px;white-space:nowrap}
+.ftab.new{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
 
-/* cards & slots */
-.cards{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
-.card{min-height:56px;min-width:140px;max-width:260px;padding:8px 12px;background:var(--paper);border:1.5px solid var(--line);border-left:5px solid var(--sea);border-radius:2px;text-align:left;cursor:pointer;font-size:15px;line-height:1.4;transition:transform .15s,border-color .15s}
-.card b{display:block;font-size:12px;color:var(--seal);letter-spacing:.04em}
+/* meter */
+.meter{background:#fff;border:1px solid var(--line);padding:12px 16px 10px}
+.meter h4{margin:0 0 2px;font-size:13px;color:var(--muted);letter-spacing:.04em}
+.meter .mq{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:44px}
+.mtrack{position:relative;height:10px;margin:0 10px;background:linear-gradient(90deg,#d9d2c3,#efe9dc 50%,#cfe0e4);border-radius:5px}
+.mtick{position:absolute;top:-3px;width:2px;height:16px;background:#fff}
+.mk{position:absolute;bottom:-4px;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.3,.64,1);text-align:center;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
+.mk i{display:block;width:18px;height:18px;margin:2px auto 0;border-radius:50%;background:#fff;border:3px solid #9aa3aa}
+.mk.now{color:var(--seal);z-index:2}
+.mk.now i{background:var(--seal);border-color:#fff;box-shadow:0 0 0 2px var(--seal)}
+.mk.ghost{opacity:.6}
+.mk.pend{color:var(--sea);z-index:3}
+.mk.pend i{background:var(--sea);border-color:#fff;box-shadow:0 0 0 2px var(--sea);animation:pop .4s ease}
+.mends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:10px}
+.mends b{color:var(--ink)}
+
+/* desk papers */
+.sheet{background:var(--paper);color:var(--ink);padding:20px 22px 22px;margin:0 auto 22px;max-width:720px;box-shadow:0 10px 24px rgba(0,0,0,.28);position:relative;border-radius:1px}
+.sheet.tilt{transform:rotate(-.4deg)}
+.sheet .label{position:absolute;top:-12px;left:18px;background:var(--seal);color:#fff;font-size:12px;font-weight:700;padding:2px 10px;letter-spacing:.06em}
+.sheet .label.sea{background:var(--sea)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);margin-bottom:8px}
+.meta span{border:1px solid var(--line);padding:0 6px;background:#fff}
+.sheet h3{font-family:var(--serif);font-size:19px;margin:0 0 10px;line-height:1.4}
+.body{font-family:var(--serif);font-size:19px;line-height:2.15}
+.orig{display:block;margin-top:12px;padding-top:8px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted);line-height:1.6;font-family:var(--serif)}
+.seg{display:inline;background:var(--mark-soft);border:0;border-bottom:2px dotted var(--gold);padding:3px 2px;margin:0 1px;font:inherit;line-height:inherit;cursor:pointer;border-radius:2px;text-align:left;transition:background .15s}
+.seg:hover{background:var(--mark)}
+.seg:focus-visible{outline:3px solid var(--sea);outline-offset:1px}
+.seg.hit{background:var(--mark);border-bottom:3px solid var(--seal);font-weight:700}
+.seg.hit::after{content:"✓";display:inline-block;margin-left:4px;font-family:var(--sans);font-size:12px;color:#fff;background:var(--seal);border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;vertical-align:2px;font-weight:700}
+.seg.off{background:none;border-bottom-color:transparent;cursor:default}
+.seg.miss{animation:shake .35s ease}
+.seg.hint{animation:hint 1.2s ease infinite}
+@keyframes hint{0%,100%{background:var(--mark-soft)}50%{background:var(--mark);box-shadow:0 0 0 3px var(--mark)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+.memo{position:absolute;right:-10px;top:-20px;background:#fff3a8;color:#4a3d10;font-size:14px;padding:8px 12px;transform:rotate(3deg);box-shadow:0 4px 10px rgba(0,0,0,.25);max-width:230px;font-weight:700;line-height:1.4}
+.hold{display:inline-block;margin-top:14px;border:3px solid var(--seal);color:var(--seal);font-family:var(--serif);font-weight:900;padding:0 10px;transform:rotate(-6deg);font-size:18px}
+.hold.ok{border-color:var(--ok);color:var(--ok)}
+.mtask{display:none}
+.desk-cap{color:#d6e0e3;font-size:14px;text-align:center;margin:0 auto 10px;max-width:720px;font-weight:700}
+
+/* cards & slots on desk */
+.tray{max-width:720px;margin:0 auto 16px;display:flex;flex-wrap:wrap;gap:10px}
+.card{min-height:56px;padding:8px 12px;background:var(--paper);border:0;border-top:4px solid var(--sea);border-radius:2px;text-align:left;cursor:pointer;font-size:15px;line-height:1.4;box-shadow:0 4px 10px rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s;max-width:340px}
+.card b{display:block;font-size:11px;color:var(--seal);letter-spacing:.06em}
 .card:hover{transform:translateY(-2px)}
-.card.sel{border-color:var(--seal);box-shadow:0 0 0 3px var(--seal-soft)}
-.card.used{opacity:.35;pointer-events:none}
-.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
-.slot{min-height:92px;border:2px dashed #b5aa94;padding:10px;background:rgba(255,255,255,.4);cursor:pointer;border-radius:2px;font-size:15px;transition:background .2s,border-color .2s}
-.slot > b{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
-.slot.ready{border-color:var(--sea);background:var(--sea-soft)}
-.slot.filled{border-style:solid;border-color:var(--ok);background:#fff}
-.slot.wrong{animation:wrong-shake .35s ease;border-color:var(--seal)}
-.slot .placed{font-family:var(--serif);font-size:16px}
+.card.sel{box-shadow:0 0 0 4px #f0c96a,0 6px 14px rgba(0,0,0,.35);transform:translateY(-3px)}
+.card.used{opacity:.3;pointer-events:none}
+.slots{max-width:720px;margin:0 auto 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.slot{min-height:104px;border:2px dashed #6f8a94;padding:10px 12px;background:rgba(255,255,255,.06);color:#dfe8ea;cursor:pointer;border-radius:3px;font-size:15px;transition:background .2s,border-color .2s}
+.slot > b{display:block;font-size:14px;margin-bottom:6px;color:#f0c96a}
+.slot.ready{border-color:#f0c96a;background:rgba(240,201,106,.14)}
+.slot.filled{border-style:solid;border-color:#8fc3d1;background:var(--paper);color:var(--ink)}
+.slot.filled > b{color:var(--sea)}
+.slot.wrong{animation:shake .35s ease;border-color:#e06a5f}
+.slot .placed{font-family:var(--serif);font-size:16px;font-weight:700}
 
 /* map */
-.mapwrap{background:#e9e2cf;border:1px solid var(--line);position:relative;margin:0 0 12px;overflow:hidden}
-.mapwrap svg{display:block;width:100%;height:auto;touch-action:manipulation}
-.mapcap{font-size:13px;color:var(--muted);padding:6px 12px;background:var(--paper);border-top:1px solid var(--line)}
+.map{background:#efe5cb;position:relative}
+.map svg{display:block;width:100%;height:auto;touch-action:manipulation}
 .isle{cursor:pointer}
 .isle .shape{transition:fill .2s}
-.isle:hover .shape{fill:#c9b98f}
-.isle.hit .shape{fill:#e8c46a}
-.maptools{position:absolute;right:8px;top:8px;display:flex;gap:6px}
-.maptools button{min-width:48px;min-height:48px;background:var(--paper);border:1px solid var(--line);border-radius:3px;font-size:15px;cursor:pointer}
-.modern{opacity:0;transition:opacity .5s}
-.legend{background:var(--sea);color:#fff;padding:6px 12px;font-size:14px;line-height:1.5}
+.isle:hover .shape{fill:#e7cf8f}
+.isle.hit .shape{fill:#f0c96a}
+.isle.hint .shape{animation:ihint 1.2s ease infinite}
+@keyframes ihint{50%{fill:#f0c96a}}
+.maptools{position:absolute;right:8px;top:8px}
+.maptools button{min-width:52px;min-height:48px;background:#fff;border:1px solid var(--line);border-radius:3px;font-size:15px;font-weight:700;cursor:pointer}
+.modern{opacity:0;transition:opacity .6s}
 .modern.show{opacity:1}
+.legend{background:var(--sea);color:#fff;padding:6px 12px;font-size:14px}
 
-/* check card */
-.check{border:1.5px solid var(--ink);background:#fff;padding:12px 16px;margin:12px 0;font-size:15px}
-.check h3{font-size:16px;font-family:var(--sans);letter-spacing:.02em;border-bottom:1px solid var(--line);padding-bottom:6px}
-.check dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}
-.check dt{font-weight:700;color:var(--ok)}
+.check{background:#fff;border:2px solid var(--ink);padding:10px 14px;font-size:15px}
+.check h5{margin:0 0 6px;font-size:14px}
+.check dl{margin:0;display:grid;gap:2px}
+.check dt{font-weight:700;color:var(--ok);font-size:13px}
 .check dt.no{color:var(--seal)}
-.check dd{margin:0}
+.check dd{margin:0 0 6px}
+.gov2{display:grid;gap:8px}
+.gov2 div{background:#fff;border:1px solid var(--line);padding:8px 12px;font-size:15px}
+.gov2 b{display:block;font-size:12px;color:var(--sea)}
 
-/* two-column claims */
-.gov2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.gov2 > div{background:var(--paper);border:1px solid var(--line);padding:10px 12px;font-size:15px}
-.gov2 b{display:block;font-size:13px;color:var(--sea)}
+/* exhibition panel */
+.expo{max-width:760px;margin:0 auto 18px;background:#fdfcf8;color:var(--ink);padding:24px 26px 26px;box-shadow:0 12px 28px rgba(0,0,0,.35);position:relative;border-top:10px solid var(--sea)}
+.expo .ttl{font-family:var(--serif);font-weight:900;font-size:25px;line-height:1.3;border-bottom:3px double var(--ink);padding-bottom:8px;margin-bottom:12px;padding-right:120px}
+.expo .ttl small{display:block;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--seal);letter-spacing:.1em}
+.eslot{border:2px dashed #b9ae98;border-radius:3px;padding:10px 12px;margin:0 0 10px;min-height:74px;cursor:pointer;transition:border-color .2s,background .2s}
+.eslot .n{font-size:13px;font-weight:700;color:var(--muted)}
+.eslot.ready{border-color:var(--gold);background:#fff8e2}
+.eslot.full{border-style:solid;border-color:var(--line);background:#fff;cursor:default}
+.eslot.focus{border-color:var(--seal);box-shadow:0 0 0 3px var(--seal-soft)}
+.eslot .cn{font-size:12px;font-weight:700;color:var(--seal);letter-spacing:.04em}
+.eslot .txt{font-family:var(--serif);font-size:17px;font-weight:700;margin-top:2px}
+.eslot .lim{font-size:13px;color:var(--muted);margin-top:4px}
+.rm{float:right;font-size:13px;border:1px solid var(--line);background:#fff;padding:2px 10px;cursor:pointer;min-height:36px;border-radius:2px}
+.rm.inline{float:none;margin-top:6px}
+.strips{display:grid;gap:8px;margin-top:8px}
+.strip{text-align:left;padding:10px 12px;min-height:52px;background:#f6f1e4;border:1.5px solid var(--line);border-radius:3px;cursor:pointer;font-family:var(--serif);font-size:16px;line-height:1.5}
+.strip:hover{border-color:var(--sea);background:#fff}
+.closing{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.closing .n{font-size:13px;font-weight:700;color:var(--muted)}
+.closing .txt{font-family:var(--serif);font-weight:900;font-size:19px;line-height:1.5}
+.flag{display:inline-block;font-family:var(--sans);font-size:11px;font-weight:700;border:1px solid var(--gold);color:var(--gold);padding:0 6px;margin-left:6px;vertical-align:2px}
+.flag.red{border-color:var(--seal);color:var(--seal)}
+.stamp{position:absolute;right:22px;top:24px;border:4px solid var(--seal);color:var(--seal);font-family:var(--serif);font-weight:900;padding:2px 12px;transform:rotate(-7deg);font-size:20px;background:rgba(255,255,255,.75);animation:stamp .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes stamp{0%{transform:scale(2.2) rotate(-14deg);opacity:0}100%{transform:scale(1) rotate(-7deg);opacity:1}}
+textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--line);border-radius:3px;background:#fff}
 
-/* panel */
-.panel{background:#fff;border:1px solid var(--ink);padding:22px 24px;margin:14px 0;position:relative}
-.panel h2{font-size:26px;border-bottom:3px double var(--ink);padding-bottom:8px}
-.panel .ev{padding:10px 0;border-bottom:1px solid var(--line)}
-.panel .ev b{font-size:12px;color:var(--seal);letter-spacing:.04em;display:block}
-.panel .ev p{font-family:var(--serif);font-size:17px;margin:2px 0}
-.panel .ev .limit{font-size:13px;color:var(--muted)}
-.panel .closing{font-family:var(--serif);font-weight:700;font-size:18px;margin-top:14px}
-.panel .flag{display:inline-block;font-size:12px;border:1px solid var(--gold);color:var(--gold);padding:0 6px;margin-left:6px;font-family:var(--sans);font-weight:700}
-.panel .flag.red{border-color:var(--seal);color:var(--seal)}
-.stamp{position:absolute;right:18px;top:14px;border:3px solid var(--seal);color:var(--seal);font-family:var(--serif);font-weight:900;padding:2px 10px;transform:rotate(-6deg);font-size:18px;animation:stamp-in .35s cubic-bezier(.34,1.56,.64,1)}
-@keyframes stamp-in{0%{transform:scale(2) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(-6deg);opacity:1}}
-.claims{display:grid;gap:8px;margin:8px 0 16px}
-.claim{text-align:left;padding:10px 14px;min-height:52px;background:var(--paper);border:1.5px solid var(--line);border-radius:3px;cursor:pointer;font-family:var(--serif);font-size:16px}
-.claim.on{border-color:var(--sea);background:var(--sea-soft)}
-textarea{width:100%;min-height:72px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--line);border-radius:3px;background:#fff}
+/* intro overlay */
+.intro{position:fixed;inset:0;z-index:20;background:rgba(14,26,32,.94);display:grid;place-items:center;padding:20px}
+.folder{width:min(560px,100%);background:#d9c79c;color:var(--ink);padding:30px 30px 26px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:fold .5s cubic-bezier(.34,1.3,.64,1)}
+.folder::before{content:"";position:absolute;left:0;top:-22px;width:40%;height:24px;background:#d9c79c;border-radius:4px 4px 0 0}
+.folder .k{font-size:13px;letter-spacing:.14em;font-weight:700;color:var(--seal)}
+.folder .yr{font-family:var(--serif);font-size:76px;font-weight:900;line-height:1;margin:6px 0 4px}
+.folder .yr.sm{font-size:46px}
+.folder .t{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:12px}
+.folder p{font-size:15px;margin:0 0 18px;color:#3d3522}
+.folder .act{background:var(--ink)}
+@keyframes fold{from{transform:translateY(30px) scale(.96);opacity:0}to{transform:none;opacity:1}}
 
 /* result */
-.traj{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:12px 0;border:1px solid var(--line);background:var(--paper)}
-.traj > div{padding:12px;border-right:1px solid var(--line);position:relative}
-.traj > div:last-child{border-right:0}
-.traj b{display:block;font-size:13px;color:var(--muted)}
-.traj .v{font-size:18px;font-weight:700}
-.traj .v.up{color:var(--ok)} .traj .v.down{color:var(--seal)}
-.qs{background:var(--ink);color:#f3efe6;padding:16px 20px;margin:16px 0}
-.qs h3{color:#f3efe6}
-.qs ol{margin:0;padding-left:20px}
+.res{max-width:820px;margin:0 auto}
+.res h1{font-family:var(--serif);color:#f5efe2;font-size:30px;margin:6px 0 14px}
+.res .k{color:#f0c96a;font-size:13px;font-weight:700;letter-spacing:.12em}
+.res .box{background:var(--work);padding:16px 18px;margin:0 0 16px}
+.res .box h2{font-family:var(--serif);font-size:20px;margin:0 0 10px}
+.res ol{margin:0;padding-left:20px}
+.res .btns{display:flex;flex-wrap:wrap;gap:10px}
+.res .btns .act{width:auto;background:var(--work)}
+.savemsg{color:#c7d3d7;font-size:14px;margin:0 0 10px}
 
-.tray{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(27,36,48,.96);color:#f3efe6;z-index:5;overflow-x:auto}
-.tray-label{font-size:13px;opacity:.75;flex:0 0 auto}
-.tray-cards{display:flex;gap:6px}
-.chip{flex:0 0 auto;font-size:13px;border:1px solid #8fb3bd;padding:2px 8px;border-radius:2px;white-space:nowrap}
-.chip.new{animation:chip-in 1.4s ease}
-@keyframes chip-in{0%{border-color:#f6e1a8;color:#f6e1a8}100%{border-color:#8fb3bd;color:#f3efe6}}
-.toast{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:3px;font-size:15px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;z-index:6}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e1a20;color:#fff;padding:10px 18px;border-radius:3px;font-size:15px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;z-index:30;border-left:4px solid #f0c96a}
 .toast.show{opacity:1}
 
-@media (max-width:640px){
+@media (max-width:860px){
   body{font-size:16px}
-  .top{padding:8px 12px}
-  .steps li{width:16px}
-  .stage{padding:16px 16px 110px}
-  h1{font-size:25px} h2{font-size:21px}
-  .doc{padding:14px}
-  .doc-body{font-size:17px}
-  .judge{grid-template-columns:1fr}
-  .compare,.gov2{grid-template-columns:1fr}
-  .traj{grid-template-columns:1fr}
-  .traj > div{border-right:0;border-bottom:1px solid var(--line)}
-  .stamp{position:static;display:inline-block;margin-bottom:10px}
-  .panel{padding:16px}
-}
-@media print{
-  .top,.timeline,.tray,.row,.toast{display:none!important}
-  body{background:#fff}
+  .prog li{padding:2px 6px;font-size:12px}
+  .prog li:not(.now){display:none}
+  .brand small{display:none}
+  .tabs{display:flex;flex:0 0 auto;background:#121f27}
+  .tabs button{flex:1;min-height:48px;background:none;border:0;color:#8fa1a9;font-weight:700;font-size:16px;border-bottom:3px solid transparent;position:relative;cursor:pointer}
+  .tabs button.on{color:#fff;border-bottom-color:#f0c96a}
+  .tabs button.dot::after{content:"";display:inline-block;margin-left:6px;width:9px;height:9px;border-radius:50%;background:#f0c96a;vertical-align:2px}
+  .grid{grid-template-columns:1fr}
+  body.pane-work .grid:not(.single) .desk{display:none}
+  body.pane-desk .grid .work{display:none}
+  .work{border-left:0}
+  .desk{padding:22px 12px 40px}
+  .sheet{padding:16px 14px 18px}
+  .body{font-size:17px;line-height:2.1}
+  .memo{position:static;transform:none;display:block;margin:0 0 10px;max-width:none}
+  .opts.row3{grid-template-columns:1fr}
+  .expo{padding:18px 14px}
+  .expo .ttl{font-size:21px;padding-right:0}
+  .stamp{position:static;display:inline-block;margin-bottom:8px}
+  .tl-item{width:100px}
+  .mtask{display:block;position:sticky;top:-22px;z-index:4;margin:-22px -12px 16px;background:var(--ink);color:#f5efe2;padding:8px 14px 10px;border-bottom:3px solid #f0c96a;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+  .mtask.done{background:var(--ok)}
+  .mtask .no{font-size:11px;color:#f0c96a;font-weight:700;letter-spacing:.06em;display:flex;gap:6px;align-items:center}
+  .mtask .no i{display:none}
+  .mtask p{margin:0;font-size:16px;font-weight:700;line-height:1.45}
+  .mtask p u{text-decoration:none;background:linear-gradient(transparent 60%,rgba(240,201,106,.55) 60%)}
+  .mtask small,.mtask .where{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
-<body>
+<body class="pane-desk">
 <header class="top">
-  <div class="brand"><span class="seal">獨</span><div><strong>독도연구소</strong><small>1905 파일 · 전시 검수</small></div></div>
-  <ol class="steps" id="steps" aria-label="진행 단계"></ol>
+  <div class="brand"><span class="seal">獨</span><div><strong>독도연구소 · 1905 파일</strong><small>전시 검수 인턴</small></div></div>
+  <ol class="prog" id="prog" aria-label="진행 단계"></ol>
 </header>
 <nav class="timeline" id="timeline" aria-label="시간 띠"></nav>
-<main id="stage" class="stage" tabindex="-1"></main>
-<footer class="tray" id="tray" hidden>
-  <span class="tray-label">확보한 사료</span>
-  <div class="tray-cards" id="trayCards"></div>
-</footer>
+<div class="tabs" id="tabs"><button type="button" data-p="desk" class="on">사료 책상</button><button type="button" data-p="work">작업판</button></div>
+<main class="grid" id="grid">
+  <section class="desk" id="desk" aria-label="사료 책상"></section>
+  <aside class="work" id="work" aria-label="작업판"></aside>
+</main>
+<div class="intro" id="intro" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
-/* 독도연구소: 1905 파일 v2.0 — DESIGN_LOCK: design-locks/dokdo1905_DESIGN_LOCK_v2.0.md
-   메커닉은 찾기·판단·배치 세 가지만 사용한다. 석도 판단에는 정오 피드백을 주지 않는다. */
+/* 독도연구소: 1905 파일 v2.1 — DESIGN_LOCK: design-locks/dokdo1905_DESIGN_LOCK_v2.0.md
+   흐름·메커닉(찾기·판단·배치)은 v2.0 잠금 그대로. v2.1은 화면(연구소 책상형) 개편. */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const P=new URLSearchParams(location.search);
-const GAME_ID='dokdo1905',VER='2.0',CLASS=(P.get('class')||'미입력').slice(0,40),NOSAVE=P.get('save')==='0';
-const SB='https://xgniwztlrakkrbzcfklb.supabase.co',KEY='sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9',SK='DOKDO1905_v2_0';
+const GAME_ID='dokdo1905',VER='2.1',CLASS=(P.get('class')||'미입력').slice(0,40),NOSAVE=P.get('save')==='0';
+const SB='https://xgniwztlrakkrbzcfklb.supabase.co',KEY='sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9',SK='DOKDO1905_v2_1';
 const SCENES=['s0','s1','s2','s3','s4','s5','s6','r'];
+const SNAME={s0:'검수',s1:'1905',s2:'1877',s3:'1900',s4:'1904',s5:'1906',s6:'전시'};
 
-const S0={scene:'s0',cards:[],lit:[],misses:0,j1900:'',u1904:'',u1906:'',s2id:'',opened:[],sortErr:0,
-  panel:{cards:[],claims:{},support:{}},review:'',reviewCard:'',closing:'',own:'',startedAt:'',resultId:'',completedAt:'',submittedAt:''};
+const S0={scene:'s0',step:0,intro:true,found:[],cards:[],lit:[],misses:0,j1900:'',u1904:'',u1906:'',s2id:'',opened:[],sortErr:0,placed1:{},placed5:{},
+  panel:{cards:[null,null,null],claims:{},support:{}},review:'',reviewCard:'',closing:'',own:'',startedAt:'',resultId:'',completedAt:'',submittedAt:''};
 let S=JSON.parse(JSON.stringify(S0));
 function save(){try{sessionStorage.setItem(SK,JSON.stringify(S))}catch{}}
 function load(){try{const x=JSON.parse(sessionStorage.getItem(SK)||'null');if(x&&SCENES.includes(x.scene))S=Object.assign(JSON.parse(JSON.stringify(S0)),x)}catch{}}
@@ -257,433 +318,440 @@ const TL=[
  {id:'t9',d:'1906.5',t:'참정대신 지령 제3호'}
 ];
 const CARDS={
- E00:{n:'1905 일본 내각 결정',y:'1905',
+ E00:{n:'1905 일본 내각 결정',
    d:'1905년 일본 내각 결정은 이 섬에 "다른 나라가 점유했다고 인정할 형적이 없다"고 적었다.',
    x:'1905년 일본은 주인이 있는 섬을 몰래 빼앗았다.',xt:'over',
    limit:'이 결정이 대한제국에 알려졌는지는 이 문서만으로 알 수 없다.'},
- E01:{n:'1877 태정관 지령',y:'1877',
+ E01:{n:'1877 태정관 지령',
    d:'1877년 태정관은 "죽도 외 일도"가 일본과 관계없다고 지령했다.',
    x:'1877년 일본 정부는 독도가 한국 땅이라고 인정했다.',xt:'link',
    limit:'지령 본문에는 "외 일도"가 어느 섬인지 이름이 적혀 있지 않다.'},
- E02:{n:'1876 기죽도약도',y:'1877',
+ E02:{n:'1876 기죽도약도',
    d:'시마네현이 제출한 약도에는 磯竹島와 松島 두 섬이 그려져 있다.',
    x:'이 약도는 독도가 조선 땅임을 보여 준다.',xt:'link',
    limit:'당시 조선 정부가 이 섬들을 어떤 방식으로 관리했는지는 이 약도만으로 알 수 없다.'},
- E03:{n:'1900 칙령 제41호',y:'1900',
+ E03:{n:'1900 칙령 제41호',
    d:'1900년 대한제국은 울도군의 관할 구역에 "울릉전도, 죽도, 석도"를 적었다.',
    x:'1900년 대한제국은 독도를 울도군 관할로 정했다.',xt:'link',
    limit:'여기의 "석도"가 어떤 섬을 가리키는지는 추가 자료가 필요하다.'},
- E04:{n:'1904 군함 니타카 기록',y:'1904',
+ E04:{n:'1904 군함 니타카 기록',
    d:'1904년 일본 군함 기록에 따르면 한국인은 이 섬을 "獨島"라고 썼다.',
    x:'1904년 대한제국 정부는 이 섬의 공식 이름을 독도로 정했다.',xt:'over',
    limit:'일본 군함이 울릉도에서 들은 이야기를 적은 것으로, 대한제국의 공식 문서가 아니다.'},
- E05:{n:'1906 울도군수 보고',y:'1906',
+ E05:{n:'1906 울도군수 보고',
    d:'1906년 울도군수는 이 섬을 "본군 소속 독도"라고 보고했다.',
    x:'1906년 대한제국은 일본 정부에 공식 항의했다.',xt:'over',
    limit:'이 보고만으로 1900년의 "석도"와 같은 섬인지까지 확정되지는 않는다.'},
- E06:{n:'1906 참정대신 지령 제3호',y:'1906',
+ E06:{n:'1906 참정대신 지령 제3호',
    d:'1906년 중앙정부는 일본 영지라는 말을 "전혀 근거가 없다"고 하며 다시 조사해 보고하라고 지시했다.',
    x:'1906년 대한제국은 일본의 편입을 국제 사회에 알리고 취소시켰다.',xt:'over',
    limit:'지령은 사실관계 재조사를 지시한 문서로, 대외 항의 문서가 아니다.'}
 };
 const JUDGE1={low:'가능성이 낮다',unsure:'판단하기 어렵다',possible:'가능성이 있다'};
-const UPD={weaken:'약화한다',same:'그대로다',strengthen:'강화한다'};
+const UPD={weaken:'덜 그렇다',same:'그대로다',strengthen:'더 그렇다'};
+const UPDBTN={weaken:'← 덜 그렇다',same:'그대로다',strengthen:'더 그렇다 →'};
+const CLOSING={
+  c1:{t:'1905년 이전과 이후에도, 이 섬에 관한 한국과 일본의 기록이 여러 개 남아 있다.'},
+  c2:{t:'1877·1900·1904·1906년의 기록을 함께 읽으면, 1905년 결정문의 "다른 나라가 점유한 형적이 없다"는 판단은 그대로 받아들이기 어렵다.'},
+  c3:{t:'독도는 우리 땅이니 더 설명할 필요가 없다.'}};
 
 /* ---------- 공통 UI ---------- */
-const stage=$('#stage');
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2600)}
-function steps(){const i=SCENES.indexOf(S.scene);$('#steps').innerHTML=SCENES.slice(0,7).map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}" title="S${k}"></li>`).join('')}
-function timeline(fresh=[]){$('#timeline').innerHTML=TL.map(x=>`<div class="tl ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${fresh.includes(x.id)?'fresh':''}"><b>${x.d}</b><span>${x.t}</span></div>`).join('');
-  if(fresh.length){const el=$$('.tl.fresh')[0];el&&el.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}}
-function light(ids){const f=ids.filter(i=>!S.lit.includes(i));S.lit.push(...f);save();timeline(f)}
-function tray(fresh){const t=$('#tray');t.hidden=!S.cards.length||S.scene==='r';$('#trayCards').innerHTML=S.cards.map(c=>`<span class="chip ${c===fresh?'new':''}">${c} ${CARDS[c].n}</span>`).join('')}
-function gain(id){if(!S.cards.includes(id)){S.cards.push(id);save();tray(id);toast(`사료 카드 확보: ${CARDS[id].n}`)}}
-function vn(who,text){return `<div class="vn"><span class="who">${who}</span><p>${text}</p></div>`}
-function go(scene){S.scene=scene;save();render()}
+const desk=$('#desk'),work=$('#work');
+const mobile=()=>matchMedia('(max-width:860px)').matches;
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2800)}
+function prog(){const i=SCENES.indexOf(S.scene);$('#prog').innerHTML=SCENES.slice(0,7).map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}">${SNAME[s]}</li>`).join('')}
+function timeline(fresh=[]){
+  $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${fresh.includes(x.id)?'fresh':''}"><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
+  const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+function light(ids){const f=ids.filter(i=>!S.lit.includes(i));if(!f.length)return;S.lit.push(...f);save();timeline(f)}
+function gain(id){if(S.cards.includes(id))return;S.cards.push(id);S._fresh=id;save();toast(`사료 카드 확보 — ${CARDS[id].n}`)}
+function pane(p,flag){document.body.classList.toggle('pane-desk',p==='desk');document.body.classList.toggle('pane-work',p==='work');
+  $$('#tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.p===p);if(b.dataset.p===p)b.classList.remove('dot')});
+  if(flag&&mobile()){const o=$(`#tabs button[data-p="${p==='desk'?'work':'desk'}"]`);o&&o.classList.add('dot')}}
+$$('#tabs button').forEach(b=>b.onclick=()=>pane(b.dataset.p));
 
-/* 찾기: 문서의 구절 중 목표 구절을 터치해 표시한다 */
-function doc({title,meta=[],segs,orig}){
-  return `<article class="doc"><div class="doc-meta">${meta.map(m=>`<span class="tag ${m[1]||''}">${m[0]}</span>`).join('')}</div>
-  ${title?`<div class="doc-title">${title}</div>`:''}
-  <div class="doc-body">${segs.map((s,i)=>`<button class="seg" data-i="${i}" type="button">${s.t}</button>`).join(' ')}</div>
-  ${orig?`<span class="orig">${orig}</span>`:''}</article>`}
-function find(root,segs,targets,onDone,miss='찾는 표현이 아닙니다. 과제를 다시 읽어 보세요.'){
-  const left=new Set(targets);
-  root.querySelectorAll('.seg').forEach(b=>{b.onclick=()=>{
-    const i=+b.dataset.i,s=segs[i];
-    if(b.classList.contains('hit'))return;
-    if(left.has(s.id)){b.classList.add('hit');left.delete(s.id);if(s.ok)toast(s.ok);if(!left.size){root.querySelectorAll('.seg:not(.hit)').forEach(x=>x.classList.add('static'));onDone()}}
-    else{S.misses++;save();b.classList.remove('miss');void b.offsetWidth;b.classList.add('miss');toast(s.note||miss)}
-  }})}
-/* 판단: 세 버튼 중 하나 */
-function judge(el,opts,cur,cb){el.innerHTML=Object.entries(opts).map(([k,v])=>`<button type="button" class="opt ${cur===k?'on':''}" data-k="${k}">${v}</button>`).join('');
-  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{el.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));cb(b.dataset.k)})}
-/* 배치: 카드 선택 → 칸 선택 */
-function place(root,{items,check,onPlace,onDone,errKey='sortErr'}){
-  let sel=null;const done={};
-  const cardEls=root.querySelectorAll('.card'),slotEls=root.querySelectorAll('.slot');
-  cardEls.forEach(c=>c.onclick=()=>{sel=c.dataset.id;cardEls.forEach(x=>x.classList.toggle('sel',x===c));slotEls.forEach(s=>{if(!s.classList.contains('filled'))s.classList.add('ready')})});
-  slotEls.forEach(s=>s.onclick=()=>{
-    if(!sel){toast('먼저 위의 카드를 고르세요.');return}
-    if(s.classList.contains('filled'))return;
-    const ok=check?check(sel,s.dataset.slot):true;
-    if(!ok){S[errKey]++;save();s.classList.remove('wrong');void s.offsetWidth;s.classList.add('wrong');toast(items[sel].why||'이 칸에 맞지 않습니다. 구절을 말한 주체를 다시 확인해 보세요.');return}
-    s.classList.add('filled');s.classList.remove('ready','wrong');s.insertAdjacentHTML('beforeend',`<div class="placed">${items[sel].t}</div>`);
-    root.querySelector(`.card[data-id="${sel}"]`).classList.add('used');done[s.dataset.slot]=sel;onPlace&&onPlace(sel,s.dataset.slot);sel=null;
-    cardEls.forEach(x=>x.classList.remove('sel'));slotEls.forEach(x=>x.classList.remove('ready'));
-    if(Object.keys(done).length===slotEls.length)onDone(done)})}
+function vn(text){return `<div class="vn"><span class="ava" aria-hidden="true">윤</span><div class="bubble"><b class="who">윤 연구원 · 선임</b>${text}</div></div>`}
+function task(no,total,text,sub='',done=false,atDesk=true){
+  return `<div class="task ${done?'done':''}"><div class="no">과제 ${no} / ${total}<i>${Array.from({length:total},(_,k)=>`<u class="${k<no?'on':''}"></u>`).join('')}</i>${done?' ✓':''}</div><p>${text}</p>${sub?`<small>${sub}</small>`:''}${atDesk&&!done&&mobile()?'<span class="where">▶ 사료 책상 탭에서 하세요</span>':''}</div>`}
+function files(){if(!S.cards.length)return '';const f=S._fresh;S._fresh='';
+  return `<div class="files"><h4>확보한 사료 ${S.cards.length} / 7</h4><div class="row">${S.cards.map(c=>`<span class="ftab ${c===f?'new':''}">${CARDS[c].n}</span>`).join('')}</div></div>`}
+function syncTask(){const t=work.querySelector('.task');let m=desk.querySelector('.mtask');
+  if(!t){m&&m.remove();return}if(!m){m=document.createElement('div');m.className='mtask';desk.prepend(m)}m.className='mtask'+(t.classList.contains('done')?' done':'');m.innerHTML=t.innerHTML}
+function setWork(html){work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;syncTask()}
+function setDesk(html){desk.innerHTML=`<div class="enter">${html}</div>`;syncTask()}
+
+/* 판단계 — "石島는 이 섬이다" 쪽으로 얼마나 기울었는가. 정답 위치는 없다. */
+const BASE={low:2,unsure:4,possible:6},DELTA={weaken:-1,same:0,strengthen:1};
+const clamp=v=>Math.max(1,Math.min(7,v));
+function points(pend){const p=[];if(!S.j1900)return p;let v=BASE[S.j1900];p.push(['1900',v]);
+  for(const [y,u] of [['1904',S.u1904],['1906',S.u1906]]){if(!u)break;v=clamp(v+DELTA[u]);p.push([y,v])}
+  if(pend)p.push(['새 판단',clamp(p[p.length-1][1]+DELTA[pend])]);return p}
+function meter(pend,title='석도 판단계'){
+  const p=points(pend),x=v=>`${(v-1)/6*100}%`,stack={};
+  return `<div class="meter"><h4>${title}</h4><div class="mq">1900년 칙령의 "石島"는 우리가 조사하는 이 섬인가?</div>
+   <div class="mtrack">${[1,2,3,4,5,6,7].map(v=>`<i class="mtick" style="left:${x(v)}"></i>`).join('')}
+   ${p.map(([y,v],k)=>{const n=stack[v]=(stack[v]||0)+1,last=k===p.length-1,cls=pend&&last?'pend':last?'now':'ghost';
+     return `<div class="mk ${cls}" style="left:${x(v)};bottom:${-4+(n-1)*34}px">${y}<i></i></div>`}).join('')}</div>
+   <div class="mends"><span>← <b>다른 섬</b>일 것</span><span>보류</span><span><b>이 섬</b>일 것 →</span></div>
+   ${p.length?'':'<p class="mends" style="justify-content:center;margin:6px 0 0">아직 판단 전이에요. 아래에서 고르면 점이 찍혀요.</p>'}</div>`}
+
+/* 찾기 */
+function doc({label,labelSea,title,meta=[],segs,orig,key,extra=''}){
+  return `<article class="sheet tilt">${label?`<span class="label ${labelSea?'sea':''}">${label}</span>`:''}${extra}
+   <div class="meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>${title?`<h3>${title}</h3>`:''}
+   <div class="body" data-key="${key}">${segs.map((s,i)=>{const hit=s.id&&S.found.includes(key+':'+s.id);return `<button class="seg ${hit?'hit':''}" data-i="${i}" type="button">${s.t}</button>`}).join(' ')}</div>
+   ${orig?`<span class="orig">${orig}</span>`:''}</article>`}
+function find(key,segs,targets,onDone){
+  const root=desk.querySelector(`.body[data-key="${key}"]`),left=new Set(targets.filter(t=>!S.found.includes(key+':'+t)));let miss=0;
+  if(!left.size){root.querySelectorAll('.seg:not(.hit)').forEach(x=>x.classList.add('off'));return}
+  root.querySelectorAll('.seg').forEach(b=>b.onclick=()=>{
+    const s=segs[+b.dataset.i];if(b.classList.contains('hit')||b.classList.contains('off'))return;
+    if(left.has(s.id)){b.classList.add('hit');b.classList.remove('hint');left.delete(s.id);S.found.push(key+':'+s.id);save();if(s.ok)toast(s.ok);
+      if(!left.size){root.querySelectorAll('.seg:not(.hit)').forEach(x=>x.classList.add('off'));setTimeout(onDone,600)}}
+    else{S.misses++;miss++;save();b.classList.remove('miss');void b.offsetWidth;b.classList.add('miss');toast(s.note||'찾는 구절이 아니에요. 과제를 다시 읽어 보세요.');
+      if(miss>=2){const t=[...root.querySelectorAll('.seg')].find(x=>left.has(segs[+x.dataset.i].id));t&&t.classList.add('hint')}}
+  })}
+/* 판단 버튼 */
+function opts(el,map,cur,cb,cls='row3'){el.className='opts '+cls;el.innerHTML=Object.entries(map).map(([k,v])=>`<button type="button" class="opt ${cur===k?'on':''}" data-k="${k}">${v}</button>`).join('');
+  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>cb(b.dataset.k))}
+/* 배치: 카드 → 칸 */
+function place(root,{items,check,store,errKey='sortErr',onDone}){
+  let sel=null;const cards=root.querySelectorAll('.card[data-id]'),slots=root.querySelectorAll('.slot');
+  const fill=(slot,id)=>{slot.classList.add('filled');slot.classList.remove('ready','wrong');slot.insertAdjacentHTML('beforeend',`<div class="placed">${items[id].t}</div>`);root.querySelector(`.card[data-id="${id}"]`).classList.add('used')};
+  Object.entries(store).forEach(([sl,id])=>{const s=root.querySelector(`.slot[data-slot="${sl}"]`);s&&fill(s,id)});
+  if(Object.keys(store).length===slots.length)return;
+  cards.forEach(c=>c.onclick=()=>{sel=c.dataset.id;cards.forEach(x=>x.classList.toggle('sel',x===c));slots.forEach(s=>{if(!s.classList.contains('filled'))s.classList.add('ready')})});
+  slots.forEach(s=>s.onclick=()=>{if(s.classList.contains('filled'))return;if(!sel){toast('먼저 카드를 한 장 고르세요.');return}
+    if(check&&!check(sel,s.dataset.slot)){S[errKey]++;save();s.classList.remove('wrong');void s.offsetWidth;s.classList.add('wrong');toast(items[sel].why||'이 칸이 아니에요.');return}
+    fill(s,sel);store[s.dataset.slot]=sel;save();sel=null;cards.forEach(x=>x.classList.remove('sel'));slots.forEach(x=>x.classList.remove('ready'));
+    if(Object.keys(store).length===slots.length)setTimeout(onDone,450)})}
+
+function intro(k,yr,t,p,btn){const el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';
+  el.innerHTML=`<div class="folder" role="dialog" aria-label="${esc(t)}"><div class="k">${k}</div><div class="yr ${yr.length>5?'sm':''}">${yr}</div><div class="t">${t}</div><p>${p}</p><button class="act" id="introGo" type="button">${btn}</button></div>`;
+  $('#introGo').onclick=()=>{el.hidden=true;S.intro=false;save();R[S.scene]()};$('#introGo').focus()}
+function go(scene){S.scene=scene;S.step=0;S.intro=true;save();render()}
+function step(n){S.step=n;save();R[S.scene]()}
 
 /* ---------- S0 검수 보류 ---------- */
+const S0SEG=[
+  {t:'독도는 우리 땅이다.',note:'패널의 결론이에요. 메모는 "어떤 기록?"이라고 묻고 있어요. 기록을 말한 문장을 찾아보세요.'},
+  {t:'1905년 일본은 이 섬을 시마네현에 편입했다.',note:'날짜와 사건이 적힌 문장이에요. 메모가 가리키는 곳은 아니에요.'},
+  {t:'일본은 이 섬에 주인이 없었다고 했지만,',note:'1905 파일에서 확인할 표현이에요. 메모는 "기록"에 대해 묻고 있어요.'},
+  {t:'그 이전부터 이 섬에 관한 기록이 여러 개 남아 있다.',id:'x',ok:'찾았어요 — 어떤 기록인지 비어 있는 문장'}];
 function s0(){
-  const segs=[
-    {t:'독도는 우리 땅이다.',note:'이 패널의 결론입니다. 결론이 설득력을 가지려면 뒤의 근거 문장이 채워져야 합니다.'},
-    {t:'1905년 일본은 이 섬을 시마네현에 편입했다.',note:'날짜와 사건이 적힌 문장입니다. 검수자가 문제 삼은 곳은 아닙니다.'},
-    {t:'일본은 이 섬에 주인이 없었다고 했지만,',note:'1905 파일에서 확인할 표현입니다. 검수 메모가 가리키는 곳은 다른 문장입니다.'},
-    {t:'그 이전부터 이 섬에 관한 기록이 여러 개 남아 있다.',id:'x'}];
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S0 · 개막 하루 전</div>
-   <h1>독도연구소: 1905 파일</h1>
-   ${vn('윤 연구원','내일 청소년 디지털 전시가 열려요. 그런데 이 패널에 <b>검수 보류</b>가 걸렸어요. 인턴님이 사료로 검수해서 패널을 확정해 주세요.')}
-   <div class="task" id="task">검수 메모: <b>"어떤 기록? 날짜·작성자 표시 없음"</b> — 메모가 가리키는 문장을 찾아 터치하세요.<small>밑줄 친 구절은 모두 터치할 수 있습니다.</small></div>
-   <div id="d">${doc({title:'전시 패널 초안 — 「독도, 1905년」',meta:[['전시 초안'],['검수 보류','now']],segs})}</div>
-   <div id="after" hidden>
-     <div class="note">이 패널은 결론만 있고 근거가 비어 있습니다. 이번 조사로 채워야 할 질문은 이것입니다.</div>
-     <h2>1905년의 조치를 판단하려면, 그 이전의 어떤 기록을 확인해야 할까?</h2>
-     <p class="muted">위쪽 <b>시간 띠</b>는 조사가 진행되면 저절로 채워집니다. 따로 누를 필요는 없습니다.</p>
-     <div class="row"><button class="act" id="next">1905 파일을 연다</button></div>
-   </div></div>`;
-  find($('#d'),segs,['x'],()=>{$('#task').classList.add('done');$('#task').innerHTML='✓ 근거가 비어 있는 문장을 찾았습니다.';$('#after').hidden=false;$('#after').scrollIntoView({behavior:'smooth',block:'start'})});
-  $('#next').onclick=()=>go('s1');
+  if(S.intro)return intro('독도연구소 · 전시 검수','1905 파일','개막 하루 전, 패널 하나에 검수 보류가 걸렸다','당신은 청소년 디지털 전시를 준비하는 연구소 인턴입니다. 사료로 근거를 확인해 패널을 확정해야 합니다.','검수를 시작한다');
+  const done=S.step>0;
+  setDesk(doc({label:'전시 패널 초안',title:'「독도, 1905년」',meta:['전시 초안','작성: 이전 담당자'],segs:S0SEG,key:'p0',
+    extra:`<div class="memo">검수 메모 ✎<br>어떤 기록? 날짜·작성자 표시 없음</div>`})+`<p class="desk-cap"><span class="hold ${done?'ok':''}">${done?'조사 착수':'검수 보류'}</span></p>`);
+  if(!done){setWork(vn('인턴님, 내일 전시가 열려요. 그런데 이 패널에 <b>검수 보류</b> 메모가 붙었어요.<br>사료 책상의 <b>노란 형광펜 구절</b>은 모두 터치할 수 있어요.')+
+      task(1,1,'노란 메모가 가리키는 <u>문장</u>을 찾아 터치하세요.','메모: "어떤 기록? 날짜·작성자 표시 없음"'));
+    pane('desk');find('p0',S0SEG,['x'],()=>step(1));return}
+  find('p0',S0SEG,['x'],()=>{});
+  setWork(task(1,1,'근거가 비어 있는 문장을 찾았어요.','',true)+
+    `<div class="note">이 패널은 결론은 있지만 근거가 비어 있어요. 이번 조사로 채워야 할 질문은 이것입니다.</div>
+     <p class="q">1905년의 조치를 판단하려면, 그 이전의 어떤 기록을 확인해야 할까?</p>
+     <div class="note">화면 위쪽 <b>시간 띠</b>는 조사가 진행되면 저절로 켜져요. 따로 누를 필요는 없어요.</div>
+     <button class="act" id="next">1905 파일을 연다</button>`);
+  pane('work',true);$('#next').onclick=()=>go('s1');
 }
 
-/* ---------- S1 1905 파일 ---------- */
+/* ---------- S1 1905 ---------- */
+const S1SEG=[
+  {t:'북위 37도 9분 30초, 동경 131도 55분, 오키섬에서 서북쪽으로 85해리 떨어진 무인도는',note:'섬의 위치를 경위도로 적은 부분이에요.'},
+  {t:'다른 나라가 이를 점유했다고 인정할 만한 형적이 없고,',id:'x',ok:'찾았어요 — 결정문은 "주인이 없다"고 판단했어요.'},
+  {t:'1903년 이래 나카이 요자부로라는 사람이 이 섬에 이주하여 어업에 종사한 것은 관계 서류로 보아 분명하므로,',note:'편입 근거로 든 일본인의 활동이에요. "주인이 없다"는 판단은 다른 구절에 있어요.'},
+  {t:'국제법상 점령한 사실이 있다고 인정하여',note:'"주인 없는 땅을 먼저 차지했다"는 논리예요. 그 전제가 되는 구절을 찾아보세요.'},
+  {t:'이 섬을 다케시마(竹島)라 이름 짓고 시마네현 소속 오키도사의 소관으로 한다.',note:'결정 내용(이름과 소속)이에요.'}];
 function s1(){
-  const segs=[
-    {t:'북위 37도 9분 30초, 동경 131도 55분, 오키섬에서 서북쪽으로 85해리 떨어진 무인도는',note:'섬의 위치를 경위도로 적은 부분입니다.'},
-    {t:'다른 나라가 이를 점유했다고 인정할 만한 형적이 없고,',id:'x',ok:'찾았습니다. 결정문은 이 섬에 "주인이 없었다"고 판단했습니다.'},
-    {t:'1903년 이래 나카이 요자부로라는 사람이 이 섬에 이주하여 어업에 종사한 것은 관계 서류로 보아 분명하므로,',note:'편입의 근거로 든 일본인의 활동입니다. "주인이 없다"는 판단 자체는 다른 구절에 있습니다.'},
-    {t:'국제법상 점령한 사실이 있다고 인정하여',note:'주인 없는 땅을 먼저 차지했다는 논리입니다. 그 전제가 되는 구절을 찾아보세요.'},
-    {t:'이 섬을 다케시마(竹島)라 이름 짓고 시마네현 소속 오키도사의 소관으로 한다.',note:'결정의 내용(이름과 소속)입니다.'}];
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S1 · 1905 사건 파일</div>
-   <h2>1905년 1월 28일, 일본 내각의 결정</h2>
-   ${vn('윤 연구원','먼저 1905년 문서부터 봐요. 일본은 이 결정으로 섬을 편입했고, 한 달 뒤 시마네현이 고시했어요.')}
-   <div class="task" id="task">이 결정문이 <b>"이 섬에는 주인이 없었다"</b>고 판단한 표현을 찾아 터치하세요.</div>
-   <div id="d">${doc({title:'각의 결정문 (요지 번역)',meta:[['1905.1.28'],['일본 내각'],['당대 문서']],segs})}</div>
-   <div id="step2" hidden>
-    <div class="task" id="task2">자료 두 개를 구분하세요. 카드를 고른 다음, 알맞은 칸을 터치하세요.</div>
-    <div class="cards">
-      <button class="card" data-id="a" type="button"><b>자료 ㉠</b>"다른 나라가 점유했다고 인정할 형적이 없고 … 국제법상 점령한 사실이 있다고 인정하여"</button>
-      <button class="card" data-id="b" type="button"><b>자료 ㉡</b>"일본 정부는 1905년 각의 결정으로 다케시마를 시마네현에 편입하여 영유 의사를 재확인했다."</button>
-    </div>
-    <div class="slots">
-      <div class="slot" data-slot="then"><b>1905년에 만들어진 문서</b></div>
-      <div class="slot" data-slot="now"><b>오늘날 일본 정부(외무성)의 설명</b></div>
-    </div>
-    <div id="after" hidden>
-      <div class="note">같은 1905년 조치를 두고, 당대 문서는 <b>"다른 나라가 점유한 형적이 없어 점령한다"</b>고 적었고 오늘날 설명은 <b>"재확인했다"</b>고 씁니다. 작성 시점과 작성 주체가 다른 자료이므로 구분해서 읽어야 합니다.</div>
-      <div class="note warn">"다른 나라가 점유한 형적이 없다"는 판단이 맞는지 확인하려면 <b>1905년 이전의 기록</b>을 봐야 합니다. 1877년과 1900년 파일이 열렸습니다.</div>
-      <div class="row"><button class="act" id="next">1877년 기록으로 거슬러 간다</button></div>
-    </div>
-   </div></div>`;
-  find($('#d'),segs,['x'],()=>{$('#task').classList.add('done');$('#task').textContent='✓ "다른 나라가 점유했다고 인정할 만한 형적이 없다"';light(['t4','t5']);gain('E00');$('#step2').hidden=false;
-    place($('#step2'),{items:{a:{t:'자료 ㉠ 각의 결정문',why:'자료 ㉠은 1905년 결정문의 구절입니다.'},b:{t:'자료 ㉡ 외무성 설명',why:'자료 ㉡은 오늘날 정부가 과거 사건을 설명한 글입니다.'}},errKey:'misses',
-      check:(c,s)=>(c==='a'&&s==='then')||(c==='b'&&s==='now'),
-      onDone:()=>{$('#task2').classList.add('done');$('#task2').textContent='✓ 당대 문서와 오늘날 설명을 구분했습니다.';$('#after').hidden=false;light(['y1877','y1900'])}});
-    $('#step2').scrollIntoView({behavior:'smooth',block:'start'})});
-  $('#next').onclick=()=>go('s2');
+  if(S.intro)return intro('FILE 01','1905','일본 내각의 결정','1905년 1월 28일, 일본 내각은 이 섬을 편입하기로 결정했고 한 달 뒤 시마네현이 고시했습니다. 먼저 이 결정문부터 읽습니다.','1905 파일을 연다');
+  const d=doc({label:'FILE 01 · 1905',title:'각의 결정문 (요지 번역)',meta:['1905.1.28','일본 내각','당대 문서'],segs:S1SEG,key:'p1',orig:'출처: 일본 국립공문서관 「공문류취」'});
+  if(S.step===0){setDesk(d);setWork(vn('편입 결정문이에요. 이 결정은 섬에 대해 어떤 판단을 했을까요?')+task(1,2,'결정문이 <u>"이 섬에는 주인이 없었다"</u>고 판단한 구절을 찾아 터치하세요.'));
+    pane('desk');find('p1',S1SEG,['x'],()=>{gain('E00');light(['t4','t5']);step(1)});return}
+  const items={a:{t:'㉠ 각의 결정문',why:'㉠은 1905년 결정문 속 구절이에요.'},b:{t:'㉡ 외무성 설명',why:'㉡은 오늘날 정부가 과거 사건을 설명한 글이에요.'}};
+  setDesk(`<p class="desk-cap">카드를 한 장 고른 다음, 아래 칸을 터치하세요</p>
+    <div class="tray"><button class="card" data-id="a" type="button"><b>자료 ㉠</b>"다른 나라가 점유했다고 인정할 형적이 없고 … 국제법상 점령한 사실이 있다고 인정하여"</button>
+     <button class="card" data-id="b" type="button"><b>자료 ㉡</b>"일본 정부는 1905년 각의 결정으로 다케시마를 시마네현에 편입하여 영유 의사를 재확인했다."</button></div>
+    <div class="slots"><div class="slot" data-slot="then"><b>1905년에 만든 문서</b></div><div class="slot" data-slot="now"><b>오늘날 일본 외무성의 설명</b></div></div>`+d);
+  find('p1',S1SEG,['x'],()=>{});
+  const after=()=>{setWork(task(2,2,'당대 문서와 오늘날 설명을 구분했어요.','',true)+
+    `<div class="note">같은 1905년 조치를 두고 당대 문서는 <b>"다른 나라가 점유한 형적이 없어 점령한다"</b>고 적었고, 오늘날 설명은 <b>"재확인했다"</b>고 써요. 만든 때와 만든 주체가 다른 자료예요.</div>
+     <div class="note warn">"다른 나라가 점유한 형적이 없다"는 판단이 맞는지 확인하려면 <b>1905년 이전의 기록</b>을 봐야 해요. 1877·1900 파일이 열렸어요.</div>
+     <button class="act" id="next">1877 파일로 거슬러 간다</button>`);pane('work',true);light(['y1877','y1900']);$('#next').onclick=()=>go('s2')};
+  if(Object.keys(S.placed1).length<2){setWork(task(2,2,'두 자료가 <u>언제, 누가</u> 만든 것인지 구분하세요.','카드를 한 장 고른 다음, 알맞은 칸을 터치하세요.'));pane('desk')}
+  else after();
+  place(desk,{items,store:S.placed1,errKey:'misses',check:(c,s)=>(c==='a'&&s==='then')||(c==='b'&&s==='now'),onDone:after});
 }
 
 /* ---------- S2 1877 ---------- */
+const S2SEG=[
+  {t:'문의한 취지의',note:'태정관이 받은 문의를 가리키는 말이에요.'},
+  {t:'죽도(竹島) 외 일도(一嶋)의 건은',id:'x',ok:'① 판단 대상 — "죽도 외 일도", 섬 두 개'},
+  {t:'본방(일본)과 관계없음을',id:'y',ok:'② 판단 내용 — 일본과 "관계없다"'},
+  {t:'명심할 것.',note:'지령을 맺는 말이에요.'}];
 const MAP=`<svg viewBox="0 0 800 460" id="map" role="img" aria-label="기죽도약도 도식 재현">
  <defs><pattern id="wv" width="24" height="12" patternUnits="userSpaceOnUse"><path d="M0 8 q6-5 12 0 t12 0" fill="none" stroke="#cdbf9c" stroke-width="1"/></pattern></defs>
- <rect width="800" height="460" fill="#efe6cf"/><rect width="800" height="460" fill="url(#wv)" opacity=".7"/>
+ <rect width="800" height="460" fill="#efe5cb"/><rect width="800" height="460" fill="url(#wv)" opacity=".7"/>
  <g stroke="#7d6a45" stroke-width="1.5" stroke-dasharray="6 5" fill="none"><line x1="262" y1="158" x2="372" y2="212"/><line x1="392" y1="226" x2="660" y2="374"/></g>
- <g font-family="Noto Serif KR,serif" fill="#5a4a2a" font-size="15">
-  <text x="300" y="172" transform="rotate(26 300 172)">乾位四十里許</text>
-  <text x="505" y="292" transform="rotate(29 505 292)">乾位八十里許</text></g>
+ <g font-family="Noto Serif KR,serif" fill="#5a4a2a" font-size="15"><text x="300" y="172" transform="rotate(26 300 172)">乾位四十里許</text><text x="505" y="292" transform="rotate(29 505 292)">乾位八十里許</text></g>
  <g class="isle" data-isle="iso"><circle cx="225" cy="120" r="80" fill="transparent"/><path class="shape" d="M190 110 q30-40 70-12 q26 22 8 52 q-18 30-56 22 q-40-10-40-34 q0-16 18-28z" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/>
-  <text x="170" y="86" font-family="Noto Serif KR,serif" font-size="26" font-weight="700" fill="#2d2413">磯竹島</text></g>
- <g class="isle" data-isle="mat"><circle class="shape" cx="372" cy="214" r="10" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/><circle class="shape" cx="392" cy="222" r="8" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/>
-  <circle cx="385" cy="212" r="58" fill="transparent"/>
-  <text x="402" y="200" font-family="Noto Serif KR,serif" font-size="26" font-weight="700" fill="#2d2413">松島</text></g>
+  <text x="166" y="84" font-family="Noto Serif KR,serif" font-size="28" font-weight="700" fill="#2d2413">磯竹島</text></g>
+ <g class="isle" data-isle="mat"><circle cx="385" cy="212" r="58" fill="transparent"/><circle class="shape" cx="372" cy="214" r="10" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/><circle class="shape" cx="392" cy="222" r="8" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/>
+  <text x="404" y="200" font-family="Noto Serif KR,serif" font-size="28" font-weight="700" fill="#2d2413">松島</text></g>
  <g><path d="M650 372 q20-24 58-12 q30 14 14 40 q-18 22-52 12 q-30-12-20-40z" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/><path d="M600 420 q14-12 32-4 q10 12-4 22 q-20 6-28-18z" fill="#d8c9a1" stroke="#5a4a2a" stroke-width="2"/>
-  <text x="700" y="350" font-family="Noto Serif KR,serif" font-size="18" font-weight="700" fill="#2d2413">隠岐</text></g>
+  <text x="700" y="350" font-family="Noto Serif KR,serif" font-size="22" font-weight="700" fill="#2d2413">隠岐</text></g>
  <g class="modern" id="modern" font-family="Noto Sans KR,sans-serif" font-weight="700">
   <rect x="120" y="186" width="118" height="30" fill="#1f4e5f"/><text x="130" y="207" fill="#fff" font-size="16">오늘의 울릉도</text>
   <rect x="262" y="234" width="104" height="30" fill="#a3322a"/><text x="272" y="255" fill="#fff" font-size="16">오늘의 독도</text>
-  <rect x="600" y="300" width="104" height="30" fill="#1f4e5f"/><text x="610" y="321" fill="#fff" font-size="16">오늘의 오키</text>
-</g>
+  <rect x="600" y="300" width="104" height="30" fill="#1f4e5f"/><text x="610" y="321" fill="#fff" font-size="16">오늘의 오키</text></g>
 </svg>`;
 function s2(){
-  const segsA=[
-    {t:'문의한 취지의',note:'태정관이 받은 문의를 가리키는 말입니다.'},
-    {t:'죽도(竹島) 외 일도(一嶋)의 건은',id:'x',ok:'판단 대상: "죽도 외 일도" — 섬 두 개입니다.'},
-    {t:'본방(일본)과 관계없음을',id:'y',ok:'판단 내용: 일본과 "관계없다".'},
-    {t:'명심할 것.',note:'지령을 맺는 말입니다.'}];
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S2 · 1877 파일</div>
-   <h2>1877년, 일본 태정관의 지령</h2>
-   ${vn('윤 연구원','1876년 시마네현이 "동해의 죽도 외 일도"를 지적(토지 대장)에 넣을지 물었어요. 내무성은 이를 당시 최고 국가기관인 태정관에 다시 물었고, 1877년 답이 내려왔어요.')}
-   <div class="task" id="task">지령에서 ① <b>판단 대상인 섬</b>과 ② <b>그 섬들이 일본과 어떤 관계인지</b>를 찾아 터치하세요.</div>
-   <div id="d">${doc({title:'태정관 지령 (번역)',meta:[['1877.3.29'],['일본 태정관'],['당대 문서']],segs:segsA,orig:'원문: 伺之趣竹島外一嶋之義本邦関係無之義ト可相心得事<br>출처: 일본 국립공문서관 「公文録」, 日本海内竹島外一島地籍編纂方伺'})}</div>
-   <div id="partB" hidden>
-    <div class="note">지령 본문에는 "외 일도"가 <b>어느 섬인지 이름이 없습니다</b>. 같은 문서철에는 1876년 시마네현이 제출한 문서와 약도가 함께 묶여 있습니다. 시마네현 문서는 이렇게 적었습니다. <b>"磯竹島, 일명 竹島 … 그 다음에 섬 하나가 있는데 松島라 부른다."</b></div>
-    <div class="task" id="task2">약도에서 ① <b>磯竹島(이소타케시마)</b>와 ② <b>松島(마쓰시마)</b>를 찾아 터치하세요.</div>
-    <div class="mapwrap">${MAP}<div class="maptools"><button type="button" id="zoom" aria-label="확대">확대</button></div><div class="legend" id="legend" hidden>오늘의 거리 — 울릉도↔독도 약 87 km · 독도↔오키 약 158 km</div>
-     <div class="mapcap">기죽도약도(磯竹島略圖) 도식 재현 — 원본이 아니며, 섬의 명칭·거리 주기·상대 위치만 옮겼습니다. 1876년 시마네현 제출, 1877년 태정관 지령과 같은 「공문록」 문서철에 편철.</div></div>
-    <div id="checkBox" hidden>
-     <div class="check"><h3>사료 검사 카드 · 기죽도약도</h3><dl>
-      <dt>확인할 수 있는 것</dt><dd>시마네현이 문의한 "죽도 외 일도"가 약도에서 磯竹島와 松島 두 섬으로 그려져 있다. 두 섬의 상대적 위치와 거리 주기(오키에서 서북으로 80리쯤 松島, 다시 서북으로 40리쯤 磯竹島).</dd>
-      <dt class="no">확인하기 어려운 것</dt><dd>당시 조선 정부가 이 섬들을 어떤 방식으로 관리했는지.</dd></dl></div>
-     <div class="row"><button class="act ghost" id="overlay">오늘의 지도와 겹쳐 본다</button></div>
-     <div id="idBox" hidden>
-      <div class="note"><span class="layer interp">해석</span>磯竹島(竹島)는 오늘날의 울릉도입니다. 松島는 울릉도에서 오키 쪽으로 떨어진 곳에 그려져 있습니다. 위치와 거리 관계로 松島를 오늘날의 독도로 <b>식별</b>하는 것이 일반적인 해석입니다. 다만 이것은 지도의 위치를 비교해 연결한 해석이고, 지령 본문에 적힌 말은 아닙니다.</div>
-      <p><b>조사 메모:</b> 松島의 위치는 우리가 조사하는 섬과 맞아 보이나요?</p>
-      <div class="judge" id="idj" style="grid-template-columns:1fr 1fr"></div>
-      <div class="row"><button class="act" id="next" disabled>1900년 파일을 연다</button></div>
-     </div>
-    </div>
-   </div></div>`;
-  find($('#d'),segsA,['x','y'],()=>{$('#task').classList.add('done');$('#task').textContent='✓ 태정관은 "죽도 외 일도"가 일본과 관계없다고 지령했습니다.';gain('E01');$('#partB').hidden=false;$('#partB').scrollIntoView({behavior:'smooth',block:'start'})});
-  let zoomed=false;$('#zoom').onclick=()=>{zoomed=!zoomed;$('#map').setAttribute('viewBox',zoomed?'130 60 330 200':'0 0 800 460');$('#zoom').textContent=zoomed?'전체':'확대'};
-  const want=['iso','mat'],hit=new Set();
-  $$('#map .isle').forEach(g=>g.onclick=()=>{const k=g.dataset.isle;if(hit.has(k))return;
-    const next=want.find(w=>!hit.has(w));
-    if(k!==next){S.misses++;save();toast(next==='iso'?'먼저 磯竹島를 찾으세요. 약도의 한자 이름을 확인해 보세요.':'이미 찾은 섬입니다. 이번에는 松島를 찾으세요.');return}
-    hit.add(k);g.classList.add('hit');toast(k==='iso'?'磯竹島 — 시마네현 문서의 "竹島"':'松島 — 시마네현 문서의 "그 다음에 있는 섬 하나"');
-    if(hit.size===2){$('#task2').classList.add('done');$('#task2').textContent='✓ "죽도 외 일도" = 약도의 磯竹島와 松島';gain('E02');$('#checkBox').hidden=false;$('#checkBox').scrollIntoView({behavior:'smooth',block:'start'})}});
-  $('#overlay').onclick=()=>{$('#modern').classList.add('show');$('#legend').hidden=false;if(zoomed)$('#zoom').click();$('#idBox').hidden=false;$('.mapwrap').scrollIntoView({behavior:'smooth',block:'start'})};
-  judge($('#idj'),{match:'맞아 보인다',hold:'판단을 보류한다'},S.s2id,k=>{S.s2id=k;save();$('#next').disabled=false});
-  if(S.s2id)$('#next').disabled=false;
+  if(S.intro)return intro('FILE 02','1877','일본 태정관의 지령','1876년 시마네현이 "동해의 죽도 외 일도"를 지적(토지 대장)에 넣을지 물었습니다. 내무성은 당시 최고 국가기관인 태정관에 다시 물었고, 1877년 답이 내려왔습니다.','1877 파일을 연다');
+  const d=doc({label:'FILE 02 · 1877',title:'태정관 지령 (번역)',meta:['1877.3.29','일본 태정관','당대 문서'],segs:S2SEG,key:'p2',
+    orig:'원문: 伺之趣竹島外一嶋之義本邦関係無之義ト可相心得事<br>출처: 일본 국립공문서관 「公文録」, 日本海内竹島外一島地籍編纂方伺'});
+  if(S.step===0){setDesk(d);setWork(vn('지령은 짧아요. 무엇에 대해, 어떻게 판단했는지 두 곳을 짚어 보세요.')+task(1,3,'지령에서 ① <u>판단 대상인 섬</u>과 ② <u>그 섬들이 일본과 어떤 관계인지</u>를 찾아 터치하세요.'));
+    pane('desk');find('p2',S2SEG,['x','y'],()=>{gain('E01');step(1)});return}
+  const mapSheet=`<article class="sheet" id="mapSheet"><span class="label sea">같은 문서철 · 1876 시마네현 제출</span>
+    <div class="meta"><span>기죽도약도(磯竹島略圖)</span><span>도식 재현 — 원본 아님</span></div>
+    <p style="font-family:var(--serif);margin:0 0 10px">시마네현 문서: <b>"磯竹島, 일명 竹島 … 그 다음에 섬 하나가 있는데 松島라 부른다."</b></p>
+    <div class="map">${MAP}<div class="maptools"><button type="button" id="zoom">확대</button></div></div>
+    <div class="legend" id="legend" ${S.step>=3?'':'hidden'}>오늘의 거리 — 울릉도↔독도 약 87 km · 독도↔오키 약 158 km</div>
+    <span class="orig">섬의 명칭·거리 주기·상대 위치만 옮겨 그렸어요. 1877년 태정관 지령과 같은 「공문록」 문서철에 묶여 있어요.</span></article>`;
+  setDesk(mapSheet+d);find('p2',S2SEG,['x','y'],()=>{});
+  let zoomed=false;$('#zoom').onclick=()=>{zoomed=!zoomed;$('#map').setAttribute('viewBox',zoomed?'130 50 330 210':'0 0 800 460');$('#zoom').textContent=zoomed?'전체':'확대'};
+  const want=['iso','mat'],hit=new Set(S.step>=2?want:[]);hit.forEach(k=>desk.querySelector(`.isle[data-isle="${k}"]`).classList.add('hit'));
+  if(S.step>=3)$('#modern').classList.add('show');
+  if(S.step===1&&mobile())$('#zoom').click();
+  if(S.step===1){
+    setWork(`<div class="note warn">지령 본문에는 "외 일도"가 <b>어느 섬인지 이름이 없어요.</b> 그런데 같은 문서철에 시마네현이 낸 문서와 약도가 묶여 있어요.</div>`+
+      task(2,3,'약도에서 ① <u>磯竹島</u>(이소타케시마)를 찾고, ② <u>松島</u>(마쓰시마)를 찾아 터치하세요.','약도의 한자 이름을 보세요. 작으면 [확대]를 누르세요.'));
+    pane('desk');let miss=0;
+    $$('#map .isle').forEach(g=>g.onclick=()=>{const k=g.dataset.isle;if(hit.has(k))return;const next=want.find(w=>!hit.has(w));
+      if(k!==next){S.misses++;miss++;save();toast(next==='iso'?'먼저 磯竹島를 찾으세요.':'이미 찾은 섬이에요. 이번엔 松島!');if(miss>=2)desk.querySelector(`.isle[data-isle="${next}"]`).classList.add('hint');return}
+      hit.add(k);g.classList.add('hit');g.classList.remove('hint');toast(k==='iso'?'磯竹島 — 시마네현 문서의 "竹島"':'松島 — "그 다음에 있는 섬 하나"');
+      if(hit.size===2){gain('E02');setTimeout(()=>step(2),600)}});
+    return}
+  const check=`<div class="check"><h5>사료 검사 카드 · 기죽도약도</h5><dl>
+    <dt>이 자료에서 확인할 수 있는 것</dt><dd>시마네현이 물은 "죽도 외 일도"가 약도에 磯竹島와 松島 두 섬으로 그려져 있다. 두 섬의 상대 위치와 거리 주기(오키 → 서북 80리쯤 松島 → 다시 서북 40리쯤 磯竹島).</dd>
+    <dt class="no">이 자료만으로 확인하기 어려운 것</dt><dd>당시 조선 정부가 이 섬들을 어떤 방식으로 관리했는지.</dd></dl></div>`;
+  if(S.step===2){setWork(task(3,3,'약도 위에 <u>오늘의 지도</u>를 겹쳐 보세요.','',false,false)+check+`<button class="act" id="ov">오늘의 지도와 겹쳐 본다</button>`);
+    pane('work',true);$('#ov').onclick=()=>{step(3);if(mobile())pane('desk',true)};return}
+  setWork(task(3,3,'松島의 위치는 우리가 조사하는 섬과 맞아 보이나요?','',false,false)+
+    `<div class="note"><span class="layer interp">해석</span>磯竹島(竹島)는 오늘의 울릉도예요. 松島는 울릉도와 오키 사이에 그려져 있어요. 위치와 거리로 松島를 오늘의 독도로 <b>식별</b>하는 것이 일반적 해석이에요. 다만 지도를 비교해 연결한 해석이지, 지령 본문에 적힌 말은 아니에요.</div>
+     <div id="idj"></div>`+check+`<button class="act" id="next" ${S.s2id?'':'disabled'}>조사 메모를 남기고 1900 파일로</button>`);
+  const pick=k=>{S.s2id=k;save();opts($('#idj'),{match:'맞아 보인다',hold:'판단을 보류한다'},k,pick,'row2');$('#next').disabled=false};
+  opts($('#idj'),{match:'맞아 보인다',hold:'판단을 보류한다'},S.s2id,pick,'row2');
+  if(!mobile())pane('work');
   $('#next').onclick=()=>go('s3');
 }
 
 /* ---------- S3 1900 ---------- */
+const S3SEG=[
+  {t:'제1조 울릉도를 울도로 개칭하여 강원도에 부속하고 도감을 군수로 개정하여',note:'제1조는 울릉도를 울도군으로 승격한 내용이에요. 관할 구역은 제2조에 있어요.'},
+  {t:'제2조 군청 위치는 태하동으로 정하고',note:'군청의 위치예요. 관할 구역은 바로 뒤에 나와요.'},
+  {t:'구역은 울릉전도(鬱陵全島)와',id:'a',ok:'① 울릉전도 — 울릉도 전체'},
+  {t:'죽도(竹島)',id:'b',ok:'② 죽도 — 울릉도 바로 옆 작은 섬(오늘의 죽도)'},
+  {t:'석도(石島)를',id:'c',ok:'③ 석도(石島)'},
+  {t:'관할할 것.',note:'"관할한다"는 동사예요. 섬 이름을 찾아보세요.'}];
 function s3(){
-  const segs=[
-    {t:'제1조 울릉도를 울도로 개칭하여 강원도에 부속하고 도감을 군수로 개정하여',note:'제1조: 울릉도를 울도군으로 승격한 내용입니다. 관할 구역은 제2조에 있습니다.'},
-    {t:'제2조 군청 위치는 태하동으로 정하고',note:'군청의 위치입니다. 관할 구역은 뒤에 나옵니다.'},
-    {t:'구역은 울릉전도(鬱陵全島)와',id:'a',ok:'① 울릉전도 — 울릉도 전체'},
-    {t:'죽도(竹島)',id:'b',ok:'② 죽도 — 울릉도 바로 옆의 작은 섬(오늘날 죽도, 대섬)'},
-    {t:'석도(石島)를',id:'c',ok:'③ 석도(石島)'},
-    {t:'관할할 것.',note:'관할한다는 동사입니다. 섬 이름을 찾아보세요.'}];
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S3 · 1900 파일</div>
-   <h2>1900년, 대한제국 칙령 제41호</h2>
-   ${vn('윤 연구원','1900년 대한제국은 울릉도를 울도군으로 승격하고, 군이 다스릴 구역을 정했어요. 관보 제1716호(1900.10.27)에 실렸어요.')}
-   <div class="task" id="task">제2조에서 울도군의 <b>관할 구역으로 적힌 섬 이름 세 개</b>를 모두 찾아 터치하세요.</div>
-   <div id="d">${doc({title:'칙령 제41호 「울릉도를 울도로 개칭하고 도감을 군수로 개정한 건」 (현대어)',meta:[['1900.10.25 반포'],['대한제국'],['당대 문서']],segs,orig:'원문 제2조: 郡廳位寘는 台霞洞으로 定하고 區域은 鬱陵全島와 竹島石島를 管轄할 事<br>출처: 대한제국 관보 제1716호(1900.10.27), 국사편찬위원회 한국사데이터베이스'})}</div>
-   <div id="after" hidden>
-    <div class="note warn"><b>같은 이름, 다른 섬.</b> 1877년 일본 문서의 "竹島"는 울릉도였습니다. 1900년 칙령의 "竹島"는 울릉도 옆의 작은 섬입니다. 사료 속 섬 이름은 시대와 작성자에 따라 다른 섬을 가리킬 수 있습니다.</div>
-    <p>그렇다면 <b>석도(石島)</b>는 어느 섬일까요? 오늘날 두 정부의 설명은 다릅니다.</p>
-    <div class="gov2"><div><b><span class="layer gov">오늘날 설명</span>한국 정부</b>칙령의 석도는 오늘날의 독도이다.</div><div><b><span class="layer gov">오늘날 설명</span>일본 정부(외무성)</b>석도가 독도를 가리킨다고 볼 명확한 근거가 없다.</div></div>
-    <p class="muted">두 설명은 모두 오늘날 정부의 해설이며 1900년의 사료가 아닙니다. 지금까지 읽은 1877·1900년 자료로 스스로 판단해 보세요. 정답은 없고, 판단은 이후 새 자료를 보며 다시 검토합니다.</p>
-    <h3>조사 질문: 칙령의 "石島"는 우리가 조사하는 이 섬을 가리키는가?</h3>
-    <div class="judge" id="j"></div>
-    <div class="row"><button class="act" id="next" disabled>이 판단을 기록하고 1904년 파일을 연다</button></div>
-   </div></div>`;
-  find($('#d'),segs,['a','b','c'],()=>{$('#task').classList.add('done');$('#task').textContent='✓ 울릉전도 · 죽도 · 석도';gain('E03');$('#after').hidden=false;$('#after').scrollIntoView({behavior:'smooth',block:'start'})});
-  judge($('#j'),JUDGE1,S.j1900,k=>{S.j1900=k;save();$('#next').disabled=false});
-  if(S.j1900)$('#next').disabled=false;
-  $('#next').onclick=()=>go('s4');
+  if(S.intro)return intro('FILE 03','1900','대한제국 칙령 제41호','1900년 대한제국은 울릉도를 울도군으로 승격하고, 군이 다스릴 구역을 정했습니다. 관보 제1716호(1900.10.27)에 실렸습니다.','1900 파일을 연다');
+  setDesk(doc({label:'FILE 03 · 1900',title:'칙령 제41호 「울릉도를 울도로 개칭하고 도감을 군수로 개정한 건」 (현대어)',meta:['1900.10.25 반포','대한제국','당대 문서'],segs:S3SEG,key:'p3',
+    orig:'원문 제2조: 郡廳位寘는 台霞洞으로 定하고 區域은 鬱陵全島와 竹島石島를 管轄할 事<br>출처: 대한제국 관보 제1716호(1900.10.27), 국사편찬위원회 한국사데이터베이스'}));
+  if(S.step===0){setWork(vn('이번엔 대한제국의 기록이에요. 울도군이 어디까지 다스렸는지 보세요.')+task(1,2,'제2조에서 울도군의 <u>관할 구역으로 적힌 섬 이름 세 개</u>를 모두 찾아 터치하세요.'));
+    pane('desk');find('p3',S3SEG,['a','b','c'],()=>{gain('E03');step(1)});return}
+  find('p3',S3SEG,['a','b','c'],()=>{});
+  const draw=()=>{
+    setWork(`<div class="note warn"><b>같은 이름, 다른 섬.</b> 1877년 일본 문서의 "竹島"는 울릉도였고, 1900년 칙령의 "竹島"는 울릉도 옆 작은 섬이에요. 섬 이름은 시대와 작성자에 따라 다른 섬을 가리킬 수 있어요.</div>
+      <div class="gov2"><div><b><span class="layer gov">오늘날 설명</span>한국 정부</b>칙령의 석도는 오늘날의 독도이다.</div><div><b><span class="layer gov">오늘날 설명</span>일본 외무성</b>석도가 독도를 가리킨다고 볼 명확한 근거가 없다.</div></div>`+
+      task(2,2,'지금까지 읽은 <u>1877·1900 자료만으로</u> 판단해 보세요.','정답은 없어요. 판단계에 점이 찍히고, 새 자료를 볼 때마다 다시 움직일 수 있어요.',false,false)+
+      meter()+`<div id="j"></div><button class="act" id="next" ${S.j1900?'':'disabled'}>판단계에 기록하고 1904 파일로</button>`);
+    opts($('#j'),JUDGE1,S.j1900,k=>{S.j1900=k;save();draw()});$('#next').onclick=()=>go('s4')};
+  draw();pane('work',true);
+}
+
+/* ---------- 판단 갱신 공통 (S4·S5) ---------- */
+function updater(key,pre,no,total,question,nextLabel,nextScene){
+  const cur=S[key];S[key]='';
+  const draw=pend=>{
+    setWork(pre+task(no,total,question,'판단계에서 <b>회색 점</b>은 지금까지의 내 판단, <b>파란 점</b>은 새 판단이에요.',false,false)+
+      meter(pend)+`<div id="j"></div><button class="act" id="next" ${pend?'':'disabled'}>${nextLabel}</button>`);
+    opts($('#j'),UPDBTN,pend,k=>draw(k));
+    $('#next').onclick=()=>{S[key]=pend;save();go(nextScene)}};
+  draw(cur);
 }
 
 /* ---------- S4 1904 ---------- */
+const S4SEG=[
+  {t:'송도(松島, 당시 일본 해군이 울릉도를 부르던 이름)에서 "리앙코르드 바위"를 실제로 본 사람에게 들은 정보:',note:'정보를 어디서 누구에게 들었는지 밝힌 부분이에요.'},
+  {t:'리앙코르드 바위를',note:'"리앙코르드"는 서양 배가 붙인 이름이에요. 한국인이 부르던 이름은 다른 구절에 있어요.'},
+  {t:'한국인은 "獨島(독도)"라고 쓰고,',id:'x',ok:'한국인은 이 섬을 "獨島"라고 썼다 — 일본 군함의 기록'},
+  {t:'일본 어부들은 줄여서 "량코도"라고 부른다.',note:'일본 어부들이 부르던 이름이에요.'}];
+const OPT={
+  b:{n:'해석 자료 · 돌섬과 독섬',body:'<span class="layer interp">해석</span>당시 울릉도 이주민 가운데 전라도 출신이 많았고, 전라도 방언에서는 "돌"을 "독"이라고도 한다. 그래서 "돌섬"을 한자로 뜻을 옮기면 <b>石島</b>, 소리를 옮기면 <b>獨島</b>가 된다는 설명이 있다. (한국 학계의 해석)'},
+  c:{n:'맥락 자료 · 군함 쓰시마 조사',body:'<span class="layer fact">사실</span>1904년 11월, 러일전쟁 중이던 일본 해군은 군함 쓰시마를 보내 이 섬에 망루·전신 시설을 세울 수 있는지 조사했다. 1905년 편입 전후의 <b>시대 배경</b>이다. 이것 하나만으로 편입의 원인을 확정할 수는 없다.'}};
 function s4(){
-  const segs=[
-    {t:'송도(松島, 당시 일본 해군이 울릉도를 부르던 이름)에서 "리앙코르드 바위"를 실제로 본 사람에게 들은 정보:',note:'정보를 어디서, 누구에게 들었는지 밝힌 부분입니다.'},
-    {t:'리앙코르드 바위를',note:'"리앙코르드"는 서양 배가 이 섬에 붙인 이름입니다. 한국인이 부르던 이름은 다른 구절에 있습니다.'},
-    {t:'한국인은 "獨島(독도)"라고 쓰고,',id:'x',ok:'한국인은 이 섬을 "獨島"라고 썼다 — 일본 군함의 기록'},
-    {t:'일본 어부들은 줄여서 "량코도"라고 부른다.',note:'일본 어부들이 부르던 이름입니다.'}];
-  const opt={
-    b:{n:'해석 자료 · 돌섬과 독섬',body:'<span class="layer interp">해석</span>당시 울릉도 이주민 가운데 전라도 출신이 많았고, 전라도 방언에서는 "돌"을 "독"이라고도 한다. 그래서 "돌섬"을 한자로 뜻을 옮기면 <b>石島</b>, 소리를 옮기면 <b>獨島</b>가 된다는 설명이 있다. (한국 학계의 해석)'},
-    c:{n:'맥락 자료 · 군함 쓰시마 조사',body:'<span class="layer fact">사실</span>1904년 11월, 러일전쟁 중이던 일본 해군은 군함 쓰시마를 보내 이 섬에 망루·전신 시설을 세울 수 있는지 조사했다. 이 조사는 1905년 편입 전후의 <b>시대 배경</b>이다. 이것 하나만으로 편입의 원인을 확정할 수는 없다.'}};
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S4 · 1904 파일</div>
-   <h2>1904년, 러일전쟁 속 일본 군함의 기록</h2>
-   ${vn('윤 연구원','1904년 2월 러일전쟁이 시작됐어요. 같은 달 일본은 한일의정서로 대한제국 안의 군사 요지를 쓸 수 있게 했죠. 그해 일본 군함들이 동해를 조사하며 남긴 기록이 있어요.')}
-   <div class="task" id="task">기록에서 <b>한국인이 이 바위섬을 부르던 이름</b>이 나오는 구절을 찾아 터치하세요.</div>
-   <div id="d">${doc({title:'군함 니타카(新高) 행동일지 (요지 번역)',meta:[['1904.9.25'],['일본 해군 군함'],['당대 문서']],segs,orig:'출처: 일본 방위성 방위연구소 소장 자료(아시아역사자료센터 JACAR)'})}</div>
-   <div id="after" hidden>
-    <div class="note"><b>이 사료의 성격.</b> 일본 군함이 울릉도에서 들은 이야기를 적은 기록입니다. 대한제국 정부가 이름을 정한 공식 문서는 아닙니다. 그래도 1904년에 한국인들이 이 섬을 "독도"라고 쓰고 있었다는 사실을 보여 줍니다.</div>
-    <p class="muted">더 조사하고 싶은 자료가 있으면 열어 보세요. 열지 않아도 진행할 수 있습니다.</p>
-    <div class="cards" id="optc">${Object.entries(opt).map(([k,v])=>`<button class="card" data-o="${k}" type="button"><b>선택 열람</b>${v.n}</button>`).join('')}</div>
-    <div id="optBody"></div>
-    <h3>판단 다시 보기</h3>
-    <div class="compare"><div class="past"><b>1900년 자료를 읽은 나</b><span class="val">${JUDGE1[S.j1900]||'—'}</span></div>
-     <div class="newdoc"><b>새 자료</b>1904년, 한국인은 이 섬을 "獨島"라고 썼다(일본 군함 기록).</div></div>
-    <h3>이 자료는 "石島는 이 섬인가?"에 대한 나의 판단에 어떤 영향을 주나요?</h3>
-    <div class="judge" id="j"></div>
-    <div class="row"><button class="act" id="next" disabled>판단을 기록하고 1906년 파일을 연다</button></div>
-   </div></div>`;
-  find($('#d'),segs,['x'],()=>{$('#task').classList.add('done');$('#task').textContent='✓ 한국인은 "獨島"라고 썼다';gain('E04');light(['t1','t2','y1904','t3']);$('#after').hidden=false;$('#after').scrollIntoView({behavior:'smooth',block:'start'})});
-  $$('#optc .card').forEach(c=>c.onclick=()=>{const k=c.dataset.o;if(!S.opened.includes(k)){S.opened.push(k);save()}
-    $$('#optc .card').forEach(x=>x.classList.toggle('sel',x===c));$('#optBody').innerHTML=`<div class="note">${opt[k].body}</div>`});
-  judge($('#j'),UPD,S.u1904,k=>{S.u1904=k;save();$('#next').disabled=false});
-  if(S.u1904)$('#next').disabled=false;
-  $('#next').onclick=()=>go('s5');
+  if(S.intro)return intro('FILE 04','1904','러일전쟁 속 일본 군함의 기록','1904년 2월 러일전쟁이 시작됐고, 같은 달 일본은 한일의정서로 대한제국 안의 군사 요지를 쓸 수 있게 했습니다. 그해 동해를 조사하던 일본 군함이 남긴 기록입니다.','1904 파일을 연다');
+  const optDesk=S.step>0?`<p class="desk-cap">선택 열람 — 더 조사하고 싶으면 열어 보세요 (안 열어도 됩니다)</p><div class="tray">${Object.entries(OPT).map(([k,v])=>`<button class="card" data-o="${k}" type="button"><b>선택 열람</b>${v.n}</button>`).join('')}</div><div id="optBody"></div>`:'';
+  setDesk(doc({label:'FILE 04 · 1904',title:'군함 니타카(新高) 행동일지 (요지 번역)',meta:['1904.9.25','일본 해군 군함','당대 문서'],segs:S4SEG,key:'p4',orig:'출처: 일본 방위성 방위연구소 소장 자료(아시아역사자료센터 JACAR)'})+optDesk);
+  if(S.step===0){setWork(vn('일본 군함이 울릉도에서 들은 이야기를 적었어요. 한국인들은 이 바위섬을 뭐라고 불렀을까요?')+task(1,2,'기록에서 <u>한국인이 이 바위섬을 부르던 이름</u>이 나오는 구절을 찾아 터치하세요.'));
+    pane('desk');find('p4',S4SEG,['x'],()=>{gain('E04');light(['t1','t2','y1904','t3']);step(1)});return}
+  find('p4',S4SEG,['x'],()=>{});
+  $$('.tray .card').forEach(c=>c.onclick=()=>{const k=c.dataset.o;if(!S.opened.includes(k)){S.opened.push(k);save()}
+    $$('.tray .card').forEach(x=>x.classList.toggle('sel',x===c));$('#optBody').innerHTML=`<article class="sheet enter" style="font-size:16px">${OPT[k].body}</article>`});
+  updater('u1904',`<div class="note"><b>이 사료의 성격.</b> 일본 군함이 울릉도에서 들은 이야기를 적은 기록이에요. 대한제국 정부가 이름을 정한 공식 문서는 아니에요. 그래도 1904년에 한국인들이 이 섬을 "독도"라고 쓰고 있었다는 사실을 보여 줘요.</div>
+    <div class="note">사료 책상에 <b>선택 열람</b> 자료 2개가 있어요. 열지 않아도 진행할 수 있어요.</div>`,
+    2,2,'이 기록을 읽고 나니, <u>"石島는 이 섬이다"</u>라는 생각이 어떻게 되나요?','판단계에 기록하고 1906 파일로','s5');
+  pane('work',true);
 }
 
 /* ---------- S5 1906 ---------- */
+const S5SEG=[
+  {t:'본군 소속 독도가 본군 바깥 바다 100여 리 밖에 있는데,',id:'x',ok:'울도군수는 이 섬을 "본군(울도군) 소속 독도"라고 불렀어요.'},
+  {t:'이달 초4일 … 일본 관원 일행이 관사에 와서 스스로 말하기를,',note:'누가 찾아왔는지 적은 부분이에요. 섬을 어떻게 불렀는지는 다른 구절에 있어요.'},
+  {t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"고 하였습니다.',note:'일본 관원이 한 말이에요. 울도군수 자신의 표현을 찾아보세요.'},
+  {t:'… 호구·토지·생산을 조사해 기록해 갔기에 이에 보고하니 살펴 주시기 바랍니다.',note:'보고를 맺는 부분이에요.'}];
 function s5(){
-  const segsA=[
-    {t:'본군 소속 독도가 본군 바깥 바다 100여 리 밖에 있는데,',id:'x',ok:'울도군수는 이 섬을 "본군(울도군) 소속 독도"라고 불렀다.'},
-    {t:'이달 초4일 … 일본 관원 일행이 관사에 와서 스스로 말하기를,',note:'누가 찾아왔는지 적은 부분입니다. 섬을 어떻게 불렀는지는 다른 구절에 있습니다.'},
-    {t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"고 하였습니다.',note:'일본 관원이 한 말입니다. 울도군수 자신의 표현을 찾아보세요.'},
-    {t:'… 호구·토지·생산을 조사해 기록해 갔기에 이에 보고하니 살펴 주시기 바랍니다.',note:'보고를 맺는 부분입니다.'}];
-  const items={
-    p1:{t:'"본군 소속 독도"',why:'이 표현은 울도군수가 쓴 말입니다.'},
-    p2:{t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"',why:'이 말은 울도를 찾아온 일본 관원이 한 말입니다.'},
-    p3:{t:'"전혀 근거가 없으니 … 다시 조사하여 보고할 것"',why:'이 구절은 중앙정부(참정대신)의 지령입니다.'}};
+  if(S.intro)return intro('FILE 05','1906','새 기록이 도착했다','1906년 3월, 시마네현 관리 일행이 울도군에 들렀습니다. 편입 결정이 있은 지 1년이 넘어서였습니다. 울도군수 심흥택은 곧 상부에 보고했습니다.','1906 파일을 연다');
+  const rep=doc({label:'FILE 05 · 1906',title:'울도군수 심흥택 보고 (강원도 관찰사 서리 이명래의 보고서에 인용, 현대어 요지)',meta:['1906.3','울도군수 → 강원도 → 의정부','당대 문서'],segs:S5SEG,key:'p5',orig:'출처: 『각관찰도안』, 국사편찬위원회 한국사데이터베이스'});
+  const order=`<article class="sheet"><span class="label">1906.5.20 · 의정부 참정대신</span><div class="meta"><span>지령 제3호 (현대어 요지)</span><span>당대 문서</span></div>
+    <div class="body" style="line-height:1.9">보고는 다 읽었다. 독도가 일본 영지가 되었다는 말은 <b>전혀 근거가 없으니(全屬無根)</b>, 그 섬의 형편과 일본인이 어떻게 행동했는지 <b>다시 조사하여 보고할 것</b>.</div></article>`;
+  const items={p1:{t:'"본군 소속 독도"',why:'이 표현은 울도군수가 쓴 말이에요.'},p2:{t:'"독도가 이번에 일본의 영지가 되었으므로 시찰차 왔다"',why:'이 말은 울도를 찾아온 일본 관원이 한 말이에요.'},p3:{t:'"전혀 근거가 없으니 … 다시 조사하여 보고할 것"',why:'이 구절은 중앙정부(참정대신)의 지령이에요.'}};
   const right={p1:'gun',p2:'jp',p3:'gov'};
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">S5 · 1906 파일</div>
-   <h2>1906년, 새 기록이 도착했다</h2>
-   ${vn('윤 연구원','1906년 3월, 시마네현 관리 일행이 울도군에 들렀어요. 편입 결정이 있은 지 1년이 넘어서였죠. 울도군수 심흥택은 곧 상부에 보고했어요.')}
-   <div class="task" id="task">보고서에서 울도군수가 <b>이 섬을 어떻게 부르고 있는지</b> 찾아 터치하세요.</div>
-   <div id="d">${doc({title:'울도군수 심흥택 보고 (강원도 관찰사 서리 이명래의 보고서에 인용, 현대어 요지)',meta:[['1906.3'],['울도군수 → 강원도 → 의정부'],['당대 문서']],segs:segsA,orig:'출처: 『각관찰도안』, 국사편찬위원회 한국사데이터베이스'})}</div>
-   <article class="doc" id="d2" hidden><div class="doc-meta"><span class="tag">1906.5.20</span><span class="tag">의정부 참정대신</span><span class="tag">당대 문서</span></div>
-    <div class="doc-title">지령 제3호 (현대어 요지)</div>
-    <div class="doc-body">보고는 다 읽었다. 독도가 일본 영지가 되었다는 말은 <b>전혀 근거가 없으니(全屬無根)</b>, 그 섬의 형편과 일본인이 어떻게 행동했는지 <b>다시 조사하여 보고할 것</b>.</div></article>
-   <div id="sort" hidden>
-    <div class="task" id="task2">세 구절을 <b>말한 주체</b>에 따라 분류하세요. 구절 카드를 고른 다음 칸을 터치하세요.</div>
-    <div class="cards">${Object.entries(items).map(([k,v])=>`<button class="card" data-id="${k}" type="button"><b>구절</b>${v.t}</button>`).join('')}</div>
-    <div class="slots"><div class="slot" data-slot="gun"><b>울도군의 인식</b></div><div class="slot" data-slot="jp"><b>일본 측의 통보</b></div><div class="slot" data-slot="gov"><b>중앙정부의 대응</b></div></div>
-   </div>
-   <div id="after" hidden>
-    <div class="note"><span class="layer fact">맥락</span>을사늑약(1905.11) 이후 대한제국의 대외 외교권이 크게 제약된 상황이었습니다. 그 속에서 지방의 보고가 중앙정부로 올라갔고, 중앙정부는 일본 영지라는 말을 "전혀 근거가 없다"고 하며 사실관계를 다시 조사하라고 지시했습니다.</div>
-    <div class="note warn"><b>주의.</b> 1906년 자료는 "독도"라는 이름과 울도군의 인식을 보여 줍니다. 1900년의 "石島"와 같은 섬인지는 이 자료 하나로 확정되지 않습니다. 여러 자료를 연결해 판단해야 합니다.</div>
-    <h3>판단 다시 보기</h3>
-    <div class="compare"><div class="past"><b>지금까지의 나</b><span class="val">1900: ${JUDGE1[S.j1900]||'—'}</span><br>1904 자료 뒤: ${UPD[S.u1904]||'—'}</div>
-     <div class="newdoc"><b>새 자료</b>1906년 울도군수는 이 섬을 "본군 소속 독도"라고 보고했다.</div></div>
-    <h3>이 자료는 "石島는 이 섬인가?"에 대한 나의 판단에 어떤 영향을 주나요?</h3>
-    <div class="judge" id="j"></div>
-    <div class="row"><button class="act" id="next" disabled>판단을 기록하고 전시 패널로 간다</button></div>
-   </div></div>`;
-  find($('#d'),segsA,['x'],()=>{$('#task').classList.add('done');$('#task').textContent='✓ "본군 소속 독도"';gain('E05');light(['t6','t7','t8','t9']);$('#d2').hidden=false;gain('E06');$('#sort').hidden=false;
-    place($('#sort'),{items,check:(c,s)=>right[c]===s,onDone:()=>{$('#task2').classList.add('done');$('#task2').textContent='✓ 울도군의 인식 · 일본 측의 통보 · 중앙정부의 대응을 구분했습니다.';$('#after').hidden=false;$('#after').scrollIntoView({behavior:'smooth',block:'start'})}});
-    $('#d2').scrollIntoView({behavior:'smooth',block:'start'})});
-  judge($('#j'),UPD,S.u1906,k=>{S.u1906=k;save();$('#next').disabled=false});
-  if(S.u1906)$('#next').disabled=false;
-  $('#next').onclick=()=>go('s6');
+  if(S.step===0){setDesk(rep);setWork(vn('편입 소식이 1년 넘게 지나서야 울도군에 전해졌어요. 군수의 보고서를 봐요.')+task(1,3,'보고서에서 울도군수가 <u>이 섬을 어떻게 부르고 있는지</u> 찾아 터치하세요.'));
+    pane('desk');find('p5',S5SEG,['x'],()=>{gain('E05');gain('E06');light(['t6','t7','t8','t9']);step(1)});return}
+  setDesk(`<p class="desk-cap">구절 카드를 한 장 고른 다음, 아래 칸을 터치하세요</p><div class="tray">${Object.entries(items).map(([k,v])=>`<button class="card" data-id="${k}" type="button"><b>구절</b>${v.t}</button>`).join('')}</div>
+    <div class="slots"><div class="slot" data-slot="gun"><b>울도군의 인식</b></div><div class="slot" data-slot="jp"><b>일본 측의 통보</b></div><div class="slot" data-slot="gov"><b>중앙정부의 대응</b></div></div>`+rep+order);
+  find('p5',S5SEG,['x'],()=>{});
+  if(S.step===1){setWork(task(2,3,'세 구절을 <u>누가 한 말인지</u>에 따라 분류하세요.','울도군수의 보고와 참정대신의 지령(사료 책상 아래쪽)을 참고하세요.'));pane('desk')}
+  place(desk,{items,store:S.placed5,check:(c,s)=>right[c]===s,onDone:()=>step(2)});
+  if(S.step<2)return;
+  updater('u1906',`<div class="note"><span class="layer fact">맥락</span>을사늑약(1905.11) 이후 대한제국의 대외 외교권이 크게 제약된 상황이었어요. 그 속에서 지방의 보고가 중앙정부로 올라갔고, 중앙정부는 일본 영지라는 말을 "전혀 근거가 없다"고 하며 사실관계를 다시 조사하라고 지시했어요. 위쪽 <b>시간 띠</b>를 보세요.</div>
+    <div class="note warn"><b>주의.</b> 1906년 자료는 "독도"라는 이름과 울도군의 인식을 보여 줘요. 1900년의 "石島"와 같은 섬인지는 이 자료 하나로 확정되지 않아요.</div>`,
+    3,3,'이 보고를 읽고 나니, <u>"石島는 이 섬이다"</u>라는 생각이 어떻게 되나요?','판단계에 기록하고 전시 패널로','s6');
+  pane('work',true);
 }
 
-/* ---------- S6 전시 패널 ---------- */
-const CLOSING={
-  c1:{t:'1905년 이전과 이후에도, 이 섬에 관한 한국과 일본의 기록이 여러 개 남아 있다.',lv:'narrow'},
-  c2:{t:'1877·1900·1904·1906년의 기록을 함께 읽으면, 1905년 결정문의 "다른 나라가 점유한 형적이 없다"는 판단은 그대로 받아들이기 어렵다.',lv:'link'},
-  c3:{t:'독도는 우리 땅이니 더 설명할 필요가 없다.',lv:'slogan'}};
+/* ---------- S6 전시 ---------- */
 function s6(){
-  let step=S.panel.cards.length===3?(S.closing?4:Object.keys(S.panel.claims).length===3?(S.review?3:2):1):0;
-  const draw=()=>{
-    const pc=S.panel.cards;
-    stage.innerHTML=`<div class="scene-enter">
-     <div class="kicker">S6 · 전시 개막</div>
-     <h2>검수 보류를 풀 전시 패널을 완성하세요</h2>
-     ${vn('윤 연구원','조사한 사료 카드로 패널을 채울 차례예요. 근거는 세 장. 각 문장이 그 자료가 말할 수 있는 범위를 넘지 않는지가 검수 기준이에요.')}
-     <div id="body"></div></div>`;
-    const b=$('#body');
-    if(step===0){
-      b.innerHTML=`<div class="task">① 패널에 쓸 사료 카드 <b>세 장</b>을 고르세요. (${pc.length}/3)</div>
-       <div class="cards">${S.cards.map(c=>`<button class="card ${pc.includes(c)?'sel':''}" data-c="${c}" type="button"><b>${c}</b>${CARDS[c].n}</button>`).join('')}</div>
-       <div class="row"><button class="act" id="ok" ${pc.length===3?'':'disabled'}>이 세 장으로 쓴다</button></div>`;
-      $$('#body .card').forEach(x=>x.onclick=()=>{const c=x.dataset.c,i=pc.indexOf(c);if(i>=0)pc.splice(i,1);else if(pc.length<3)pc.push(c);else{toast('세 장까지 고를 수 있습니다. 바꾸려면 고른 카드를 한 번 더 누르세요.');return}save();draw()});
-      $('#ok').onclick=()=>{S.panel.claims={};S.panel.support={};S.review='';S.reviewCard='';save();step=1;draw()};
-    }else if(step===1){
-      b.innerHTML=`<div class="task">② 카드마다 패널에 쓸 <b>문장</b>을 고르세요.</div>`+pc.map(c=>{const d=CARDS[c],pair=[['d',d.d],['x',d.x]].sort(()=>c.charCodeAt(2)%2?1:-1);
-        return `<h3>${c} · ${d.n}</h3><div class="claims" data-c="${c}">${pair.map(([k,t])=>`<button type="button" class="claim ${S.panel.claims[c]===k?'on':''}" data-k="${k}">${t}</button>`).join('')}</div>`}).join('')+
-        `<div class="row"><button class="act" id="ok" disabled>검토 의견을 받는다</button></div>`;
-      const chk=()=>{$('#ok').disabled=Object.keys(S.panel.claims).length<3};
-      $$('#body .claims').forEach(g=>g.querySelectorAll('.claim').forEach(x=>x.onclick=()=>{S.panel.claims[g.dataset.c]=x.dataset.k;save();g.querySelectorAll('.claim').forEach(y=>y.classList.toggle('on',y===x));chk()}));chk();
-      $('#ok').onclick=()=>{step=2;draw()};
-    }else if(step===2){
-      const strong=pc.find(c=>S.panel.claims[c]==='x');
-      if(!strong){S.review='none';save();step=3;draw();return}
-      const d=CARDS[strong],over=d.xt==='over';S.reviewCard=strong;save();
-      b.innerHTML=`<div class="task">③ 검토 의견이 도착했습니다.</div>
-       <div class="doc"><div class="doc-meta"><span class="tag now">검토 의견</span><span class="tag">${strong} · ${d.n}</span></div>
-        <div class="doc-body" style="font-size:17px">"${esc(d.x)}"<br>${over?'<b>이 자료에서는 이 내용을 확인할 수 없습니다.</b> 자료의 성격을 다시 보세요.':'<b>그 자료 하나만으로 이렇게 말할 수 있습니까?</b> 이 표현은 자료가 직접 말하는 것보다 강합니다.'}</div>
-        <span class="orig">자료가 말하는 범위: ${d.limit}</span></div>
-       <div class="judge" id="rv"></div><div id="sup"></div>
-       <div class="row"><button class="act" id="ok" disabled>의견을 반영한다</button></div>`;
-      const opts=over?{narrow:'표현을 좁힌다',keep:'그대로 둔다'}:{add:'다른 근거를 추가한다',narrow:'표현을 좁힌다',keep:'그대로 둔다'};
-      judge($('#rv'),opts,'',k=>{S.review=k;save();$('#ok').disabled=k==='add';
-        $('#sup').innerHTML=k==='add'?`<p>이 문장을 함께 뒷받침할 카드를 고르세요.</p><div class="cards">${S.cards.filter(c=>c!==strong).map(c=>`<button class="card" data-s="${c}" type="button"><b>${c}</b>${CARDS[c].n}</button>`).join('')}</div>`:'';
-        $$('#sup .card').forEach(x=>x.onclick=()=>{S.panel.support[strong]=x.dataset.s;save();$$('#sup .card').forEach(y=>y.classList.toggle('sel',y===x));$('#ok').disabled=false})});
-      $('#ok').onclick=()=>{if(S.review==='narrow')S.panel.claims[strong]='d';save();step=3;draw()};
-    }else if(step===3){
-      b.innerHTML=`${S.review==='none'?'<div class="note ok">검토 의견: 세 문장 모두 자료가 직접 말하는 범위 안에 있습니다. 그렇다면 세 자료를 이어서 무엇을 말할 수 있을까요?</div>':''}
-       <div class="task">④ 패널을 맺는 문장을 고르세요.</div>
-       <div class="claims" id="cl">${Object.entries(CLOSING).map(([k,v])=>`<button type="button" class="claim ${S.closing===k?'on':''}" data-k="${k}">${v.t}</button>`).join('')}</div>
-       <div id="clnote"></div>
-       <p class="muted">덧붙이고 싶은 내 문장이 있으면 적어 보세요. (선택 · 이 기기에서만 보이며 저장·전송되지 않습니다)</p>
-       <textarea id="own" maxlength="200" placeholder="예: 1905년 결정문은 …">${esc(S.own)}</textarea>
-       <div class="row"><button class="act" id="ok" ${S.closing?'':'disabled'}>전시를 연다</button></div>`;
-      const note=k=>{$('#clnote').innerHTML=k==='c3'?'<div class="note warn">검수 기준: 처음 패널 초안의 결론으로 돌아갔습니다. 조사한 근거가 문장에 드러나지 않습니다. 그대로 두어도 되지만, 검수 의견이 패널에 남습니다.</div>':''};
-      $$('#cl .claim').forEach(x=>x.onclick=()=>{S.closing=x.dataset.k;save();$$('#cl .claim').forEach(y=>y.classList.toggle('on',y===x));note(S.closing);$('#ok').disabled=false});note(S.closing);
-      $('#own').oninput=e=>{S.own=e.target.value;save()};
-      $('#ok').onclick=()=>{finish();go('r')};
-    }else{go('r')}
-  };
-  draw();
+  if(S.intro)return intro('FILE 06','전시 개막','검수 보류를 풀 패널을 완성한다','조사하며 모은 사료 카드로 패널을 채웁니다. 검수 기준은 하나 — 각 문장이 그 자료가 말할 수 있는 범위를 넘지 않는가.','패널 편집을 시작한다');
+  const pc=S.panel.cards,filled=pc.filter(Boolean).length;
+  const flagOf=c=>{const d=CARDS[c],k=S.panel.claims[c],sup=S.panel.support[c];if(k!=='x')return '';
+    return d.xt==='over'?'<span class="flag red">검수 의견: 자료 범위 밖</span>':sup?`<span class="flag">해석 · ${CARDS[sup].n}와 연결</span>`:'<span class="flag">해석 · 추가 근거 필요</span>'};
+  const slotHTML=(i,mode)=>{const c=pc[i];
+    if(!c)return `<div class="eslot" data-i="${i}"><div class="n">근거 ${i+1} — 빈칸</div><div class="lim">카드를 고른 뒤 여기를 터치하세요</div></div>`;
+    const d=CARDS[c],k=S.panel.claims[c],focusNow=(mode==='claim'&&!k&&pc.findIndex(x=>!S.panel.claims[x])===i)||(mode==='review'&&S.reviewCard===c);
+    let inner=`<div class="cn">근거 ${i+1} · ${d.n}</div>`;
+    if(mode==='place')inner=`<button type="button" class="rm" data-rm="${i}">빼기</button>`+inner+`<div class="lim">문장은 다음 단계에서 골라요</div>`;
+    else if(mode==='claim'&&!k){if(focusNow){const pair=[['d',d.d],['x',d.x]].sort(()=>c.charCodeAt(2)%2?1:-1);inner+=`<div class="strips">${pair.map(([kk,t])=>`<button type="button" class="strip" data-c="${c}" data-k="${kk}">${t}</button>`).join('')}</div>`}
+      else inner+=`<div class="lim">차례를 기다리는 중</div>`}
+    else if(k){inner+=`<div class="txt">${esc(k==='x'?d.x:d.d)}${mode==='done'?flagOf(c):''}</div>${mode==='done'?`<div class="lim">이 자료만으로 확인하기 어려운 것 — ${d.limit}</div>`:''}${mode==='claim'?`<button type="button" class="rm inline" data-re="${c}">문장 다시 고르기</button>`:''}`}
+    return `<div class="eslot full ${focusNow?'focus':''}" data-i="${i}">${inner}</div>`};
+  const panel=(mode,closingHTML='')=>`<div class="expo"><div class="ttl"><small>독도연구소 청소년 디지털 전시</small>독도, 1905년 — 그 이전과 이후의 기록</div>
+    ${[0,1,2].map(i=>slotHTML(i,mode)).join('')}<div class="closing"><div class="n">맺음 문장</div>${closingHTML||'<div class="lim" style="color:var(--muted);font-size:14px">마지막 단계에서 골라요</div>'}</div></div>`;
+
+  if(S.step===0){
+    setDesk(`<p class="desk-cap">① 카드를 한 장 고르고 → ② 패널의 빈칸을 터치하세요</p><div class="tray">${S.cards.map(c=>`<button class="card ${pc.includes(c)?'used':''}" data-c="${c}" type="button"><b>${c}</b>${CARDS[c].n}</button>`).join('')}</div>`+panel('place'));
+    setWork(vn('패널에 쓸 근거는 세 장이에요. 1905년 결정문의 판단을 확인하는 데 무엇이 필요했는지 떠올려 보세요.')+
+      task(1,4,'사료 카드 <u>세 장</u>을 패널의 빈칸에 놓으세요.',`지금 ${filled} / 3 — 놓은 카드를 빼려면 [빼기]`,filled===3)+`<button class="act" id="next" ${filled===3?'':'disabled'}>이 세 장으로 쓴다</button>`);
+    if(filled<3)pane('desk');else pane('work',true);
+    let sel=null;
+    $$('.tray .card').forEach(x=>x.onclick=()=>{sel=x.dataset.c;$$('.tray .card').forEach(y=>y.classList.toggle('sel',y===x));$$('.eslot:not(.full)').forEach(s=>s.classList.add('ready'))});
+    $$('.eslot:not(.full)').forEach(s=>s.onclick=()=>{if(!sel){toast('먼저 위에서 카드를 한 장 고르세요.');return}pc[+s.dataset.i]=sel;save();s6()});
+    $$('[data-rm]').forEach(b=>b.onclick=e=>{e.stopPropagation();pc[+b.dataset.rm]=null;save();s6()});
+    $('#next').onclick=()=>{S.panel.claims={};S.panel.support={};S.review='';S.reviewCard='';step(1)};return}
+
+  if(S.step===1){
+    const idx=pc.findIndex(c=>!S.panel.claims[c]),left=idx>=0;
+    setDesk(panel('claim'));
+    setWork(task(2,4,left?`근거 ${idx+1}(${CARDS[pc[idx]].n})에 쓸 <u>문장</u>을 고르세요.`:'세 문장을 모두 골랐어요.',left?'패널의 빨간 테두리 칸에 두 문장이 있어요. 이 자료가 <b>직접</b> 말하는 것은 어느 쪽일까요? 더 강한 문장을 골라도 돼요 — 대신 검토 의견이 올 수 있어요.':'',!left)+
+      `<button class="act" id="next" ${left?'disabled':''}>검토 의견을 받는다</button>`);
+    if(left)pane('desk');else pane('work',true);
+    $$('.strip').forEach(b=>b.onclick=()=>{S.panel.claims[b.dataset.c]=b.dataset.k;save();s6()});
+    $$('[data-re]').forEach(b=>b.onclick=()=>{delete S.panel.claims[b.dataset.re];save();s6()});
+    $('#next').onclick=()=>step(2);return}
+
+  if(S.step===2){
+    const strong=pc.find(c=>S.panel.claims[c]==='x');
+    if(!strong){S.review='none';S.reviewCard='';save();return step(3)}
+    const d=CARDS[strong],over=d.xt==='over';S.reviewCard=strong;save();
+    setDesk(panel('review'));
+    const optsMap=over?{narrow:'표현을 좁힌다',keep:'그대로 둔다'}:{add:'다른 근거를 추가한다',narrow:'표현을 좁힌다',keep:'그대로 둔다'};
+    setWork(task(3,4,'검토 의견이 도착했어요.','',false,false)+
+      `<article class="sheet" style="margin:10px 0 0;box-shadow:none;border:2px solid var(--seal);transform:none"><span class="label">검토 의견 · 근거 ${pc.indexOf(strong)+1}</span>
+       <p style="font-family:var(--serif);margin:6px 0 8px">"${esc(d.x)}"</p>
+       <p style="margin:0 0 6px"><b>${over?'이 자료에서는 이 내용을 확인할 수 없어요.':'그 자료 하나만으로 이렇게 말할 수 있나요?'}</b></p>
+       <p class="orig" style="margin:0">자료가 말하는 범위 — ${d.limit}</p></article>
+       <div id="rv"></div><div id="sup"></div><button class="act" id="next" ${S.review&&(S.review!=='add'||S.panel.support[strong])?'':'disabled'}>의견을 반영한다</button>`);
+    pane('work',true);
+    const pick=k=>{S.review=k;save();opts($('#rv'),optsMap,k,pick,over?'row2':'row3');
+      $('#next').disabled=k==='add'&&!S.panel.support[strong];
+      $('#sup').innerHTML=k==='add'?`<p style="margin:0 0 6px;font-weight:700">이 문장을 함께 뒷받침할 카드를 고르세요.</p><div id="supo"></div>`:'';
+      if(k==='add'){const m={};S.cards.filter(c=>c!==strong).forEach(c=>m[c]=CARDS[c].n);
+        const sp=c=>{S.panel.support[strong]=c;save();opts($('#supo'),m,c,sp,'wrap');$('#next').disabled=false};opts($('#supo'),m,S.panel.support[strong],sp,'wrap')}};
+    opts($('#rv'),optsMap,S.review,pick,over?'row2':'row3');if(S.review)pick(S.review);
+    $('#next').onclick=()=>{if(S.review==='narrow')S.panel.claims[strong]='d';if(S.review!=='add')delete S.panel.support[strong];save();step(3)};return}
+
+  const cl=S.closing?`<div class="txt">${esc(CLOSING[S.closing].t)}${S.closing==='c3'?'<span class="flag red">검수 의견: 근거 미표시</span>':''}</div><button type="button" class="rm inline" data-cl>맺음 문장 다시 고르기</button>`:
+    `<div class="strips">${Object.entries(CLOSING).map(([k,v])=>`<button type="button" class="strip" data-k="${k}">${v.t}</button>`).join('')}</div>`;
+  setDesk(panel('done',cl));
+  setWork((S.review==='none'?'<div class="note ok">검토 의견: 세 문장 모두 자료가 직접 말하는 범위 안에 있어요. 그렇다면 세 자료를 이어서 무엇을 말할 수 있을까요?</div>':'')+
+    task(4,4,S.closing?'맺음 문장을 골랐어요.':'패널을 <u>맺는 문장</u>을 고르세요.',S.closing?'':'패널 맨 아래에 후보 문장 세 개가 있어요.',!!S.closing)+
+    (S.closing==='c3'?'<div class="note warn">처음 패널 초안의 결론으로 돌아갔어요. 조사한 근거가 문장에 드러나지 않아요. 그대로 두어도 되지만 검수 의견이 패널에 남아요.</div>':'')+
+    `<div><p style="margin:0 0 6px;font-size:14px;color:var(--muted)">덧붙이고 싶은 내 문장 (선택 · 이 기기에서만 보이고 저장·전송되지 않아요)</p><textarea id="own" maxlength="200" placeholder="예: 1905년 결정문은 …">${esc(S.own)}</textarea></div>
+     <button class="act" id="next" ${S.closing?'':'disabled'}>전시를 연다</button>`);
+  if(!S.closing){pane('desk');setTimeout(()=>{const c=desk.querySelector('.closing');c&&c.scrollIntoView({behavior:'smooth',block:'center'})},200)}else pane('work',true);
+  $$('.closing .strip').forEach(b=>b.onclick=()=>{S.closing=b.dataset.k;save();s6()});
+  $$('[data-cl]').forEach(b=>b.onclick=()=>{S.closing='';save();s6()});
+  $('#own').oninput=e=>{S.own=e.target.value;save()};
+  $('#next').onclick=()=>{finish();go('r')};
 }
 
 /* ---------- 결과 ---------- */
-function panelHTML(){
-  return `<div class="panel"><span class="stamp">검수 완료</span><h2>독도, 1905년 — 그 이전과 이후의 기록</h2>
-   ${S.panel.cards.map(c=>{const d=CARDS[c],k=S.panel.claims[c],sup=S.panel.support[c];
-     const flag=k==='x'?(d.xt==='over'?'<span class="flag red">검수 의견: 자료 범위 밖</span>':sup?`<span class="flag">해석 · ${sup} ${CARDS[sup].n}와 연결</span>`:'<span class="flag">해석 · 추가 근거 필요</span>'):'';
-     return `<div class="ev"><b>${c} · ${d.n}</b><p>${esc(k==='x'?d.x:d.d)}${flag}</p><div class="limit">이 자료만으로 확인하기 어려운 것 — ${d.limit}</div></div>`}).join('')}
-   <p class="closing">${esc(CLOSING[S.closing]?.t||'')}${S.closing==='c3'?'<span class="flag red">검수 의견: 근거 미표시</span>':''}</p>
-   ${S.own.trim()?`<p style="font-family:var(--serif)">${esc(S.own)}</p>`:''}</div>`}
 function r(){
-  const cls=v=>v==='strengthen'?'up':v==='weaken'?'down':'';
-  stage.innerHTML=`<div class="scene-enter">
-   <div class="kicker">전시 개막</div>
-   <h1>검수 보류가 풀렸습니다</h1>
-   ${panelHTML()}
-   <h2>나의 판단 궤적 — "石島는 이 섬인가?"</h2>
-   <div class="traj"><div><b>1900 · 칙령 제41호를 읽고</b><span class="v">${JUDGE1[S.j1900]||'—'}</span></div>
-    <div><b>1904 · 군함 기록을 읽고</b><span class="v ${cls(S.u1904)}">${UPD[S.u1904]||'—'}</span></div>
-    <div><b>1906 · 울도군수 보고를 읽고</b><span class="v ${cls(S.u1906)}">${UPD[S.u1906]||'—'}</span></div></div>
-   <p class="muted">궤적에는 정답이 없습니다. 짝과 비교해 보세요. "나는 어느 자료에서 판단이 움직였고, 왜 그랬는가?"</p>
-   <div class="qs"><h3>함께 생각해 볼 질문</h3><ol>
-    <li>내 전시 패널에서 ① 사료가 직접 말하는 것, ② 여러 자료를 연결해 해석한 것, ③ 오늘날 우리가 평가하는 것을 하나씩 찾아보자.</li>
-    <li>1905년 결정문은 "다른 나라가 점유한 형적이 없다"고 적었다. 1877·1900·1906년의 기록은 이 판단과 어떻게 만나는가?</li>
-    <li>1906년 대한제국 정부의 대응에서 할 수 있었던 일과 어려웠던 일은 무엇이었나? 시간 띠를 보며 이야기해 보자.</li></ol></div>
-   <p id="saveMsg" class="muted"></p>
-   <div class="row"><button class="act ghost" id="retry" hidden>기록을 다시 저장한다</button><button class="act ghost" id="restart">처음부터 다시 조사한다</button></div></div>`;
+  $('#grid').classList.add('single');$('#tabs').hidden=true;pane('desk');
+  const pc=S.panel.cards.filter(Boolean);
+  const flagOf=c=>{const d=CARDS[c],k=S.panel.claims[c],sup=S.panel.support[c];if(k!=='x')return '';
+    return d.xt==='over'?'<span class="flag red">검수 의견: 자료 범위 밖</span>':sup?`<span class="flag">해석 · ${CARDS[sup].n}와 연결</span>`:'<span class="flag">해석 · 추가 근거 필요</span>'};
+  const panel=`<div class="expo"><span class="stamp">검수 완료</span><div class="ttl"><small>독도연구소 청소년 디지털 전시</small>독도, 1905년 — 그 이전과 이후의 기록</div>
+    ${pc.map((c,i)=>{const d=CARDS[c],k=S.panel.claims[c];return `<div class="eslot full"><div class="cn">근거 ${i+1} · ${d.n}</div><div class="txt">${esc(k==='x'?d.x:d.d)}${flagOf(c)}</div><div class="lim">이 자료만으로 확인하기 어려운 것 — ${d.limit}</div></div>`}).join('')}
+    <div class="closing"><div class="txt">${esc(CLOSING[S.closing]?.t||'')}${S.closing==='c3'?'<span class="flag red">검수 의견: 근거 미표시</span>':''}</div>${S.own.trim()?`<p style="font-family:var(--serif);margin:8px 0 0">${esc(S.own)}</p>`:''}</div></div>`;
+  setDesk(`<div class="res"><div class="k">전시 개막</div><h1>검수 보류가 풀렸습니다</h1>${panel}
+    <div class="box"><h2>나의 판단 궤적</h2>${meter('','석도 판단계 — 1900 → 1904 → 1906')}
+     <p style="margin:10px 0 0;font-size:15px">1900 <b>${JUDGE1[S.j1900]||'—'}</b> → 1904 자료 뒤 <b>${UPD[S.u1904]||'—'}</b> → 1906 자료 뒤 <b>${UPD[S.u1906]||'—'}</b></p>
+     <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">궤적에는 정답이 없어요. 짝과 비교해 보세요 — "나는 어느 자료에서 판단이 움직였고, 왜 그랬을까?"</p></div>
+    <div class="box"><h2>함께 생각해 볼 질문</h2><ol>
+     <li>내 전시 패널에서 ① 사료가 직접 말하는 것, ② 여러 자료를 연결해 해석한 것, ③ 오늘날 우리가 평가하는 것을 하나씩 찾아보자.</li>
+     <li>1905년 결정문은 "다른 나라가 점유한 형적이 없다"고 적었다. 1877·1900·1906년의 기록은 이 판단과 어떻게 만나는가?</li>
+     <li>1906년 대한제국 정부의 대응에서 할 수 있었던 일과 어려웠던 일은 무엇이었나? 시간 띠를 보며 이야기해 보자.</li></ol></div>
+    <p class="savemsg" id="saveMsg"></p>
+    <div class="btns"><button class="act ghost" id="retry" hidden>기록을 다시 저장한다</button><button class="act ghost" id="restart">처음부터 다시 조사한다</button></div></div>`);
   $('#restart').onclick=()=>{if(!confirm('조사 기록을 지우고 처음부터 시작할까요?'))return;try{sessionStorage.removeItem(SK)}catch{}location.href=location.pathname+location.search};
-  $('#retry').onclick=()=>submitUI(true);
-  submitUI(false);
+  $('#retry').onclick=()=>submitUI(true);submitUI(false);
 }
 
 /* ---------- 저장 (구조화 값만, 자유서술 제외) ---------- */
 function finish(){if(!S.resultId)S.resultId=GAME_ID+'-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));if(!S.completedAt)S.completedAt=new Date().toISOString();save()}
-function payload(){finish();const dur=S.startedAt?Math.round((Date.parse(S.completedAt)-Date.parse(S.startedAt))/1000):null;
+function payload(){finish();const dur=S.startedAt?Math.round((Date.parse(S.completedAt)-Date.parse(S.startedAt))/1000):null,pc=S.panel.cards.filter(Boolean);
   return{class:CLASS,game:GAME_ID,timestamp:S.completedAt,choices:{version:VER,record_type:'result',result_id:S.resultId,
-    j1900:S.j1900,u1904:S.u1904,u1906:S.u1906,s2_identify:S.s2id,opened:S.opened,sort_errors:S.sortErr,find_misses:S.misses,
-    panel_cards:S.panel.cards,claim_levels:S.panel.cards.map(c=>S.panel.claims[c]==='x'?CARDS[c].xt:'direct'),
+    j1900:S.j1900,u1904:S.u1904,u1906:S.u1906,meter:points().map(p=>p[1]),s2_identify:S.s2id,opened:S.opened,sort_errors:S.sortErr,find_misses:S.misses,
+    panel_cards:pc,claim_levels:pc.map(c=>S.panel.claims[c]==='x'?CARDS[c].xt:'direct'),
     review:S.review,review_card:S.reviewCard,support:S.panel.support,closing:S.closing,duration_sec:dur},comment:''}}
-async function submit(force){if(NOSAVE||(S.submittedAt&&!force))return 'skip';
+async function submit(force){if(NOSAVE||(S.submittedAt&&!force))return;
   const res=await fetch(SB+'/rest/v1/game_results',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload()),keepalive:true});
-  if(!res.ok)throw Error('HTTP '+res.status);S.submittedAt=new Date().toISOString();save();return 'done'}
+  if(!res.ok)throw Error('HTTP '+res.status);S.submittedAt=new Date().toISOString();save()}
 function submitUI(force){const m=$('#saveMsg');if(!m)return;
   if(NOSAVE){m.textContent='저장 없이 진행하는 모드입니다.';return}
   if(S.submittedAt&&!force){m.textContent='✓ 조사 기록(선택값만)이 저장되었습니다.';return}
   m.textContent='조사 기록을 저장하는 중입니다…';$('#retry').hidden=true;
   submit(force).then(()=>{m.textContent='✓ 조사 기록(선택값만)이 저장되었습니다. 자유롭게 쓴 문장은 저장하지 않습니다.'})
-   .catch(()=>{m.textContent='기록 저장에 실패했습니다. 결과 화면은 그대로 사용할 수 있고, 인터넷 연결 뒤 다시 저장할 수 있습니다.';$('#retry').hidden=false})}
+   .catch(()=>{m.textContent='기록 저장에 실패했습니다. 결과 화면은 그대로 쓸 수 있고, 인터넷 연결 뒤 다시 저장할 수 있습니다.';$('#retry').hidden=false})}
 
 /* ---------- 시작 ---------- */
 const R={s0,s1,s2,s3,s4,s5,s6,r};
-function render(){steps();timeline();tray();R[S.scene]();stage.focus({preventScroll:true});scrollTo(0,0)}
+function render(){$('#grid').classList.remove('single');$('#tabs').hidden=false;prog();timeline();desk.scrollTop=0;work.scrollTop=0;R[S.scene]()}
 load();if(!S.startedAt){S.startedAt=new Date().toISOString();save()}
 render();
 })();
-
 </script>
 </body>
 </html>
