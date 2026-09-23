@@ -1,0 +1,47 @@
+name: Dokdo Map Intake
+
+on:
+  push:
+    branches:
+      - build/dokdo-1905-file
+    paths:
+      - .github/workflows/dokdo-map-intake.yml
+
+permissions:
+  contents: write
+
+jobs:
+  intake-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: build/dokdo-1905-file
+          fetch-depth: 0
+
+      - name: Download public institutional scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dokdo-1905-file/assets/sources
+          curl -fL --retry 4 --retry-delay 2 --connect-timeout 20 --max-time 90 \
+            "https://dokdo.mofa.go.kr/m/kor/img/contents/view0503_img02_b.jpg" \
+            -o dokdo-1905-file/assets/sources/kijukdo-yakudo.jpg
+          test -s dokdo-1905-file/assets/sources/kijukdo-yakudo.jpg
+          file dokdo-1905-file/assets/sources/kijukdo-yakudo.jpg
+          sha256sum dokdo-1905-file/assets/sources/kijukdo-yakudo.jpg
+
+      - name: Commit map asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dokdo-1905-file/assets/sources/kijukdo-yakudo.jpg
+          if git diff --cached --quiet; then
+            echo "No asset change to commit."
+            exit 0
+          fi
+          git commit -m "Add Kijukdo map scan for S2"
+          git push origin HEAD:build/dokdo-1905-file
