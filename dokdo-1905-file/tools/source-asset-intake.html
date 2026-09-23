@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>독도연구소 BUILD · 사료 asset intake helper</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;color:#202830;background:#eef1f3}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:auto;padding:24px}.card{background:#fff;border:1px solid #bcc5ca;border-radius:12px;padding:18px;margin:14px 0}h1{font-size:28px}h2{font-size:20px}.warn{border-left:5px solid #9b5a35;background:#fff7ef;padding:12px}label{display:grid;gap:5px;margin:10px 0;font-weight:700}input,textarea,button{font:inherit}input,textarea{width:100%;padding:9px;border:1px solid #9ca8af;border-radius:7px}button{min-height:44px;padding:9px 14px;border:1px solid #596b76;border-radius:8px;background:#fff;cursor:pointer}.primary{background:#244760;color:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stage{position:relative;max-width:100%;overflow:auto;border:1px solid #86959d;background:#dfe8ec;min-height:180px}.stage-inner{position:relative;display:inline-block;line-height:0}.stage img{display:block;max-width:min(100%,1000px);height:auto;user-select:none}.box{position:absolute;border:3px solid #b14735;background:rgba(177,71,53,.14);pointer-events:none}.box.second{border-color:#315f80;background:rgba(49,95,128,.14)}.status{font-family:ui-monospace,monospace;white-space:pre-wrap;background:#f7f8f8;padding:10px;border-radius:8px}.small{font-size:13px;color:#5e6a72}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<h1>공식 사료 asset intake helper</h1>
+<div class="warn"><b>내부 BUILD 도구입니다.</b> 선택한 파일은 브라우저 밖으로 업로드하지 않습니다. 공식 뷰어에서 직접 받은 원본만 사용하고, 제3자 복제본으로 canonical asset을 만들지 마세요.</div>
+
+<section class="card">
+<h2>1. 기죽도약도 원본 확인 정보</h2>
+<div class="grid">
+<label>공식 viewer URL<input id="viewerUrl" placeholder="https://www.digital.archives.go.jp/img/..."></label>
+<label>실제 page/frame<input id="pageFrame" placeholder="공식 뷰어에서 확인한 값"></label>
+<label>image identifier / 원 파일명<input id="imageId" placeholder="뷰어 또는 다운로드 파일의 값"></label>
+<label>다운로드 일시<input id="downloadedAt" type="datetime-local"></label>
+</div>
+<label>공식 이미지 파일 선택<input id="file" type="file" accept="image/*"></label>
+<div id="fileInfo" class="status">파일을 선택하면 픽셀 크기와 SHA-256을 계산합니다.</div>
+</section>
+
+<section class="card">
+<h2>2. 게임용 crop에서 hotspot 측정</h2>
+<p>여기에는 최종 게임용 crop 파일을 선택하세요. 첫 번째 드래그는 <b>큰 섬의 명칭·위치</b>, 두 번째 드래그는 <b>두 번째 섬의 명칭·상대 위치</b>입니다. 좌표는 표시된 이미지의 실제 픽셀 크기를 기준으로 정규화됩니다.</p>
+<label>게임용 crop 선택<input id="crop" type="file" accept="image/*"></label>
+<div class="grid"><button id="modeLarge" class="primary" type="button">큰 섬 hotspot 그리기</button><button id="modeSecond" type="button">두 번째 섬 hotspot 그리기</button></div>
+<p class="small">이미지 위에서 드래그해 사각형을 만드세요. 다시 그리면 해당 hotspot이 교체됩니다.</p>
+<div class="stage"><div id="stageInner" class="stage-inner"><img id="preview" alt="선택한 crop 미리보기" hidden><div id="largeBox" class="box" hidden></div><div id="secondBox" class="box second" hidden></div></div></div>
+<div id="cropInfo" class="status">crop 파일을 선택하면 측정할 수 있습니다.</div>
+</section>
+
+<section class="card">
+<h2>3. 쓰시마 전시일지 exact frame</h2>
+<div class="grid">
+<label>1904-11-20 exact frame<input id="tsushimaFrame" placeholder="JACAR 공식 뷰어에서 직접 확인"></label>
+<label>exact viewer URL<input id="tsushimaUrl" placeholder="https://www.jacar.archives.go.jp/..."></label>
+</div>
+<label>해당 프레임에서 직접 확인한 문구<textarea id="tsushimaPhrase" rows="3" placeholder="원문을 직접 대조한 뒤 기록"></textarea></label>
+</section>
+
+<section class="card">
+<h2>4. INTAKE RECORD 생성</h2>
+<div class="grid"><button id="generate" class="primary" type="button">기록 생성</button><button id="copy" type="button">클립보드 복사</button></div>
+<textarea id="output" rows="24" spellcheck="false"></textarea>
+<p class="small">생성값은 `ASSET_INTAKE_MANUAL.md`의 INTAKE RECORD와 `S2_MAP_ASSET_CONTRACT.md` hotspot metadata를 채우는 데 사용합니다. 실제 지도 page/frame 또는 좌표가 비어 있으면 blocker는 해소되지 않습니다.</p>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const state={original:null,crop:null,mode:'large',boxes:{large:null,second:null}};
+async function digest(file){const buf=await file.arrayBuffer();const hash=await crypto.subtle.digest('SHA-256',buf);return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function imageMeta(file){return new Promise((resolve,reject)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{resolve({url:u,w:im.naturalWidth,h:im.naturalHeight})};im.onerror=reject;im.src=u})}
+$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=await imageMeta(f);state.original={name:f.name,size:f.size,w:m.w,h:m.h,sha:await digest(f)};URL.revokeObjectURL(m.url);$('#fileInfo').textContent=`원 파일명: ${f.name}\n픽셀: ${m.w} × ${m.h}\n바이트: ${f.size}\nSHA-256: ${state.original.sha}`};
+$('#crop').onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=await imageMeta(f),im=$('#preview');state.crop={name:f.name,size:f.size,w:m.w,h:m.h,sha:await digest(f)};state.boxes={large:null,second:null};im.src=m.url;im.hidden=false;im.onload=()=>renderBoxes();$('#cropInfo').textContent=`crop 파일명: ${f.name}\n픽셀: ${m.w} × ${m.h}\nSHA-256: ${state.crop.sha}`};
+function setMode(m){state.mode=m;$('#modeLarge').classList.toggle('primary',m==='large');$('#modeSecond').classList.toggle('primary',m==='second')}
+$('#modeLarge').onclick=()=>setMode('large');$('#modeSecond').onclick=()=>setMode('second');
+const stage=$('#stageInner');let start=null;
+stage.addEventListener('pointerdown',e=>{if(!state.crop||e.target.id!=='preview')return;const r=$('#preview').getBoundingClientRect();start={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};e.preventDefault()});
+stage.addEventListener('pointerup',e=>{if(!start||!state.crop)return;const r=$('#preview').getBoundingClientRect();let x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;x=Math.max(0,Math.min(1,x));y=Math.max(0,Math.min(1,y));const left=Math.min(start.x,x),top=Math.min(start.y,y),w=Math.abs(x-start.x),h=Math.abs(y-start.y);if(w<.01||h<.01){start=null;return}state.boxes[state.mode]={x:left,y:top,w,h};start=null;renderBoxes()});
+function renderBoxes(){for(const [k,id] of [['large','largeBox'],['second','secondBox']]){const b=state.boxes[k],el=$('#'+id);if(!b){el.hidden=true;continue}el.hidden=false;el.style.left=(b.x*100)+'%';el.style.top=(b.y*100)+'%';el.style.width=(b.w*100)+'%';el.style.height=(b.h*100)+'%'}}
+function n(v){return v==null?'TBD':Number(v).toFixed(4)}
+function val(id){return $(id).value.trim()||'TBD'}
+$('#generate').onclick=()=>{const o=state.original,c=state.crop,L=state.boxes.large,S=state.boxes.second;const rec=`### 磯竹島略圖\n- 실제 page/frame: ${val('#pageFrame')}\n- 뷰어 URL: ${val('#viewerUrl')}\n- image identifier / 원 파일명: ${val('#imageId')}\n- 다운로드 일시: ${val('#downloadedAt')}\n- 원 파일 픽셀 크기: ${o?o.w+'×'+o.h:'TBD'}\n- 원 파일 SHA-256: ${o?.sha||'TBD'}\n- 게임용 crop 파일명: ${c?.name||'TBD'}\n- 게임용 crop 픽셀 크기: ${c?c.w+'×'+c.h:'TBD'}\n- 게임용 crop SHA-256: ${c?.sha||'TBD'}\n- 큰 섬 hotspot: x=${n(L?.x)}, y=${n(L?.y)}, w=${n(L?.w)}, h=${n(L?.h)}\n- 두 번째 섬 hotspot: x=${n(S?.x)}, y=${n(S?.y)}, w=${n(S?.w)}, h=${n(S?.h)}\n\n### 軍艦對馬戰時日誌（5）\n- 1904-11-20 exact frame: ${val('#tsushimaFrame')}\n- exact viewer URL: ${val('#tsushimaUrl')}\n- 해당 프레임에서 확인한 문구: ${val('#tsushimaPhrase')}\n- 이미지 저장소 복제 허가 여부: 미확인 / 사용하지 않음\n\n### S2 asset metadata\n\`\`\`js\nD.assets = D.assets || {};\nD.assets.kijukdoMap = {\n  src: 'assets/sources/kijukdo-yakudo.webp',\n  alt: '1876년 시마네현 제출 자료 기죽도약도. 섬의 명칭과 상대 위치·거리 정보가 표시되어 있다.',\n  sourceLabel: '일본 국립공문서관 소장 · 公02032100-01600',\n  processedLabel: '원 공개본에서 게임 화면용으로 크롭·확대',\n  hotspots: [\n    { id:'large-island', label:'큰 섬의 명칭·위치', x:${n(L?.x)}, y:${n(L?.y)}, w:${n(L?.w)}, h:${n(L?.h)} },\n    { id:'second-island', label:'두 번째 섬의 명칭·상대 위치', x:${n(S?.x)}, y:${n(S?.y)}, w:${n(S?.w)}, h:${n(S?.h)} }\n  ]\n};\n\`\`\``;$('#output').value=rec};
+$('#copy').onclick=async()=>{if(!$('#output').value)$('#generate').click();await navigator.clipboard.writeText($('#output').value);$('#copy').textContent='복사됨';setTimeout(()=>$('#copy').textContent='클립보드 복사',1200)};
+</script>
+</body></html>
