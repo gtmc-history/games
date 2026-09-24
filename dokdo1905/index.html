@@ -85,6 +85,7 @@ button{font:inherit;color:inherit}
 .layer.fact{background:var(--ink);color:#fff}
 .layer.interp{background:var(--gold);color:#fff}
 .layer.gov{background:var(--sea);color:#fff}
+.work .act#next{position:sticky;bottom:0;z-index:3;box-shadow:0 -10px 14px var(--work)}
 .q{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.45;margin:0}
 .act{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;padding:10px 18px;background:var(--seal);color:#fff;border:0;border-radius:3px;font-weight:700;font-size:17px;cursor:pointer;transition:transform .15s,filter .15s}
 .act:hover{filter:brightness(1.08);transform:translateY(-1px)}
@@ -107,7 +108,7 @@ button{font:inherit;color:inherit}
 /* meter */
 .meter{background:#fff;border:1px solid var(--line);padding:12px 16px 10px}
 .meter h4{margin:0 0 2px;font-size:13px;color:var(--muted);letter-spacing:.04em}
-.meter .mq{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:70px}
+.meter .mq{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:58px}
 .mtrack{position:relative;height:10px;margin:0 10px;background:linear-gradient(90deg,#d9d2c3,#efe9dc 50%,#cfe0e4);border-radius:5px}
 .mtick{position:absolute;top:-3px;width:2px;height:16px;background:#fff}
 .mk{position:absolute;bottom:-4px;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.3,.64,1);text-align:center;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
@@ -309,7 +310,8 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
   .sheet{padding:16px 14px 18px}
   .body{font-size:17px;line-height:2.1}
   .memo{position:static;transform:none;display:block;margin:0 0 10px;max-width:none}
-  .opts.row3{grid-template-columns:1fr}
+  .opts.row3:not(.keep){grid-template-columns:1fr}
+  .opts.keep .opt{font-size:15px;padding:8px 6px}
   .expo{padding:18px 14px}
   .expo .ttl{font-size:21px;padding-right:0}
   .stamp{position:static;display:inline-block;margin-bottom:8px}
@@ -360,7 +362,9 @@ const S0={scene:'s0',step:0,intro:true,titled:false,found:[],cards:[],lit:[],mis
   panel:{cards:[null,null,null],claims:{},support:{}},review:'',reviewCard:'',closing:'',own:'',startedAt:'',resultId:'',completedAt:'',submittedAt:''};
 let S=JSON.parse(JSON.stringify(S0));
 function save(){try{sessionStorage.setItem(SK,JSON.stringify(S))}catch{}}
-function load(){try{const x=JSON.parse(sessionStorage.getItem(SK)||'null');if(x&&SCENES.includes(x.scene))S=Object.assign(JSON.parse(JSON.stringify(S0)),x)}catch{}}
+let SAVED=null;
+function load(){try{const x=JSON.parse(sessionStorage.getItem(SK)||'null');if(x&&SCENES.includes(x.scene)&&(x.scene!=='s0'||x.step>0))SAVED=Object.assign(JSON.parse(JSON.stringify(S0)),x)}catch{}}
+function clearSaved(){try{sessionStorage.removeItem(SK)}catch{}SAVED=null}
 
 /* ---------- 데이터 ---------- */
 const TL=[
@@ -553,8 +557,12 @@ function titleScreen(){const el=$('#intro');el.hidden=false;desk.innerHTML='';wo
   el.innerHTML=`<div class="scn" style="text-align:center"><span class="ttl-seal">獨島</span><div class="ttl-h1">독도연구소: 1905 파일</div><div class="ttl-years">1877 · 1900 · 1904 · 1906</div>
    <div class="photo"><img src="${IMG.title}" alt="새벽 동해의 두 섬(삽화)"></div>
    <div class="ttl-card" style="text-align:left">1905년, 일본은 동해의 한 섬을 자국 영토로 편입했다. 그 판단은 <b>그 이전과 이후의 기록</b> 앞에서도 그대로 설 수 있을까?<div class="hair"></div>당신은 청소년 디지털 전시를 준비하는 <b>독도연구소 인턴</b>이다. 개막 전날 밤, 패널 하나에 검수 보류가 걸렸다.</div>
-   <button class="act" id="introGo" type="button" style="max-width:420px;margin:18px auto 0">검수를 시작한다</button></div>`;
-  $('#introGo').onclick=()=>{sfx('flip');S.titled=true;save();R[S.scene]()};$('#introGo').focus()}
+   <button class="act" id="introGo" type="button" style="max-width:420px;margin:18px auto 0">${SAVED?'새로 시작한다':'검수를 시작한다'}</button>
+   ${SAVED?`<div class="ttl-card" style="text-align:left;margin-top:14px;font-family:var(--sans);font-size:15px">이 기기에 ${SAVED.completedAt?'<b>이미 끝난 조사 결과</b>':`<b>진행 중인 조사(${SNAME[SAVED.scene]||''} 단계)</b>`}가 남아 있어요. 본인의 기록일 때만 이어서 보세요.
+     <button class="act ghost" id="resume" type="button" style="margin-top:10px;color:#f0c96a;border-color:#f0c96a">${SAVED.completedAt?'지난 결과 보기':'이어서 한다'}</button></div>`:''}</div>`;
+  $('#introGo').onclick=()=>{sfx('flip');clearSaved();S=JSON.parse(JSON.stringify(S0));S.startedAt=new Date().toISOString();S.titled=true;save();R[S.scene]()};
+  if(SAVED)$('#resume').onclick=()=>{sfx('flip');S=SAVED;SAVED=null;save();el.hidden=true;render()};
+  $('#introGo').focus()}
 function intro(){
   if(S.scene==='s0'&&!S.titled)return titleScreen();
   $('#toast').classList.remove('show');const c=SCN[S.scene],el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';let i=0;
@@ -704,7 +712,7 @@ function s3(){
       <div class="gov2"><div><b><span class="layer gov">오늘날 설명</span>한국 정부</b>칙령의 석도는 오늘날의 독도이다.</div><div><b><span class="layer gov">오늘날 설명</span>일본 외무성</b>석도가 독도를 가리킨다고 볼 명확한 근거가 없다.</div></div>`+
       task(2,2,'지금까지 읽은 <u>1877·1900 자료만으로</u> 판단해 보세요.','정답은 없어요. 판단계에 점이 찍히고, 새 자료를 볼 때마다 다시 움직일 수 있어요.',false,false)+
       meter()+`<div id="j"></div><button class="act" id="next" ${S.j1900?'':'disabled'}>판단계에 기록하고 1904 파일로</button>`);
-    opts($('#j'),JUDGE1,S.j1900,k=>{S.j1900=k;save();draw()});$('#next').onclick=()=>go('s4')};
+    opts($('#j'),JUDGE1,S.j1900,k=>{S.j1900=k;save();draw()},'row3 keep');$('#next').onclick=()=>go('s4')};
   draw();pane('work',true);
 }
 
@@ -714,7 +722,7 @@ function updater(key,pre,no,total,question,nextLabel,nextScene){
   const draw=pend=>{
     setWork(pre+task(no,total,question,'판단계에서 <b>회색 점</b>은 지금까지의 내 판단, <b>파란 점</b>은 새 판단이에요.',false,false)+
       meter(pend)+`<div id="j"></div><button class="act" id="next" ${pend?'':'disabled'}>${nextLabel}</button>`);
-    opts($('#j'),UPDBTN,pend,k=>draw(k));
+    opts($('#j'),UPDBTN,pend,k=>draw(k),'row3 keep');
     $('#next').onclick=()=>{S[key]=pend;save();go(nextScene)}};
   draw(cur);
 }
@@ -888,7 +896,7 @@ function submitUI(force){const m=$('#saveMsg');if(!m)return;
 /* ---------- 시작 ---------- */
 const R={s0,s1,s2,s3,s4,s5,s6,r};
 function render(){$('#grid').classList.remove('single');$('#tabs').hidden=false;prog();timeline();desk.scrollTop=0;work.scrollTop=0;R[S.scene]()}
-sndUI();load();if(!S.startedAt){S.startedAt=new Date().toISOString();save()}
+sndUI();load();if(!SAVED){S.startedAt=new Date().toISOString();save()}
 render();
 })();
 </script>
