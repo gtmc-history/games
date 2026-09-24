@@ -1,0 +1,8 @@
+{
+  "startNodeId":"n1",
+  "nodes":[
+    {"id":"n1","choices":[{"id":"dup","targetId":"n2"}]},
+    {"id":"n2","choices":[{"id":"dup","targetId":"e1"}]}
+  ],
+  "endings":[{"id":"e1"}]
+}

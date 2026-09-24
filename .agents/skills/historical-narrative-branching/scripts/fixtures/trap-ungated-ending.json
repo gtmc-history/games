@@ -1,0 +1,4 @@
+{"startNodeId":"n1","evidence":[{"id":"ev-a"}],"nodes":[
+ {"id":"n1","choices":[{"id":"c1","label":"a","targetId":"n2","effects":{"addEvidence":["ev-a"]}},{"id":"c2","label":"skip","targetId":"e1"}]},
+ {"id":"n2","choices":[{"id":"c3","label":"end","targetId":"e1"}]}
+],"endings":[{"id":"e1","requiresEvidence":["ev-a"]}]}

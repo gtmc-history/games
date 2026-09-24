@@ -1,0 +1,1 @@
+{"startNodeId":"n1","nodes":[{"id":"n1","choices":[{"id":"c1","label":"a","targetId":"e1","requiresFlag":"x"}]}],"endings":[{"id":"e1"}]}

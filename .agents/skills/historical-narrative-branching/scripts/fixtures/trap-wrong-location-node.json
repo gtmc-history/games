@@ -1,0 +1,1 @@
+{"startNodeId":"n1","nodes":[{"id":"n1","choices":[{"id":"c1","targetId":"n2"}]},{"id":"n2","requiresEvidence":["ev-a"],"choices":[{"id":"c2","targetId":"e1"}]}],"endings":[{"id":"e1"}]}

@@ -1,0 +1,7 @@
+{"startNodeId":"n1","evidence":[{"id":"ev-map"},{"id":"ev-doc"}],"nodes":[
+ {"id":"n1","choices":[
+   {"id":"c1","label":"둘 다 본다","targetId":"n2","effects":{"addEvidence":["ev-map"]}},
+   {"id":"c2","label":"문서만","targetId":"n3","effects":{"addEvidence":["ev-doc"]}}]},
+ {"id":"n2","choices":[{"id":"c4","label":"문서","targetId":"n3","effects":{"addEvidence":["ev-doc"]}}]},
+ {"id":"n3","choices":[{"id":"c3","label":"판정","targetId":"e1","requiresEvidence":["ev-map","ev-doc"]}]}
+],"endings":[{"id":"e1"}]}

@@ -1,0 +1,3 @@
+{"startNodeId":"n1","nodes":[
+ {"id":"n1","choices":[{"id":"c1","label":"판정","targetId":"e1","requiredEvidence":["ev-never"]}]}
+],"endings":[{"id":"e1","requiresEvidences":["ev-never"]}]}

@@ -1,0 +1,13 @@
+{
+  "startNodeId": "n1",
+  "evidence": [{"id":"ev-map"},{"id":"ev-doc"}],
+  "nodes": [
+    {"id":"n1","choices":[
+      {"id":"c1","label":"지도","targetId":"n2","effects":{"addEvidence":["ev-map"]}},
+      {"id":"c2","label":"문서","targetId":"n3","effects":{"addEvidence":["ev-doc"]}}
+    ]},
+    {"id":"n2","choices":[{"id":"c3","label":"문서도 본다","targetId":"n3","effects":{"addEvidence":["ev-doc"]}}]},
+    {"id":"n3","choices":[{"id":"c4","label":"판정","targetId":"e1","requiresEvidence":["ev-map","ev-doc"]},{"id":"c5","label":"지도도 본다","targetId":"n3","effects":{"addEvidence":["ev-map"]}}]}
+  ],
+  "endings": [{"id":"e1","requiresEvidence":["ev-map","ev-doc"]}]
+}

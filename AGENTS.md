@@ -118,3 +118,28 @@
 - 목적별 커밋을 선호한다.
 - push 전에 diff, status, 원격 ahead/behind를 재확인한다.
 - 오래된 clone을 동기화하거나 수정하지 않는다.
+
+## 역사 웹게임 스킬팩 (history-webgame-codex-skills v1.1.3)
+
+`.agents/skills/`에 설치했다. 이 저장소의 규칙(`PROJECT_INSTRUCTIONS.md`, 최신 DESIGN_LOCK, `docs/` 계약, 위 절대 규칙)과 충돌하면 **저장소 규칙이 우선**한다. 스킬팩의 예시는 마이그레이션 지시가 아니다.
+
+### Project profile
+
+- architecture: `single-html` — 게임별 `<slug>/index.html`. 삽화 등 정적 자산은 `<slug>/assets/`에 둘 수 있다(예: `dokdo1905`).
+- hosting: `github-pages`
+- primary-input: `mixed` — 크롬북(키보드·트랙패드)과 태블릿(터치) 모두 완주 가능해야 한다.
+- shared-device: `yes` — 학교 공용 기기 가정. 새 세션이 기본, 이어하기는 명시적 선택.
+- persistence: `supabase` — `game_results` 익명 INSERT(publishable 키). sessionStorage/localStorage는 진행 캐시일 뿐 저장 PASS 근거가 아니다.
+- class-time: `50m`
+- historical-source-of-truth: 해당 게임의 최신 `design-locks/<slug>_DESIGN_LOCK_vX.Y.md`(사료·근거 LOCK)와 게임 폴더의 `SOURCES.md`(있을 때). 근거가 없으면 `UNVERIFIED – 교사 확인`.
+
+### 스킬 사용
+
+- 구조·범위·상태·수업시간 변경: `history-game-foundations`
+- 사료·고지도·공문서·증거·판정 갱신: `historical-evidence-interactions`
+- 비주얼노벨·선택지·분기: `historical-narrative-branching` (분기 데이터가 있을 때 `node .agents/skills/historical-narrative-branching/scripts/validate-branch-graph.mjs <file>`)
+- 캐릭터 이동·공간 탐색: `phaser-history-exploration` — 공간 이동이 학습에 기여할 때만
+- 화면 디자인·반응형: `history-game-ui-design` — 계정 스킬 `gtmc-history-design`과 `docs/VISUAL_DESIGN_RULES.md`를 우선
+- 배포 전·큰 변경 후 검수: `history-game-playtest` — 결과는 `PASS / CONDITIONAL PASS / NO-GO`로 보고
+
+BLOCKER/HIGH가 남아 있으면 새 기능을 추가하지 않고 최소 수정 후 재검사한다.
