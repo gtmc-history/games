@@ -214,6 +214,12 @@ button{font:inherit;color:inherit}
 @keyframes stamp{0%{transform:scale(2.2) rotate(-14deg);opacity:0}100%{transform:scale(1) rotate(-7deg);opacity:1}}
 textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--line);border-radius:3px;background:#fff}
 
+/* ---------- 낱말 풀이 ---------- */
+.gl{border-bottom:1.5px dotted currentColor;cursor:help}
+.gl::after{content:"?";font-family:var(--sans);font-size:.62em;font-weight:700;vertical-align:super;margin-left:1px;opacity:.65}
+.gl:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+.gpop{position:fixed;z-index:40;max-width:min(300px,90vw);background:#fffdf6;color:var(--ink);border:1.5px solid var(--ink);border-radius:4px;padding:10px 12px;font:400 14px/1.6 var(--sans);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.gpop b{display:block;font-size:13px;color:var(--seal);margin-bottom:2px}
 /* ---------- 현장 장면(도입) ---------- */
 .top{position:relative;z-index:30}
 .ctrl{display:flex;gap:6px;align-items:center}
@@ -419,6 +425,66 @@ const CLOSING={
   c2:{t:'1877·1900·1904·1906년의 기록을 함께 읽으면, 1905년 결정문의 "다른 나라가 점유한 형적이 없다"는 판단은 그대로 받아들이기 어렵다.'},
   c3:{t:'독도는 우리 땅이니 더 설명할 필요가 없다.'}};
 
+/* ---------- 낱말 풀이: 탭(클릭)하면 뜨는 툴팁. 찾기 구절 안의 낱말을 눌러도 찾기 판정은 하지 않는다 ---------- */
+const GLOSS={
+ '형적':'남아 있는 흔적이나 자취.',
+ '점유':'어떤 물건이나 땅을 차지하여 가짐.',
+ '국제법상 점령':'국제법에서, 어느 나라에도 속하지 않은 땅을 한 나라가 먼저 실제로 차지해 영토로 삼는 것을 가리키는 말(선점).',
+ '해리':'바다에서 쓰는 거리 단위. 1해리는 약 1.85km.',
+ '오키도사':'오키섬을 맡아 다스리던 시마네현의 지방 관직.',
+ '각의':'내각의 회의. 여기서 정한 것이 각의 결정이다.',
+ '고시':'행정 기관이 정한 내용을 공개적으로 널리 알림.',
+ '태정관':'메이지 시대 초기 일본의 최고 국가 기관.',
+ '지령':'윗 기관이 아래 기관에 내리는 지시.',
+ '문서철':'관련 문서를 한데 묶어 놓은 묶음.',
+ '약도':'필요한 것만 간단히 줄여 그린 지도.',
+ '칙령':'황제가 내린 명령.',
+ '관보':'정부가 법령과 공문을 알리려고 펴내는 신문.',
+ '도감':'칙령 제41호 이전에 울릉도를 맡아 다스리던 관직.',
+ '개칭':'이름을 바꿈.',
+ '부속':'주된 것에 딸려 붙음.',
+ '군청':'군의 행정을 맡아보는 관청.',
+ '관할':'권한을 가지고 맡아 다스림. 또는 그 범위.',
+ '행동일지':'군함이 날마다 한 일을 적은 공식 기록.',
+ '량코도':'"리앙코르드"를 일본 어부들이 줄여 부른 이름.',
+ '울도군':'칙령 제41호(1900)로 울릉도에 새로 둔 군.',
+ '군수':'군의 행정을 책임지는 관리.',
+ '영지':'한 나라가 차지하여 다스리는 땅.',
+ '시찰':'직접 돌아다니며 실제 사정을 살핌.',
+ '호구':'집의 수와 사람의 수.',
+ '관찰사 서리':'도의 장관인 관찰사의 일을 임시로 대신 맡은 관리.',
+ '참정대신':'대한제국 의정부의 대신. 당시 정부 업무를 이끌던 자리.',
+ '의정부':'대한제국의 최고 행정 기관.',
+ '全屬無根':'"전속무근". 전부 근거가 없다는 뜻.',
+ '한일의정서':'1904년 러일전쟁 중 일본이 대한제국과 맺은 조약. 일본이 군사상 필요한 곳을 쓸 수 있게 했다.',
+ '을사늑약':'1905년 일본이 대한제국의 외교권을 빼앗은 조약.',
+ '외교권':'다른 나라와 조약을 맺거나 교섭하는 등 대외 관계를 처리하는 권리.',
+ '통감부':'을사늑약 뒤 일본이 대한제국에 설치한 통치 기관.',
+ '무인도':'사람이 살지 않는 섬.',
+ '대여 청원':'나카이가 이 섬을 일본 영토로 편입하고 자신에게 빌려 달라고 정부에 요청한 것.',
+ '망루':'멀리 살펴보려고 높게 지은 시설.',
+ '방언':'한 지역에서만 쓰는 말. 사투리.',
+ '검수':'내용이 맞는지 검사하여 확인함.'};
+const GL_TERMS=Object.keys(GLOSS).sort((a,b)=>b.length-a.length);
+const GL_SKIP='.tl-item:not(.lit),.card,.strip,.opt,.slot,.act,.ftab,.chip,.gl,.tabs,.prog,.cbtn,.mk,.plate,.rm,textarea,script,style,svg,.gpop';
+function glossify(root){if(!root)return;const used=new Set(),nodes=[];
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;return !p||p.closest(GL_SKIP)||!n.nodeValue.trim()?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});
+  while(w.nextNode())nodes.push(w.currentNode);
+  for(let k=0;k<nodes.length;k++){const n=nodes[k];for(const term of GL_TERMS){if(used.has(term))continue;const i=n.nodeValue.indexOf(term);if(i<0)continue;
+    used.add(term);const hit=n.splitText(i),rest=hit.splitText(term.length);const sp=document.createElement('span');sp.className='gl';sp.dataset.g=term;sp.textContent=term;
+    if(!n.parentElement.closest('button,[role="button"]')){sp.tabIndex=0;sp.setAttribute('role','button')}sp.setAttribute('aria-label',term+' 뜻 보기');
+    hit.replaceWith(sp);nodes.push(n,rest);break}}}
+let gpop=null,gAnchor=null;
+function hideGloss(){if(gpop){gpop.remove();gpop=null;gAnchor=null}}
+function showGloss(el){if(gAnchor===el){hideGloss();return}hideGloss();const t=el.dataset.g;gAnchor=el;
+  S.gloss=S.gloss||{};S.gloss[t]=(S.gloss[t]||0)+1;save();
+  gpop=document.createElement('div');gpop.className='gpop';gpop.setAttribute('role','tooltip');gpop.innerHTML=`<b>${t}</b>${GLOSS[t]}`;document.body.appendChild(gpop);
+  const r=el.getBoundingClientRect(),pw=gpop.offsetWidth,ph=gpop.offsetHeight;let x=Math.min(Math.max(8,r.left+r.width/2-pw/2),innerWidth-pw-8),y=r.bottom+8;if(y+ph>innerHeight-8)y=Math.max(8,r.top-ph-8);
+  gpop.style.left=x+'px';gpop.style.top=y+'px'}
+document.addEventListener('click',e=>{const g=e.target.closest&&e.target.closest('.gl');if(g){e.preventDefault();e.stopPropagation();showGloss(g);return}if(!(e.target.closest&&e.target.closest('.gpop')))hideGloss()},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideGloss();else if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('gl')){e.preventDefault();showGloss(e.target)}});
+document.addEventListener('scroll',hideGloss,true);addEventListener('resize',hideGloss);
+
 /* ---------- 소리: 음원 파일 없이 브라우저에서 합성 (기본값 꺼짐) ---------- */
 const SND={on:false,ctx:null,amb:null};
 try{SND.on=localStorage.getItem('dokdo1905_sound')==='1'}catch{}
@@ -457,7 +523,7 @@ function prog(){const i=SCENES.indexOf(S.scene);$('#prog').innerHTML=SCENES.slic
 const NOW={s1:['t4','t5'],s2:['y1877'],s3:['y1900'],s4:['y1904'],s5:['t8','t9']};
 function timeline(fresh=[]){
   $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${S.lit.includes(x.id)&&(NOW[S.scene]||[]).includes(x.id)?'now':''} ${fresh.includes(x.id)?'fresh':''}"><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
-  const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+  glossify($('#timeline'));const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
 function light(ids){const f=ids.filter(i=>!S.lit.includes(i));if(!f.length)return;S.lit.push(...f);save();timeline(f)}
 function gain(id){if(S.cards.includes(id))return;S.cards.push(id);S._fresh=id;save();sfx('card');toast(`사료 카드 확보 — ${CARDS[id].n}`)}
 function pane(p,flag){document.body.classList.toggle('pane-desk',p==='desk');document.body.classList.toggle('pane-work',p==='work');
@@ -472,8 +538,8 @@ function files(){if(!S.cards.length)return '';const f=S._fresh;S._fresh='';
   return `<div class="files"><h4>확보한 사료 ${S.cards.length} / 7</h4><div class="row">${S.cards.map(c=>`<span class="ftab ${c===f?'new':''}">${CARDS[c].n}</span>`).join('')}</div></div>`}
 function syncTask(){const t=work.querySelector('.task');let m=desk.querySelector('.mtask');
   if(!t){m&&m.remove();return}if(!m){m=document.createElement('div');m.className='mtask';desk.prepend(m)}m.className='mtask'+(t.classList.contains('done')?' done':'');m.innerHTML=t.innerHTML}
-function setWork(html){work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;syncTask()}
-function setDesk(html){desk.innerHTML=`<div class="enter">${SCN[S.scene]?scenebar(S.scene):''}${html}</div>`;syncTask()}
+function setWork(html){hideGloss();work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;glossify(work);syncTask()}
+function setDesk(html){hideGloss();desk.innerHTML=`<div class="enter">${SCN[S.scene]?scenebar(S.scene):''}${html}</div>`;glossify(desk);syncTask()}
 
 /* 판단계 — "石島는 이 섬이다" 쪽으로 얼마나 기울었는가. 정답 위치는 없다. */
 const BASE={low:2,unsure:4,possible:6},DELTA={weaken:-1,same:0,strengthen:1};
@@ -571,7 +637,7 @@ function intro(){
     <div class="stagev"><div class="pframe" id="pf"><img src="${IMG.yoon}" alt="윤 연구원"></div><div class="speech"><span class="plate" id="plate"></span><div class="dbox" id="dbox" role="button" tabindex="0"></div></div></div>
     <button class="act" id="introGo" type="button" hidden>${c.btn}</button></div>`;
   const show=()=>{const [w,t]=c.lines[i];$('#plate').textContent=w==='y'?'윤 연구원 · 선임':'기록';$('#plate').className='plate'+(w==='y'?'':' nar');
-    $('#pf').style.visibility=w==='y'?'visible':'hidden';$('#dbox').innerHTML=`<span class="typing">${t}</span>`;
+    $('#pf').style.visibility=w==='y'?'visible':'hidden';hideGloss();$('#dbox').innerHTML=`<span class="typing">${t}</span>`;glossify($('#dbox'));
     const last=i===c.lines.length-1;$('#dbox').classList.toggle('end',last);$('#introGo').hidden=!last;if(last)$('#introGo').focus()};
   const adv=()=>{if(i<c.lines.length-1){i++;sfx('tick');show()}};
   $('#dbox').onclick=adv;$('#dbox').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();adv()}};
@@ -882,7 +948,7 @@ function payload(){finish();const dur=S.startedAt?Math.round((Date.parse(S.compl
   return{class:CLASS,game:GAME_ID,timestamp:S.completedAt,choices:{version:VER,record_type:'result',result_id:S.resultId,
     j1900:S.j1900,u1904:S.u1904,u1906:S.u1906,meter:points().map(p=>p[1]),s2_identify:S.s2id,opened:S.opened,sort_errors:S.sortErr,find_misses:S.misses,
     panel_cards:pc,claim_levels:pc.map(c=>S.panel.claims[c]==='x'?CARDS[c].xt:'direct'),
-    review:S.review,review_card:S.reviewCard,support:S.panel.support,closing:S.closing,duration_sec:dur},comment:''}}
+    review:S.review,review_card:S.reviewCard,support:S.panel.support,closing:S.closing,glossary_opens:S.gloss||{},duration_sec:dur},comment:''}}
 async function submit(force){if(NOSAVE||(S.submittedAt&&!force))return;
   const res=await fetch(SB+'/rest/v1/game_results',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload()),keepalive:true});
   if(!res.ok)throw Error('HTTP '+res.status);S.submittedAt=new Date().toISOString();save()}
