@@ -214,6 +214,34 @@ button{font:inherit;color:inherit}
 @keyframes stamp{0%{transform:scale(2.2) rotate(-14deg);opacity:0}100%{transform:scale(1) rotate(-7deg);opacity:1}}
 textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--line);border-radius:3px;background:#fff}
 
+/* ---------- 사료 다시 보기(읽기 전용) ---------- */
+.viewer{position:fixed;inset:0;z-index:35;background:rgba(8,14,18,.86);overflow:auto;padding:24px 16px}
+.vbox{max-width:780px;margin:0 auto}
+.vhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;color:#f0e9da}
+.vhead b{font-family:var(--serif);font-size:20px}
+.vhead small{display:block;color:#b9c7cc;font-size:13px}
+.vclose{min-height:44px;padding:6px 16px;background:#f0c96a;color:#1b2430;border:0;border-radius:3px;font-weight:700;cursor:pointer}
+.seg.ro{cursor:default}.seg.ro:hover{background:var(--mark-soft)}
+.vnote{max-width:720px;margin:-6px auto 22px;background:#fffdf6;border-left:4px solid var(--sea);padding:10px 14px;font-size:15px;line-height:1.6}
+.vnote b{color:var(--seal)}
+.ctxcard{max-width:720px;margin:0 auto 22px;background:var(--paper);padding:18px 20px;font-size:16px;line-height:1.75;box-shadow:0 10px 24px rgba(0,0,0,.28)}
+.tl-item.lit{cursor:pointer}
+.tl-item.lit:hover span,.tl-item.lit:focus-visible span{text-decoration:underline}
+.tl-item:focus-visible{outline:2px solid #f0c96a;outline-offset:2px}
+button.ftab{cursor:pointer;font:inherit;font-size:12px;color:inherit}
+button.ftab:hover{border-color:var(--sea)}
+.revisit{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.revisit button{min-height:44px;padding:6px 12px;background:#fff;border:1.5px solid var(--sea);color:var(--sea);border-radius:3px;font-weight:700;font-size:14px;cursor:pointer}
+/* 결과: 전시실 */
+.hall{position:relative;border-radius:6px;overflow:hidden;margin:0 0 -40px;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.hall img{display:block;width:100%;max-height:46vh;object-fit:cover;filter:brightness(.9)}
+.hall::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(14,26,32,.95))}
+.hall .cap{position:absolute;left:20px;bottom:54px;z-index:2;color:#f5efe2}
+.hall .cap .k{color:#f0c96a}
+.hall .cap h1{margin:4px 0 0}
+.res .expo{position:relative;z-index:3;max-width:700px}
+.printmeta{display:none}
+.pdfhint{font-size:13px;color:#b9c7cc;margin:6px 0 0}
 /* ---------- 낱말 풀이 ---------- */
 .gl{border-bottom:1.5px dotted currentColor;cursor:help}
 .gl::after{content:"?";font-family:var(--sans);font-size:.62em;font-weight:700;vertical-align:super;margin-left:1px;opacity:.65}
@@ -337,6 +365,18 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
   .mtask p u{text-decoration:none;background:linear-gradient(transparent 60%,rgba(240,201,106,.55) 60%)}
   .mtask small,.mtask .where{display:none}
 }
+@media print{
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important}
+  .top,.timeline,.tabs,.btns,.savemsg,.pdfhint,.toast,.viewer,.intro,.gpop,.revisit,.hall::after{display:none!important}
+  .grid{display:block!important;height:auto!important}
+  .desk{overflow:visible!important;background:#fff!important;padding:0!important}
+  .res h1{color:#111!important}.hall .cap{color:#111}.hall{box-shadow:none;margin:0 0 12px}.hall img{max-height:none;filter:none}
+  .hall .cap{position:static;padding:8px 0}
+  .res .box{border:1px solid #ccc;break-inside:avoid}.expo{box-shadow:none;border:1px solid #999;break-inside:avoid}
+  *{animation:none!important}
+  .gl{border-bottom:0!important}.gl::after{display:none!important}
+  .printmeta{display:block!important;font-size:12px;color:#444;margin:0 0 8px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -352,6 +392,7 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
   <aside class="work" id="work" aria-label="작업판"></aside>
 </main>
 <div class="intro" id="intro" hidden></div>
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="사료 다시 보기"><div class="vbox" id="vbox"></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
@@ -359,7 +400,7 @@ textarea{width:100%;min-height:70px;font:inherit;font-size:16px;padding:10px;bor
    흐름·메커닉(찾기·판단·배치)은 v2.0 잠금 그대로. v2.1은 화면(연구소 책상형) 개편. */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const P=new URLSearchParams(location.search);
-const GAME_ID='dokdo1905',VER='2.2',CLASS=(P.get('class')||'미입력').slice(0,40),NOSAVE=P.get('save')==='0';
+const GAME_ID='dokdo1905',VER='2.3',CLASS=(P.get('class')||'미입력').slice(0,40),LOCALFILE=location.protocol==='file:',NOSAVE=P.get('save')==='0'||LOCALFILE;
 const SB='https://xgniwztlrakkrbzcfklb.supabase.co',KEY='sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9',SK='DOKDO1905_v2_1';
 const SCENES=['s0','s1','s2','s3','s4','s5','s6','r'];
 const SNAME={s0:'검수',s1:'1905',s2:'1877',s3:'1900',s4:'1904',s5:'1906',s6:'전시'};
@@ -373,6 +414,8 @@ function load(){try{const x=JSON.parse(sessionStorage.getItem(SK)||'null');if(x&
 function clearSaved(){try{sessionStorage.removeItem(SK)}catch{}SAVED=null}
 
 /* ---------- 데이터 ---------- */
+const TLX={t1:'러일전쟁이 시작된 달, 일본은 한일의정서를 맺어 대한제국 안의 군사상 필요한 곳을 쓸 수 있게 했다.',t2:'나카이 요자부로가 이 섬을 일본 영토로 편입하고 자신에게 빌려 달라고 일본 정부에 청원했다.',t3:'러일전쟁 중 일본 해군이 군함 쓰시마를 보내 이 섬에 망루·전신 시설을 세울 수 있는지 조사했다. 편입 전후의 시대 배경이며, 이것만으로 편입의 원인을 확정할 수는 없다.',t5:'1905년 2월, 한 달 앞선 일본 내각 결정에 따라 시마네현이 고시로 이 섬의 편입을 알렸다.',t6:'1905년 11월, 일본이 대한제국의 외교권을 빼앗은 조약.',t7:'을사늑약 뒤 일본이 대한제국에 설치한 통치 기관.'};
+const TLDOC={y1877:['E01','E02'],y1900:['E03'],y1904:['E04'],t4:['E00'],t8:['E05'],t9:['E06']};
 const TL=[
  {id:'y1877',d:'1877',t:'태정관 지령',file:1},
  {id:'y1900',d:'1900',t:'칙령 제41호',file:1},
@@ -466,7 +509,7 @@ const GLOSS={
  '방언':'한 지역에서만 쓰는 말. 사투리.',
  '검수':'내용이 맞는지 검사하여 확인함.'};
 const GL_TERMS=Object.keys(GLOSS).sort((a,b)=>b.length-a.length);
-const GL_SKIP='.tl-item:not(.lit),.card,.strip,.opt,.slot,.act,.ftab,.chip,.gl,.tabs,.prog,.cbtn,.mk,.plate,.rm,textarea,script,style,svg,.gpop';
+const GL_SKIP='h1,.tl-item:not(.lit),.card,.strip,.opt,.slot,.act,.ftab,.chip,.gl,.tabs,.prog,.cbtn,.mk,.plate,.rm,textarea,script,style,svg,.gpop';
 function glossify(root){if(!root)return;const used=new Set(),nodes=[];
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;return !p||p.closest(GL_SKIP)||!n.nodeValue.trim()?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});
   while(w.nextNode())nodes.push(w.currentNode);
@@ -490,10 +533,16 @@ const SND={on:false,ctx:null,amb:null};
 try{SND.on=localStorage.getItem('dokdo1905_sound')==='1'}catch{}
 function actx(){if(!SND.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;SND.ctx=new A()}if(SND.ctx.state==='suspended')SND.ctx.resume();return SND.ctx}
 function noise(c,sec,brown){const b=c.createBuffer(1,Math.floor(c.sampleRate*sec),c.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){const w=Math.random()*2-1;if(brown){l=(l+.02*w)/1.02;d[i]=l*3.5}else d[i]=w}return b}
-function ambient(on){const c=actx();if(!c)return;if(!on){if(SND.amb){SND.amb.g.gain.setTargetAtTime(0,c.currentTime,.4);const a=SND.amb;setTimeout(()=>{try{a.src.stop();a.lfo.stop()}catch{}},1500);SND.amb=null}return}
+function ambient(on){const c=actx();if(!c)return;if(!on){if(SND.amb){SND.amb.g.gain.setTargetAtTime(0,c.currentTime,.4);const a=SND.amb;setTimeout(()=>{try{a.src.stop();a.lfo.stop();a.stop&&a.stop()}catch{}},1500);SND.amb=null}return}
   if(SND.amb)return;const src=c.createBufferSource();src.buffer=noise(c,6,true);src.loop=true;const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=480;
   const g=c.createGain();g.gain.value=0;const lfo=c.createOscillator();lfo.frequency.value=.09;const lg=c.createGain();lg.gain.value=.022;lfo.connect(lg);lg.connect(g.gain);
-  src.connect(f);f.connect(g);g.connect(c.destination);src.start();lfo.start();g.gain.setTargetAtTime(.04,c.currentTime,1.2);SND.amb={src,lfo,g}}
+  src.connect(f);f.connect(g);g.connect(c.destination);src.start();lfo.start();g.gain.setTargetAtTime(.07,c.currentTime,1.2);
+  const mg=c.createGain();mg.gain.value=0;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1100;mg.connect(lp);lp.connect(c.destination);
+  const oscs=[146.83,220,293.66,369.99].map((fq,k)=>{const o=c.createOscillator();o.type=k%2?'triangle':'sine';o.frequency.value=fq;o.detune.value=(k-1.5)*4;const og=c.createGain();og.gain.value=.25;o.connect(og);og.connect(mg);o.start();return o});
+  const ml=c.createOscillator();ml.frequency.value=.05;const mlg=c.createGain();mlg.gain.value=.012;ml.connect(mlg);mlg.connect(mg.gain);ml.start();mg.gain.setTargetAtTime(.03,c.currentTime,2);
+  const prog=[[146.83,220,293.66,369.99],[123.47,185,246.94,293.66],[130.81,196,261.63,329.63],[146.83,220,293.66,369.99]];let pi=0;
+  const iv=setInterval(()=>{pi=(pi+1)%prog.length;oscs.forEach((o,k)=>o.frequency.setTargetAtTime(prog[pi][k],c.currentTime,1.6))},9000);
+  SND.amb={src,lfo,g:{gain:{setTargetAtTime:(v,t,k)=>{g.gain.setTargetAtTime(v,t,k);mg.gain.setTargetAtTime(v,t,k)}}},stop:()=>{clearInterval(iv);oscs.forEach(o=>{try{o.stop()}catch{}});try{ml.stop()}catch{}}}}
 function tone(c,t,f,d,type='sine',v=.07,f2){const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.02)}
 function burst(c,t,d,freq,v=.12,type='bandpass'){const s=c.createBufferSource();s.buffer=noise(c,d);const f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;const g=c.createGain();
@@ -522,8 +571,8 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');cl
 function prog(){const i=SCENES.indexOf(S.scene);$('#prog').innerHTML=SCENES.slice(0,7).map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}">${SNAME[s]}</li>`).join('')}
 const NOW={s1:['t4','t5'],s2:['y1877'],s3:['y1900'],s4:['y1904'],s5:['t8','t9']};
 function timeline(fresh=[]){
-  $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${S.lit.includes(x.id)&&(NOW[S.scene]||[]).includes(x.id)?'now':''} ${fresh.includes(x.id)?'fresh':''}"><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
-  glossify($('#timeline'));const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+  $('#timeline').innerHTML=`<div class="tl-track">${TL.map(x=>`<div class="tl-item ${x.file?'file':''} ${S.lit.includes(x.id)?'lit':''} ${S.lit.includes(x.id)&&(NOW[S.scene]||[]).includes(x.id)?'now':''} ${fresh.includes(x.id)?'fresh':''}" data-tl="${x.id}" ${S.lit.includes(x.id)?'role="button" tabindex="0" aria-label="'+x.d+' '+x.t+' 다시 보기"':''}><i class="dot"></i><b>${x.d}</b><span>${x.t}</span></div>`).join('')}</div>`;
+  $$('#timeline .tl-item.lit').forEach(el=>{el.onclick=()=>openTL(el.dataset.tl);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTL(el.dataset.tl)}}});const f=$('.tl-item.fresh');if(f)f.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
 function light(ids){const f=ids.filter(i=>!S.lit.includes(i));if(!f.length)return;S.lit.push(...f);save();timeline(f)}
 function gain(id){if(S.cards.includes(id))return;S.cards.push(id);S._fresh=id;save();sfx('card');toast(`사료 카드 확보 — ${CARDS[id].n}`)}
 function pane(p,flag){document.body.classList.toggle('pane-desk',p==='desk');document.body.classList.toggle('pane-work',p==='work');
@@ -535,10 +584,10 @@ function vn(text){return `<div class="vn"><span class="ava" aria-hidden="true">�
 function task(no,total,text,sub='',done=false,atDesk=true){
   return `<div class="task ${done?'done':''}"><div class="no">과제 ${no} / ${total}<i>${Array.from({length:total},(_,k)=>`<u class="${k<no?'on':''}"></u>`).join('')}</i>${done?' ✓':''}</div><p>${text}</p>${sub?`<small>${sub}</small>`:''}${atDesk&&!done&&mobile()?'<span class="where">▶ 사료 책상 탭에서 하세요</span>':''}</div>`}
 function files(){if(!S.cards.length)return '';const f=S._fresh;S._fresh='';
-  return `<div class="files"><h4>확보한 사료 ${S.cards.length} / 7</h4><div class="row">${S.cards.map(c=>`<span class="ftab ${c===f?'new':''}">${CARDS[c].n}</span>`).join('')}</div></div>`}
+  return `<div class="files"><h4>확보한 사료 ${S.cards.length} / 7</h4><div class="row">${S.cards.map(c=>`<button type="button" class="ftab ${c===f?'new':''}" data-src="${c}">${CARDS[c].n}</button>`).join('')}</div><p style="margin:6px 0 0;font-size:12px;color:var(--muted)">눌러서 다시 볼 수 있어요. 위쪽 시간 띠의 켜진 칸도 눌러 볼 수 있어요.</p></div>`}
 function syncTask(){const t=work.querySelector('.task');let m=desk.querySelector('.mtask');
   if(!t){m&&m.remove();return}if(!m){m=document.createElement('div');m.className='mtask';desk.prepend(m)}m.className='mtask'+(t.classList.contains('done')?' done':'');m.innerHTML=t.innerHTML}
-function setWork(html){hideGloss();work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;glossify(work);syncTask()}
+function setWork(html){hideGloss();work.innerHTML=`<div class="enter wcol">${html}${files()}</div>`;work.scrollTop=0;glossify(work);syncTask();$$('#work [data-src]').forEach(b=>b.onclick=()=>openSrc([b.dataset.src]))}
 function setDesk(html){hideGloss();desk.innerHTML=`<div class="enter">${SCN[S.scene]?scenebar(S.scene):''}${html}</div>`;glossify(desk);syncTask()}
 
 /* 판단계 — "石島는 이 섬이다" 쪽으로 얼마나 기울었는가. 정답 위치는 없다. */
@@ -622,7 +671,7 @@ function scenebar(k){const c=SCN[k];return `<div class="scenebar"><img src="${IM
 function titleScreen(){const el=$('#intro');el.hidden=false;desk.innerHTML='';work.innerHTML='';
   el.innerHTML=`<div class="scn" style="text-align:center"><span class="ttl-seal">獨島</span><div class="ttl-h1">독도연구소: 1905 파일</div><div class="ttl-years">1877 · 1900 · 1904 · 1906</div>
    <div class="photo"><img src="${IMG.title}" alt="새벽 동해의 두 섬(삽화)"></div>
-   <div class="ttl-card" style="text-align:left">1905년, 일본은 동해의 한 섬을 자국 영토로 편입했다. 그 판단은 <b>그 이전과 이후의 기록</b> 앞에서도 그대로 설 수 있을까?<div class="hair"></div>당신은 청소년 디지털 전시를 준비하는 <b>독도연구소 인턴</b>이다. 개막 전날 밤, 패널 하나에 검수 보류가 걸렸다.</div>
+   <div class="ttl-card" style="text-align:left">1905년, 일본은 동해의 한 섬을 자국 영토로 편입했다. 그 판단은 <b>그 이전과 이후의 기록</b> 앞에서도 그대로 설 수 있을까?<div class="hair"></div>당신은 청소년 디지털 전시를 준비하는 <b>독도연구소 인턴</b>이다. 개막 전날 밤, 패널 하나에 검수 보류가 걸렸다.<div class="hair"></div><span style="font-family:var(--sans);font-size:14px;color:#b9c7cc">배경음악은 꺼진 채로 시작해요. 들으려면 오른쪽 위 <b>🔇 소리</b> 버튼을 누르세요(이어폰 권장).</span></div>
    <button class="act" id="introGo" type="button" style="max-width:420px;margin:18px auto 0">${SAVED?'새로 시작한다':'검수를 시작한다'}</button>
    ${SAVED?`<div class="ttl-card" style="text-align:left;margin-top:14px;font-family:var(--sans);font-size:15px">이 기기에 ${SAVED.completedAt?'<b>이미 끝난 조사 결과</b>':`<b>진행 중인 조사(${SNAME[SAVED.scene]||''} 단계)</b>`}가 남아 있어요. 본인의 기록일 때만 이어서 보세요.
      <button class="act ghost" id="resume" type="button" style="margin-top:10px;color:#f0c96a;border-color:#f0c96a">${SAVED.completedAt?'지난 결과 보기':'이어서 한다'}</button></div>`:''}</div>`;
@@ -664,7 +713,7 @@ function s0(){
   setWork(task(1,1,'근거가 비어 있는 문장을 찾았어요.','',true)+
     `<div class="note">이 패널은 결론은 있지만 근거가 비어 있어요. 이번 조사로 채워야 할 질문은 이것입니다.</div>
      <p class="q">1905년의 조치를 판단하려면, 그 이전의 어떤 기록을 확인해야 할까?</p>
-     <div class="note">화면 위쪽 <b>시간 띠</b>는 조사가 진행되면 저절로 켜져요. 따로 누를 필요는 없어요.</div>
+     <div class="note">화면 위쪽 <b>시간 띠</b>는 조사가 진행되면 저절로 켜져요. 켜진 칸을 누르면 지난 자료를 다시 볼 수 있어요(판단을 고치지는 않아요).</div>
      <button class="act" id="next">1905 파일을 연다</button>`);
   pane('work',true);$('#next').onclick=()=>go('s1');
 }
@@ -919,6 +968,35 @@ function s6(){
   $('#next').onclick=()=>{finish();go('r')};
 }
 
+/* ---------- 사료 다시 보기: 이미 본 자료만, 읽기 전용(판단은 바꾸지 않는다 — 후견지명 차단) ---------- */
+function roDoc({label,title,meta,segs,key,kind='',extra='',orig=''}){
+  return `<article class="sheet ${kind?'k-'+kind:''}"><span class="label">${label}</span>${extra}<div class="meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div><h3>${title}</h3>
+   <div class="body">${segs.map(x=>`<span class="seg ro ${x.id&&S.found.includes(key+':'+x.id)?'hit':''}">${x.t}</span>`).join(' ')}</div>${orig?`<span class="orig">${orig}</span>`:''}</article>`}
+function srcHTML(id){
+  const lim=`<div class="vnote">이 자료만으로 확인하기 어려운 것 — ${CARDS[id].limit}</div>`;
+  if(id==='E00')return roDoc({kind:'jp',extra:'<span class="wm">閣議決定</span>',label:'1905 · 일본 내각',title:'각의 결정문 (요지 번역)',meta:['1905.1.28','당대 문서'],segs:S1SEG,key:'p1'})+lim;
+  if(id==='E01')return roDoc({kind:'dajo',extra:'<span class="wm">太政官 指令</span>',label:'1877 · 일본 태정관',title:'태정관 지령 (번역)',meta:['1877.3.29','당대 문서'],segs:S2SEG,key:'p2',orig:'원문: 伺之趣竹島外一嶋之義本邦関係無之義ト可相心得事'})+lim;
+  if(id==='E02')return `<article class="sheet k-map"><span class="label sea">1876 · 시마네현 제출</span><div class="meta"><span>기죽도약도</span><span>도식 재현 — 원본 아님</span></div>
+     <p style="font-family:var(--serif);margin:0 0 10px">"磯竹島, 일명 竹島 … 그 다음에 섬 하나가 있는데 松島라 부른다."</p><div class="map">${MAP.replace(/id="map"/,'id="map-v"').replace(/id="modern"/,'').replace(/class="modern"/,'class="modern show"').replace(/id="wv"/,'id="wv-v"').replace(/url\(#wv\)/,'url(#wv-v)')}</div>
+     <div class="legend">오늘의 거리 — 울릉도↔독도 약 87 km · 독도↔오키 약 158 km</div></article>`+lim+(S.s2id?`<div class="vnote">나의 조사 메모: <b>${S.s2id==='match'?'松島의 위치가 조사 중인 섬과 맞아 보인다':'판단을 보류한다'}</b></div>`:'');
+  if(id==='E03')return roDoc({kind:'gwan',extra:'<div class="mast"><b>官報</b><span>第一千七百十六號<br>光武四年 十月 二十七日</span></div>',label:'1900 · 대한제국',title:'칙령 제41호 (현대어)',meta:['1900.10.25 반포','당대 문서'],segs:S3SEG,key:'p3'})+lim+(S.j1900?`<div class="vnote">이 자료를 읽고 나의 판단: <b>${JUDGE1[S.j1900]}</b></div>`:'');
+  if(id==='E04')return roDoc({kind:'log',extra:'<div class="logmast">行動日誌 · 軍艦 新高</div>',label:'1904 · 일본 해군 군함',title:'군함 니타카 행동일지 (요지 번역)',meta:['1904.9.25','당대 문서'],segs:S4SEG,key:'p4'})+lim+(S.u1904?`<div class="vnote">이 자료를 읽고 "石島는 이 섬이다"라는 생각: <b>${UPD[S.u1904]}</b></div>`:'');
+  if(id==='E05')return roDoc({kind:'han',extra:'<div class="hanmast"><i>報告</i>報告書 號外</div>',label:'1906 · 울도군수 → 의정부',title:'울도군수 심흥택 보고 (현대어 요지)',meta:['1906.3','당대 문서'],segs:S5SEG,key:'p5'})+lim+(S.u1906?`<div class="vnote">1906년 자료를 읽고 "石島는 이 섬이다"라는 생각: <b>${UPD[S.u1906]}</b></div>`:'');
+  if(id==='E06')return `<article class="sheet k-han"><span class="label">1906.5.20 · 의정부 참정대신</span><div class="hanmast"><i>指令</i>指令 第三號</div><div class="meta"><span>지령 제3호 (현대어 요지)</span><span>당대 문서</span></div>
+     <div class="body" style="line-height:1.9">보고는 다 읽었다. 독도가 일본 영지가 되었다는 말은 <b>전혀 근거가 없으니(全屬無根)</b>, 그 섬의 형편과 일본인이 어떻게 행동했는지 <b>다시 조사하여 보고할 것</b>.</div></article>`+lim;
+  return ''}
+function openViewer(title,sub,html){const v=$('#viewer');hideGloss();
+  $('#vbox').innerHTML=`<div class="vhead"><div><b>${title}</b><small>${sub}</small></div><button class="vclose" id="vclose" type="button">닫기 ✕</button></div>${html}`;
+  v.hidden=false;v.scrollTop=0;glossify($('#vbox'));sfx('flip');$('#vclose').onclick=closeViewer;$('#vclose').focus()}
+function closeViewer(){hideGloss();$('#viewer').hidden=true}
+$('#viewer').addEventListener('click',e=>{if(e.target.id==='viewer')closeViewer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#viewer').hidden)closeViewer()});
+function openSrc(ids){ids=ids.filter(i=>S.cards.includes(i));if(!ids.length)return;
+  openViewer('사료 다시 보기',ids.map(i=>CARDS[i].n).join(' · ')+' — 읽기 전용이에요. 판단은 바꾸지 않아요.',ids.map(srcHTML).join(''))}
+function openTL(id){const t=TL.find(x=>x.id===id);if(!t||!S.lit.includes(id))return;
+  if(TLDOC[id]&&TLDOC[id].some(i=>S.cards.includes(i)))return openSrc(TLDOC[id]);
+  openViewer(`${t.d} · ${t.t}`,'시간 띠 — 시대 배경',`<div class="ctxcard">${TLX[id]||t.t}</div>`)}
+
 /* ---------- 결과 ---------- */
 function r(){
   $('#grid').classList.add('single');$('#tabs').hidden=true;pane('desk');
@@ -928,16 +1006,20 @@ function r(){
   const panel=`<div class="expo"><span class="stamp">검수 완료</span><div class="ttl"><small>독도연구소 청소년 디지털 전시</small>독도, 1905년 — 그 이전과 이후의 기록</div>
     ${pc.map((c,i)=>{const d=CARDS[c],k=S.panel.claims[c];return `<div class="eslot full"><div class="cn">근거 ${i+1} · ${d.n}</div><div class="txt">${esc(k==='x'?d.x:d.d)}${flagOf(c)}</div><div class="lim">이 자료만으로 확인하기 어려운 것 — ${d.limit}</div></div>`}).join('')}
     <div class="closing"><div class="txt">${esc(CLOSING[S.closing]?.t||'')}${S.closing==='c3'?'<span class="flag red">검수 의견: 근거 미표시</span>':''}</div>${S.own.trim()?`<p style="font-family:var(--serif);margin:8px 0 0">${esc(S.own)}</p>`:''}</div></div>`;
-  setDesk(`<div class="res"><div class="k">전시 개막</div><h1>검수 보류가 풀렸습니다</h1>${panel}
+  setDesk(`<div class="res"><p class="printmeta">독도연구소: 1905 파일 — 내 조사 결과 · 반 ${esc(CLASS)} · ${new Date(S.completedAt||Date.now()).toLocaleString('ko-KR')}</p><div class="hall"><img src="${IMG.s6}" alt="개막한 독도연구소 디지털 전시실(삽화)"><div class="cap"><div class="k">전시 개막 · 독도연구소 청소년 디지털 전시</div><h1>검수 보류가 풀렸습니다</h1></div></div>${panel}
     <div class="box"><h2>나의 판단 궤적</h2>${meter('','석도 판단계 — 1900 → 1904 → 1906')}
      <p style="margin:10px 0 0;font-size:15px">1900 <b>${JUDGE1[S.j1900]||'—'}</b> → 1904 자료 뒤 <b>${UPD[S.u1904]||'—'}</b> → 1906 자료 뒤 <b>${UPD[S.u1906]||'—'}</b></p>
-     <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">궤적에는 정답이 없어요. 짝과 비교해 보세요 — "나는 어느 자료에서 판단이 움직였고, 왜 그랬을까?"</p></div>
+     <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">궤적에는 정답이 없어요. 짝과 비교해 보세요 — "나는 어느 자료에서 판단이 움직였고, 왜 그랬을까?"</p>
+     <div class="revisit"><button type="button" data-rv="E03">1900 칙령 제41호 다시 보기</button><button type="button" data-rv="E04">1904 군함 기록 다시 보기</button><button type="button" data-rv="E05,E06">1906 보고·지령 다시 보기</button><button type="button" data-rv="E01,E02">1877 지령·약도 다시 보기</button><button type="button" data-rv="E00">1905 결정문 다시 보기</button></div></div>
     <div class="box"><h2>함께 생각해 볼 질문</h2><ol>
      <li>내 전시 패널에서 ① 사료가 직접 말하는 것, ② 여러 자료를 연결해 해석한 것, ③ 오늘날 우리가 평가하는 것을 하나씩 찾아보자.</li>
      <li>1905년 결정문은 "다른 나라가 점유한 형적이 없다"고 적었다. 1877·1900·1906년의 기록은 이 판단과 어떻게 만나는가?</li>
      <li>1906년 대한제국 정부의 대응에서 할 수 있었던 일과 어려웠던 일은 무엇이었나? 시간 띠를 보며 이야기해 보자.</li></ol></div>
-    <p class="savemsg" id="saveMsg"></p>
-    <div class="btns"><button class="act ghost" id="retry" hidden>기록을 다시 저장한다</button><button class="act ghost" id="restart">처음부터 다시 조사한다</button></div></div>`);
+    <div class="btns"><button class="act" id="pdf" type="button" style="width:auto">내 결과를 PDF로 저장</button><button class="act ghost" id="retry" hidden>선생님께 다시 보내기</button><button class="act ghost" id="restart">처음부터 다시 조사한다</button></div>
+    <p class="pdfhint">PDF 저장: 인쇄 창이 열리면 '대상'을 <b>PDF로 저장</b>으로 고르세요.</p>
+    <p class="savemsg" id="saveMsg"></p></div>`);
+  $$('[data-rv]').forEach(b=>b.onclick=()=>openSrc(b.dataset.rv.split(',')));
+  $('#pdf').onclick=()=>{try{window.print()}catch{toast('이 화면에서는 인쇄 창을 열 수 없어요. 게임 주소로 접속해서 다시 시도하세요.')}};
   $('#restart').onclick=()=>{if(!confirm('조사 기록을 지우고 처음부터 시작할까요?'))return;try{sessionStorage.removeItem(SK)}catch{}location.href=location.pathname+location.search};
   $('#retry').onclick=()=>submitUI(true);submitUI(false);sfx('stamp');
 }
@@ -953,11 +1035,12 @@ async function submit(force){if(NOSAVE||(S.submittedAt&&!force))return;
   const res=await fetch(SB+'/rest/v1/game_results',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload()),keepalive:true});
   if(!res.ok)throw Error('HTTP '+res.status);S.submittedAt=new Date().toISOString();save()}
 function submitUI(force){const m=$('#saveMsg');if(!m)return;
-  if(NOSAVE){m.textContent='저장 없이 진행하는 모드입니다.';return}
-  if(S.submittedAt&&!force){m.textContent='✓ 조사 기록(선택값만)이 저장되었습니다.';return}
-  m.textContent='조사 기록을 저장하는 중입니다…';$('#retry').hidden=true;
-  submit(force).then(()=>{m.textContent='✓ 조사 기록(선택값만)이 저장되었습니다. 자유롭게 쓴 문장은 저장하지 않습니다.'})
-   .catch(()=>{m.textContent='기록 저장에 실패했습니다. 결과 화면은 그대로 쓸 수 있고, 인터넷 연결 뒤 다시 저장할 수 있습니다.';$('#retry').hidden=false})}
+  if(LOCALFILE){m.textContent='파일로 직접 연 게임이라 결과를 선생님께 보내지 않아요. 내 결과는 PDF로 저장할 수 있어요.';return}
+  if(NOSAVE){m.textContent='결과 전송 없이 진행하는 모드예요.';return}
+  if(S.submittedAt&&!force){m.textContent='✓ 선생님께 결과(선택값만)를 보냈어요.';return}
+  m.textContent='선생님께 결과를 보내는 중…';$('#retry').hidden=true;
+  submit(force).then(()=>{m.textContent='✓ 선생님께 결과(선택값만)를 보냈어요. 직접 쓴 문장은 보내지 않아요.'})
+   .catch(()=>{m.textContent='선생님께 결과를 보내지 못했어요(인터넷 연결 또는 학교 네트워크 차단). 결과 화면과 PDF 저장은 그대로 쓸 수 있어요.';$('#retry').hidden=false})}
 
 /* ---------- 시작 ---------- */
 const R={s0,s1,s2,s3,s4,s5,s6,r};
