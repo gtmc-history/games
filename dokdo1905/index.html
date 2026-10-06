@@ -883,7 +883,7 @@ function s3(){
     pane('desk');find('p3',S3SEG,['a','b','c'],()=>{gain('E03');step(1)});return}
   find('p3',S3SEG,['a','b','c'],()=>{});
   const draw=()=>{
-    setWork(task(2,2,'지금까지 읽은 <u>1877·1900 자료만으로</u> 판단해 보세요.',DNOTE_TIP()+' 정답은 없어요. 판단계에 점이 찍히고, 새 자료를 볼 때마다 다시 움직일 수 있어요.',false,false)+
+    setWork(task(2,2,'지금까지 읽은 <u>1877·1900 자료만으로</u> 판단해 보세요.',DNOTE_TIP()+' 이 선택은 정오로 채점하지 않아요. 지금까지 읽은 자료를 근거로 판단하세요. 뒤의 자료를 읽으며 판단이 바뀔 수 있어요.',false,false)+
       meter()+`<div id="j"></div>${S.j1900?'<p class="whyq">이렇게 판단한 <b>가장 큰 이유</b>는?</p><div id="w"></div>':''}<button class="act" id="next" ${S.j1900&&S.w1900?'':'disabled'}>판단계에 기록하고 1904 파일로</button>`);
     opts($('#j'),JUDGE1,S.j1900,k=>{S.j1900=k;save();draw();showWhy()},'row3 keep');
     if(S.j1900)opts($('#w'),WHY.s3,S.w1900,k=>{S.w1900=k;save();draw()},'why');
@@ -1080,7 +1080,7 @@ function r(){
   setDesk(`<div class="res"><p class="printmeta">독도연구소: 1905 파일 — 내 조사 결과 · 반 ${esc(CLASS)} · ${new Date(S.completedAt||Date.now()).toLocaleString('ko-KR')}</p><div class="hall"><img src="${IMG.s6}" alt="개막한 독도연구소 디지털 전시실(삽화)"><div class="cap"><div class="k">전시 개막 · 독도연구소 청소년 디지털 전시</div><h1>검수 보류가 풀렸습니다</h1></div></div>${panel}
     <div class="box"><h2>나의 판단 궤적</h2>${meter('','석도 판단계 — 1900 → 1904 → 1906')}
      <ol class="trail"><li><b>1900 칙령 제41호</b> → ${JUDGE1[S.j1900]||'—'}<small>이유: ${WHY.s3[S.w1900]||'—'}</small></li><li><b>1904 군함 기록</b> → ${UPD[S.u1904]||'—'}<small>이유: ${WHY.s4[S.w1904]||'—'}</small></li><li><b>1906 보고·지령</b> → ${UPD[S.u1906]||'—'}<small>이유: ${WHY.s5[S.w1906]||'—'}</small></li></ol>
-     <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">궤적에는 정답이 없어요. 짝과 비교해 보세요 — "나는 어느 자료에서 판단이 움직였고, 왜 그랬을까?"</p>
+     <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">판단의 방향은 정오로 채점하지 않아요. 짝과 비교해 보세요 — "나는 어느 자료에서 판단이 움직였고, 왜 그랬을까?"</p>
      <div class="revisit"><button type="button" data-rv="E03">1900 칙령 제41호 다시 보기</button><button type="button" data-rv="E04">1904 군함 기록 다시 보기</button><button type="button" data-rv="E05,E06">1906 보고·지령 다시 보기</button><button type="button" data-rv="E01,E02">1877 지령·약도 다시 보기</button><button type="button" data-rv="E00">1905 결정문 다시 보기</button></div></div>
     <div class="box"><h2>나의 역사 기행 경로</h2><div class="jbox">${journeyMap('r',true)}<ol>
       <li>1905 도쿄 — 일본 내각 결정문</li><li>1877 도쿄 — 태정관 지령과 약도</li><li>1900 한성 — 대한제국 칙령 제41호</li><li>1904 동해 해상 — 군함 니타카 기록</li><li>1906 울도군 — 울도군수 보고, 의정부 지령</li></ol></div>
