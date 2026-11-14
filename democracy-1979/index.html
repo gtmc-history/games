@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>1979: 지워진 목소리 | 역사 기록 판별 게임</title>
+<title>1979: 지워진 목소리 | 역사 기록 판별 게임 v0.4</title>
 <style>
 :root{--bg:#0c1323;--panel:#172139;--panel2:#202e48;--ink:#f0eee7;--muted:#afb8cb;--gold:#e7c58f;--cyan:#76c9cb;--line:#36445c;--good:#a3e0b5;--bad:#f3aa9d}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 65% -15%,#273a59 0,transparent 55%),var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;line-height:1.65}
@@ -15,61 +15,215 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.09;ba
 @media(max-width:700px){.page{padding:17px 14px 60px}.intro{padding:32px 0 12px}.grid,.evidences{grid-template-columns:1fr}.stepCard{min-height:unset}.selects{grid-template-columns:1fr}.news{padding:17px 18px}.card{padding:17px}.endGrid{gap:5px}.stat{padding:10px}.stat b{font-size:1.5rem}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{body{background:#fff!important;color:#000!important}body:before,.btn{display:none!important}.card,.record{background:#fff!important;color:#000!important;border-color:#888!important}.muted,small{color:#333!important}}
+
+
+/* v0.4 interaction/accessibility */
+.srcLink{display:inline-block;margin:10px 0 2px;color:#b6ebee;text-underline-offset:3px;font-weight:650;font-size:.88rem}
+.evidenceCard{background:#1d2b45;border:1px solid #55617a;border-radius:10px;padding:10px;min-width:0}
+.evidenceCard .evidence{width:100%;min-height:78px;border:0;background:transparent;padding:5px;box-shadow:none}
+.evidenceCard.open{border-color:var(--gold);background:#293b4f}
+.evidenceCard .evidence:focus-visible,.srcLink:focus-visible,.chip:focus-visible,.btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.evidenceCard .eText{font-size:.86rem;color:#d9e1e9;display:block;padding:3px 5px 6px}
+.formHint{display:block;color:#afbdd0;font-size:.84rem;margin-top:5px}
+.warning{border:1px solid #9e6b3e;background:#332b27;padding:12px 15px;margin:12px 0;border-radius:10px}
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.stat{min-width:0}
+.stat small{display:block;line-height:1.4}
+.notice{background:#202f43;border-left:3px solid var(--cyan);padding:11px 14px;margin:12px 0;color:#e6edf6}
+.footerActions{margin-top:18px}
+.meta{align-items:center}
+#statusMessage{margin:8px 0;color:#e5d9b9}
+#changeReasonWrap .formLabel{margin-top:15px}
+@media(max-width:700px){.statGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.evidences{grid-template-columns:1fr}.news .headline{overflow-wrap:anywhere}}
 </style>
 </head>
 <body>
 <main class="page">
-<div class="top"><div class="logo">ARCHIVE / 1979</div><div class="edition">한국사2 · 역사 판단 실험실 · 시제품 v0.1</div></div>
-<section id="intro" class="intro">
- <div class="eyebrow">CASE FILE : 1972–1979</div>
- <h1>1979:<br><span>지워진 목소리</span></h1>
- <p class="lead">어느 기록이 틀렸고, 어느 기록은 중요한 사실을 빠뜨렸을까요? 짧은 기사 세 편을 읽고 역사 자료를 대조해 보세요.</p>
- <div class="tagline">정답을 빨리 맞히는 게임이 아닙니다. <b>처음 생각과 자료를 본 뒤의 생각이 어떻게 달라졌는지</b> 기록하는 게임입니다.</div>
- <div class="grid"><div class="stepCard"><strong>01 · 먼저 판단</strong><span>자료를 보기 전의 생각을 선택</span></div><div class="stepCard"><strong>02 · 자료 열람</strong><span>서로 다른 근거 카드를 확인</span></div><div class="stepCard"><strong>03 · 근거와 수정</strong><span>기사를 다시 판정하고 이유 기록</span></div></div>
- <div class="row"><button class="btn" id="startBtn">기록 조사 시작하기</button><span class="tip">약 8~12분 · 기기 안에서만 기록 · 이름 입력 없음</span></div>
- <div class="ethics">수업용 학습 게임입니다. 화면의 기사 제목·주장과 자료 카드 문장은 <b>역사적 사실을 바탕으로 새로 만든 학습용 재구성</b>이며 당시의 실제 기사 인용문이 아닙니다.</div>
-</section>
-<section id="game" class="hide" aria-live="polite">
- <div class="meta"><span id="missionCount">기록 1 / 3</span><div class="progress" aria-label="진행도"><div id="progressFill" style="width:0%"></div></div><span id="topicMini"></span></div>
- <div class="card"><div id="caseYear" class="eyebrow"></div><h2 id="caseTitle"></h2><p class="muted" id="caseContext"></p>
- <div class="news"><div class="paperTop"><span>THE RECORD / 편집 전 기사</span><span>가상 헤드라인</span></div><div class="headline" id="claim"></div><span class="stamp">검토 필요</span></div>
- <div id="initialBlock"><h3>1. 처음 읽었을 때</h3><p class="muted">이 문장을 사건 전체를 설명하는 주장으로 보았을 때, 어떻게 판단하나요?</p><div id="initialChoices" class="selects"></div><div class="foot"><span class="tip">틀려도 괜찮습니다. 자료 확인 전 판단을 기록합니다.</span><button class="btn" id="unlockBtn" disabled>자료 봉투 열기</button></div></div>
- <div id="evidenceBlock" class="hide"><h3>2. 기록 봉투 열람</h3><p class="muted">카드 두 장 이상을 펼쳐 내용을 확인하세요. 출처는 새 탭에서 확인할 수 있습니다.</p><div class="evidences" id="evidences"></div><div class="call" id="evidenceCount">열람한 카드: 0장 / 최소 2장</div>
- <div id="finalBlock" class="hide"><h3>3. 다시 판정하기</h3><p class="muted">자료를 본 뒤의 최종 판단을 고르고, 핵심 근거를 찾아 기록하세요.</p><div id="finalChoices" class="selects"></div><label class="formLabel" for="reason">선택 이유 — 확인한 기록을 근거로 1~2문장</label><textarea id="reason" placeholder="어떤 자료를 확인했고, 그 자료 때문에 이 문장을 어떻게 판단했는지 적어 보세요."></textarea><div class="label">가장 결정적이었던 기록</div><div id="keyEvidence" class="chips"></div><div class="foot"><span id="validation" class="tip">최종 판단, 이유(12자 이상), 결정적 기록을 선택하세요.</span><button class="btn" id="submitBtn" disabled>판정 기록하기</button></div></div>
- </div>
- <div id="feedbackBlock" class="hide"></div></div>
-</section>
-<section id="summary" class="hide">
- <div class="intro"><div class="eyebrow">ARCHIVE CLOSED / 1979</div><h1>판단은<br><span>기록으로 남는다</span></h1><p class="lead">세 개의 기사를 검토했습니다. 빠르게 맞혔는지보다, 어떤 증거를 선택하고 왜 그렇게 생각했는지가 중요합니다.</p></div>
- <div id="stats" class="endGrid"></div><div id="records"></div>
- <div class="note"><b>다음 역사로 연결해 봅시다.</b><br>유신체제에 대한 저항과 부마민주항쟁을 살펴본 뒤, 1979년 10·26 사건과 12·12 군사반란, 1980년 5·18 민주화운동으로 이어지는 역사적 흐름을 추가로 탐구해 보세요.</div>
- <div class="row"><button class="btn" id="copyBtn">내 판단 기록 복사</button><button class="btn alt" id="downloadBtn">TXT로 저장</button><button class="btn ghost" id="restartBtn">처음부터 다시</button></div><p class="footnote" id="copyStatus">기록은 서버에 전송되지 않습니다. 이름·학번 등 개인정보를 입력하지 마세요.</p>
-</section>
+ <div class="top"><div class="logo">ARCHIVE / 1979</div><div class="edition">한국사2 · 역사 판단 실험실 · 검수용 v0.4</div></div>
+ <section id="intro" class="intro">
+  <div class="eyebrow">CASE FILES : 1972–1979</div>
+  <h1>1979:<br><span>지워진 목소리</span></h1>
+  <p class="lead">유신헌법, 긴급조치 제9호, 부마민주항쟁. 세 시기의 여섯 가지 주장을 확인하고 자료에 따라 판단해 보세요.</p>
+  <div class="tagline">빠른 정답보다 <b>자료의 의미를 설명하는 능력</b>이 중요합니다. 모르면 보류하고, 새로운 근거를 보면 판단을 수정해도 됩니다.</div>
+  <div class="grid">
+   <div class="stepCard"><strong>01 · 첫 판단</strong><span>자료를 보기 전 생각을 기록</span></div>
+   <div class="stepCard"><strong>02 · 자료 읽기</strong><span>역사 사실과 확인되지 않은 주장을 구별</span></div>
+   <div class="stepCard"><strong>03 · 근거 쓰기</strong><span>최종 판단과 변화 이유를 설명</span></div>
+  </div>
+  <div class="row">
+   <button class="btn" id="startBtn">새 조사 시작하기</button>
+   <button class="btn alt hide" id="resumeBtn">저장된 조사 이어하기</button>
+   <span class="tip">약 12~18분 · 학생 정보 수집 없음 · 기기 내부 임시 저장</span>
+  </div>
+  <div class="warning hide" id="startConfirm" role="group" aria-label="기존 기록 삭제 확인">
+   <strong>저장된 조사 기록이 있습니다.</strong><p>새로 시작하면 이 기기에 저장된 진행 상황이 사라집니다. 먼저 TXT를 내려받았는지 확인하세요.</p>
+   <div class="row"><button class="btn alt" id="startCancel">취소</button><button class="btn" id="startErase">기록 삭제하고 새로 시작</button></div>
+  </div>
+  <p class="notice">이 게임에서 <b>판단 보류</b>는 '거짓'과 다릅니다. 공개된 카드만으로 어떤 수치를 검증할 수 없다면 보류가 적절할 수 있습니다.</p>
+  <div class="ethics">모든 가상 헤드라인과 자료 카드 설명은 <b>학습을 위해 재구성한 문장</b>이며 당시 실제 기사·1차 사료의 인용문이 아닙니다. 출처 원문을 확인하려면 인터넷 접속이 필요합니다. 학생 이름·학번 등 개인정보를 입력하지 마세요.</div>
+ </section>
+ <section id="game" class="hide" aria-label="역사 자료 판별 활동">
+  <div class="meta"><span id="missionCount">판정 1 / 6</span><div class="progress" role="progressbar" aria-label="진행 중인 판정" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progressOuter"><div id="progressFill" style="width:0%"></div></div><span id="topicMini"></span></div>
+  <div class="card"><div id="caseYear" class="eyebrow"></div><h2 id="caseTitle"></h2><p class="muted" id="caseContext"></p>
+   <div class="news"><div class="paperTop"><span>THE RECORD / 검증할 주장</span><span>수업용 가상 기사 · 실제 기사 아님</span></div><div class="headline" id="claim"></div><span class="stamp">근거 확인</span></div>
+   <div id="initialBlock"><h3>1. 첫 판단</h3><p class="muted" id="casePrompt"></p><div id="initialChoices" class="selects" role="group" aria-label="첫 판단 선택"></div><div class="foot"><span class="tip">틀려도 괜찮습니다. 근거를 보기 전 생각을 저장합니다.</span><button class="btn" id="unlockBtn" disabled>자료 봉투 열기</button></div></div>
+   <div id="evidenceBlock" class="hide"><h3>2. 기록 봉투 확인</h3><p class="muted">세 카드 중 두 장 이상 펼쳐 보세요. 출처 원문 링크는 별도로 열 수 있습니다.</p><div class="evidences" id="evidences"></div><div class="call" id="evidenceCount">열람 0 / 최소 2장</div>
+    <div id="finalBlock" class="hide"><h3>3. 근거에 따라 다시 판정</h3><p class="muted" id="finalPrompt"></p><div id="finalChoices" class="selects" role="group" aria-label="최종 판단 선택"></div>
+     <label class="formLabel" for="reason">판정 이유 — 자료의 구체적인 내용을 들어 1~2문장</label><textarea id="reason" placeholder="자료 A에서 무엇을 확인했으며, 이를 바탕으로 어떤 판단을 내렸나요?"></textarea><span class="formHint">12자 이상은 입력 최소 조건일 뿐, 내용의 역사적 타당성을 자동 채점하지 않습니다.</span>
+     <div id="changeReasonWrap" class="hide"><label class="formLabel" for="changeReason" id="changeReasonLabel">생각이 달라진 이유</label><textarea id="changeReason" placeholder="어떤 카드가 판단을 바꾸거나 보류를 풀게 했나요?"></textarea></div>
+     <div class="formLabel">가장 결정적이었던 기록</div><div id="keyEvidence" class="chips" role="group" aria-label="핵심 근거 카드 선택"></div>
+     <div class="foot"><span id="validation" class="tip" aria-live="polite">최종 판단·이유·핵심 근거를 기록하세요.</span><button class="btn" id="submitBtn" disabled>이 판단 기록하기</button></div>
+    </div>
+   </div>
+   <div id="feedbackBlock" class="hide" aria-live="polite"></div>
+  </div>
+  <p id="statusMessage" role="status" aria-live="polite"></p>
+ </section>
+ <section id="summary" class="hide">
+  <div class="intro"><div class="eyebrow">ARCHIVE CLOSED / 1979</div><h1>판단은<br><span>기록으로 남는다</span></h1><p class="lead">6개 주장을 확인했습니다. 맞힌 개수보다 근거를 어떻게 사용하고 판단을 수정했는지 살펴보세요.</p></div>
+  <div id="stats" class="statGrid"></div><div id="records"></div>
+  <div class="note"><b>다음 역사로 이어집니다.</b><br>1979년 10·26 사건과 12·12 군사반란, 1980년 5·18 민주화운동을 공부할 때도 기록의 출처, 내용의 누락, 역사적 사실을 구분해 보세요.</div>
+  <div class="row footerActions"><button class="btn" id="copyBtn">내 판단 기록 복사</button><button class="btn alt" id="downloadBtn">TXT로 저장</button><button class="btn ghost" id="restartBtn">새로 시작</button></div>
+  <div class="warning hide" id="restartConfirm"><strong>기록을 정말 지울까요?</strong><p>저장한 기록이 모두 삭제됩니다. 필요하다면 TXT를 먼저 저장하세요.</p><div class="row"><button class="btn alt" id="restartCancel">계속 결과 보기</button><button class="btn" id="restartErase">기록 삭제하고 다시 시작</button></div></div>
+  <p class="footnote" id="copyStatus">기록은 외부 서버로 전송되지 않지만 이 브라우저에 임시 저장됩니다. 공유 기기에서는 TXT 저장 뒤 새로 시작해 기록을 정리하세요.</p>
+ </section>
 </main>
-<script>
-'use strict';
-const OPTIONS=[{id:'match',label:'자료와 일치',sub:'핵심 내용이 근거와 들어맞는다'},{id:'error',label:'사실과 다름',sub:'자료로 확인되는 사실과 어긋난다'},{id:'omit',label:'중요한 내용 빠짐',sub:'일부는 맞지만 전체 설명에는 핵심이 빠졌다'},{id:'hold',label:'판단 보류',sub:'제시된 근거로는 충분히 단정할 수 없다'}];
-const MISSIONS=[
- {year:'1972',title:'누가 대통령을 뽑는가?',topic:'유신헌법',context:'1972년 정치 제도의 변화에 관한 한 줄 설명을 검토합니다.',claim:'“유신헌법 이후에도 국민은 대통령을 직접 투표로 선출했다.”',correct:'error',explain:'유신헌법 아래 대통령은 국민의 직접투표가 아니라 통일주체국민회의의 간접선거로 선출되었습니다. 정치 제도의 구조를 바꾼 변화입니다.',cards:[{name:'유신헌법의 대통령 선거',text:'1972년 유신헌법에 따라 대통령 선거는 통일주체국민회의에서 실시되는 간접선거 방식으로 바뀌었습니다.',cite:'국사편찬위원회 우리역사넷 · 10월 유신',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i500200'},{name:'1972년 10월 17일',text:'박정희 대통령의 특별선언으로 국회가 해산되고 정당 및 정치활동이 중지되는 조치가 이루어졌습니다.',cite:'국사편찬위원회 우리역사넷 · 10월 유신',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i500200'},{name:'새로운 대통령 선출 기관',text:'유신헌법 이후 통일주체국민회의가 대통령을 선출했습니다. 직선제와 구별해야 합니다.',cite:'국사편찬위원회 한국사데이터베이스 · 헌정사',url:'https://db.history.go.kr/item/cons/level.do?levelId=cons_008_0010'}]},
- {year:'1975',title:'비판의 자유는 어땠을까?',topic:'긴급조치 제9호',context:'유신체제와 표현의 자유에 관한 문장을 검토합니다.',claim:'“1975년 긴급조치 제9호는 유신헌법 비판과 개헌 주장을 제한했다.”',correct:'match',explain:'1975년 긴급조치 제9호는 유신헌법을 비판하거나 개정을 주장하는 행위 등을 제한하였습니다. 권력의 법적 장치와 시민의 자유가 어떤 관계였는지 살펴야 합니다.',cards:[{name:'1975년 5월의 조치',text:'1975년 5월 13일 긴급조치 제9호가 발동되어 유신헌법 개정 주장 등이 금지되었습니다.',cite:'한국민족문화대백과사전 · 선거',url:'https://encykorea.aks.ac.kr/Article/E0028600'},{name:'표현의 자유와 문화',text:'유신 시기에는 긴급조치와 검열이 정치적 표현뿐 아니라 문화예술 활동에도 제약을 가했습니다.',cite:'국사편찬위원회 우리역사넷 · 유신 시기의 문화',url:'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_50&levelId=kc_i502850'},{name:'저항이 계속된 기록',text:'유신체제 아래에서도 학생·종교계·언론계 등 여러 영역의 민주화운동은 계속되었습니다.',cite:'민주화운동기념사업회 자료 소개(연합뉴스 보도)',url:'https://www.yna.co.kr/view/AKR20260825171700004'}]},
- {year:'1979',title:'이 기사에는 누가 빠졌는가?',topic:'부마민주항쟁',context:'아래 문장을 ‘부마민주항쟁 전체를 소개하는 기사 제목’으로 사용한다면 어떨까요?',claim:'“부마민주항쟁: 부산 대학생들의 시위”',correct:'omit',explain:'부산 대학생들의 시위에서 시작된 것은 맞지만, 부마민주항쟁을 이것만으로 설명하면 부산의 시민·노동자 참여와 마산으로의 확산을 빠뜨립니다. 일부분의 사실만 담아도 전체 맥락이 달라질 수 있습니다.',cards:[{name:'시위의 시작',text:'1979년 10월 16일 부산대학교 학생들의 시위가 시작되어 부산 시내로 확산되었습니다.',cite:'한국민족문화대백과사전 · 부마민주항쟁',url:'https://encykorea.aks.ac.kr/Article/E0024157'},{name:'시민과 노동자의 참여',text:'부마민주항쟁은 학생들의 움직임에서 출발했지만 시민과 노동자 등 다양한 참여층으로 확대되었습니다.',cite:'민주화운동기념사업회 아카이브 · 부마항쟁',url:'https://archives.kdemo.or.kr/collections/view/10000047'},{name:'부산에서 마산으로',text:'부산에서 시작된 시위는 10월 18일 마산 지역으로 퍼졌습니다. 항쟁은 부산 한 지역에만 머물지 않았습니다.',cite:'국사편찬위원회 우리역사넷 · 부마민주항쟁',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i502300'}]}
+
+<script>'use strict';
+const STORAGE_KEY='history-1979-v04-draft';
+const OPTIONS=[
+ {id:'match',label:'자료와 일치',sub:'제시된 질문의 범위에서 핵심 사실과 자료가 맞다'},
+ {id:'error',label:'사실과 다름',sub:'자료가 주장의 구체적 사실을 반박한다'},
+ {id:'omit',label:'중요한 내용 빠짐',sub:'틀린 말은 아니지만 요구된 전체 맥락이 빠졌다'},
+ {id:'hold',label:'판단 보류',sub:'제공된 자료만으로는 단정할 근거가 부족하다'}
 ];
-let at=0,phase='intro',initial='',final='',visited=new Set(),key='',records=[];
+const SOURCES={
+ yushin:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i500200',
+ yushinCulture:'https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_50&levelId=kc_i502850',
+ election:'https://encykorea.aks.ac.kr/Article/E0028600',
+ buma:'https://archives.kdemo.or.kr/collections/view/10000047',
+ bumaHistory:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i502300'
+};
+const CARDSETS={
+ '1972':[
+  {name:'대통령 선출 방식',text:'유신헌법 아래 대통령은 통일주체국민회의가 선출하는 간접선거 방식으로 뽑았습니다.',cite:'국사편찬위원회 우리역사넷 · 10월 유신',url:SOURCES.yushin},
+  {name:'1972년 10월 17일',text:'대통령 특별선언에 따라 국회가 해산되고 정당·정치활동이 중단되었으며 비상계엄이 선포되었습니다.',cite:'국사편찬위원회 우리역사넷 · 10월 유신',url:SOURCES.yushin},
+  {name:'유신헌법의 성립과 시행',text:'1972년 10월 27일 개헌안이 공고되고 국민투표를 거쳐 12월 27일 유신헌법이 공포되었습니다. 12월 23일에는 통일주체국민회의에서 대통령이 선출되었습니다.',cite:'국사편찬위원회 우리역사넷 · 10월 유신',url:SOURCES.yushin}
+ ],
+ '1975':[
+  {name:'긴급조치 제9호',text:'1975년 5월 13일 발령된 긴급조치 제9호는 유신헌법에 대한 비판과 개정·폐지 주장 등을 제한했습니다.',cite:'한국민족문화대백과사전 · 선거',url:SOURCES.election},
+  {name:'표현과 문화에 대한 제약',text:'유신 시기 긴급조치와 검열은 정치적 표현 및 문화예술 활동에 제약을 가했습니다.',cite:'국사편찬위원회 우리역사넷 · 유신 시기의 문화',url:SOURCES.yushinCulture},
+  {name:'대중문화에 미친 영향',text:'1975년 긴급조치 제9호는 출판과 방송에도 영향을 미쳤고, 일부 책과 노래가 금지되었습니다.',cite:'국사편찬위원회 우리역사넷 · 유신 시기의 문화',url:SOURCES.yushinCulture}
+ ],
+ '1979':[
+  {name:'시위의 시작',text:'1979년 10월 16일 부산대학교 학생들의 유신 반대 시위가 시작되어 부산 도심으로 확산되었습니다.',cite:'국사편찬위원회 우리역사넷 · 부마민주항쟁',url:SOURCES.bumaHistory},
+  {name:'참여한 사람들',text:'학생들뿐 아니라 부산의 시민과 노동자 등 다양한 사람들이 유신체제에 저항하는 항쟁에 참여했습니다.',cite:'민주화운동기념사업회 · 부마항쟁',url:SOURCES.buma},
+  {name:'마산으로 확산',text:'10월 18일에는 마산에서도 시위가 일어났습니다. 부마민주항쟁은 부산의 대학생 시위로만 설명할 수 없는 민주화운동이었습니다.',cite:'국사편찬위원회 우리역사넷 · 부마민주항쟁',url:SOURCES.bumaHistory}
+ ]
+};
+const MISSIONS=[
+ {year:'1972',title:'대통령은 어떻게 뽑았을까?',topic:'유신헌법 · 선거',prompt:'대통령 선출 방식에 관한 이 문장을 확인하세요.',claim:'“유신헌법 이후에도 국민은 대통령을 직접 선출했다.”',correct:'error',explain:'유신헌법 아래 대통령은 통일주체국민회의가 선출했습니다. 국민이 대통령을 직접 뽑았다는 주장은 사실과 다릅니다.'},
+ {year:'1972',title:'10월 17일, 무슨 조치가?',topic:'유신체제 · 정치',prompt:'1972년 10월 17일의 조치를 설명하는 이 문장을 확인하세요.',claim:'“1972년 10월 17일, 국회가 해산되고 정치활동이 중단됐다.”',correct:'match',explain:'대통령 특별선언에 따른 국회 해산과 정치활동 중단은 당시 조치에 부합합니다.'},
+ {year:'1975',title:'긴급조치는 무엇을 제한했나?',topic:'긴급조치 제9호',prompt:'긴급조치 제9호의 주요 내용을 자료와 대조하세요.',claim:'“1975년 긴급조치 제9호는 유신헌법 비판과 개헌 주장을 제한했다.”',correct:'match',explain:'긴급조치 제9호는 유신헌법 비판 및 개정·폐지 주장을 제한했습니다.'},
+ {year:'1975',title:'여론은 수치로 확인됐을까?',topic:'긴급조치와 증거',prompt:'다음 수치 주장을 세 카드의 정보만으로 검증할 수 있나요?',claim:'“1975년 긴급조치 제9호에 대해 당시 국민의 70%가 반대했다.”',correct:'hold',explain:'이 세 카드에는 전국적인 찬반 여론조사 결과나 표본 정보가 없습니다. 찬반 비율을 맞다거나 틀리다고 단정하지 않고, 조사 기록을 추가로 찾아야 합니다. 70%는 학습용 검증 대상에 제시한 수치이며 확인된 역사적 통계가 아닙니다.'},
+ {year:'1979',title:'부산에서 마산까지',topic:'부마민주항쟁 · 확산',prompt:'부마민주항쟁의 주요 전개 방향을 설명한 문장입니다.',claim:'“1979년 10월 부산에서 일어난 유신 반대 시위는 마산으로 확산됐다.”',correct:'match',explain:'부산에서 시작된 항쟁은 마산으로 퍼졌으며 시민·노동자 등 다양한 사람들이 참여했습니다.'},
+ {year:'1979',title:'전체 흐름을 담은 요약인가?',topic:'부마민주항쟁 · 생략',prompt:'다음 문장을 부마민주항쟁 전체를 설명하는 교재의 유일한 요약으로 쓴다면 어떻게 평가할까요?',claim:'“1979년 10월 16일 부산대학교 학생들의 유신 반대 시위가 시작됐다.”',correct:'omit',explain:'시작에 관한 사실은 맞지만 부마민주항쟁 전체를 설명하는 유일한 요약이라면 시민·노동자의 참여와 마산 확산이라는 필수 맥락이 빠집니다. ‘사실과 다름’이 아닌 ‘중요한 내용 빠짐’으로 구분하는 이유입니다.'}
+];
 const $=id=>document.getElementById(id);
+const blank=()=>({at:0,phase:'intro',initial:'',final:'',visited:[],key:null,reason:'',changeReason:'',records:[]});
+let state=blank();
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){$('statusMessage').textContent='기기 저장 공간이 제한되어 임시 저장을 사용할 수 없습니다. 활동을 마친 뒤 TXT로 저장해 주세요.';}}
+function read(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return null;const v=JSON.parse(raw);if(!Number.isInteger(v.at)||v.at<0||v.at>MISSIONS.length||!Array.isArray(v.records)||!Array.isArray(v.visited))return null;return {...blank(),...v};}catch(e){return null}}
+function clearSaved(){try{localStorage.removeItem(STORAGE_KEY)}catch(e){}}
 function show(id){['intro','game','summary'].forEach(x=>$(x).classList.toggle('hide',x!==id));}
-function choices(target,value,onChange){const root=$(target);root.textContent=''; OPTIONS.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='select'+(value===o.id?' active':'');b.setAttribute('aria-pressed',value===o.id?'true':'false');b.innerHTML='<strong>'+o.label+'</strong><span class="mini">'+o.sub+'</span>';b.addEventListener('click',()=>onChange(o.id));root.appendChild(b);});}
-function mission(){const m=MISSIONS[at];phase='initial';initial='';final='';visited=new Set();key=''; $('game').scrollIntoView({behavior:'instant',block:'start'});$('missionCount').textContent=`기록 ${at+1} / ${MISSIONS.length}`;$('topicMini').textContent=m.topic;$('progressFill').style.width=(at/MISSIONS.length*100)+'%';$('caseYear').textContent='RECORD / '+m.year;$('caseTitle').textContent=m.title;$('caseContext').textContent=m.context;$('claim').textContent=m.claim;$('initialBlock').classList.remove('hide');$('evidenceBlock').classList.add('hide');$('finalBlock').classList.add('hide');$('feedbackBlock').classList.add('hide');choices('initialChoices','',v=>{initial=v;choices('initialChoices',v,vv=>{initial=vv;refreshInitial();});refreshInitial();});$('unlockBtn').disabled=true;}
-function refreshInitial(){$('unlockBtn').disabled=!initial;choices('initialChoices',initial,v=>{initial=v;refreshInitial();});}
-function unlock(){if(!initial)return;phase='evidence';$('initialBlock').classList.add('hide');$('evidenceBlock').classList.remove('hide');drawEvidence();}
-function drawEvidence(){const m=MISSIONS[at];const box=$('evidences');box.textContent='';m.cards.forEach((c,i)=>{const open=visited.has(i);const b=document.createElement('button');b.className='evidence'+(open?' open':'');b.type='button';b.setAttribute('aria-expanded',open?'true':'false');const top=document.createElement('span');top.className='eLabel';top.textContent='기록 카드 '+String.fromCharCode(65+i)+(open?' · 열람함':' · 봉인');const title=document.createElement('strong');title.textContent=c.name;b.append(top,title);if(open){const txt=document.createElement('span');txt.className='eText';txt.textContent=c.text;const src=document.createElement('span');src.className='source';src.textContent='원출처 보기 ↗';b.append(txt,src);}b.addEventListener('click',(e)=>{if(open&&e.target.classList.contains('source')){window.open(c.url,'_blank','noopener,noreferrer');return;}visited.add(i);drawEvidence();});box.appendChild(b);});$('evidenceCount').textContent=`열람한 카드: ${visited.size}장 / 최소 2장`;
- if(visited.size>=2){if(phase==='evidence'){$('finalBlock').classList.remove('hide');phase='final';choices('finalChoices','',v=>{final=v;refreshFinal();});$('reason').value='';$('keyEvidence').textContent='';m.cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent='기록 '+String.fromCharCode(65+i)+' · '+c.name;b.addEventListener('click',()=>{key=i;refreshKey();refreshFinal();});b.id='key'+i;$('keyEvidence').appendChild(b);});$('submitBtn').disabled=true;}}else if(phase==='final'){$('finalBlock').classList.add('hide');phase='evidence';}}
-function refreshKey(){MISSIONS[at].cards.forEach((_,i)=>{const b=$('key'+i);if(b)b.classList.toggle('on',key===i);});}
-function refreshFinal(){choices('finalChoices',final,v=>{final=v;refreshFinal();});const n=$('reason').value.trim().length;const good=Boolean(final&&n>=12&&key!=='');$('submitBtn').disabled=!good;$('validation').textContent=good?'기록할 준비가 됐습니다.':`최종 판단 · 이유 ${n}/12자 · 결정적 기록 선택이 필요합니다.`;}
-function submit(){const reason=$('reason').value.trim();if(!final||reason.length<12||key==='')return;const m=MISSIONS[at];records.push({year:m.year,title:m.title,claim:m.claim,initial,final,correct:m.correct,opened:[...visited].sort(),key,reason});phase='feedback';$('finalBlock').classList.add('hide');const ok=final===m.correct, changed=initial!==final;const box=$('feedbackBlock');box.classList.remove('hide');box.textContent='';const panel=document.createElement('div');panel.className='result '+(ok?'correct':'wrong');const hdr=document.createElement('strong');hdr.textContent=ok?'근거에 맞게 판정했습니다.':'근거를 다시 대조해 봅시다.';const detail=document.createElement('p');detail.textContent='이 기록의 권장 판정: '+OPTIONS.find(o=>o.id===m.correct).label+' — '+m.explain;const att=document.createElement('p');att.textContent=changed?'처음 판단과 최종 판단이 달라졌습니다. 무엇 때문에 달라졌는지 기록을 살펴보세요.':'처음 판단을 유지했습니다. 그 판단이 자료로 뒷받침되는지 다시 확인해 보세요.';panel.append(hdr,detail,att);box.append(panel);const next=document.createElement('button');next.type='button';next.className='btn';next.textContent=at===MISSIONS.length-1?'조사 보고서 보기':'다음 기록 검토하기';next.addEventListener('click',()=>{at++;if(at<MISSIONS.length){mission();}else{end();}});box.append(next);box.scrollIntoView({behavior:'smooth',block:'nearest'});}
-function label(v){return OPTIONS.find(o=>o.id===v)?.label??'-';}
-function reportText(){const lines=['1979: 지워진 목소리 — 나의 역사 판단 기록','학습용 기록 / 개인정보를 입력하지 않음',''];records.forEach((r,i)=>{const m=MISSIONS[i];lines.push(`[${i+1}] ${r.year} ${r.title}`,`제시된 주장: ${r.claim}`,`최초 판단: ${label(r.initial)}`,`최종 판단: ${label(r.final)}`,`권장 판정: ${label(r.correct)}`,`확인한 기록: ${r.opened.map(j=>String.fromCharCode(65+j)).join(', ')}`,`결정적 기록: ${String.fromCharCode(65+r.key)} / ${m.cards[r.key].name}`,`나의 이유: ${r.reason}`,'');});lines.push('다음 질문: 1979년 이후 5·18 민주화운동과 1987년 6월 민주항쟁에서는 어떤 기록의 생략·왜곡을 검증해야 할까?');return lines.join('\n');}
-function end(){show('summary');const correct=records.filter(r=>r.final===r.correct).length;const changed=records.filter(r=>r.initial!==r.final).length;const opened=records.reduce((s,r)=>s+r.opened.length,0);$('stats').innerHTML=`<div class="stat"><b>${correct}/${MISSIONS.length}</b><small>근거와 맞는 최종 판정</small></div><div class="stat"><b>${changed}</b><small>처음 생각을 수정한 기록</small></div><div class="stat"><b>${opened}</b><small>열어본 근거 카드</small></div>`;const container=$('records');container.textContent='';records.forEach((r,i)=>{const box=document.createElement('div');box.className='record';const title=document.createElement('strong');title.textContent=`기록 ${i+1}. ${r.title}`;const desc=document.createElement('p');desc.textContent=`최초: ${label(r.initial)} → 최종: ${label(r.final)} · 핵심 근거: 기록 ${String.fromCharCode(65+r.key)}`;const why=document.createElement('p');why.textContent='내가 쓴 이유: '+r.reason;box.append(title,desc,why);container.appendChild(box);});window.scrollTo({top:0,behavior:'instant'});}
-$('startBtn').addEventListener('click',()=>{at=0;records=[];show('game');mission();});$('unlockBtn').addEventListener('click',unlock);$('reason').addEventListener('input',refreshFinal);$('submitBtn').addEventListener('click',submit);$('restartBtn').addEventListener('click',()=>{at=0;records=[];show('intro');window.scrollTo(0,0);});$('copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(reportText());$('copyStatus').textContent='판단 기록을 복사했습니다.';}catch(e){$('copyStatus').textContent='자동 복사가 제한되어 TXT 저장을 이용하세요.';}});$('downloadBtn').addEventListener('click',()=>{const blob=new Blob([reportText()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='1979_역사판단기록.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+function scrollTop(){window.scrollTo({top:0,behavior:'instant'});}
+function label(v){return OPTIONS.find(o=>o.id===v)?.label??'-'}
+function allButtons(rootId,selected,onSelect){
+ const root=$(rootId);root.replaceChildren();
+ OPTIONS.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='select';b.dataset.value=o.id;b.setAttribute('aria-pressed',selected===o.id?'true':'false');b.innerHTML='<strong>'+o.label+'</strong><span class="mini">'+o.sub+'</span>';b.classList.toggle('active',selected===o.id);
+ b.addEventListener('click',()=>{root.querySelectorAll('button').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b?'true':'false')});onSelect(o.id);});root.append(b);});
+}
+function changeCategory(){if(state.initial==='hold'&&state.final!=='hold')return '보류 후 판단';if(state.initial!=='hold'&&state.initial!==state.final)return '판단 수정';if(state.initial==='hold'&&state.final==='hold')return '보류 유지';return '판단 유지'}
+function needsChangeReason(){return Boolean(state.final && state.initial!==state.final)}
+function refreshFields(){
+ if(!['final'].includes(state.phase))return;
+ const wrap=$('changeReasonWrap');wrap.classList.toggle('hide',!needsChangeReason());
+ $('changeReasonLabel').textContent=state.initial==='hold'?'보류를 풀게 된 자료와 이유(12자 이상)':'처음 생각을 수정하게 된 자료와 이유(12자 이상)';
+ const n=state.reason.trim().length,c=state.changeReason.trim().length;
+ const good=!!state.final&&n>=12&&state.key!==null&&(!needsChangeReason()||c>=12);
+ $('submitBtn').disabled=!good;
+ $('validation').textContent=good?'판단·근거 기록이 준비됐습니다.':`최종 판단 · 이유 ${n}/12자 · 근거 카드 ${state.key===null?'미선택':'선택'}${needsChangeReason()?' · 변화 이유 '+c+'/12자':''}`;
+}
+function present(){
+ $('startConfirm').classList.add('hide');$('restartConfirm').classList.add('hide');
+ if(state.phase==='intro'){show('intro');$('resumeBtn').classList.toggle('hide',!hasDraft());return}
+ if(state.phase==='summary'||state.at>=MISSIONS.length){state.phase='summary';save();end();return}
+ show('game');renderCase();scrollTop();
+}
+function hasDraft(){return !!read()&&read().phase!=='intro'}
+function renderCase(){
+ const m=MISSIONS[state.at];$('missionCount').textContent=`판정 ${state.at+1} / ${MISSIONS.length}`;$('topicMini').textContent=m.topic;
+ $('progressFill').style.width=((state.at+1)/MISSIONS.length*100)+'%';$('progressOuter').setAttribute('aria-valuenow',String(state.at+1));
+ $('caseYear').textContent=`RECORD / ${m.year} · ${state.at%2+1}번째 검토`;
+ $('caseTitle').textContent=m.title;$('caseContext').textContent=m.prompt;$('claim').textContent=m.claim;$('casePrompt').textContent=m.prompt;
+ $('initialBlock').classList.toggle('hide',state.phase!=='initial');
+ $('evidenceBlock').classList.toggle('hide',state.phase==='initial');
+ $('finalBlock').classList.toggle('hide',state.phase!=='final');
+ $('feedbackBlock').classList.toggle('hide',state.phase!=='feedback');
+ if(state.phase==='initial'){allButtons('initialChoices',state.initial,v=>{state.initial=v;$('unlockBtn').disabled=false;save()});$('unlockBtn').disabled=!state.initial}
+ if(state.phase!=='initial')renderEvidence();
+ if(state.phase==='final'){allButtons('finalChoices',state.final,v=>{state.final=v;refreshFields();save()});$('reason').value=state.reason;$('changeReason').value=state.changeReason;renderKeys();refreshFields();}
+ if(state.phase==='feedback')feedback();
+}
+function renderEvidence(){
+ const m=MISSIONS[state.at],set=CARDSETS[m.year],box=$('evidences');box.replaceChildren();
+ set.forEach((c,i)=>{const isOpen=state.visited.includes(i);const wrap=document.createElement('div');wrap.className='evidenceCard'+(isOpen?' open':'');
+ const b=document.createElement('button');b.type='button';b.className='evidence';b.setAttribute('aria-expanded',isOpen?'true':'false');
+ const s=document.createElement('span');s.className='eLabel';s.textContent=`기록 카드 ${String.fromCharCode(65+i)} · ${isOpen?'열람함':'봉인'}`;const strong=document.createElement('strong');strong.textContent=c.name;b.append(s,strong);
+ b.addEventListener('click',()=>{if(!state.visited.includes(i)){state.visited.push(i);save();renderEvidence();if(state.phase==='evidence'&&state.visited.length>=2){state.phase='final';save();renderCase();$('finalBlock').scrollIntoView({behavior:'smooth',block:'nearest'})}}});wrap.append(b);
+ if(isOpen){const t=document.createElement('div');t.className='eText';t.textContent=c.text;const a=document.createElement('a');a.className='srcLink';a.href=c.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=`원출처 보기 · ${c.cite} ↗`;wrap.append(t,a)}box.append(wrap);
+ });
+ $('evidenceCount').textContent=`열람한 카드 ${state.visited.length}장 / 최소 2장`;
+}
+function renderKeys(){const root=$('keyEvidence'),set=CARDSETS[MISSIONS[state.at].year];root.replaceChildren();set.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='chip'+(state.key===i?' on':'');b.textContent=`카드 ${String.fromCharCode(65+i)} · ${c.name}`;b.setAttribute('aria-pressed',state.key===i?'true':'false');b.addEventListener('click',()=>{state.key=i;root.querySelectorAll('button').forEach((x,j)=>{x.classList.toggle('on',j===i);x.setAttribute('aria-pressed',j===i?'true':'false')});refreshFields();save()});root.append(b)})}
+function clearCurrent(){state.initial='';state.final='';state.visited=[];state.key=null;state.reason='';state.changeReason=''}
+function unlock(){if(!state.initial)return;state.phase='evidence';save();renderCase();$('evidenceBlock').scrollIntoView({behavior:'smooth',block:'nearest'});}
+function submit(){
+ if(state.phase!=='final')return;
+ const reason=$('reason').value.trim(),changeReason=$('changeReason').value.trim();
+ if(!state.final||state.key===null||reason.length<12||(needsChangeReason()&&changeReason.length<12))return;
+ const m=MISSIONS[state.at];state.records.push({year:m.year,title:m.title,claim:m.claim,initial:state.initial,final:state.final,correct:m.correct,opened:[...state.visited].sort(),key:state.key,reason,changeReason:needsChangeReason()?changeReason:'',kind:changeCategory(),recordedAt:new Date().toISOString()});
+ state.phase='feedback';save();renderCase();$('feedbackBlock').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function feedback(){
+ const m=MISSIONS[state.at],box=$('feedbackBlock');box.replaceChildren();const rec=state.records.at(-1),isCorrect=rec.final===m.correct;
+ const panel=document.createElement('div');panel.className='result '+(isCorrect?'correct':'wrong');
+ const header=document.createElement('strong');header.textContent=isCorrect?'권장 판정과 일치합니다.':'권장 판정과 다릅니다. 근거를 다시 비교해 보세요.';
+ const detail=document.createElement('p');detail.textContent='이 기록의 권장 판정: '+label(m.correct)+' — '+m.explain;
+ const why=document.createElement('p');why.textContent=rec.kind==='보류 후 판단'?'자료를 확인한 뒤 보류를 풀고 판단했습니다.':rec.kind==='판단 수정'?'새 근거를 보고 최초 판단을 수정했습니다.':rec.kind==='보류 유지'?'현재 자료로는 계속 보류했습니다.':'처음 판단을 유지했습니다.';
+ const caveat=document.createElement('p');caveat.className='muted';caveat.textContent='이 피드백은 선택지의 권장 분류만 비교합니다. 내가 쓴 근거의 역사적 타당성은 자동 채점하지 않습니다.';
+ panel.append(header,detail,why,caveat);const next=document.createElement('button');next.type='button';next.className='btn';next.textContent=state.at===MISSIONS.length-1?'조사 보고서 보기':'다음 주장 검토';next.addEventListener('click',()=>{state.at++;clearCurrent();state.phase=state.at>=MISSIONS.length?'summary':'initial';save();present()});box.append(panel,next);
+}
+function reportText(){const lines=['1979: 지워진 목소리 v0.4 — 나의 역사 판단 기록','본 기록은 학습용이며 역사적 주장과 자료 카드는 재구성된 문장입니다.','개인정보를 입력하지 마세요.',''];state.records.forEach((r,i)=>{const m=MISSIONS[i],c=CARDSETS[m.year][r.key];lines.push(`[${i+1}/${MISSIONS.length}] ${r.year} ${r.title}`,`제시된 주장: ${r.claim}`,`첫 판단: ${label(r.initial)}`,`최종 판단: ${label(r.final)}`,`권장 분류: ${label(r.correct)}`,`판단 유형: ${r.kind}`,`열어본 카드: ${r.opened.map(n=>String.fromCharCode(65+n)).join(', ')}`,`결정적 카드: ${String.fromCharCode(65+r.key)} · ${c.name}`,`판정 이유: ${r.reason}`,`판단 변화·보류 해제 이유: ${r.changeReason||'해당 없음'}`,`기록 시각: ${r.recordedAt}`,'')});lines.push('다음 탐구: 유신체제의 저항이 1980년 5·18 민주화운동과 1987년 6월 민주항쟁에 어떻게 이어졌을까?');return lines.join('\n')}
+function end(){show('summary');const correct=state.records.filter(r=>r.final===r.correct).length,changed=state.records.filter(r=>r.kind==='판단 수정').length,afterHold=state.records.filter(r=>r.kind==='보류 후 판단').length,opened=state.records.reduce((x,r)=>x+r.opened.length,0);
+ $('stats').replaceChildren();[[correct+'/'+MISSIONS.length,'권장 판정 일치'],[changed,'판단 수정'],[afterHold,'보류 후 판단'],[opened,'열어본 근거 카드']].forEach(([num,title])=>{const box=document.createElement('div');box.className='stat';const b=document.createElement('b');b.textContent=String(num);const s=document.createElement('small');s.textContent=title;box.append(b,s);$('stats').append(box)});
+ const root=$('records');root.replaceChildren();state.records.forEach((r,i)=>{const box=document.createElement('div');box.className='record';const strong=document.createElement('strong');strong.textContent=`판정 ${i+1}. ${r.year} · ${r.title}`;const p=document.createElement('p');p.textContent=`처음 ${label(r.initial)} → 최종 ${label(r.final)} · ${r.kind}`;const why=document.createElement('p');why.textContent='나의 근거: '+r.reason;box.append(strong,p,why);if(r.changeReason){const ch=document.createElement('p');ch.textContent='판단 변화 이유: '+r.changeReason;box.append(ch)}root.append(box)});scrollTop();}
+function fresh(){clearSaved();state=blank();state.phase='initial';save();present()}
+function startup(){const previous=read();if(previous&&previous.phase!=='intro'){state=previous;$('resumeBtn').classList.remove('hide')}else{$('resumeBtn').classList.add('hide')}show('intro')}
+$('startBtn').addEventListener('click',()=>{if(hasDraft()){$('startConfirm').classList.remove('hide')}else fresh()});
+$('startCancel').addEventListener('click',()=>$('startConfirm').classList.add('hide'));
+$('startErase').addEventListener('click',fresh);
+$('resumeBtn').addEventListener('click',()=>{const saved=read();if(saved){state=saved;present()}else fresh()});
+$('unlockBtn').addEventListener('click',unlock);
+$('reason').addEventListener('input',()=>{state.reason=$('reason').value;refreshFields();save()});
+$('changeReason').addEventListener('input',()=>{state.changeReason=$('changeReason').value;refreshFields();save()});
+$('submitBtn').addEventListener('click',submit);
+$('restartBtn').addEventListener('click',()=>{$('restartConfirm').classList.remove('hide');$('restartConfirm').scrollIntoView({behavior:'smooth',block:'center'})});
+$('restartCancel').addEventListener('click',()=>$('restartConfirm').classList.add('hide'));
+$('restartErase').addEventListener('click',()=>{clearSaved();state=blank();startup();scrollTop()});
+$('copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(reportText());$('copyStatus').textContent='내 판단 기록을 복사했습니다.'}catch(e){$('copyStatus').textContent='자동 복사가 제한됐습니다. TXT 저장 기능을 이용하세요.'}});
+$('downloadBtn').addEventListener('click',()=>{const blob=new Blob(['\uFEFF',reportText()],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='1979_역사판단기록_'+new Date().toISOString().slice(0,16).replace('T','_').replace(':','')+'.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)});
+startup();
 </script>
 </body>
 </html>
