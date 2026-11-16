@@ -295,6 +295,12 @@ async function auditFilesystem(games, report) {
     } else if (game.save === 'optional' && missing.length === Object.keys(saveMarkers).length) {
       report.warn('optional SAVE not detected', `slug=${game.slug}`);
     }
+    // Prevent runtime SAVE failures caused by referencing an undeclared game slug.
+    // This caught the democracy-1979 submit-time crash that marker checks missed.
+    if (game.save === 'required' && /\bGAME_SLUG\b/.test(source)
+      && !/\b(?:const|let|var)\s+GAME_SLUG\b/.test(source)) {
+      report.exactError('SAVE runtime identifier', game.slug, 'declared GAME_SLUG', 'undeclared');
+    }
   }
 
   if (report.errorCount() === before) report.pass('filesystem ↔ manifest');
