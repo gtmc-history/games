@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#18323a">
+<title>1980: 광주의 기록을 복원하라</title>
+<style>
+:root{color-scheme:light;--ink:#19343b;--dark:#102a31;--paper:#f8f7f1;--line:#d1d7d4;--muted:#526a70;--teal:#315d63;--green:#2c655b;--warn:#a44b3c;--cream:#fffdf7;--shadow:0 12px 30px rgba(16,42,49,.085)}
+*{box-sizing:border-box}html{font-size:16px}body{margin:0;background:#e8ede9;color:var(--ink);font-family:system-ui,-apple-system,"Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.6}
+button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;border:1px solid #aebdb9;border-radius:8px;background:#fff;color:var(--ink);padding:9px 16px;font-weight:670}button:hover:not(:disabled){border-color:var(--teal);background:#eef3f1}button:focus-visible,textarea:focus-visible{outline:3px solid #f1b870;outline-offset:2px}button:disabled{cursor:not-allowed;opacity:.53}.primary{background:var(--dark);color:#fff;border-color:var(--dark)}.primary:hover:not(:disabled){background:#27575c;color:#fff}.secondary{background:#edf3f0}.danger{color:#913c30;border-color:#d8b0a8}.tiny{min-height:39px;padding:6px 12px;font-size:.89rem}.selected{background:#dbebe4!important;border:2px solid #28695b!important;color:#153f37!important}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:770;color:#57787b}.tag{display:inline-flex;gap:5px;align-items:center;padding:3px 9px;border-radius:4px;background:#e7eee9;color:#315c61;font-size:.78rem;font-weight:700}.tag.claim{background:#f4e6dd;color:#884937}.tag.later{background:#dfeaf0;color:#345269}.tag.rebuild{background:#f5eee0;color:#856339}.warn{color:#8d382d}.ok{color:#22604e}.hidden{display:none!important}
+.top{position:sticky;top:0;z-index:20;background:var(--dark);color:#f7f8f4;border-bottom:3px solid #bdac8a;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:62px;padding:9px max(20px,calc((100vw - 1190px)/2));box-shadow:0 3px 16px #18323a22}.wordmark{font-size:.91rem;font-weight:850;letter-spacing:.1em}.top-r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.top .tag{background:#29494e;color:#eaf4f0}.top .tag.warn{background:#6e3c37;color:#fff}.top small{color:#bad0d0;font-size:.74rem}
+.shell{max-width:1190px;margin:0 auto;padding:19px 22px 90px}.hero{background:linear-gradient(105deg,#15343c,#28525a 71%,#355b5b);color:#fafbf8;border-radius:12px;padding:23px 29px;min-height:154px;position:relative;overflow:hidden;display:flex;align-items:center;box-shadow:var(--shadow)}.hero:after{content:"ARCHIVE / 1980";position:absolute;right:-12px;bottom:-38px;color:#fff1;font-size:4.4rem;font-weight:950;letter-spacing:.08em;transform:rotate(-6deg);pointer-events:none}.hero h1{font-family:Georgia,"Noto Serif KR",serif;font-size:clamp(1.5rem,3.0vw,2.15rem);line-height:1.3;margin:3px 0 8px;letter-spacing:-.035em}.hero p{max-width:780px;margin:0;font-size:1rem;color:#e7efed}.hero .eyebrow{color:#d3c7aa}.archive-ribbon{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.ribbon-cell{background:#fff;min-height:52px;border:1px solid #d5dcd8;border-left:5px solid #c7ccca;border-radius:5px;padding:8px 14px}.ribbon-cell.complete{border-left-color:#347261;background:#f3faf5}.ribbon-cell b{font-size:.82rem;display:block}.ribbon-cell small{display:block;font-size:.73rem;color:#617279}.main-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:14px;align-items:start}.panel{border:1px solid #d1dad7;background:var(--cream);border-radius:10px;box-shadow:0 4px 18px #1d3f3d09;min-width:0}.panel-h{padding:14px 18px 11px;border-bottom:1px solid #d9dfdb;display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-h h2,.panel h2{font-size:1.04rem;margin:0}.panel-b{padding:17px 18px}.paper{background:var(--paper);border:1px solid #dedad0;border-left:4px solid #ae9a75;padding:15px 18px;border-radius:3px;position:relative}.paper h3{font-size:1.05rem;margin:0 0 8px}.paper p{margin:8px 0}.source-item{border:1px solid #d8ded9;border-radius:7px;background:#fff;padding:12px;margin:9px 0}.source-item h3{font-size:.95rem;margin:4px 0}.source-item p{font-size:.91rem;margin:7px 0}.source-actions{display:flex;gap:8px;flex-wrap:wrap}.meta{color:#657577;font-size:.79rem}.button-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.choice{min-width:0;text-align:left;white-space:normal;word-break:keep-all}.choice b{display:block;font-size:.8rem;opacity:.75}.placeholder{min-height:58px;border:2px dashed #afc0b9;background:#f6f8f4;color:#4e6567;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:7px;padding:10px}.line-cards{display:flex;flex-direction:column;gap:9px}.line-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.line-row>*{flex:1}.line-row .slotnum{flex:0 0 34px;font-weight:800;color:var(--teal)}.note{padding:12px 14px;background:#edf4f2;border-radius:7px;border-left:4px solid #7dada0;margin:13px 0}.note.warning{background:#fff2eb;border-color:#bd705d}.actions{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 4px}.status-line{padding:9px 11px;background:#e5ede8;border-radius:5px;margin-top:12px;min-height:42px}.status-line.error{background:#fbece6;color:#84392e}.status-line.success{background:#e1efe4;color:#215845}.kbd{display:inline-block;font:700 .8rem monospace;background:#e9ece8;border:1px solid #c9d3cd;border-radius:4px;padding:1px 6px}.progressline{display:flex;gap:7px;margin-bottom:14px}.progressline span{flex:1;border-bottom:4px solid #bfcfc7;padding:0 1px 5px;font-size:.79rem;color:#62746c}.progressline span.on{border-color:#407a69;color:#205749;font-weight:800}.progressline span.past{border-color:#95ac94}.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compare .paper{min-width:0}.compare ol{margin:0;padding-left:22px}.compare li{padding-bottom:12px}.text-input{width:100%;min-height:82px;resize:vertical;padding:12px;border:1px solid #9eada9;border-radius:6px;background:#fff;color:var(--ink)}.sticky-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}.subhead{font-size:.93rem;font-weight:790;margin:13px 0 9px}.check-symbol{color:#28725d;font-weight:900}.footer-note{font-size:.81rem;color:#5b6f70;margin:22px 3px}.source-focus{background:#f1f7f3;border:1px dashed #9fb6a9;border-radius:6px;padding:10px;margin:9px 0}.row-list{display:grid;gap:8px}.slot{border:1px dashed #aabbb4;padding:10px;border-radius:7px;background:#f8faf8}.slot b{font-size:.9rem}.slot p{font-size:.83rem;margin:4px 0 0}.text-center{text-align:center}.prompt{font-size:1.04rem;font-weight:720}.wordmark em{font-style:normal;color:#d3ba8c}
+
+/* 5-scene visual-novel layer: original artwork, no network resources */
+.hero{height:184px;min-height:184px;padding:21px 28px;background:radial-gradient(ellipse at 73% 16%,#345b63 0%,transparent 58%),linear-gradient(105deg,#142e37,#20454b 68%,#193941);isolation:isolate;align-items:center}
+.hero:after{content:none}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,39,45,.48) 0%,rgba(16,39,45,.05) 75%);pointer-events:none;z-index:1}
+.hero-copy{position:relative;z-index:3;max-width:58%;min-width:0}
+.hero .eyebrow{color:#decdab;letter-spacing:.17em;font-size:.68rem}
+.hero h1{font-family:Georgia,"Noto Serif KR","Noto Sans KR",serif;font-size:clamp(1.43rem,2.35vw,2.05rem);font-weight:790;line-height:1.23;margin:7px 0 10px;text-wrap:balance;letter-spacing:-.032em}
+.hero p{max-width:600px;font-size:.94rem;line-height:1.58;color:#e5ede8;text-wrap:pretty}
+.hero-illustration{position:absolute;z-index:2;top:0;right:0;height:100%;width:51%;pointer-events:none;overflow:visible;filter:drop-shadow(-12px 9px 15px rgba(4,17,20,.22))}
+.hero-illustration .art-stage{opacity:0;visibility:hidden;transform:translateY(5px);transform-origin:50% 70%}
+.hero-illustration .art-stage.is-current{opacity:1;visibility:visible;transform:none}
+.hero-illustration .art-shine{opacity:.48;mix-blend-mode:screen}
+.hero-illustration .art-ink{fill:#152e35}
+.hero-illustration .art-paper{fill:#f2e7cd;stroke:#d6bc92;stroke-width:1.3}
+.hero-illustration .art-mark{stroke:#ad946d;stroke-width:2;stroke-linecap:round}
+.hero-illustration .art-mini{fill:#6f6352;font:700 11px system-ui,sans-serif;letter-spacing:.11em}
+.hero-illustration .art-accent{fill:#e1ae6d}
+.hero-illustration .art-thread{stroke:#b5c8bb;stroke-width:2;fill:none;stroke-linecap:round;stroke-dasharray:4 6}
+.hero[data-scene="4"][data-c-step="1"] .c-evidence{opacity:.4}
+.hero[data-scene="4"][data-c-step="1"] .c-contemporary{opacity:1}
+.hero[data-scene="4"][data-c-step="2"] .c-evidence{opacity:1}
+.hero[data-scene="4"][data-c-step="2"] .c-contemporary{opacity:.48}
+.hero[data-scene="3"].hero-complete .art-censor{opacity:.06;transform:scaleX(.07)}
+.hero[data-scene="2"].hero-complete .art-tear{transform:translate(7px,0)}
+.hero[data-scene="4"].hero-complete .art-connector{stroke:#d3e2b0;stroke-dasharray:none}
+.ribbon-cell.just-restored{animation:archive-highlight .42s ease-out}
+@keyframes hero-enter{from{opacity:.15;transform:translateY(9px) scale(.989)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes lamp-wake{0%{opacity:.08}100%{opacity:.48}}
+@keyframes artifact-enter{from{opacity:0;transform:translateX(17px) translateY(4px)}to{opacity:1;transform:translateX(0) translateY(0)}}
+@keyframes archive-highlight{0%{background:#e9f6e4;border-left-color:#b6a66d}100%{background:#f3faf5;border-left-color:#347261}}
+@keyframes stamp-in{0%{opacity:0;transform:scale(1.16) rotate(-11deg)}100%{opacity:1;transform:scale(1) rotate(-11deg)}}
+.hero.scene-arrival .hero-copy{animation:hero-enter .34s ease-out both}
+.hero.scene-arrival .art-stage.is-current{animation:artifact-enter .38s ease-out both}
+.hero.scene-arrival .art-shine{animation:lamp-wake .32s ease-out both}
+.hero-illustration .art-censor,.hero-illustration .art-tear,.hero-illustration .art-connector,.hero-illustration .c-evidence,.hero-illustration .c-contemporary{transition:opacity .34s ease-out,transform .34s ease-out,stroke .34s ease-out}
+.hero.scene-arrival[data-scene="5"] .restored-stamp{animation:stamp-in .42s cubic-bezier(.15,.85,.23,1) both;transform-origin:365px 147px}
+@media(max-width:850px){.hero{height:178px;min-height:178px;padding:17px 21px}.hero-copy{max-width:63%}.hero-illustration{width:56%}.hero h1{font-size:1.52rem}.hero p{font-size:.88rem}}
+@media(max-width:520px){.hero{height:184px;min-height:184px;padding:15px 18px}.hero-copy{max-width:100%;width:100%}.hero::before{background:linear-gradient(90deg,rgba(16,39,45,.74) 0%,rgba(16,39,45,.54) 100%)}.hero-illustration{width:77%;opacity:.24;right:-18%;-webkit-mask-image:linear-gradient(90deg,transparent 0%,transparent 50%,rgba(0,0,0,.16) 65%,black 100%);mask-image:linear-gradient(90deg,transparent 0%,transparent 50%,rgba(0,0,0,.16) 65%,black 100%)}.hero h1{font-size:1.47rem;max-width:320px}.hero p{font-size:.84rem;max-width:320px}.hero .eyebrow{font-size:.59rem}}
+@media(prefers-reduced-motion:reduce){.hero.scene-arrival .hero-copy,.hero.scene-arrival .art-stage.is-current,.hero.scene-arrival .art-shine,.hero.scene-arrival[data-scene="5"] .restored-stamp,.ribbon-cell.just-restored{animation:none!important}.hero-illustration .art-censor,.hero-illustration .art-tear,.hero-illustration .art-connector,.hero-illustration .c-evidence,.hero-illustration .c-contemporary{transition:none!important}}
+
+@media(max-width:850px){.shell{padding:12px 12px 50px}.main-grid{grid-template-columns:1fr}.hero{padding:21px;min-height:130px}.top{padding:10px 14px}.top small{display:none}.archive-ribbon{gap:5px}.ribbon-cell{padding:7px 9px}.ribbon-cell small{font-size:.7rem}.compare{grid-template-columns:1fr}}
+@media(max-width:520px){.button-grid{grid-template-columns:1fr 1fr}.mini-grid{grid-template-columns:1fr}.top .wordmark{font-size:.74rem}.top-r{gap:6px}.top .tag{font-size:.68rem;padding:3px 5px}.hero:after{font-size:2.4rem}.panel-b{padding:14px}.hero h1{font-size:1.48rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wordmark">HISTORY FILES <em>/ 1980</em></div><div class="top-r"><span id="stepBadge" class="tag">기록 접수</span><span id="classBadge" class="tag">수업 반 확인</span><span id="localBadge" class="tag">로컬 보관</span><small>익명 역사 기록 조사</small></div></header>
+<main class="shell">
+<section class="hero" id="sceneHero" data-scene="1" data-c-step="1" aria-labelledby="heroTitle"><div class="hero-copy"><div class="eyebrow" id="heroEyebrow">ARCHIVE DESK / EP.02</div><h1 id="heroTitle">1980: 광주의 기록을 복원하라</h1><p id="heroText">1980년 5월의 기록에는 서로 다른 설명이 남았습니다. 누가 무엇을 기록하고 빠뜨렸는지 자료를 대조해 복원하세요.</p></div>
+<svg class="hero-illustration" viewBox="0 0 580 200" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="desk-light" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#37616b"/><stop offset=".58" stop-color="#244751"/><stop offset="1" stop-color="#102d36"/></linearGradient>
+  <linearGradient id="paper-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff5dc"/><stop offset="1" stop-color="#dfcaa6"/></linearGradient>
+  <radialGradient id="desk-lamp"><stop stop-color="#d6ad66" stop-opacity=".34"/><stop offset="1" stop-color="#d6ad66" stop-opacity="0"/></radialGradient>
+  <filter id="paper-shadow" x="-35%" y="-35%" width="180%" height="180%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#071b20" flood-opacity=".34"/></filter>
+  <pattern id="crosshatch" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M0 0l15 15" stroke="#72908c" stroke-width=".6" opacity=".16"/></pattern>
+ </defs>
+ <rect width="580" height="200" fill="url(#desk-light)"/>
+ <path d="M0 156Q270 116 580 167L580 200H0Z" fill="#0d2931" opacity=".52"/>
+ <path d="M0 170h580M0 188h580" stroke="#87a79c" stroke-width="1" opacity=".13"/>
+ <ellipse cx="365" cy="67" rx="220" ry="136" fill="url(#desk-lamp)" class="art-shine"/>
+ <rect width="580" height="200" fill="url(#crosshatch)"/>
+ <!-- Scene 1: sealed archival intake -->
+ <g class="art-stage is-current" data-art-scene="1">
+  <g filter="url(#paper-shadow)" transform="translate(168,18) rotate(-9 190 87)">
+   <rect x="64" y="30" width="270" height="139" rx="7" fill="#bda582" stroke="#9a8065" stroke-width="2"/>
+   <path d="M65 31l134 90L333 31" fill="#d9c4a1" stroke="#9d866b" stroke-width="1.4"/>
+   <path d="M65 169L177 86M333 169L220 86" stroke="#9d866b" stroke-width="1" opacity=".75"/>
+   <g transform="rotate(5 217 90)">
+    <path d="M109 6h185l9 10v135l-7 9H99V18Z" fill="url(#paper-face)" stroke="#e9d3ac" stroke-width="1.5"/>
+    <path d="M118 30h140M118 37h120" stroke="#8c927c" opacity=".44" stroke-width="2"/>
+    <rect x="115" y="48" width="118" height="22" rx="2" fill="#efe7d1" stroke="#b2a489"/>
+    <text x="124" y="63" class="art-mini" style="font-size:12px;letter-spacing:.22em">ARCHIVE / 1980</text>
+    <path d="M118 89h154M118 97h135M118 105h150M118 113h100" class="art-mark" opacity=".5"/>
+    <rect x="198" y="130" width="89" height="19" rx="2" fill="#193c41" opacity=".95"/>
+    <text x="205" y="144" style="fill:#f0c991;font:700 12px monospace;letter-spacing:.12em">ORDER-01</text>
+   </g>
+  </g>
+  <g transform="translate(451 26)"><circle cx="20" cy="20" r="19" fill="#ba8365" opacity=".92"/><circle cx="20" cy="20" r="13" fill="none" stroke="#f0d0ad" stroke-width="1.3" stroke-dasharray="2 4"/><path d="M14 20l5 5 9-12" fill="none" stroke="#f7e4bf" stroke-width="2.1"/></g>
+ </g>
+ <!-- Scene 2: fragments and blank chronology -->
+ <g class="art-stage" data-art-scene="2">
+  <g filter="url(#paper-shadow)" transform="translate(157 11) rotate(-5 175 88)">
+   <rect x="44" y="20" width="340" height="152" rx="4" fill="#d8c49e" opacity=".5"/>
+   <path d="M74 13H307V163H74Z" fill="url(#paper-face)" stroke="#dcc39a" stroke-width="2"/>
+   <rect x="89" y="26" width="97" height="16" fill="#375b5e"/>
+   <text x="98" y="37" style="fill:#e6dbb9;font:700 10px monospace;letter-spacing:.1em">EVENT LOG</text>
+   <path d="M106 57H288M106 68H270" stroke="#8f9a89" stroke-width="2" opacity=".48"/>
+   <path d="M111 107h177" stroke="#678179" stroke-width="2.4" stroke-dasharray="3 5"/>
+   <circle cx="117" cy="107" r="7" fill="#ddc490" stroke="#4e736b" stroke-width="2"/><circle cx="199" cy="107" r="7" fill="#ddc490" stroke="#4e736b" stroke-width="2"/><circle cx="281" cy="107" r="7" fill="#ddc490" stroke="#4e736b" stroke-width="2"/>
+   <path d="M96 130h202M96 138h171M96 146h112" stroke="#9da28f" stroke-width="2" opacity=".36"/>
+  </g>
+  <g class="art-tear" transform="translate(193 56) rotate(6)"><path d="M0 0h100l-3 14 5 11-5 15H0l4-10-5-12Z" fill="#e9d6b3" stroke="#cfba97" stroke-width="2"/><text x="10" y="25" class="art-mini">01 · ??</text></g>
+  <g class="art-tear" transform="translate(350 94) rotate(-12)"><path d="M0 0h113l-4 14 4 12-5 14H0l5-13-5-12Z" fill="#f2dfbd" stroke="#d4b68d" stroke-width="2"/><text x="10" y="25" class="art-mini">02 · ??</text></g>
+  <g class="art-tear" transform="translate(436 28) rotate(8)"><path d="M0 0h91l-4 13 5 12-4 14H0l2-12-4-13Z" fill="#dfc8a2" stroke="#d1b083" stroke-width="2"/><text x="9" y="24" class="art-mini">03 · ??</text></g>
+  <path d="M186 180h321" stroke="#95b6a8" stroke-width="1.5" stroke-dasharray="4 9" opacity=".55"/>
+ </g>
+ <!-- Scene 3: three censored text bars and evidence threads -->
+ <g class="art-stage" data-art-scene="3">
+  <g filter="url(#paper-shadow)" transform="translate(171 11) rotate(4 190 88)">
+   <rect x="56" y="4" width="290" height="177" rx="4" fill="url(#paper-face)" stroke="#dbc4a1" stroke-width="1.5"/>
+   <path d="M77 27h178M77 34h224M77 54h198M77 78h231M77 104h192M77 124h239M77 150h191" stroke="#a1a38f" stroke-width="2.5" opacity=".56"/>
+   <rect class="art-censor" x="125" y="47" width="142" height="16" rx="2" fill="#172f34"/>
+   <rect class="art-censor" x="91" y="97" width="158" height="16" rx="2" fill="#172f34"/>
+   <rect class="art-censor" x="170" y="142" width="130" height="16" rx="2" fill="#172f34"/>
+  </g>
+  <g transform="translate(427 39)"><rect x="0" y="0" width="107" height="122" rx="4" fill="#2b5557" stroke="#9cb8a0" stroke-width="1.1"/><rect x="15" y="16" width="76" height="24" fill="#edf0df" opacity=".94"/><rect x="15" y="49" width="76" height="24" fill="#f2dfbb"/><rect x="15" y="82" width="76" height="24" fill="#e0ecdf"/><text x="22" y="32" class="art-mini">B-S1</text><text x="22" y="65" class="art-mini">B-S2</text><text x="22" y="98" class="art-mini">B-S3</text></g>
+  <path d="M385 59L426 58M375 104L427 101M389 148L426 136" class="art-thread"/>
+  <circle cx="385" cy="59" r="4" fill="#e8c992"/><circle cx="375" cy="104" r="4" fill="#e8c992"/><circle cx="389" cy="148" r="4" fill="#e8c992"/>
+ </g>
+ <!-- Scene 4: comparison evidence board, C1 and C2 spotlight -->
+ <g class="art-stage" data-art-scene="4">
+  <rect x="171" y="18" width="354" height="167" rx="5" fill="#1a3941" stroke="#7b9e95" stroke-width="1.5"/>
+  <g class="c-contemporary">
+   <rect x="186" y="33" width="103" height="122" rx="3" fill="#dcc59d" transform="rotate(-3 237 100)"/>
+   <rect x="297" y="30" width="104" height="121" rx="3" fill="#f2e5c7" transform="rotate(2 349 91)"/>
+   <rect x="414" y="31" width="91" height="120" rx="3" fill="#d8c59d" transform="rotate(-2 460 91)"/>
+   <text x="197" y="61" class="art-mini">05·25</text><text x="315" y="59" class="art-mini">05·25</text><text x="425" y="59" class="art-mini">05·22</text>
+   <rect x="196" y="72" width="71" height="9" fill="#955b4d"/><rect x="314" y="70" width="65" height="9" fill="#2e6a68"/><rect x="426" y="69" width="60" height="9" fill="#90713e"/>
+   <path d="M197 97h72M197 104h51M314 95h68M314 102h52M426 95h57M426 103h41" stroke="#8b917a" stroke-width="2" opacity=".7"/>
+  </g>
+  <g class="c-evidence">
+   <circle cx="248" cy="162" r="11" fill="#8fae9a" stroke="#e0e9c2" stroke-width="1.5"/><circle cx="351" cy="162" r="11" fill="#8fae9a" stroke="#e0e9c2" stroke-width="1.5"/><circle cx="465" cy="162" r="11" fill="#8fae9a" stroke="#e0e9c2" stroke-width="1.5"/>
+   <path class="art-connector" d="M248 147L248 114M351 147L351 114M465 147L465 114" stroke="#9cbca8" stroke-width="2.4" stroke-dasharray="4 5"/>
+   <text x="248" y="167" text-anchor="middle" style="font:700 12px system-ui;fill:#11353c">01</text><text x="351" y="167" text-anchor="middle" style="font:700 12px system-ui;fill:#11353c">02</text><text x="465" y="167" text-anchor="middle" style="font:700 12px system-ui;fill:#11353c">03</text>
+  </g>
+  <path d="M166 17l18 0M166 17l0 18M520 17l-18 0M520 17v18M166 185h18M166 185v-18M520 185h-18M520 185v-18" stroke="#d6c18f" stroke-width="2" fill="none" opacity=".62"/>
+ </g>
+ <!-- Scene 5: completed three-line archive and certification stamp -->
+ <g class="art-stage" data-art-scene="5">
+  <g filter="url(#paper-shadow)" transform="translate(185 13) rotate(-5 190 85)">
+   <rect x="36" y="15" width="304" height="165" rx="4" fill="#baa47f" stroke="#d1b790" stroke-width="1.7"/>
+   <rect x="62" y="4" width="247" height="164" rx="3" fill="url(#paper-face)" stroke="#ecdaae" stroke-width="1.6"/>
+   <rect x="86" y="22" width="142" height="20" fill="#2c5555"/><text x="95" y="35" style="fill:#f1dfbe;font:700 11px monospace;letter-spacing:.12em">RESTORED / 1980</text>
+   <g fill="none" stroke="#7f947e" stroke-width="3"><path d="M91 59l8 8 13-15M91 94l8 8 13-15M91 129l8 8 13-15"/></g>
+   <path d="M121 59h147M121 66h127M121 94h154M121 101h134M121 129h145M121 136h128" stroke="#949b87" stroke-width="2.5" opacity=".72"/>
+   <g class="restored-stamp" transform="rotate(-11 260 133)"><circle cx="269" cy="127" r="32" fill="none" stroke="#b45e4a" stroke-width="4" opacity=".83"/><circle cx="269" cy="127" r="25" fill="none" stroke="#b45e4a" stroke-width="1.7" stroke-dasharray="3 4"/><path d="M255 128l9 9 20-23" fill="none" stroke="#ae5946" stroke-width="3.4"/></g>
+  </g>
+  <path d="M490 30h53M490 37h40" stroke="#a9bfaa" stroke-width="2" opacity=".3"/>
+ </g>
+</svg></section>
+<div id="ribbon" class="archive-ribbon" aria-label="복원 기록철 진행 상황"></div>
+<div id="message" class="status-line hidden" role="status" aria-live="polite"></div>
+<section id="app" aria-live="polite"></section>
+<footer class="footer-note">1980년 5월, 광주 · 이 게임의 훼손된 원고와 복원 책상은 학습용 재구성이며 실제 1980년 당시 기사 원본이 아닙니다. 이름·학번·개인 및 가족 경험을 입력하지 마세요.</footer>
+</main>
+<script>
+'use strict';
+const GAME_SLUG = 'democracy-1980';
+const STORAGE_KEY = 'democracy-1980-v1-draft';
+const RESULTS_URL = 'https://xgniwztlrakkrbzcfklb.supabase.co/rest/v1/game_results';
+// 공개용 publishable 키만 사용하며 서버 비밀키는 포함하지 않는다.
+const RESULTS_KEY = 'sb_publishable_mYZObIGh4nOLKqfnjXHsow_eIARb5U9';
+const EVIDENCE_VERSION = '1980-evidence-v1.2';
+const ORDER_QUESTION = '계엄군의 발포와 시민군의 조직적인 무장 가운데, 어느 일이 먼저였을까요?';
+const B_THIRD_SENTENCE = '당시 보도 통제를 보여 주는 문서는 [③]이다.';
+const ORDER_OPTIONS = [
+  {id:'fire_first',label:'계엄군의 발포가 먼저'},
+  {id:'armed_first',label:'시민군의 조직적인 무장이 먼저'},
+  {id:'unsure',label:'아직 모르겠다'}
+];
+const EVENT_CARDS = [
+  {id:'A-E1',text:'신군부 권력 장악과 민주화 요구 확산'},
+  {id:'A-E2',text:'비상계엄 전국 확대'},
+  {id:'A-E3',text:'전남대 앞 시위와 강경 진압'},
+  {id:'A-D1',text:'시민군의 조직적 무장이 먼저이므로 초기 진압이 시작됐다',falseClaim:true},
+  {id:'A-D2',text:'서울의 민주화 요구와 무관한 광주만의 지역 소요였다',falseClaim:true}
+];
+const B_BLANKS=[
+  {id:'B-B1',title:'① 먼저 확인되는 것은',correct:'military_fired',source:'B-S2',options:[{id:'military_fired',label:'계엄군의 발포'},{id:'militia_first_shots',label:'시민군의 선제 사격'},{id:'accidental_discharge',label:'우발적 총기 오발'}]},
+  {id:'B-B2',title:'② 이후 시민들은',correct:'citizen_self_defense_armed',source:'B-S3',options:[{id:'citizen_self_defense_armed',label:'자위적 무장'},{id:'premeditated_uprising',label:'사전 계획된 무장 봉기'},{id:'complete_disbandment',label:'전원 자진 해산'}]},
+  {id:'B-B3',title:'③ 보도 통제를 보여 주는 문서',correct:'censorship_0517',source:'B-S1',options:[{id:'censorship_0517',label:'5·17 보도통제지침'},{id:'media_merger_late1980',label:'하반기 언론 통폐합'},{id:'press_ledger_0604',label:'6·4 신문 제작 대장'}]}
+];
+const C_ROLES=[{id:'claim_origin',label:'당시 권력 주장의 존재'},{id:'citizen_stance',label:'시민군의 입장'},{id:'reporting_demand',label:'보도 요구'}];
+const C_AXES=[{id:'citizen_self_government',label:'시민 자치',source:'C-G1a'},{id:'military_blockade',label:'봉쇄·피해',source:'C-G1b'},{id:'negotiation_resistance_suppression',label:'협상·항전·진압',source:'C-G1c'}];
+const C_ROLE_ANSWERS={'C-S1':'claim_origin','C-S2':'citizen_stance','C-S3':'reporting_demand'};
+const SOURCES={
+ 'A-S1':{title:'신군부의 권력 장악과 민주화 요구',meta:'후대 역사 해설 · 우리역사넷',type:'later',short:'신군부가 권력을 장악한 뒤 민주화 요구가 확대됐다.',detail:'12·12 이후 군 지휘권 장악, 서울의 봄을 거친 민주화 요구의 맥락을 확인한다.',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i501000'},
+ 'A-S2':{title:'비상계엄 전국 확대',meta:'후대 역사 해설 · 우리역사넷',type:'later',short:'5·17 비상계엄이 전국으로 확대됐다.',detail:'5·17의 전국 비상계엄 확대와 정치·사회활동 제약을 사건의 맥락으로 연결한다.',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i501000'},
+ 'A-S3':{title:'전남대 앞 시위와 계엄군의 대응',meta:'후대 역사 해설 · 우리역사넷',type:'later',short:'5·18 전남대학교 앞 시위에 계엄군이 강경 진압으로 대응했다.',detail:'시민의 시위를 강경 진압의 정당화 사유로 제시하지 않으며 군의 행동 주체를 분명히 한다.',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i501000'},
+ 'B-S1':{title:'5·17 보도통제지침',meta:'1980년 당시 문건 · 보도검열 지침',type:'original',short:'계엄포고령에 의한 보도검열 실시와 5·17 계엄 확대조치 비판 제한.',detail:'원문에는 계엄포고령 제10호 2-나항에 따른 보도검열 방침과 비상계엄 확대조치 비판 제한이 함께 나타난다.',url:'https://archives.kdemo.or.kr/isad/view/00859054'},
+ 'B-S2':{title:'5·19~21 계엄군 발포 조사',meta:'후대 조사 결과를 전한 보도 · 연합뉴스',type:'later',short:'5·19 광주고등학교 앞 발포, 5·20 밤 광주역 발포, 5·21 도청 일대 집단 발포가 확인된다.',detail:'이 카드의 출처는 조사위원회 종합보고서 원문이 아니라 조사 결과를 전한 후대 보도다. 산발적인 초기 무기 탈취와 이후 본격적 조직 무장을 구별한다.',url:'https://www.yna.co.kr/view/MYH20230517000700641'},
+ 'B-S3':{title:'당시 취합 보고 Fact Sheet #59',meta:'1980년 당시 취합 기록 · 내용 검증 주의',type:'original',short:'계엄군 발포 이후 자위적 무장에 관한 당시 취합 보고가 있다.',detail:'당시 보고의 표현 하나로 산발적 초기 무기 탈취가 없었다고 절대화하지 않는다.',url:'https://archives.kdemo.or.kr/contents/view/422'},
+ 'C-S1':{title:'5·25 계엄사 발표',meta:'1980년 당시 권력의 주장 · 발표 존재와 진실성 구분',type:'claim',short:'당시 계엄사는 광주의 상황을 약탈·무질서로 묘사하는 주장을 발표했다.',detail:'이 자료는 그 발표가 존재했다는 사실을 보여 주며, 발표의 내용이 실제로 옳았다는 근거는 아니다.',url:'https://archives.kdemo.or.kr/display2/sub07/sub07_04.html'},
+ 'C-S2':{title:'5·25 광주시민군 궐기문',meta:'당시 시민군의 입장 · 학생용 안전 발췌',type:'original',short:'“우리 시민군은 … 여러분의 안전을 끝까지 지킬 것입니다.” [안전 발췌]',detail:'이 안전한 짧은 발췌는 시민군의 호소·입장을 보여 준다. 시민 자치의 실제 운영은 별도 후대 검증 자료로 확인한다.'},
+ 'C-S3':{title:'5·22 시민 측 선언문',meta:'1980년 당시 시민 측 요구 · 왜곡 보도 중단',type:'original',short:'시민 측은 광주의 상황을 정확히 보도하고 왜곡 보도를 중단하라고 요구했다.',detail:'이는 언론 보도에 대한 당시 시민의 요구를 보여 주는 문서다. 시민 생활 전반의 사실을 독자적으로 입증하지 않는다.',url:'https://archives.kdemo.or.kr/display2/sub07/sub07_04.html'},
+ 'C-G1a':{title:'시민 자치와 일상의 질서',meta:'후대 공식 해설 · 국가기록원',type:'later',short:'계엄군 철수 이후 광주 시내에서 시민들은 질서 유지와 나눔의 활동을 이어갔다.',detail:'당시 시민들의 생활과 자치에 관해 후대 기록으로 검증된 내용을 확인한다.',url:'https://theme.archives.go.kr/next/518/sub3.do'},
+ 'C-G1b':{title:'계엄군의 외곽 봉쇄와 피해',meta:'후대 역사 해설 · 우리역사넷',type:'later',short:'계엄군의 외곽 봉쇄 속에서 광주는 고립됐고 민간인 피해도 발생했다.',detail:'시민의 생활을 군의 봉쇄 및 민간인 피해와 함께 보아야 한다.',url:'https://contents.history.go.kr/mobile/kc/view.do?levelId=kc_i501000'},
+ 'C-G1c':{title:'협상·항전의 고민과 5·27 진압',meta:'후대 공식 해설 · 국가기록원',type:'later',short:'시민 내부에는 협상과 항전의 입장 차이가 있었으며 5·27 계엄군이 다시 진압했다.',detail:'5·27의 결과는 5·25 당시 기록이 아닌 후대 검증 카드에만 실어 시간에 따른 인식을 구별한다.',url:'https://theme.archives.go.kr/next/518/sub3.do'}
+};
+const FIRST_RECORDS=['광주에서 갑자기 시위가 시작됐다','광주에서는 충돌이 벌어졌다','광주는 무질서했다'];
+const $=id=>document.getElementById(id);
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shuffled(a){const out=[...a];for(let i=out.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
+function shuffleA(){let a=shuffled(EVENT_CARDS.map(e=>e.id));for(let tries=0;tries<20;tries++){const visible=a.filter(x=>x.startsWith('A-E'));if(visible.join(',')!=='A-E1,A-E2,A-E3')break;a=shuffled(a)}return a;}
+function randomBOptions(){const indexes=shuffled([0,1,2]);return B_BLANKS.map((b,i)=>{const others=shuffled(b.options.filter(o=>o.id!==b.correct).map(o=>o.id));const a=[...others];a.splice(indexes[i],0,b.correct);return a;});}
+function getClassParam(){
+  const params=new URLSearchParams(location.search), normal=params.getAll('class'),alt=params.getAll('Class');
+  let invalid=false;for(const [k] of params){if(k.toLowerCase()==='class'&&k!=='class'&&k!=='Class')invalid=true;if(k.toLowerCase().startsWith('class')&&k!=='class'&&k!=='Class')invalid=true;}
+  if(invalid||normal.length>1||alt.length>1||(normal.length&&alt.length))return {value:'미입력',corrected:false,warning:'반 링크 충돌 또는 잘못된 형식입니다. 선생님께 링크 확인'};
+  if(normal.length===1&&normal[0].trim())return {value:normal[0].trim().slice(0,40),corrected:false,warning:''};
+  if(alt.length===1&&alt[0].trim())return {value:alt[0].trim().slice(0,40),corrected:true,warning:'반 링크 표기 보정'};
+  return {value:'미입력',corrected:false,warning:'선생님께 링크 확인'};
+}
+const classInfo=getClassParam();
+let state=null,selectedCard=null,selectedSource=null,bActive=0,cSource=null,cBoardSource=null,renderMessage='',renderMessageKind='';
+let savingPromise=null,runningSince=0;
+function uuid(){return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{let r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)}));}
+function freshState(){return {game:GAME_SLUG,localVersion:1,className:classInfo.value,started_at:null,completed_at:null,resultId:'democracy-1980-'+uuid(),scene:1,cStage:1,pre:null,post:null,archive:{background:null,actor_sequence:null,citizen_context:null},a:{deck:shuffleA(),order:[null,null,null],excluded:[null,null],links:{},opened:[],wrong:0,done:false},b:{optionOrders:randomBOptions(),answers:[{answer_id:null,source_id:null},{answer_id:null,source_id:null},{answer_id:null,source_id:null}],opened:[],wrong:0,done:false},c:{roles:{},links:{},lead_axis:null,finalText:'',opened:[],wrong:0,done:false},duration:{A:0,B:0,C:0},submissionStatus:'idle',snapshotPayload:null};}
+function loadStored(){try{const v=localStorage.getItem(STORAGE_KEY);if(!v)return null;const x=JSON.parse(v);if(x&&x.game===GAME_SLUG&&x.localVersion===1&&x.a&&x.b&&x.c&&x.duration&&typeof x.className==='string')return x;}catch(e){}return null;}
+let stored=loadStored(),showResume=!!stored;
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));$('localBadge').textContent='기기 임시 기록 보관';return true}catch(e){$('localBadge').textContent='기기 보관 실패 ⚠';return false}}
+function mission(){return state?.scene===2?'A':state?.scene===3?'B':state?.scene===4?'C':null;}
+function tick(){if(runningSince&&state){const m=mission();if(m)state.duration[m]+=Math.max(0,(performance.now()-runningSince)/1000)}runningSince=0;}
+function resumeTimer(){if(state&&mission()&&!document.hidden)runningSince=performance.now();}
+function updateTimer(){tick();resumeTimer();}
+function switchScene(n){tick();state.scene=n;resumeTimer();selectedCard=null;selectedSource=null;cSource=null;cBoardSource=null;renderMessage='';persist();render();}
+function setMessage(s,kind=''){renderMessage=s;renderMessageKind=kind;const m=$('message');m.textContent=s;m.className='status-line'+(kind?' '+kind:'')+(s?'':' hidden');}
+let previousVisualStage=null;let previousRestoredMask=null;
+function refreshGlobal(){const names=['기록 접수','배경 복원','문서 복원','시민 기록','복원 기록철'];$('stepBadge').textContent=`${state.scene}/5 · ${names[state.scene-1]}`;const b=$('classBadge');b.textContent='수업 반: '+classInfo.value+(classInfo.corrected?' · 반 링크 표기 보정':classInfo.warning?' ⚠️':'');b.className='tag'+(classInfo.warning?' warn':'');const r=$('ribbon');const vals=[['① 배경',state.archive.background],['② 발포·무장·검열',state.archive.actor_sequence],['③ 시민 생활',state.archive.citizen_context]];const restoredMask=vals.reduce((mask,[,value],i)=>mask|(value?1<<i:0),0);r.innerHTML=vals.map(([title,value],i)=>`<div class="ribbon-cell ${value?'complete':''} ${previousRestoredMask!==null&&value&&!(previousRestoredMask&(1<<i))?'just-restored':''}"><b>${title} ${value?'✓':''}</b><small>${value?'근거가 연결됐습니다':'아직 복원 전'}</small></div>`).join('');previousRestoredMask=restoredMask;const stageKey=state.scene+':'+(state.scene===4?state.cStage:1);const hero=$('sceneHero');hero.dataset.scene=String(state.scene);hero.dataset.cStep=String(state.cStage||1);hero.classList.toggle('hero-complete',Boolean((state.scene===2&&state.archive.background)||(state.scene===3&&state.archive.actor_sequence)||(state.scene===4&&state.archive.citizen_context)));hero.querySelectorAll('[data-art-scene]').forEach(g=>g.classList.toggle('is-current',Number(g.dataset.artScene)===state.scene));if(previousVisualStage!==null&&previousVisualStage!==stageKey){hero.classList.remove('scene-arrival');void hero.offsetWidth;hero.classList.add('scene-arrival')}previousVisualStage=stageKey;const briefs=[['ARCHIVE DESK / EP.02','1980: 광주의 기록을 복원하라','1980년 5월의 기록에는 서로 다른 설명이 남았습니다. 누가 무엇을 기록하고 빠뜨렸는지 자료를 대조해 복원하세요.'],['MISSION A / BACKGROUND','광주의 5월은 어디서 시작됐나','5월 이전의 맥락이 지워진 일지를 복원해 보세요. 세 사건을 잇고 두 왜곡 설명을 제외한 뒤, 근거를 연결하세요.'],['MISSION B / CENSORED TEXT',"'충돌'이라는 말에 가려진 순서",'‘충돌’이라는 말만 남은 원고에서 누가 발포했는지, 시민군의 본격적 무장은 언제 이어졌는지, 검열이 어떻게 기록을 가렸는지 확인하세요.'],['MISSION C / EVIDENCE', '기록에서 사라진 광주의 일상','같은 1980년 5월에도 계엄사와 시민 측이 남긴 기록은 달랐습니다. 기록이 말한 것과 말하지 않은 것을 구별해 광주의 모습을 복원하세요.'],['EPILOGUE / ARCHIVE RESTORED','처음 기록과 내가 복원한 기록을 비교하세요','이제 처음 훼손된 세 문장과, 자료를 연결해 복원한 기록을 나란히 보세요. 복원 전과 같은 질문에도 다시 답해 주세요.']];const brief=briefs[state.scene-1];$('heroEyebrow').textContent=brief[0];$('heroTitle').textContent=brief[1];$('heroText').textContent=brief[2];setMessage(renderMessage,renderMessageKind);}
+function orderQuestion(kind){const v=kind==='before'?state.pre:state.post;return `<fieldset style="border:0;padding:0;margin:0"><legend class="prompt">${ORDER_QUESTION}</legend><div class="button-grid" style="margin:13px 0">${ORDER_OPTIONS.map(o=>`<button type="button" class="choice ${v===o.id?'selected':''}" data-order-kind="${kind}" data-order="${o.id}" aria-pressed="${v===o.id}">${o.label}</button>`).join('')}</div></fieldset>`;}
+function sourceTag(type){return type==='claim'?'<span class="tag claim">당시 권력의 주장</span>':type==='later'?'<span class="tag later">후대 해설</span>':'<span class="tag">동시대 자료</span>';}
+function sourceCards(ids,active,selector){return ids.map(id=>{const s=SOURCES[id],isActive=id===active;return `<div class="source-item ${isActive?'source-focus':''}">${sourceTag(s.type)} <span class="eyebrow">${id}</span><h3>${escapeHTML(s.title)}</h3><div class="meta">${escapeHTML(s.meta)}</div><p>${escapeHTML(s.short)}</p><div class="source-actions"><button type="button" class="tiny ${isActive?'selected':''}" data-source-select="${id}" data-source-mode="${selector}">${selector==='A'?'근거칩 선택':selector==='B'?'이 근거 연결':selector==='C1'?'역할 연결에 사용':'보드에 연결'}</button><button type="button" class="tiny secondary" data-open="${id}">안전 요약 더 보기</button></div>${state[selector==='A'?'a':selector==='B'?'b':'c'].opened.includes(id)?`<p class="meta" style="margin-top:8px">${escapeHTML(s.detail)}</p>${s.url?`<p class="meta">출처: ${escapeHTML(s.meta)} (외부 사이트는 열리지 않아도 게임 진행 가능)</p>`:''}`:''}</div>`}).join('');}
+function renderStart(){return `<div class="panel"><div class="panel-h"><h2>기록 복원 조사 시작</h2><span class="tag rebuild">질문 · 사전 판단</span></div><div class="panel-b"><div class="note warning">이 게임에는 1980년 5월 국가폭력과 기록 통제에 관한 역사 자료가 포함됩니다. 개인이나 가족의 경험을 말하거나 공개할 필요는 없습니다.</div>${classInfo.warning?`<div class="note warning">수업 반: 미입력 ⚠️ — ${escapeHTML(classInfo.warning)}</div>`:classInfo.corrected?'<div class="note">반 링크 표기 보정 — 인식된 수업 반을 확인하세요.</div>':''}<p class="muted">정답을 먼저 보여주지 않습니다. 지금 생각을 기록하고 다른 자료로 확인하세요.</p>${orderQuestion('before')}<div class="actions"><button type="button" class="primary" id="startButton" ${!state.pre?'disabled':''}>기록 복원 시작</button></div></div></div>`;}
+function labelCard(id){const x=EVENT_CARDS.find(x=>x.id===id);return x?x.text:'비어 있음';}
+function renderA(){const a=state.a;return `<div class="main-grid"><section class="panel"><div class="panel-h"><h2>사료를 조사한다</h2><span class="tag later">후대 해설</span></div><div class="panel-b">${sourceCards(['A-S1','A-S2','A-S3'],selectedSource,'A')}</div></section><section class="panel"><div class="panel-h"><h2>사건의 시간과 근거를 잇는다</h2><span class="tag rebuild">A / 세 사건과 두 왜곡</span></div><div class="panel-b"><div class="note">1. 사건 조각 선택 → 시간축/제외 칸 지정<br>2. 근거칩 선택 → 사건의 시간축 칸 누르기<br>3. 복원 결과 확인</div><div class="subhead">사건 조각 (최초 배열은 섞여 있습니다)</div><div class="button-grid">${a.deck.map(id=>`<button type="button" class="choice ${selectedCard===id?'selected':''}" data-card="${id}">${labelCard(id)} ${id.startsWith('A-D')?'<small class="tag rebuild">학습용 왜곡 설명</small>':''}</button>`).join('')}</div><div class="subhead">시간축 — 날짜는 원문 카드에서 확인합니다</div><div class="line-cards">${a.order.map((id,i)=>`<div class="line-row"><span class="slotnum">${i+1}</span><button type="button" class="slot ${id?'selected':''}" data-a-slot="${i}">${id?escapeHTML(labelCard(id)):'이곳에 사건을 배치하세요'}<p>${a.links[i]?`근거: ${a.links[i]}`:'근거 미연결'}</p></button></div>`).join('')}</div><div class="subhead">제외할 설명 두 장</div><div class="mini-grid">${a.excluded.map((id,i)=>`<button type="button" class="slot" data-a-excluded="${i}">${id?escapeHTML(labelCard(id)):'왜곡 설명 제외 칸'}</button>`).join('')}</div><div class="actions"><button class="tiny danger" id="resetA" type="button">현재 배치 초기화</button><button class="primary" id="checkA" type="button" ${a.done?'disabled':''}>기록철 ① 복원</button></div>${a.done?'<div class="status-line success">배경 기록 복원 완료 ✓</div><div class="actions"><button class="primary" id="toB">발포와 검열 기록을 복원한다</button></div>':''}</div></section></div>`;}
+function renderB(){const b=state.b,blank=B_BLANKS[bActive],selected=b.answers[bActive];return `<div class="main-grid"><section class="panel"><div class="panel-h"><h2>근거를 확인하고 연결한다</h2><span class="tag">B-S1~3</span></div><div class="panel-b">${sourceCards(['B-S1','B-S2','B-S3'],null,'B')}</div></section><section class="panel"><div class="panel-h"><h2>검은 띠를 걷어내는 원고</h2><span class="tag rebuild">학습용 재구성 · 실제 기사 원본 아님</span></div><div class="panel-b"><div class="paper"><h3>「'충돌'이라는 말에 가려진 순서」</h3><p>시민군의 본격적 무장보다 먼저 확인되는 것은 <button type="button" class="tiny ${bActive===0?'selected':''}" data-blank="0">[①] ${b.answers[0].answer_id?escapeHTML(B_BLANKS[0].options.find(o=>o.id===b.answers[0].answer_id)?.label||''):''}</button>이다.</p><p>이후 시민들은 <button type="button" class="tiny ${bActive===1?'selected':''}" data-blank="1">[②] ${b.answers[1].answer_id?escapeHTML(B_BLANKS[1].options.find(o=>o.id===b.answers[1].answer_id)?.label||''):''}</button>에 나섰다.</p><p>${B_THIRD_SENTENCE.split('[③]')[0]}<button type="button" class="tiny ${bActive===2?'selected':''}" data-blank="2">[③] ${b.answers[2].answer_id?escapeHTML(B_BLANKS[2].options.find(o=>o.id===b.answers[2].answer_id)?.label||''):''}</button>${B_THIRD_SENTENCE.split('[③]')[1]}</p></div><div class="subhead">${blank.title} — 보기 선택</div><div class="button-grid">${b.optionOrders[bActive].map(id=>{const o=blank.options.find(o=>o.id===id);return `<button type="button" class="choice ${selected.answer_id===id?'selected':''}" data-b-answer="${id}">${escapeHTML(o.label)}</button>`}).join('')}</div><div class="status-line">근거칩: ${selected.source_id?selected.source_id+' 연결됨':'왼쪽에서 이 빈칸을 뒷받침하는 자료를 선택하세요.'}</div><div class="subhead">빈칸별 연결 상태</div><div class="mini-grid">${b.answers.map((x,i)=>`<div class="slot"><b>0${i+1}</b><p>${x.answer_id?'답 선택 ✓':'답 미선택'}<br>${x.source_id?'근거 '+x.source_id:'근거 미연결'}</p></div>`).join('')}</div><div class="actions"><button type="button" class="primary" id="checkB" ${b.done?'disabled':''}>원고 복원 확인</button></div>${b.done?'<div class="status-line success">계엄군의 발포와 본격적 무장, 보도 통제 기록이 복원됐습니다. ✓</div><div class="actions"><button class="primary" id="toC">시민 기록을 대조한다</button></div>':''}</div></section></div>`;}
+function renderC1(){return `<div class="main-grid"><section class="panel"><div class="panel-h"><h2>당시 자료 세 장을 대조한다</h2><span class="tag">C · 1/2</span></div><div class="panel-b">${sourceCards(['C-S1','C-S2','C-S3'],cSource,'C1')}</div></section><section class="panel"><div class="panel-h"><h2>누가 무엇을 주장하거나 요구했나?</h2><span class="tag claim">당시 기록 · 검증 사실과 구분</span></div><div class="panel-b"><p class="note">왼쪽의 자료를 고른 뒤, 그 자료가 실제로 보여 주는 역할에 연결하세요. 한 당사자의 주장이 참이라는 뜻은 아닙니다.</p><div class="row-list">${C_ROLES.map(role=>{const assigned=Object.keys(state.c.roles).find(id=>state.c.roles[id]===role.id);return `<button type="button" class="slot choice ${assigned?'selected':''}" data-c-role="${role.id}"><b>${role.label}</b><p>${assigned?SOURCES[assigned].title:'이 역할에 연결할 자료 선택'}</p></button>`}).join('')}</div><div class="actions"><button class="primary" id="checkC1">다른 자료로 실제 모습을 검증하기</button></div></div></section></div>`;}
+function renderC2(){const c=state.c;return `<div class="main-grid"><section class="panel"><div class="panel-h"><h2>후대의 검증 기록</h2><span class="tag later">C · 2/2</span></div><div class="panel-b">${sourceCards(['C-G1a','C-G1b','C-G1c'],cBoardSource,'C2')}<details style="margin-top:12px"><summary class="tiny">1단계에서 대조한 당시 기록 요약</summary><div class="note">${['C-S1','C-S2','C-S3'].map(id=>`<p>${id}: ${escapeHTML(SOURCES[id].short)}</p>`).join('')}</div></details></div></section><section class="panel"><div class="panel-h"><h2>기록에서 빠진 세 갈래를 복원한다</h2><span class="tag">3축 보드</span></div><div class="panel-b"><div class="note">후대 검증 카드 한 장을 선택한 뒤 해당 축을 누르세요. 세 축은 모두 복원하고, 그중 어느 축을 먼저 서술할지만 결정합니다.</div><div class="row-list">${C_AXES.map((ax,i)=>`<button type="button" class="slot choice ${c.links[ax.id]?'selected':''}" data-c-axis="${ax.id}"><b>${i+1}. ${ax.label}</b><p>${c.links[ax.id]?'근거 '+c.links[ax.id]+' 연결됨':'후대 검증 자료 연결 전'}</p></button>`).join('')}</div><p class="subhead">기록의 첫머리에 앞세울 축 (정오 점수 없음)</p><div class="mini-grid">${C_AXES.map(a=>`<button type="button" class="choice ${c.lead_axis===a.id?'selected':''}" data-lead="${a.id}">${a.label}</button>`).join('')}</div><p class="subhead">기록에서 누락된 5월의 모습을 한 문장으로 복원하세요.</p><p class="muted" style="margin:0 0 8px">시민의 행동과 군의 행동 또는 이후 변화 하나를 함께 적어 보세요. (권장 20~45자, AI 평가 없음)</p><textarea id="finalText" class="text-input" placeholder="내가 복원한 한 문장" aria-label="기록에서 누락된 5월의 모습을 한 문장으로 복원하세요.">${escapeHTML(c.finalText)}</textarea><div class="actions"><button class="tiny secondary" id="backC1">당시 기록 다시 확인</button><button class="primary" id="checkC2">기록철 ③ 복원</button></div>${c.done?'<div class="status-line success">시민 생활과 봉쇄·협상·항전에 관한 기록이 복원됐습니다. ✓</div><div class="actions"><button type="button" class="primary" id="toFinal">완성된 기록철 대조</button></div>':''}</div></section></div>`;}
+function renderFinal(){const r=[state.archive.background||'',state.archive.actor_sequence||'',state.archive.citizen_context||''];return `<div class="panel"><div class="panel-h"><h2>1980년 5월, 최초 기록과 복원 기록</h2><span class="tag rebuild">학습용 훼손 사례 · 당시 원문 아님</span></div><div class="panel-b"><div class="compare"><div class="paper"><h3>처음 손상된 기록</h3><ol>${FIRST_RECORDS.map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ol></div><div class="paper"><h3>근거와 함께 복원한 기록</h3><ol>${r.map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ol><p class="meta">학생의 한 문장: ${escapeHTML(state.c.finalText)}</p><p class="meta">당시 자료의 주장·요구와 후대의 사실 검증을 구분했습니다.</p></div></div><div class="note" style="margin-top:16px">복원 전에 했던 질문에 다시 답해 주세요. 같은 질문·같은 보기입니다. 답변이 바뀌어도 그것만으로 학습 효과를 증명하지는 않습니다.</div>${orderQuestion('after')}<div class="actions"><button class="primary" id="finishButton" ${!state.post||state.completed_at?'disabled':''}>사후 판단 기록 완료</button></div>${state.completed_at?renderRemote():''}</div></div>`;}
+function renderRemote(){let value=state.submissionStatus,msg=value==='saved'?'서버 저장 완료 ✓':value==='sending'?'서버 저장 중…':value==='failed'?'저장 여부를 확인하지 못했습니다 ⚠️ 재시도하거나 TXT 백업을 저장하세요':value==='unknown'?'저장 여부를 확인하지 못했습니다 ⚠️ 재시도하거나 TXT 백업을 저장하세요':'저장 전';return `<div class="status-line ${value==='saved'?'success':value==='sending'?'': 'error'}" id="remoteStatus" role="status" aria-live="polite">${msg}</div><div class="actions">${(value==='failed'||value==='unknown')?'<button type="button" class="primary" id="retryButton">저장 다시 시도</button>':''}<button type="button" id="backupButton">TXT 백업 저장</button><button type="button" id="copyButton">기록 내용 복사</button></div><p class="meta">저장 결과를 교사에게 보여주세요. 저장에 실패해도 기록철은 완료되며 기기에 보관됩니다. 이름과 학번은 입력하지 않습니다.</p>`;}
+function render(){refreshGlobal();const app=$('app');app.innerHTML=state.scene===1?renderStart():state.scene===2?renderA():state.scene===3?renderB():state.scene===4?(state.cStage===1?renderC1():renderC2()):renderFinal();wireEvents();}
+function setScene(n){switchScene(n);window.scrollTo({top:0,behavior:'instant'});}
+function addUnique(arr,id){if(!arr.includes(id))arr.push(id)}
+function assignA(index,isExcluded){const a=state.a;if(selectedSource&&!isExcluded){const id=a.order[index];if(!id){setMessage('근거를 연결하려면 먼저 이 칸에 사건을 배치하세요.','error');return}a.links[index]=selectedSource;selectedSource=null;persist();render();return}if(!selectedCard){setMessage('먼저 사건 조각 또는 근거칩을 선택하세요.','error');return}a.order=a.order.map(id=>id===selectedCard?null:id);a.excluded=a.excluded.map(id=>id===selectedCard?null:id);if(isExcluded){a.excluded[index]=selectedCard}else{a.order[index]=selectedCard;delete a.links[index]}selectedCard=null;a.done=false;state.archive.background=null;persist();render()}
+function validA(){const a=state.a;return a.order.join('|')==='A-E1|A-E2|A-E3'&&a.excluded.includes('A-D1')&&a.excluded.includes('A-D2')&&Object.entries(a.links).filter(([i,sid])=>a.order[i]===`A-E${Number(i)+1}`&&sid===`A-S${Number(i)+1}`).length>=2;}
+function checkA(){const a=state.a;if(!validA()){if(a.order.every(Boolean)&&a.excluded.every(Boolean)&&Object.values(a.links).filter(Boolean).length>=2)a.wrong++;persist();setMessage('시점과 근거를 다시 대조하세요. 사건은 정순인지, 왜곡 설명은 두 개 제외했는지, 사건마다 근거가 맞는지 확인하세요.','error');return}a.done=true;state.archive.background='신군부의 권력 장악과 5·17 비상계엄 확대 속에서 민주화 요구와 5·18 광주의 저항이 이어졌다.';persist();setMessage('기록철 ① 배경 복원 완료 ✓','success');render()}
+function checkB(){const b=state.b;if(!b.answers.every((a,i)=>a.answer_id===B_BLANKS[i].correct&&a.source_id===B_BLANKS[i].source)){if(b.answers.every(x=>x.answer_id&&x.source_id))b.wrong++;persist();setMessage('이 문장을 뒷받침하는 사료 칩을 다시 연결하세요. 발포, 본격적 무장, 검열의 순서를 구별해야 합니다.','error');return}b.done=true;state.archive.actor_sequence='계엄군의 발포가 시민군의 본격적 자위적 무장보다 앞섰으며, 5·17 보도통제지침은 당시의 보도 검열을 보여 준다.';persist();setMessage('기록철 ② 원고 복원 완료 ✓','success');render()}
+function checkC1(){const roles=state.c.roles;const ok=Object.keys(C_ROLE_ANSWERS).every(id=>roles[id]===C_ROLE_ANSWERS[id]);if(!ok){if(Object.keys(roles).length===3)state.c.wrong++;persist();setMessage('주장을 했다는 기록과 그 주장의 사실 여부를 구분하고, 작성일과 생산자를 확인하세요.','error');return}state.cStage=2;updateTimer();persist();setMessage('당시 기록의 역할을 확인했습니다. 후대의 검증 기록으로 세 축을 복원하세요.','success');render();window.scrollTo({top:0,behavior:'instant'})}
+function checkC2(){const c=state.c;if(!$('finalText'))return;c.finalText=$('finalText').value;const ok=C_AXES.every(ax=>c.links[ax.id]===ax.source);if(!ok||!c.lead_axis||!c.finalText.trim()){if(C_AXES.every(ax=>c.links[ax.id])&&c.lead_axis&&c.finalText.trim())c.wrong++;persist();setMessage('세 축을 후대 검증 자료와 연결하고, 강조할 축과 자신의 한 문장을 남겨 주세요.','error');return}c.done=true;state.archive.citizen_context='계엄군의 외곽 봉쇄 속에서도 시민들은 자치와 나눔을 이어갔고, 협상·항전의 고민 끝에 5·27 계엄군이 다시 진압했다.';persist();setMessage('기록철 ③ 시민의 생활과 이후 진압 복원 완료 ✓','success');render()}
+function sourceOpened(id){const scope=id.startsWith('A-')?state.a:id.startsWith('B-')?state.b:state.c;addUnique(scope.opened,id);persist();render()}
+function collectMission(id,scope){const c=state[scope];let mechanic_output=null,accuracy_flags={};if(scope==='a'){mechanic_output={ordered_event_ids:[...c.order],excluded_distractor_ids:[...c.excluded],evidence_links:Object.entries(c.links).filter(([_,v])=>v).map(([i,sid])=>({source_id:sid,target_id:c.order[i]}))};accuracy_flags={chronology_correct:c.order.join('|')==='A-E1|A-E2|A-E3',distractor_avoided:c.excluded.includes('A-D1')&&c.excluded.includes('A-D2'),evidence_supported:validA()}}else if(scope==='b'){mechanic_output={blanks:Object.fromEntries(c.answers.map((a,i)=>[B_BLANKS[i].id,{answer_id:a.answer_id,source_id:a.source_id}]))};accuracy_flags={actor_restored:c.answers[0].answer_id===B_BLANKS[0].correct,sequence_correct:c.answers[1].answer_id===B_BLANKS[1].correct,censorship_identified:c.answers[2].answer_id===B_BLANKS[2].correct}}else{mechanic_output={claim_comparison:['C-S1','C-S2','C-S3'].map(sid=>({source_id:sid,role:c.roles[sid]})),board_links:{citizen_self_government:[{source_id:c.links.citizen_self_government,role:'verified_context'}],military_blockade:[{source_id:c.links.military_blockade,role:'verified_context'}],negotiation_resistance_suppression:[{source_id:c.links.negotiation_resistance_suppression,role:'verified_context'}]},lead_axis:c.lead_axis};accuracy_flags={source_roles_distinguished:Object.keys(C_ROLE_ANSWERS).every(key=>c.roles[key]===C_ROLE_ANSWERS[key]),three_axes_supported:C_AXES.every(ax=>c.links[ax.id]===ax.source)}}const cited=scope==='a'?Object.values(c.links):scope==='b'?c.answers.map(x=>x.source_id):Object.values(c.roles).length?[...Object.keys(c.roles),...Object.values(c.links)]:Object.values(c.links);return {id,duration_sec:Math.max(0,Math.round(state.duration[id])),wrong_attempts:c.wrong,opened_source_ids:[...c.opened],cited_source_ids:[...new Set(cited.filter(Boolean))],mechanic_output,accuracy_flags};}
+function buildPayload(){
+  return {class:state.className,game: 'democracy-1980',timestamp:state.completed_at,
+    choices:{version:'1.2.0',result_id:state.resultId,record_type:'result',mode:'archive-reconstruction',question_id:'ORDER-01',evidence_version:EVIDENCE_VERSION,started_at:state.started_at,completed_at:state.completed_at,pre_post:{before:state.pre,after:state.post},missions:[collectMission('A','a'),collectMission('B','b'),collectMission('C','c')],final_reconstruction_text:state.c.finalText.trim()},comment:''};
+}
+async function attemptSave(){
+  if(state.scene!==5||!state.completed_at||state.submissionStatus==='saved'||savingPromise)return;
+  const payload=state.snapshotPayload||buildPayload();state.snapshotPayload=payload;
+  state.submissionStatus='sending';persist();render();
+  const request=Promise.resolve().then(async()=>{
+    try{
+      if(navigator.onLine===false)throw new Error('offline');
+      const response=await fetch(RESULTS_URL,{method:'POST',headers:{apikey:RESULTS_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload),keepalive:true});
+      if(!response.ok)throw new Error('HTTP '+response.status);
+      state.submissionStatus='saved';
+    }catch(e){state.submissionStatus=e&&e.message==='offline'?'failed':'unknown'}
+  });
+  savingPromise=request;
+  try{await request}finally{savingPromise=null;persist();render()}
+}
+function finish(){if(state.completed_at||!state.post)return;updateTimer();if(!state.a.done||!state.b.done||!state.c.done){setMessage('아직 복원하지 않은 기록이 있습니다.','error');return}state.completed_at=new Date().toISOString();state.snapshotPayload=buildPayload();persist();render();void attemptSave()}
+function backupText(){const payload=state.snapshotPayload||buildPayload();const m=payload.choices.missions;return ['1980: 광주의 기록을 복원하라 — 내 복원 기록철','수업 반: '+payload.class,'저장 확인: '+state.submissionStatus,'결과 ID: '+payload.choices.result_id,'','처음 받은 기록:',...FIRST_RECORDS.map((v,i)=>`${i+1}. ${v}`),'','복원한 기록:',state.archive.background,state.archive.actor_sequence,state.archive.citizen_context,'','나의 한 문장: '+state.c.finalText,'사전 판단: '+state.pre,'사후 판단: '+state.post,'','연결한 근거 ID:',...m.map(x=>x.id+': '+x.cited_source_ids.join(', ')),'','서버 저장 상태는 화면의 실제 성공 응답으로 확인해야 합니다.'].join('\n')}
+function backup(){const blob=new Blob([backupText()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='1980_광주의_기록_백업_'+(state.className||'미입력')+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);setMessage('TXT 백업 저장을 요청했습니다.','success')}
+async function copyBackup(){const s=backupText();try{if(navigator.clipboard&&navigator.clipboard.writeText)await navigator.clipboard.writeText(s);else{const t=document.createElement('textarea');t.value=s;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}setMessage('기록 내용을 복사했습니다.','success')}catch(e){setMessage('복사에 실패했습니다. TXT 백업을 이용하세요.','error')}}
+function wireEvents(){document.querySelectorAll('[data-order]').forEach(el=>el.onclick=()=>{const key=el.dataset.orderKind;if(key==='before')state.pre=el.dataset.order;else state.post=el.dataset.order;persist();render()});const start=$('startButton');if(start)start.onclick=()=>{state.started_at=new Date().toISOString();persist();setScene(2)};
+ document.querySelectorAll('[data-card]').forEach(el=>el.onclick=()=>{selectedSource=null;selectedCard=el.dataset.card;setMessage('선택한 조각을 배치할 시간축 또는 제외 칸을 누르세요.');render()});
+ document.querySelectorAll('[data-a-slot]').forEach(el=>el.onclick=()=>assignA(Number(el.dataset.aSlot),false));document.querySelectorAll('[data-a-excluded]').forEach(el=>el.onclick=()=>assignA(Number(el.dataset.aExcluded),true));
+ document.querySelectorAll('[data-source-select]').forEach(el=>el.onclick=()=>{const id=el.dataset.sourceSelect,mode=el.dataset.sourceMode;if(mode==='A'){selectedSource=id;selectedCard=null;setMessage('근거칩 선택됨: 연결할 사건의 시간축 칸을 누르세요.');render()}else if(mode==='B'){state.b.answers[bActive].source_id=id;addUnique(state.b.cited||[],id);persist();render()}else if(mode==='C1'){cSource=id;render()}else if(mode==='C2'){cBoardSource=id;render()}});
+ document.querySelectorAll('[data-open]').forEach(el=>el.onclick=()=>sourceOpened(el.dataset.open));
+ document.querySelectorAll('[data-b-answer]').forEach(el=>el.onclick=()=>{state.b.answers[bActive].answer_id=el.dataset.bAnswer;persist();render()});document.querySelectorAll('[data-blank]').forEach(el=>el.onclick=()=>{bActive=Number(el.dataset.blank);render()});
+ document.querySelectorAll('[data-c-role]').forEach(el=>el.onclick=()=>{if(!cSource){setMessage('먼저 왼쪽 당대 기록 중 하나를 선택하세요.','error');return}state.c.roles[cSource]=el.dataset.cRole;addUnique(state.c.cited||[],cSource);cSource=null;persist();render()});
+ document.querySelectorAll('[data-c-axis]').forEach(el=>el.onclick=()=>{if(!cBoardSource){setMessage('먼저 후대 검증 카드 하나를 선택하세요.','error');return}state.c.links[el.dataset.cAxis]=cBoardSource;addUnique(state.c.cited||[],cBoardSource);cBoardSource=null;persist();render()});
+ document.querySelectorAll('[data-lead]').forEach(el=>el.onclick=()=>{state.c.lead_axis=el.dataset.lead;persist();render()});const text=$('finalText');if(text)text.oninput=()=>{state.c.finalText=text.value;persist()};
+ const back=$('backC1');if(back)back.onclick=()=>{updateTimer();state.cStage=1;persist();render()};
+ for(const [id,cb] of [['checkA',checkA],['checkB',checkB],['checkC1',checkC1],['checkC2',checkC2],['resetA',()=>{state.a.order=[null,null,null];state.a.excluded=[null,null];state.a.links={};selectedCard=null;selectedSource=null;persist();render()}],['toB',()=>setScene(3)],['toC',()=>setScene(4)],['toFinal',()=>setScene(5)],['finishButton',finish],['retryButton',()=>void attemptSave()],['backupButton',backup],['copyButton',()=>void copyBackup()]]){const el=$(id);if(el)el.onclick=cb}
+}
+function startNew(){state=freshState();showResume=false;selectedCard=null;selectedSource=null;bActive=0;cSource=null;cBoardSource=null;persist();render();resumeTimer()}
+function initial(){if(showResume){state=freshState();refreshGlobal();$('app').innerHTML=`<div class="panel"><div class="panel-h"><h2>기기에 남은 1980 기록이 있습니다</h2></div><div class="panel-b">${stored.className!==classInfo.value?`<div class="note warning">이전 기록의 반(${escapeHTML(stored.className)})과 현재 링크의 반(${escapeHTML(classInfo.value)})이 달라 자동 이어하기를 하지 않습니다. 선생님께 링크를 확인하세요.</div>`:'<div class="note">이전 기록을 이어하거나 새 기록을 시작할 수 있습니다.</div>'}${classInfo.warning?`<div class="note warning">수업 반: 미입력 ⚠️ — ${escapeHTML(classInfo.warning)}</div>`:''}<div class="actions">${stored.className===classInfo.value?'<button class="primary" id="resumeButton">이어하기</button>':''}<button id="newButton">새 기록 시작</button></div></div></div>`;const re=$('resumeButton');if(re)re.onclick=()=>{state=stored;showResume=false;if(state.submissionStatus==='sending')state.submissionStatus='unknown';render();resumeTimer()};$('newButton').onclick=()=>startNew();return}startNew()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){tick();if(state)persist()}else resumeTimer()});window.addEventListener('pagehide',()=>{tick();if(state)persist()});window.addEventListener('focus',()=>{if(!runningSince)resumeTimer()});window.addEventListener('blur',()=>{tick();if(state)persist()});
+initial();
+</script>
+</body>
+</html>
