@@ -1,10 +1,10 @@
 # Technical debt
 
-## P0/P1 후보 — `game_meta` RLS hardening
+## 해결됨 (2026-11-17) — `game_meta`·`game_results` RLS/grant hardening
 
-- 상태: production에 anon INSERT/UPDATE policy가 남아 있음. 공개 game client writer는 제거됨.
-- 위험: 익명 사용자가 dashboard metadata를 변조할 수 있음.
-- 다음 행동: 현재 policy/grant를 재확인하고 `supabase/proposals/20260819_rls_hardening.sql`을 운영자 승인 후 적용. 이 작업에서 자동 적용하지 않음.
+- 적용: `supabase/migrations/20261117003320_rls_hardening_game_results_game_meta.sql` (검토 근거 `supabase/proposals/20261117_rls_hardening_v2.sql`).
+- 결과: `game_meta` anon INSERT/UPDATE 정책 삭제·쓰기 grant 회수(SELECT만), `game_results` anon INSERT만, CHECK 4개(game 형식·class 20자·comment 500자·choices 16KB).
+- 남은 일: `wall_posts` grant 정리(v1 제안 3번)는 미적용.
 
 ## Migration history
 
