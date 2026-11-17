@@ -23,3 +23,6 @@ jobs:
 
       - name: Audit canonical game integration
         run: npm run audit:games
+
+      - name: Verify 1980 student-input security and inline JavaScript syntax
+        run: node tests/democracy-1980-security.mjs
