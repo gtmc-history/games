@@ -20,6 +20,7 @@ button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;border:
 .hero .eyebrow{color:#decdab;letter-spacing:.17em;font-size:.68rem}
 .hero h1{font-family:Georgia,"Noto Serif KR","Noto Sans KR",serif;font-size:clamp(1.43rem,2.35vw,2.05rem);font-weight:790;line-height:1.23;margin:7px 0 10px;text-wrap:balance;letter-spacing:-.032em}
 .hero p{max-width:600px;font-size:.94rem;line-height:1.58;color:#e5ede8;text-wrap:pretty}
+.hero h1,.hero p{word-break:keep-all}
 .hero-illustration{position:absolute;z-index:2;top:0;right:0;height:100%;width:51%;pointer-events:none;overflow:visible;filter:drop-shadow(-12px 9px 15px rgba(4,17,20,.22))}
 .hero-illustration .art-stage{opacity:0;visibility:hidden;transform:translateY(5px);transform-origin:50% 70%}
 .hero-illustration .art-stage.is-current{opacity:1;visibility:visible;transform:none}
@@ -74,9 +75,9 @@ button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;border:
 .hero-art{position:absolute;z-index:2;top:0;right:0;height:100%;width:56%;object-fit:cover;object-position:72% 30%;pointer-events:none;opacity:0;transition:opacity .35s ease-out;-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.55) 18%,black 34%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.55) 18%,black 34%)}
 .hero.has-art .hero-art{opacity:1}
 .hero.has-art .hero-illustration{display:none}
-.hero-art-note{position:absolute;z-index:4;right:10px;bottom:7px;font-size:.66rem;letter-spacing:.02em;color:#f3ead6;background:rgba(16,39,45,.72);padding:2px 7px;border-radius:3px;pointer-events:none}
+.hero-art-note{position:absolute;z-index:4;right:10px;bottom:7px;font-size:.72rem;letter-spacing:.02em;color:#f3ead6;background:rgba(16,39,45,.72);padding:2px 7px;border-radius:3px;pointer-events:none}
 @media(max-width:850px){.hero-art{width:60%}}
-@media(max-width:520px){.hero-art{width:80%;right:-8%;opacity:0}.hero.has-art .hero-art{opacity:.3}.hero-art-note{font-size:.6rem;right:6px;bottom:5px}}
+@media(max-width:520px){.hero-art{width:80%;right:-8%;opacity:0}.hero.has-art .hero-art{opacity:.3}.hero-art-note{font-size:.64rem;right:6px;bottom:5px}}
 @media(prefers-reduced-motion:reduce){.hero-art{transition:none!important}}
 .friend-photo{width:56px;height:56px;display:block;border-radius:12px;object-fit:cover;background:#e6ede8}
 .friend-face .friend-photo+svg{display:none}
@@ -309,7 +310,7 @@ function friendStage(){if(!state)return null;if(state.scene===1)return 's1';if(s
 function pendingBeats(){const stage=friendStage();return stage?FRIEND_STAGES[stage].filter(id=>!state.vn.dismissed.includes(id)):[];}
 function dismissBeats(ids){ids.forEach(id=>addUnique(state.vn.dismissed,id));persist();renderFriend();}
 // 지우 초상(창작 일러스트). 표정별 파일이 생기면 여기만 바꾸면 된다. 로드 실패 시 아래 SVG 얼굴이 보인다.
-const FRIEND_PHOTOS={neutral:'art/jiwoo_avatar.webp',curious:'art/jiwoo_avatar.webp',smile:'art/jiwoo_avatar.webp'};
+const FRIEND_PHOTOS={neutral:'art/jiwoo_neutral.webp',curious:'art/jiwoo_curious.webp',smile:'art/jiwoo_avatar.webp'};
 function friendFace(face){const photo=FRIEND_PHOTOS[face]||FRIEND_PHOTOS.neutral;return (photo?`<img class="friend-photo" src="${photo}" alt="" aria-hidden="true" width="56" height="56" onerror="this.remove()">`:'')+friendSvg(face);}
 function friendSvg(face){return `<svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><rect width="56" height="56" rx="12" fill="#e6ede8"/><path d="M8 56c2-10 10-14 20-14s18 4 20 14Z" fill="#30535a"/><path d="M22 44l6 6 6-6" fill="#f6f3ea"/><circle cx="28" cy="29" r="14" fill="#f1d6bc"/><path d="M14 28c0-11 7-16 14-16s14 5 14 16c-3-6-8-8-14-8s-11 2-14 8Z" fill="#2f2723"/>${FRIEND_FACES[face]||FRIEND_FACES.neutral}<circle cx="21" cy="30" r="1.6" fill="#2b2522"/><circle cx="35" cy="30" r="1.6" fill="#2b2522"/></svg>`;}
 function renderFriend(){const box=$('friend');if(!box)return;const beats=state?pendingBeats():[];if(!beats.length){box.classList.add('hidden');box.innerHTML='';return}const id=beats[0],beat=FRIEND_BEATS[id],more=beats.length>1;box.classList.remove('hidden');box.dataset.beat=id;box.innerHTML=`<div class="friend-face">${friendFace(beat.face)}</div><div class="friend-body"><div class="friend-head"><b class="friend-name">지우</b><span class="friend-role">같은 반 친구 · 가상 인물</span>${beat.tag?`<span class="tag friend-tag">${escapeHTML(beat.tag)}</span>`:''}</div><p class="friend-line" role="status" aria-live="polite"><span class="sr-only">지우의 말: </span>${beat.lines.map(escapeHTML).join('<br>')}</p>${beat.check?`<p class="friend-check"><b>확인할 것</b>${escapeHTML(beat.check)}</p>`:''}</div><div class="friend-actions"><button type="button" class="tiny" id="friendNext" aria-label="${more?'지우의 다음 말 보기':'지우의 말 닫기'}">${more?'다음 ▸':'확인'}</button>${more?'<button type="button" class="tiny secondary" id="friendSkip">대화 건너뛰기</button>':''}</div>`;$('friendNext').onclick=()=>dismissBeats([id]);const skip=$('friendSkip');if(skip)skip.onclick=()=>dismissBeats(beats);}
