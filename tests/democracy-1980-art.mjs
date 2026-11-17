@@ -25,3 +25,16 @@ assert.ok(!/https?:\/\/[^'"]*\.(webp|png|jpe?g)/i.test(html), 'no external image
 assert.ok(html.includes('@media(prefers-reduced-motion:reduce){.hero-art{transition:none!important}}'), 'no crossfade under reduced motion');
 
 console.log('1980 art layer checks: PASS (6 local WebP ≤80KB, decorative, labelled, SVG fallback)');
+
+// Jiwoo portrait: local file, decorative, SVG face kept as fallback
+const photos = JSON.parse(code.match(/const FRIEND_PHOTOS=(\{[^}]*\});/)[1].replace(/'/g, '"').replace(/([{,])(\w+):/g, '$1"$2":'));
+assert.deepEqual(Object.keys(photos).sort(), ['curious', 'neutral', 'smile']);
+for (const src of new Set(Object.values(photos))) {
+  assert.match(src, /^art\/[0-9a-z_]+\.webp$/);
+  const b = readFileSync(new URL(src, dir));
+  assert.equal(b.subarray(8, 12).toString(), 'WEBP', src);
+  assert.ok(b.length <= 80 * 1024, src + ' ≤ 80KB');
+}
+assert.ok(code.includes('alt="" aria-hidden="true" width="56" height="56" onerror="this.remove()"'), 'portrait is decorative and falls back');
+assert.ok(html.includes('.friend-face .friend-photo+svg{display:none}'), 'SVG face shows only when the photo is gone');
+console.log('1980 Jiwoo portrait checks: PASS');
