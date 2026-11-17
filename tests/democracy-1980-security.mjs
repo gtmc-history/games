@@ -55,10 +55,10 @@ function inspectPersist(submissionStatus) {
   const values = new Map();
   const badge = { textContent: '' };
   const saveCtx = {
-    state: { game: 'democracy-1980', localVersion: 1, resultId: 'rid-1',
+    state: { game: 'democracy-1980', localVersion: 2, resultId: 'rid-1',
              submissionStatus, c: { finalText: 'PRIVATE-STUDENT-TEXT' },
              snapshotPayload: { sensitive: true } },
-    GAME_SLUG: 'democracy-1980', STORAGE_KEY: 'democracy-1980-v1-draft',
+    GAME_SLUG: 'democracy-1980', STORAGE_KEY: 'democracy-1980-v1-draft', LOCAL_VERSION: 2,
     localStorage: { setItem: (k,v) => values.set(k,v) },
     $: () => badge, Date
   };
@@ -69,6 +69,7 @@ function inspectPersist(submissionStatus) {
 }
 const saved = inspectPersist('saved');
 assert.equal(saved.resultId, 'rid-1');
+assert.equal(saved.localVersion, 2, 'saved stub must carry local draft version 2');
 assert.equal(saved.submissionStatus, 'saved');
 assert.ok(!JSON.stringify(saved).includes('PRIVATE-STUDENT-TEXT'));
 assert.equal(saved.snapshotPayload, undefined);
@@ -78,5 +79,6 @@ assert.equal(unsaved.c.finalText, 'PRIVATE-STUDENT-TEXT', 'failed saves must ret
 assert.ok(code.includes("clearScreen.onclick=()=>startNew()"), 'explicit shared-device reset must be connected');
 assert.ok(code.includes("game: 'democracy-1980'"), 'game slug contract must remain literal');
 assert.ok(html.includes("democracy-1980-v1-draft"), '1980 storage must stay separate from 1979');
+assert.ok(code.includes('const LOCAL_VERSION = 2;'), 'local draft version must be 2 (DESIGN_LOCK v1.3 §11)');
 
 console.log('1980 BUILD1 security checks: PASS (syntax, URL, text, output, local persistence)');

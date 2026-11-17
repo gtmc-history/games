@@ -26,3 +26,6 @@ jobs:
 
       - name: Verify 1980 student-input security and inline JavaScript syntax
         run: node tests/democracy-1980-security.mjs
+
+      - name: Verify 1980 DESIGN_LOCK v1.3 contract (game logic, payload, save branches, local drafts)
+        run: node tests/democracy-1980-contract-v13.mjs
