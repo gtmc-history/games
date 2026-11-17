@@ -16,7 +16,7 @@ const AXIS_NAMES = ['시민 자치','봉쇄·피해','협상·항전·진압'];
 function makeEl(id) {
   return { id, textContent: '', innerHTML: '', className: '', value: '', onclick: null, oninput: null,
     dataset: {}, style: {}, offsetWidth: 1,
-    classList: { add(){}, remove(){}, toggle(){} },
+    classList: { add(){}, remove(){}, toggle(){}, contains(){ return false; } },
     querySelectorAll: () => [], appendChild(){}, remove(){}, click(){}, select(){} };
 }
 function makeGame({ search = '?class=1-1', storage = {}, fetchImpl, online = true } = {}) {
@@ -73,10 +73,13 @@ async function playThrough(g, { x1Detour = true, cxDenyFirst = true, cDecoy = tr
   assert.equal(r('state.b.textDone'), true);
   assert.equal(r('state.b.done'), false, 'B is not final until the counterexample is answered');
   if (cxDenyFirst) {
+    assert.equal(r(`renderB().includes('data-cx=')`), false, 'counterexample panel waits for V5');
+    r(`dismissBeats(['V5'])`);
     r(`answerCounterexample('cx_deny')`);
     assert.equal(r('state.b.done'), false, 'cx_deny must require re-check');
     assert.match(r('renderMessage'), /^산발적인 탈취 사례는 있었지만 시민들의 본격적인 무장은 5월 21일 집단 발포 뒤에 이어졌어요\./);
   }
+  r(`dismissBeats(['V5'])`);
   r(`answerCounterexample('cx_distinguish')`);
   assert.equal(r('state.b.done'), true);
   r(`setScene(4)`);
@@ -145,10 +148,11 @@ for (const [id, b] of Object.entries(beats)) {
   assert.ok(b.lines.length >= 1 && b.lines.length <= 2, id + ' ≤ 2 lines');
   for (const l of b.lines) assert.ok(l.length <= 40, id + ' line too long');
 }
-for (const id of ['F4','F5','F6']) assert.ok(beats[id].tag && beats[id].check, id + ' misconception has a tag and same-cut correction');
+for (const id of ['V4','V7']) assert.ok(beats[id].tag && beats[id].check, id + ' misconception has a tag and same-cut correction');
+assert.ok(g0.run('CX_CHECK').length > 0, 'V6 counterexample panel keeps its same-cut check');
 assert.equal(Object.values(stages).flat().length, Object.keys(beats).length, 'each beat placed exactly once');
-assert.equal(beats.F1.lines.join(' '), '전시 패널 초안 써 왔어. 도서관에 있던 옛날 신문 스크랩을 보고 썼어.');
-assert.equal(beats.F4.tag, '흔한 오해');
+assert.equal(beats.V1.lines.join(' '), '여기 전학 와서 처음 맡은 일이 5월 기록 전시야. 금요일 개막이라 신문 스크랩을 보고 초안을 썼어.');
+assert.equal(beats.V4.tag, '흔한 오해');
 
 // A: identical label on all five cards, no 'distortion' badge before checking
 g0.run(`setScene(2)`);

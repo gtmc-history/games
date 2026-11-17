@@ -32,3 +32,6 @@ jobs:
 
       - name: Verify 1980 art layer (local WebP, labels, SVG fallback)
         run: node tests/democracy-1980-art.mjs
+
+      - name: Verify 1980 DESIGN_LOCK v1.5 story (dialogue, V5→counterexample gating, payload unchanged)
+        run: node tests/democracy-1980-story-v15.mjs
