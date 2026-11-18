@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102a31">
+<title>1980 시안 · 전시 벽 무대 (A)</title>
+<!--
+  EXPLORE 시안 — democracy-1980 DESIGN_LOCK v1.6 초안의 미션 A 화면 실험.
+  · 정본 게임(democracy-1980/index.html)과 별개. 서버 저장·POST·localStorage 없음.
+  · 사료 문구·정답·판정 로직·힌트 문구는 정본 index.html의 A 미션 값을 그대로 옮김.
+  · 지우 반응 대사 R-A1~R-A5는 시안(미승인)이다. V3만 v1.5 정본 문구.
+  · GA4·반 파라미터·저장은 시안 범위가 아니라 넣지 않음(정본 BUILD 때 기존 코드 유지).
+-->
+<style>
+:root{
+  --ink:#19343b;--dark:#102a31;--teal:#315d63;--green:#2c655b;--warn:#a44b3c;
+  --wall:#ece6d9;--wall-d:#ddd4c2;--paper:#fbf8f0;--brass:#b88a52;--line:#cfc6b3;
+  --hand:#1a3a41;--tag:#e9d9b4;--tag-d:#b89a5e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--dark);color:var(--ink);font-family:system-ui,-apple-system,"Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible{outline:3px solid #f1b870;outline-offset:2px}
+
+/* ---------- 전체 틀: 한 화면 ---------- */
+.game{height:100vh;height:100dvh;display:grid;grid-template-rows:52px minmax(0,1fr) auto;overflow:hidden}
+
+/* 상단 바 */
+.bar{display:flex;align-items:center;gap:16px;padding:0 20px;background:var(--dark);color:#eef3f1;border-bottom:3px solid #bdac8a}
+.wordmark{font-weight:850;letter-spacing:.1em;font-size:.86rem;white-space:nowrap}
+.wordmark em{font-style:normal;color:#d3ba8c}
+.wallmap{display:flex;gap:6px;align-items:center;margin-left:auto}
+.wallmap span.lbl{font-size:.72rem;color:#b9cdcb;margin-right:4px}
+.mini{width:46px;height:30px;border-radius:3px;border:1px solid #4b6a6e;background:#21434a;display:grid;place-items:center;font-size:.75rem;font-weight:800;color:#8fa9a8;position:relative;transition:background .4s,color .4s,border-color .4s}
+.mini.now{border-color:#d3ba8c;color:#f3e6c8}
+.mini.done{background:#e9dfc6;color:#2c4a4a;border-color:#e9dfc6}
+.mini.done::after{content:"✓";position:absolute;right:-5px;top:-7px;background:#2c655b;color:#fff;border-radius:50%;width:16px;height:16px;font-size:.62rem;display:grid;place-items:center}
+.proto{font-size:.7rem;font-weight:800;background:#6e3c37;color:#fff;border-radius:4px;padding:3px 8px;white-space:nowrap}
+
+/* 무대 */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:0;min-height:0;
+  background:
+    radial-gradient(ellipse 30% 55% at 22% 0%,rgba(255,244,214,.75),transparent 70%),
+    radial-gradient(ellipse 30% 55% at 62% 0%,rgba(255,244,214,.6),transparent 70%),
+    linear-gradient(180deg,var(--wall) 0%,var(--wall-d) 100%)}
+.wall{position:relative;padding:18px 22px 14px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:18px;align-items:start;min-height:0;overflow:auto}
+.wall::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:linear-gradient(180deg,transparent,rgba(80,60,30,.12))}
+
+/* 전시 패널 */
+.board{background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 0 #fff inset,0 14px 30px rgba(60,45,20,.18),0 2px 4px rgba(60,45,20,.12);padding:16px 20px 16px;position:relative}
+.board::before,.board::after{content:"";position:absolute;top:-7px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8d3a4,#9b7a3f);box-shadow:0 2px 3px rgba(0,0,0,.25)}
+.board::before{left:22px}.board::after{right:22px}
+.board-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.board-h h2{margin:0;font-family:Georgia,"Noto Serif KR",serif;font-size:1.22rem;letter-spacing:-.02em}
+.chip{display:inline-flex;align-items:center;font-size:.72rem;font-weight:750;border-radius:3px;padding:2px 8px;background:#f5eee0;color:#856339}
+.chip.later{background:#dfeaf0;color:#345269}
+.draft{margin:12px 0 4px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.draft-line{font-family:"Nanum Pen Script","Comic Sans MS",cursive,system-ui;font-size:1.08rem;color:#5a5245;background:#fff;border:1px dashed #cdbf9f;padding:6px 12px;border-radius:3px;position:relative}
+.draft-line small{display:block;font-family:system-ui,sans-serif;font-size:.7rem;color:#8a7d64}
+.draft-line.struck .txt{text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:#a44b3c;color:#9a8f7c}
+.memo{background:#fdf0a6;color:#4c4318;font-size:.9rem;padding:8px 12px 7px;max-width:290px;transform:rotate(-1.6deg);box-shadow:0 6px 12px rgba(80,70,20,.18);position:relative}
+.memo::before{content:"";position:absolute;top:-6px;left:50%;width:46px;height:14px;margin-left:-23px;background:rgba(255,255,255,.55);transform:rotate(2deg)}
+.memo span{display:block;font-size:.72rem;color:#7a6c2c;margin-top:2px}
+.memo.hint{background:#fbe0d6;color:#6a2e23}
+.memo.hint span{color:#9a5143}
+.memo.pop{animation:memo-pop .35s ease-out}
+@keyframes memo-pop{0%{transform:rotate(-1.6deg) scale(.85);opacity:.3}100%{transform:rotate(-1.6deg) scale(1);opacity:1}}
+
+/* 시간축 */
+.track-label{margin:12px 0 6px;font-size:.82rem;font-weight:800;color:#6b5e45;letter-spacing:.02em}
+.track{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr;align-items:stretch}
+.arrow{display:grid;place-items:center;color:#a8946a;font-weight:900;pointer-events:none}
+.slot{min-height:108px;border:2px dashed #c9bb98;border-radius:6px;background:rgba(255,255,255,.55);padding:8px;display:flex;flex-direction:column;gap:6px;text-align:left;transition:border-color .2s,background .2s,box-shadow .2s;position:relative}
+.slot .num{font-size:.72rem;font-weight:900;color:#a8946a}
+.slot .empty{font-size:.84rem;color:#8e8169;margin:auto 0}
+.slot.target{border-color:#2c655b;background:#eef6f1;box-shadow:0 0 0 4px rgba(44,101,91,.14)}
+.slot.filled{border-style:solid;border-color:#d8ccb0;background:#fff}
+.placed{font-weight:720;font-size:.95rem;line-height:1.35;word-break:keep-all}
+.placed.land{animation:land .32s cubic-bezier(.2,1.4,.4,1)}
+@keyframes land{0%{transform:translateY(-14px) rotate(-2deg);opacity:.2}100%{transform:none;opacity:1}}
+.hole{margin-top:auto;min-height:30px;border:1.5px dashed #c9bb98;border-radius:4px;font-size:.74rem;color:#8e8169;display:flex;align-items:center;padding:3px 8px}
+.hole.tagged{border:0;background:var(--tag);color:#4f3d17;font-weight:800;position:relative;padding-left:20px}
+.hole.tagged::before{content:"";position:absolute;left:7px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:var(--paper);box-shadow:0 0 0 1.5px var(--tag-d)}
+.hole.target{border-color:#b88a52;background:#fff6e3;color:#7a5a24}
+
+/* 보류 상자 */
+.shelf{background:#d9cfbb;border-radius:6px;padding:12px;box-shadow:inset 0 2px 6px rgba(60,45,20,.18)}
+.shelf h3{margin:0 0 2px;font-size:.92rem}
+.shelf p{margin:0 0 8px;font-size:.78rem;color:#5d5340}
+.shelf .slot{min-height:76px;background:rgba(255,255,255,.4);margin-top:8px}
+.shelf .slot.filled{background:#f3ece0}
+.shelf .slot.filled .placed{color:#6f6553}
+
+.board-foot{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.hang{min-height:52px;padding:10px 20px;border-radius:8px;border:0;background:var(--dark);color:#fff;font-weight:800;font-size:1rem;display:inline-flex;align-items:center;gap:8px}
+.hang:disabled{background:#9aa9a6;cursor:not-allowed}
+.ghost{min-height:44px;padding:8px 14px;border-radius:8px;border:1px solid #c6b893;background:transparent;font-size:.86rem;font-weight:700;color:#6b5e45}
+.need{font-size:.82rem;color:#6b5e45}
+
+/* 복원 완료 상태 */
+.restored{display:none;margin-top:12px;border-top:2px solid #e2d8c2;padding-top:12px}
+.board.complete .restored{display:block;animation:restore .6s ease-out}
+.restored .caption{font-family:Georgia,"Noto Serif KR",serif;font-size:1.12rem;line-height:1.55;margin:0 0 8px}
+.restored .srcs{display:flex;gap:6px;flex-wrap:wrap;font-size:.76rem}
+.restored .srcs span{background:var(--tag);color:#4f3d17;font-weight:800;border-radius:3px;padding:2px 8px}
+.stamp{position:absolute;right:20px;top:14px;border:3px solid #2c655b;color:#2c655b;font-weight:900;padding:4px 10px;border-radius:4px;transform:rotate(-8deg);font-size:.9rem;letter-spacing:.06em;opacity:0}
+.board.complete .stamp{opacity:.9;animation:stamp .4s .25s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:.9}}
+@keyframes restore{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+.board.complete .track,.board.complete .track-label,.board.complete .board-foot .hang:not(.next),.board.complete .board-foot .ghost,.board.complete .need{display:none}
+.next{display:none}
+.board.complete .next{display:inline-flex}
+
+/* 지우 */
+.friend{border-left:1px solid rgba(80,60,30,.15);background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,0));display:flex;flex-direction:column;min-height:0}
+.portrait{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;background:#20454b}
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:78% 28%}
+.portrait .credit{position:absolute;right:6px;bottom:6px;font-size:.62rem;background:rgba(16,42,49,.72);color:#e9efed;padding:2px 6px;border-radius:3px}
+.say{background:#fffdf7;border-top:4px solid var(--brass);padding:12px 14px 14px;position:relative;min-height:142px}
+.say-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.say-h img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #e7dcc4}
+.say-h b{font-size:.95rem}
+.say-h small{font-size:.7rem;color:#6b7c7f}
+.say p{margin:0;font-size:1rem;font-weight:650;line-height:1.5;word-break:keep-all}
+.say .draftnote{display:inline-block;margin-top:6px;font-size:.66rem;color:#8d6b3a;background:#f5eee0;border-radius:3px;padding:1px 6px}
+.say.talk{animation:talk .3s ease-out}
+@keyframes talk{0%{opacity:.35;transform:translateY(4px)}100%{opacity:1;transform:none}}
+
+/* 손패 + 수첩 */
+.dock{background:linear-gradient(180deg,#183840,#102a31);color:#eef3f1;padding:10px 20px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;border-top:3px solid #bdac8a}
+.dock h3{margin:0 0 7px;font-size:.78rem;letter-spacing:.06em;color:#d3ba8c;font-weight:800}
+.dock h3 small{color:#9fb6b4;font-weight:600;letter-spacing:0;margin-left:6px}
+.hand{display:flex;gap:10px;min-height:96px;align-items:stretch;overflow-x:auto;padding:4px 2px 4px}
+.card{flex:0 0 168px;min-height:92px;text-align:left;border:0;border-radius:4px;padding:10px 11px 8px;background:#f6f0e2;color:#2e2a22;box-shadow:0 4px 0 #cdbf9f,0 8px 14px rgba(0,0,0,.25);font-weight:700;font-size:.9rem;line-height:1.35;display:flex;flex-direction:column;gap:6px;word-break:keep-all;transition:transform .15s,box-shadow .15s;clip-path:polygon(0 3%,8% 0,22% 2%,40% 0,61% 2%,80% 0,100% 2%,100% 100%,0 100%)}
+.card:hover{transform:translateY(-3px)}
+.card.sel{transform:translateY(-8px);box-shadow:0 4px 0 #2c655b,0 0 0 3px #f1b870,0 14px 22px rgba(0,0,0,.35)}
+.card small{margin-top:auto;font-size:.66rem;color:#856339;font-weight:700}
+.handempty{font-size:.84rem;color:#9fb6b4;align-self:center}
+.notebook{display:flex;gap:10px}
+.tag{width:150px;min-height:92px;border-radius:4px 4px 4px 4px;background:var(--tag);color:#3f3013;padding:9px 10px 8px 22px;position:relative;box-shadow:0 6px 12px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:4px}
+.tag::before{content:"";position:absolute;left:8px;top:13px;width:8px;height:8px;border-radius:50%;background:#183840;box-shadow:0 0 0 2px var(--tag-d)}
+.tag.sel{box-shadow:0 0 0 3px #f1b870,0 10px 18px rgba(0,0,0,.35);transform:translateY(-6px)}
+.tag .id{font-size:.66rem;font-weight:900;color:#7a5a24;letter-spacing:.05em}
+.tag .tt{font-size:.82rem;font-weight:800;line-height:1.3;word-break:keep-all}
+.tag .row{display:flex;gap:6px;margin-top:auto}
+.tag .row button{flex:1;min-height:34px;border-radius:4px;border:1px solid var(--tag-d);background:#f6ead0;font-size:.74rem;font-weight:800;padding:2px 4px}
+.tag .row button.pick{background:#183840;color:#f3e6c8;border-color:#183840}
+.tag .row button:disabled{opacity:.4;cursor:default}
+.dock>div{min-width:0}
+/* 벽에 걸린 다음 패널(아직 지우의 초안) */
+.upnext{margin-top:14px;display:grid;gap:8px}
+.upnext h4{margin:0;font-size:.74rem;letter-spacing:.06em;color:#7a6c50}
+.mini-board{background:#f4efe3;border:1px solid var(--line);border-radius:3px;padding:8px 10px;box-shadow:0 6px 12px rgba(60,45,20,.12);position:relative}
+.mini-board b{display:block;font-size:.8rem;padding-right:40px}
+.mini-board span{font-size:.78rem;color:#8a7d64;font-family:"Nanum Pen Script",cursive,system-ui}
+.mini-board i{position:absolute;right:8px;top:6px;font-style:normal;font-size:.66rem;font-weight:800;color:#a44b3c;background:#fbe0d6;border-radius:3px;padding:0 6px}
+.tag .opened{position:absolute;right:7px;top:7px;font-size:.6rem;font-weight:800;color:#2c655b}
+
+.status{position:absolute;left:22px;bottom:12px;font-size:.84rem;background:#183840;color:#f3e6c8;border-radius:5px;padding:6px 12px;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;max-width:60%}
+.status.on{opacity:1;transform:none}
+
+/* 자료 읽기 시트 */
+.sheet-bg{position:fixed;inset:0;background:rgba(16,42,49,.45);display:none;align-items:flex-end;justify-content:center;z-index:30}
+.sheet-bg.on{display:flex}
+.sheet{background:var(--paper);width:min(640px,94vw);border-radius:8px 8px 0 0;padding:18px 22px 20px;box-shadow:0 -10px 30px rgba(0,0,0,.25);animation:rise .22s ease-out}
+@keyframes rise{0%{transform:translateY(30px);opacity:.4}100%{transform:none;opacity:1}}
+.sheet h3{margin:6px 0 2px;font-size:1.12rem}
+.sheet .meta{font-size:.78rem;color:#6b7c7f}
+.sheet p{margin:10px 0 0;font-size:1rem}
+.sheet .det{font-size:.9rem;color:#4b5f63;background:#f1ece0;border-radius:5px;padding:8px 10px}
+.sheet .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.sheet .row button{min-height:48px;padding:8px 18px;border-radius:8px;border:1px solid #c6b893;background:#fff;font-weight:800}
+.sheet .row button.pick{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* 툴팁 */
+.term{border-bottom:2px dotted currentColor;cursor:help}
+.tip{position:fixed;z-index:50;max-width:240px;background:#102a31;color:#f3efe4;font-size:.82rem;line-height:1.45;padding:7px 10px;border-radius:6px;box-shadow:0 8px 18px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}
+
+/* 좁은 화면(태블릿 세로·휴대폰) */
+@media (max-width:980px){
+  .game{height:auto;min-height:100dvh;overflow:visible;grid-template-rows:auto auto auto}
+  .bar{flex-wrap:wrap;padding:8px 14px;gap:8px}
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .wall{grid-template-columns:minmax(0,1fr);overflow:visible;padding:16px 14px}
+  .friend{order:-1;flex-direction:row;border-left:0;border-bottom:1px solid rgba(80,60,30,.15)}
+  .portrait{flex:0 0 96px;min-height:0}
+  .say{flex:1;border-top:0;border-left:4px solid var(--brass);min-height:0}
+  .dock{position:sticky;bottom:0;grid-template-columns:minmax(0,1fr);gap:6px;padding:6px 12px 10px;z-index:10}
+  .dock h3{margin:0 0 4px}.dock h3 small{display:none}
+  .hand,.notebook{overflow-x:auto;min-height:0;padding:2px}
+  .card{flex:0 0 132px;min-height:62px;font-size:.82rem;padding:8px 9px 6px}
+  .card small{display:none}
+  .tag{flex:0 0 172px;min-height:0;padding:6px 8px 6px 20px}
+  .tag .id{display:none}.tag::before{top:10px}
+  .tag .row button{min-height:32px}
+  .status{position:fixed;bottom:auto;top:8px;left:14px;max-width:calc(100% - 28px);z-index:40}
+}
+@media (max-width:560px){
+  .track{grid-template-columns:1fr;gap:4px}
+  .arrow{height:20px;font-size:0}
+  .arrow::after{content:"↓";font-size:1rem}
+  .slot{min-height:84px}
+  .hand{min-height:84px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="game">
+  <header class="bar">
+    <div class="wordmark">HISTORY FILES <em>/ 1980</em></div>
+    <span class="proto">시안 · 저장 없음</span>
+    <div class="wallmap" aria-label="전시 벽 진행">
+      <span class="lbl">전시 벽</span>
+      <div class="mini now" id="mini1" title="패널 ① 사건 배경·시작">①</div>
+      <div class="mini" title="패널 ② 아직 지우의 초안">②</div>
+      <div class="mini" title="패널 ③ 아직 지우의 초안">③</div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="wall" aria-label="전시 벽">
+      <article class="board" id="board" aria-labelledby="boardTitle">
+        <div class="stamp" aria-hidden="true">전시 가능</div>
+        <div class="board-h">
+          <h2 id="boardTitle">패널 ① 사건 배경·시작</h2>
+          <span class="chip">학습용 재구성 · 실제 1980년 지면 아님</span>
+        </div>
+        <div class="draft">
+          <div class="draft-line" id="draftLine"><small>지우의 초안</small><span class="txt">광주에서 갑자기 시위가 시작됐다</span></div>
+          <div class="memo" id="memo" role="status" aria-live="polite"></div>
+        </div>
+        <div class="track-label">시간 순서대로 사건 조각을 붙이고, 출처 꼬리표를 다세요</div>
+        <div class="track" id="track"></div>
+        <div class="restored" id="restored">
+          <p class="caption" id="caption"></p>
+          <div class="srcs" id="srcs"></div>
+        </div>
+        <div class="board-foot">
+          <button class="hang" id="hang" type="button" disabled>패널 ① 전시 벽에 걸기</button>
+          <button class="ghost" id="reset" type="button">모두 떼기</button>
+          <span class="need" id="need"></span>
+          <button class="hang next" id="next" type="button" disabled title="시안은 미션 A까지만 있습니다">패널 ② 검열된 원고로 → (시안 범위 밖)</button>
+        </div>
+      </article>
+
+      <aside class="shelf" aria-labelledby="shelfTitle">
+        <h3 id="shelfTitle">보류 상자</h3>
+        <p>근거로 확인되지 않아 전시하지 않을 설명 두 장</p>
+        <div id="shelf"></div>
+        <div class="upnext" aria-label="아직 고치지 않은 패널">
+          <h4>벽에 걸린 다음 패널</h4>
+          <div class="mini-board"><i>초안</i><b>패널 ② 폭력 진압·발포·무장·보도 통제</b><span>“광주에서는 충돌이 벌어졌다”</span></div>
+          <div class="mini-board"><i>초안</i><b>패널 ③ 광주의 일상과 대응</b><span>“광주는 무질서했다”</span></div>
+        </div>
+      </aside>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <aside class="friend" aria-label="지우">
+      <div class="portrait"><img src="../../democracy-1980/art/02_timeline.webp" alt="스크랩을 들여다보는 지우(창작 일러스트)" onerror="this.style.display='none'"><span class="credit">창작 일러스트 · 실제 사료 아님</span></div>
+      <div class="say" id="say" aria-live="polite">
+        <div class="say-h"><img id="face" src="../../democracy-1980/art/jiwoo_curious.webp" alt="" onerror="this.style.display='none'"><b>지우</b><small>같은 반 친구 · 가상 인물</small></div>
+        <p id="sayText"></p>
+        <span class="draftnote" id="sayNote" hidden>시안 대사 · 미승인</span>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="dock">
+    <div>
+      <h3>사건 조각<small>조각을 고른 뒤 패널의 칸이나 보류 상자를 누르세요</small></h3>
+      <div class="hand" id="hand"></div>
+    </div>
+    <div>
+      <h3>조사 수첩 · 출처 꼬리표<small>읽어 보고, 꼬리표를 사건에 다세요</small></h3>
+      <div class="notebook" id="notebook"></div>
+    </div>
+  </footer>
+</div>
+
+<div class="sheet-bg" id="sheetBg">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <span class="chip later">후대 해설</span> <span class="meta" id="sheetId"></span>
+    <h3 id="sheetTitle"></h3>
+    <div class="meta" id="sheetMeta"></div>
+    <p id="sheetShort"></p>
+    <p class="det" id="sheetDetail"></p>
+    <div class="row">
+      <button class="pick" id="sheetPick" type="button">이 꼬리표 들기</button>
+      <button id="sheetClose" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+'use strict';
+/* ===== 정본 index.html에서 옮긴 값 (변경 금지) ===== */
+const EVENT_CARDS = [
+  {id:'A-E1',text:'신군부 권력 장악과 민주화 요구 확산'},
+  {id:'A-E2',text:'비상계엄 전국 확대'},
+  {id:'A-E3',text:'전남대 앞 시위와 강경 진압'},
+  {id:'A-D1',text:'시민군의 조직적 무장이 먼저이므로 초기 진압이 시작됐다'},
+  {id:'A-D2',text:'서울의 민주화 요구와 무관한 광주만의 지역 소요였다'}
+];
+const SOURCES = {
+  'A-S1':{title:'신군부의 권력 장악과 민주화 요구',meta:'후대 역사 해설 · 우리역사넷',short:'신군부가 권력을 장악한 뒤 민주화 요구가 확대됐다.',detail:'12·12 이후 군 지휘권 장악, 서울의 봄을 거친 민주화 요구의 맥락을 확인한다.'},
+  'A-S2':{title:'비상계엄 전국 확대',meta:'후대 역사 해설 · 우리역사넷',short:'5·17 비상계엄이 전국으로 확대됐다.',detail:'5·17의 전국 비상계엄 확대와 정치·사회활동 제약을 사건의 맥락으로 연결한다.'},
+  'A-S3':{title:'전남대 앞 시위와 계엄군의 대응',meta:'후대 역사 해설 · 우리역사넷',short:'5·18 전남대학교 앞 시위에 계엄군이 강경 진압으로 대응했다.',detail:'시민의 시위를 강경 진압의 정당화 사유로 제시하지 않으며 군의 행동 주체를 분명히 한다.'}
+};
+const PANEL_BACKGROUND = '신군부의 권력 장악과 5·17 비상계엄 확대 속에서 민주화 요구와 5·18 광주의 저항이 이어졌다.';
+const MEMO_A = '‘갑자기’? 그 전엔 무슨 일이 있었지?';
+const MEMO_BY = '동아리 지도교사(가상)';
+const HINT_WRONG_EXCLUDE = '제외 칸에 놓은 조각 가운데 근거 자료로 확인되는 사건이 있어요. 왼쪽 근거칩의 내용과 다시 비교해 보세요.'.replace('왼쪽 근거칩','수첩 꼬리표');
+const HINT_GENERAL = '시점과 근거를 다시 대조하세요. 사건은 시간순인지, 근거로 확인되지 않는 조각 두 장을 제외했는지, 사건마다 근거가 맞는지 확인하세요.';
+const V3 = {face:'curious',lines:['선생님 메모가 붙어 있어. 스크랩은 5월 18일부터만 있는데…','그 전엔 무슨 일이 있었던 거야?']};
+
+/* ===== 시안 반응 대사 (미승인 · v1.6 초안 R-A1~R-A5) ===== */
+const REACT = {
+  firstCard:{face:'smile',lines:['좋아, 하나 붙였다.','순서가 맞는지는 꼬리표로 확인해 보자.']},
+  firstShelf:{face:'curious',lines:['이건 전시에서 빼 두자는 거지?','왜 빼는지도 자료로 말할 수 있어야 해.']},
+  firstTag:{face:'smile',lines:['출처 꼬리표가 붙으니까','진짜 전시 패널 같다.']},
+  fail:{face:'curious',lines:['어디가 어긋났을까?','선생님 메모를 다시 보자.']},
+  done:{face:'smile',lines:['5월 18일 전에도 일이 이어져 있었구나.','이제 ‘갑자기’라고는 못 쓰겠다.']}
+};
+const FACES = {smile:'../../democracy-1980/art/jiwoo_avatar.webp',curious:'../../democracy-1980/art/jiwoo_curious.webp',neutral:'../../democracy-1980/art/jiwoo_neutral.webp'};
+
+/* 툴팁 용어(40자 이내) */
+const TERMS = {
+  '신군부':'12·12 사태로 군권을 잡은 전두환 중심의 군인 세력',
+  '비상계엄':'전시 등 비상시 군이 행정·사법 사무를 맡는 조치',
+  '계엄군':'계엄 아래 투입된 군 부대',
+  '서울의 봄':'10·26 뒤 1980년 봄, 민주화 요구가 커진 시기',
+  '12·12':'1979년 전두환 등 군부 세력이 군권을 장악한 사건'
+};
+
+/* ===== 상태: 정본 state.a와 같은 모양 ===== */
+function shuffled(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function shuffleA(){let a=shuffled(EVENT_CARDS.map(e=>e.id));for(let t=0;t<20;t++){if(a.filter(x=>x.startsWith('A-E')).join(',')!=='A-E1,A-E2,A-E3')break;a=shuffled(a)}return a}
+const A = {deck:shuffleA(),order:[null,null,null],excluded:[null,null],links:{},wrong:0,opened:[],done:false};
+const seen = {};
+let sel = null;      // {kind:'card'|'tag', id}
+let landed = null;   // 방금 붙인 칸(애니메이션용)
+let sheetId = null;
+window.__proto = {A, seen};
+
+const $ = id => document.getElementById(id);
+const cardText = id => EVENT_CARDS.find(e=>e.id===id).text;
+function el(tag, cls, text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
+function inHand(){const used=new Set([...A.order,...A.excluded].filter(Boolean));return A.deck.filter(id=>!used.has(id))}
+
+/* 툴팁: 용어를 DOM 노드로 감싸 붙인다(템플릿 리터럴에 span 삽입하지 않음) */
+function withTerms(parent, text){
+  const keys=Object.keys(TERMS).sort((a,b)=>b.length-a.length);
+  let rest=text;
+  while(rest.length){
+    let best=-1,key=null;
+    for(const k of keys){const i=rest.indexOf(k);if(i>=0&&(best<0||i<best)){best=i;key=k}}
+    if(best<0){parent.appendChild(document.createTextNode(rest));break}
+    if(best>0)parent.appendChild(document.createTextNode(rest.slice(0,best)));
+    const t=el('span','term',key);t.tabIndex=0;t.dataset.tip=TERMS[key];parent.appendChild(t);
+    rest=rest.slice(best+key.length);
+  }
+  return parent;
+}
+function showTip(target){
+  const tip=$('tip');tip.textContent=target.dataset.tip;
+  tip.style.left='0px';tip.style.top='-9999px';tip.classList.add('on');
+  const h=tip.offsetHeight,w=tip.offsetWidth,r=target.getBoundingClientRect();
+  let top=r.top-h-8;if(top<6)top=r.bottom+8;
+  let left=Math.min(Math.max(6,r.left+r.width/2-w/2),window.innerWidth-w-6);
+  tip.style.left=left+'px';tip.style.top=top+'px';
+}
+function hideTip(){$('tip').classList.remove('on')}
+document.addEventListener('pointerover',e=>{const t=e.target.closest('.term');if(t)showTip(t)});
+document.addEventListener('pointerout',e=>{if(e.target.closest('.term'))hideTip()});
+document.addEventListener('focusin',e=>{const t=e.target.closest('.term');if(t)showTip(t)});
+document.addEventListener('focusout',hideTip);
+document.addEventListener('click',e=>{const t=e.target.closest('.term');if(t){e.stopPropagation();showTip(t);setTimeout(hideTip,2600)}},true);
+
+/* ===== 지우 / 메모 / 상태줄 ===== */
+function say(beat, draft){
+  const box=$('say');$('face').src=FACES[beat.face]||FACES.neutral;
+  $('sayText').textContent=beat.lines.join(' ');$('sayNote').hidden=!draft;
+  box.classList.remove('talk');void box.offsetWidth;box.classList.add('talk');
+}
+function react(key){if(seen[key])return;seen[key]=true;say(REACT[key],true)}
+function memo(text, isHint){
+  const m=$('memo');m.textContent='';m.appendChild(document.createTextNode(text));m.appendChild(el('span',null,'— '+MEMO_BY));
+  m.classList.toggle('hint',!!isHint);m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');
+}
+let statusTimer=0;
+function status(text){const s=$('status');s.textContent=text;s.classList.add('on');clearTimeout(statusTimer);statusTimer=setTimeout(()=>s.classList.remove('on'),2600)}
+
+/* ===== 조작 ===== */
+function pick(kind,id){sel=(sel&&sel.kind===kind&&sel.id===id)?null:{kind,id};render()}
+function place(zone,i){
+  if(A.done)return;
+  const arr=zone==='order'?A.order:A.excluded;
+  const here=arr[i];
+  if(sel&&sel.kind==='tag'){
+    if(zone!=='order'){status('꼬리표는 전시할 사건 조각에 답니다.');return}
+    if(!here){status('먼저 이 칸에 사건 조각을 붙이세요.');return}
+    A.links[i]=sel.id;sel=null;landed='tag'+i;react('firstTag');render();return;
+  }
+  if(sel&&sel.kind==='card'){
+    const id=sel.id;
+    A.order=A.order.map(x=>x===id?null:x);A.excluded=A.excluded.map(x=>x===id?null:x);
+    A.order.forEach((x,k)=>{if(!x)delete A.links[k]});
+    (zone==='order'?A.order:A.excluded)[i]=id;
+    if(zone==='order')delete A.links[i];
+    sel=null;landed=zone+i;react(zone==='order'?'firstCard':'firstShelf');render();return;
+  }
+  if(here){arr[i]=null;if(zone==='order')delete A.links[i];status('조각을 손으로 되돌렸어요.');render();return}
+  status('아래에서 사건 조각이나 출처 꼬리표를 먼저 고르세요.');
+}
+function ready(){return A.order.every(Boolean)&&A.excluded.every(Boolean)&&Object.values(A.links).filter(Boolean).length>=2}
+/* 정본 validA/checkA와 같은 판정 */
+function validA(){return A.order.join('|')==='A-E1|A-E2|A-E3'&&A.excluded.includes('A-D1')&&A.excluded.includes('A-D2')&&Object.entries(A.links).filter(([i,sid])=>A.order[i]===`A-E${Number(i)+1}`&&sid===`A-S${Number(i)+1}`).length>=2}
+function hang(){
+  if(A.done||!ready())return;
+  if(!validA()){
+    A.wrong++;
+    const wrongExclude=A.excluded.some(id=>id&&id.startsWith('A-E'));
+    memo(wrongExclude?HINT_WRONG_EXCLUDE:HINT_GENERAL,true);
+    seen.fail=false;react('fail');return;
+  }
+  A.done=true;sel=null;
+  $('board').classList.add('complete');$('draftLine').classList.add('struck');
+  $('mini1').classList.remove('now');$('mini1').classList.add('done');
+  $('caption').textContent='';withTerms($('caption'),PANEL_BACKGROUND);
+  const srcs=$('srcs');srcs.textContent='';srcs.appendChild(el('b',null,'출처 꼬리표 '));
+  Object.entries(A.links).sort().forEach(([i,sid])=>srcs.appendChild(el('span',null,sid+' '+SOURCES[sid].title)));
+  memo('근거와 출처가 함께 붙었네. 다음 패널도 이렇게 부탁해.',false);
+  react('done');render();
+}
+function openSheet(id){
+  sheetId=id;if(!A.opened.includes(id))A.opened.push(id);
+  const s=SOURCES[id];$('sheetId').textContent=id;$('sheetTitle').textContent=s.title;$('sheetMeta').textContent=s.meta;
+  $('sheetShort').textContent='';withTerms($('sheetShort'),s.short);
+  $('sheetDetail').textContent='';withTerms($('sheetDetail'),s.detail);
+  $('sheetBg').classList.add('on');$('sheetPick').focus();render();
+}
+function closeSheet(){$('sheetBg').classList.remove('on');hideTip();const b=document.querySelector(`[data-read="${sheetId}"]`);if(b)b.focus()}
+$('sheetPick').onclick=()=>{const id=sheetId;closeSheet();sel={kind:'tag',id};render()};
+$('sheetClose').onclick=closeSheet;
+$('sheetBg').onclick=e=>{if(e.target===$('sheetBg'))closeSheet()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('sheetBg').classList.contains('on'))closeSheet();else if(sel){sel=null;render()}}});
+$('hang').onclick=hang;
+$('reset').onclick=()=>{if(A.done)return;A.order=[null,null,null];A.excluded=[null,null];A.links={};sel=null;status('모든 조각과 꼬리표를 손으로 되돌렸어요.');render()};
+
+/* ===== 그리기 ===== */
+function slotNode(zone,i){
+  const id=(zone==='order'?A.order:A.excluded)[i];
+  const b=el('button','slot'+(id?' filled':''));b.type='button';
+  const cardSel=sel&&sel.kind==='card', tagSel=sel&&sel.kind==='tag';
+  if(cardSel&&!A.done)b.classList.add('target');
+  if(zone==='order')b.appendChild(el('span','num',(i+1)+'번째'));
+  if(id){const p=el('div','placed',cardText(id));if(landed===zone+i)p.classList.add('land');b.appendChild(p)}
+  else b.appendChild(el('span','empty',zone==='order'?'사건 조각을 붙일 자리':'보류할 조각 자리'));
+  if(zone==='order'){
+    const sid=A.links[i];
+    const h=el('span','hole'+(sid?' tagged':'')+(tagSel&&id?' target':''),sid?(sid+' · '+SOURCES[sid].title):'출처 꼬리표 자리');
+    if(sid&&landed==='tag'+i)h.classList.add('land');
+    b.appendChild(h);
+  }
+  b.setAttribute('aria-label',(zone==='order'?`시간축 ${i+1}번째 칸`:`보류 상자 ${i+1}번째 칸`)+(id?`: ${cardText(id)}`:': 비어 있음')+(zone==='order'&&A.links[i]?`, 출처 ${A.links[i]}`:''));
+  b.onclick=()=>place(zone,i);
+  if(A.done)b.disabled=true;
+  return b;
+}
+function render(){
+  const track=$('track');track.textContent='';
+  A.order.forEach((_,i)=>{track.appendChild(slotNode('order',i));if(i<2)track.appendChild(el('div','arrow','→'))});
+  const shelf=$('shelf');shelf.textContent='';A.excluded.forEach((_,i)=>shelf.appendChild(slotNode('excluded',i)));
+
+  const hand=$('hand');hand.textContent='';
+  const ids=inHand();
+  if(!ids.length)hand.appendChild(el('span','handempty',A.done?'패널 ①에 쓴 조각은 전시 벽에 남았습니다.':'모든 조각을 붙였습니다. 패널을 걸어 보세요.'));
+  ids.forEach(id=>{
+    const c=el('button','card'+(sel&&sel.kind==='card'&&sel.id===id?' sel':''));c.type='button';
+    c.appendChild(el('span',null,cardText(id)));c.appendChild(el('small',null,'학습용 재구성'));
+    c.setAttribute('aria-pressed',String(!!(sel&&sel.id===id)));c.onclick=()=>pick('card',id);
+    if(A.done)c.disabled=true;hand.appendChild(c);
+  });
+
+  const nb=$('notebook');nb.textContent='';
+  Object.keys(SOURCES).forEach(id=>{
+    const s=SOURCES[id];const t=el('div','tag'+(sel&&sel.kind==='tag'&&sel.id===id?' sel':''));
+    t.appendChild(el('span','id','후대 해설 · '+id));
+    if(A.opened.includes(id))t.appendChild(el('span','opened','읽음 ✓'));
+    t.appendChild(el('span','tt',s.title));
+    const row=el('div','row');
+    const r=el('button',null,'읽기');r.type='button';r.dataset.read=id;r.onclick=()=>openSheet(id);
+    const p=el('button','pick',sel&&sel.id===id?'내려놓기':'꼬리표 들기');p.type='button';p.onclick=()=>pick('tag',id);
+    if(A.done)p.disabled=true;
+    row.append(r,p);t.appendChild(row);nb.appendChild(t);
+  });
+
+  const linkN=Object.values(A.links).filter(Boolean).length;
+  const left=[];
+  const placed=A.order.filter(Boolean).length+A.excluded.filter(Boolean).length;
+  if(placed<5)left.push(`조각 ${5-placed}장 더`);
+  if(linkN<2)left.push(`꼬리표 ${2-linkN}개 더`);
+  $('need').textContent=left.length?left.join(' · ')+' 붙이면 걸 수 있어요':'';
+  $('hang').disabled=!ready()||A.done;
+  landed=null;
+}
+
+/* 시작 */
+memo(MEMO_A,false);
+say(V3,false);
+render();
+</script>
+</body>
+</html>
