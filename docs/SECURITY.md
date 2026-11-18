@@ -17,11 +17,11 @@
 
 - `wall_posts`처럼 공개를 의도한 출력은 비공개 결과와 테이블·정책을 구분한다.
 - `game_meta`는 공개 SELECT가 필요하지만 일반 학생 client의 INSERT/UPDATE는 필요하지 않다.
-- 현재 production에는 `game_meta` anon INSERT/UPDATE 정책이 남아 있다. 해결 완료로 간주하지 않는다.
+- 2026-11-17 production에서 `game_meta` anon INSERT/UPDATE 정책과 쓰기 grant를 제거했다(`20261117003320` migration).
 
 ## Policy changes
 
 - RLS와 grants는 현재 정책을 먼저 조회하고 migration/proposal을 검토한 뒤 변경한다.
 - production RLS 변경과 migration history repair는 명시적 승인 없이 실행하지 않는다.
-- 검토용 제안: `../supabase/proposals/20260819_rls_hardening.sql`
+- 검토용 제안: `../supabase/proposals/20260819_rls_hardening.sql`, `../supabase/proposals/20261117_rls_hardening_v2.sql`(적용됨)
 - 현재 미해결 상태와 다음 행동: `TECH_DEBT.md`
